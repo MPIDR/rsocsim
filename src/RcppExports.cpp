@@ -35,11 +35,21 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// socsimMain2
+void socsimMain2();
+RcppExport SEXP _rsoc_socsimMain2() {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    socsimMain2();
+    return R_NilValue;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_rsoc_rcpp_hello_world", (DL_FUNC) &_rsoc_rcpp_hello_world, 0},
     {"_rsoc_timesTwo3", (DL_FUNC) &_rsoc_timesTwo3, 1},
     {"_rsoc_socsimMain", (DL_FUNC) &_rsoc_socsimMain, 0},
+    {"_rsoc_socsimMain2", (DL_FUNC) &_rsoc_socsimMain2, 0},
     {NULL, NULL, 0}
 };
 

@@ -1,5 +1,5 @@
 /* %W% %G% */
-#include "defs.h"
+//#include "defs.h"
 #include <strings.h>
 #include <stdio.h>
 #include <sys/file.h>
@@ -22,8 +22,10 @@ children born in December are only one month old.
 #define CHECK(x) (INRANGE((x)) && ALIVE((x))) ? 1 : 0
 #define ISCHILD(x) (CHILD((x)) && ALIVE((x))) ? 1 : 0
 
-int
-	get_expected_number_of_births(group) int group;
+
+void fill_in_rates(double*,struct age_block*);
+
+int get_expected_number_of_births(int group)
 {
 
 	int count[MAXUMONTHS][MAXPARITY][NUMMARSTATUS];
@@ -78,9 +80,7 @@ int
 	return (int)num_births;
 }
 
-int
-	get_expected_number_of_transits(from, dest) int from,
-	dest;
+int	get_expected_number_of_transits(int from, int dest)
 {
 
 	int count[MAXUMONTHS][NUMSEXES][NUMMARSTATUS];
@@ -132,8 +132,7 @@ int
 	return (int)num_transits;
 }
 
-fill_in_rates(rate_table, rate_set) double *rate_table;
-struct age_block *rate_set;
+void fill_in_rates( double *rate_table,struct age_block *rate_set)
 {
 	struct age_block *current_block;
 	int i;
@@ -153,23 +152,17 @@ struct age_block *rate_set;
 	}
 }
 
-double
-	ident(p, crnt_block) struct person *p;
-struct age_block *crnt_block;
+double	ident(struct person *p, struct age_block *crnt_block)
 {
 	return crnt_block->lambda;
 }
 
-double
-	twofold(p, crnt_block) struct person *p;
-struct age_block *crnt_block;
+double twofold( struct person *p, struct age_block *crnt_block)
 {
 	return crnt_block->lambda * 2;
 }
 
-double
-	usefertmult(p, crnt_block) struct person *p;
-struct age_block *crnt_block;
+double usefertmult(struct person *p,struct age_block *crnt_block)
 {
 	if (!hetfert)
 		return crnt_block->lambda;
@@ -184,17 +177,14 @@ struct age_block *crnt_block;
  ** no males
  ***/
 
-double
-	usenullmult(p, crnt_block) struct person *p;
-struct age_block *crnt_block;
+double usenullmult(struct person *p, struct age_block *crnt_block)
 {
 	return crnt_block->lambda;
 }
 
 /******************************************************************/
 
-double usedeathmult(p, crnt_block) struct person *p;
-struct age_block *crnt_block;
+double usedeathmult(struct person *p,struct age_block *crnt_block)
 {
 	/** 
       Just like usefertmult this will be called from modify_rates and
@@ -219,9 +209,7 @@ struct age_block *crnt_block;
 
 /******************************************************************/
 
-double
-	usetransmult(p, crnt_block) struct person *p;
-struct age_block *crnt_block;
+double usetransmult(struct person *p,struct age_block *crnt_block)
 {
 	/**    if ( p->egos_extra->tmult == NULL) 
 	 should equate to (but compile better) carlm 7/25/00
@@ -277,9 +265,7 @@ struct person *p;
 }
 */
 
-double
-	table_lookup(age, crnt_table) int age;
-struct age_table *crnt_table;
+double table_lookup( int age, struct age_table *crnt_table)
 {
 	if (crnt_table == NULL)
 	{
@@ -291,7 +277,7 @@ struct age_table *crnt_table;
 	return crnt_table->prob;
 }
 
-census()
+void census()
 {
 	struct person *p, *spouse, *mother, *father;
 	struct person *stepmother, *stepfather;
@@ -665,7 +651,7 @@ census()
     */
 }
 
-child_census()
+void child_census()
 {
 	struct person *p, *spouse, *mother, *father, *sibling;
 	struct person *stepmother, *stepfather;
@@ -1340,28 +1326,27 @@ child_census()
  * index value. returns the index'th value in the linked list
  * used to access extra socio-demog like variables 
  ************************************************************************/
-float get_extra(p, i) struct person *p;
-int i;
+float get_extra( struct person *p, int i)
 {
 	struct extra_data *first;
 	struct extra_data *current;
 	int indx;
 	if ((i < 0) || (i > size_of_extra))
 	{
-		logmsg("Attempt to read stupid position in extra vars: %d", " ",i);
-		exit(-1);
+		stop("Attempt to read stupid position in extra vars: %d", " ",i);
+		//exit(-1);
 	}
 	indx = 0;
 	if (p == NULL)
 	{
-		logmsg("Attempt to reference extra variable of nonexistant person\n", "", 1);
-		exit(-1);
+		stop("Attempt to reference extra variable of nonexistant person\n", "", 1);
+		//exit(-1);
 	}
 	if (p->extra == NULL)
 	{
-		logmsg("Attempt to reference uninitialized extra variable personid:%d\n",
+		stop("Attempt to reference uninitialized extra variable personid:%d\n",
 			   " ",(int) p->person_id);
-		exit(-1);
+		//exit(-1);
 	}
 
 	current = p->extra;
@@ -1374,8 +1359,8 @@ int i;
 		}
 		else
 		{
-			logmsg("%s\n", "Attempt to read uninitialized value in get_extra",1);
-			exit(-1);
+			stop("%s\n", "Attempt to read uninitialized value in get_extra",1);
+			//exit(-1);
 		}
 	}
 	return (current->value);
@@ -1386,9 +1371,7 @@ int i;
    *the value will be stuck into the index'th place on the
    *egos_extra linked list. all mallocs will be done as implied
    *****************************************************************/
-void put_extra(p, i, x) struct person *p;
-int i;
-float x;
+void put_extra(struct person *p,int i,float x)
 {
 	struct extra_data *current;
 	struct extra_data *first;
@@ -1396,8 +1379,8 @@ float x;
 	int indx;
 	if ((i < 0) || (i > size_of_extra))
 	{
-		logmsg("Attempt to write stupid number of extra vars %s"," ", i);
-		exit(-1);
+		stop("Attempt to write stupid number of extra vars %s"," ", i);
+		//exit(-1);
 	}
 	indx = 0;
 
@@ -1426,12 +1409,11 @@ float x;
 
 /*****************************************************************/
 
-int get_parity(p)
+int get_parity(	struct person *p)
 	/************************************************************
    returns number of births to person p if female
    else returns zero
   ************************************************************/
-	struct person *p;
 {
 	int indx;
 	struct person *child;
@@ -1458,7 +1440,7 @@ int get_parity(p)
 	}
 }
 /************************************************************************/
-int get_previous_mstatus(p) struct person *p;
+int get_previous_mstatus(struct person *p)
 
 {
 	/** Mon Apr 19 09:59:26 PDT 2010 Called from divorce and death in
@@ -1525,7 +1507,7 @@ int get_previous_mstatus(p) struct person *p;
 	return (prev_mstat);
 }
 /******************************************************************/
-int get_previous_mstatusOBSOLETE(p) struct person *p;
+int get_previous_mstatusOBSOLETE( struct person *p)
 {
 	struct marriage *prior;
 	/*
@@ -1579,15 +1561,13 @@ int get_previous_mstatusOBSOLETE(p) struct person *p;
 			*/
 		}
 	}
-	logmsg("%s\n", "ran out of prior marriages in get_prior_mstatus", 1);
-	exit(-1);
+	stop("%s\n", "ran out of prior marriages in get_prior_mstatus", 1);
+	//exit(-1);
 }
 
 /******************************************************************/
 
-int get_marity(p)
-
-	struct person *p;
+int get_marity(struct person *p)
 {
 	/*
     Counts current and previous marriages returns integer

@@ -17,11 +17,25 @@ NumericVector timesTwo3(NumericVector x) {
 }
 
 #include "src\events.cpp"
+//#include "src\random.c"
 
 
 // [[Rcpp::export]]
 void socsimMain(){
-  main();
+  Rcpp::Rcout << "thistestobj" << std::endl;
+}
+
+// [[Rcpp::export]]
+void socsimMain2(){
+  Rcpp::Rcout << "jabadabadujujujuku--------------1u! noch etwas frueher" << std::endl;
+  char *args[] = {
+    (char*)"zerothArgument",
+    (char*)"sample.sup",
+    (char*)"12345",
+    NULL
+  };
+  main22(3, args);
+  //main(3,["bla1","bla2","bla3"]);
 }
 
 

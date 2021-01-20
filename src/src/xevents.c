@@ -1,5 +1,5 @@
 /* %W% %G% */
-#include "defs.h"
+//#include "defs.h"
 #include <math.h>
 #include <stdlib.h>
 
@@ -22,7 +22,17 @@ struct transit_list
 struct transit_list *tl;
 struct transit_list *tl0;
 
-birth(p) struct person *p;
+void new_marriage( struct person*, struct person*);
+int marriage_allowable(struct person *,struct person *);
+int check_agedif(struct person *, struct person *);
+void create_working_mqueue(struct person*);
+void destroy_working_mqueue();
+
+int add_minor_children(struct person *);
+int check_endogamy(struct person *, struct person *);
+int check_incest(struct person *, struct person *);
+
+void birth(struct person *p)
 {
   struct person *child;
   int m;
@@ -108,7 +118,7 @@ birth(p) struct person *p;
   if (child->sex == FEMALE)
   {
     child->fmult = alpha * p->fmult + (1 - alpha) * fertmult();
-    child->fmult = 2.5 * exp(beta * log(child->fmult / 2.5));
+    child->fmult = 2.5 * exp(betaT * log(child->fmult / 2.5));
   }
   else
   {
@@ -171,7 +181,7 @@ birth(p) struct person *p;
 }
 
 /*************************************************************************/
-death(p) struct person *p;
+void death(struct person *p)
 {
   struct person *spouse;
   int m;
@@ -266,7 +276,7 @@ death(p) struct person *p;
 #endif
 }
 
-divorce(p) struct person *p;
+void divorce(struct person *p)
 {
   struct person *spouse;
   int m;
@@ -335,7 +345,7 @@ divorce(p) struct person *p;
 #endif
 }
 
-marriage(p) struct person *p;
+void marriage(struct person *p)
 {
   struct person *spouse;
   int m;
@@ -355,7 +365,7 @@ marriage(p) struct person *p;
     /* error one-queue implies that this should not be called for males*/
     // logmsg("Error: marriage_queues==1 yet marriage() called for male person %d", //jimtom
     // p->person_id,1);
-    exit(-1);
+    stop("wefa marriage ");//exit(-1);
   }
 
   if (p->mstatus == COHABITING)
@@ -430,7 +440,7 @@ marriage(p) struct person *p;
 }
 
 /************************************************************************/
-new_marriage(p, spouse) struct person *p, *spouse;
+void new_marriage( struct person *p, struct person *spouse)
 {
 
   struct marriage *mar;
@@ -566,8 +576,7 @@ new_marriage(p, spouse) struct person *p, *spouse;
 
 /********************************************************************/
 
-struct person *
-    random_spouse2(p) struct person *p;
+struct person * random_spouse2( struct person *p)
 {
   /* pointed to by p->pref  and thus called from marriage() to
      produce a spouse  called after mq_w is created 
@@ -620,7 +629,7 @@ struct person *
 
 /**********************************/
 
-create_working_mqueue(p) struct person *p;
+void create_working_mqueue(struct person *p)
 /* called from marriage() just before p->pref() is invoked to find a
    spouse from the current marriage_queue of opposite sex potential
    spouses. This creates a linked list, called mq_w which is a GLOBAL
@@ -775,7 +784,7 @@ create_working_mqueue(p) struct person *p;
     */
 }
 
-int destroy_working_mqueue()
+void destroy_working_mqueue()
 {
 
   struct mqueue_w *mq, *mq2;
@@ -796,8 +805,7 @@ int destroy_working_mqueue()
   mq_count = 0;
 }
 
-struct person *
-    random_spouse(p) struct person *p;
+struct person * random_spouse(struct person *p)
 {
   struct queue_element *op;
   struct person *spouse;
@@ -827,9 +835,7 @@ struct person *
 }
 /****************************************************************************/
 
-int
-    marriage_allowable(p1, p2) struct person *p1,
-    *p2;
+int marriage_allowable(struct person *p1,struct person *p2)
 {
   /** This will call all of the functions that can disallow a union
       outright This includes incest, past marriage to same partner, age
@@ -876,9 +882,7 @@ int
 }
 
 /********************************************************************/
-int
-    check_agedif(p1, p2) struct person *p1,
-    *p2;
+int check_agedif(struct person *p1, struct person *p2)
 {
   /** this just checks age difference husband - wife  accepts with 1
       if within bounds otherwiser rejects with 0 
@@ -914,9 +918,7 @@ int
 }
 
 /********************************************************************/
-int
-    check_incest(p1, p2) struct person *p1,
-    *p2;
+int check_incest(struct person *p1,struct person *p2)
 {
   /** This function used to be called "check" but that was too stupid
       a name for a function now it does what the name implies. It is
@@ -1014,8 +1016,7 @@ int
 
 /**************************************************************************/
 
-double
-    score3(p, suitor)
+double score3(struct person *p, struct person *suitor)
     /** default marriage scoring routine. assigns a numerical score to the
     happy couple. p will ultimately choose the max scorer. Since the
     ordinal rank is all that matters, the user chooses the peak
@@ -1029,8 +1030,7 @@ double
     let's try to keep them positive
 **/
 
-    struct person *p,
-    *suitor;
+
 {
   struct person *w, *m;
   double x;
@@ -1153,7 +1153,7 @@ WRONG Marcia!  subtracting birthdates not ages!
 }
     */
 /********************************************************************/
-int check_endogamy(p, suitor) struct person *p, *suitor;
+int check_endogamy(struct person *p, struct person *suitor)
 {
   /*
     Note that if the user set endogamy directive is no -1,0,1 this 
@@ -1256,9 +1256,7 @@ int check_endogamy(p, suitor) struct person *p, *suitor;
    */
 }
 
-double
-    score1_OBSOLETE(p, suitor) struct person *p,
-    *suitor;
+double score1_OBSOLETE(struct person *p, struct person *suitor)
 {
   struct person *w, *m;
 
@@ -1315,7 +1313,7 @@ double
 }
 
 /*** execute transtion event **/
-void transit(q) struct person *q;
+void transit(struct person *q)
 {
   int destgroup, m;
   struct person *p;
@@ -1406,7 +1404,7 @@ void transit(q) struct person *q;
 #endif
 }
 
-void assemble_household(p) struct person *p;
+void assemble_household(struct person *p)
 {
   struct marriage *p_prior;
   struct person *current_child;
@@ -1508,7 +1506,7 @@ void assemble_household(p) struct person *p;
     */
 }
 
-int add_minor_children(p) struct person *p;
+int add_minor_children(struct person *p)
 {
   int overage = FALSE;
   struct person *current_child;
@@ -1558,8 +1556,7 @@ print_migrants()
 }
 /****************************************************************/
 /************************************************************************/
-struct person *
-    find_random_father(child) struct person *child;
+struct person * find_random_father(struct person *child)
 {
   /** 
       called only from birth. If child has no father AND random_father

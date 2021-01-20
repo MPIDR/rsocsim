@@ -1,7 +1,7 @@
 /* %W% %G% */
 #include <stdio.h>
 #include <math.h>
-#include "defs.h"
+//#include "defs.h"
 #include <stdlib.h>
 // #include <stdint.h>
 
@@ -13,17 +13,17 @@ NO these must be const long int
 #define INCREMENT 13849
 */
 
-/*const long int MODULUS= 65536;     /*  m */
-/*const long int MULTIPLIER = 25173; /* a */
-/*const long int  INCREMENT = 13849; /*c */
+/*const long int MODULUS= 65536;     // m */
+/*const long int MULTIPLIER = 25173; // a */
+/*const long int  INCREMENT = 13849; // c */
 
 const long long MODULUS= 2147483648 ;     /*  m */
 const long long MULTIPLIER = 1103515245; /* a */
 const long int  INCREMENT = 12345; /*c */
 
+double cycle(double,int);
 
-int
-irandom()
+int irandom()
 {
     long int ceed;
     #if defined(_WIN32) || defined(WIN32) || defined(__CYGWIN__) || defined(__MINGW32__) //check if this is Windows, because win has no random(), only rand()
@@ -121,9 +121,7 @@ fertmult()
     */
 }
 
-double
-flog(x)
-double x;
+double flog(double x)
 {
     return cycle(x,1) - cycle(x, 2)/2
     + cycle(x, 3)/3 - cycle(x,4)/4
@@ -138,10 +136,7 @@ double x;
     */
 }
 
-double
-cycle(x,p)
-double x;
-int p;
+double cycle(double x,int p)
 {
     double y;
     int i;

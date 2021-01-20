@@ -1,4 +1,4 @@
-#include "defs.h"
+//#include "defs.h"
 #include <stdio.h>
 #include <math.h>
 #include <string.h>
@@ -101,7 +101,7 @@ int make_random_socsim_NEVERUSED (){
   }
   }  ***/
 /***********************************************************************/
-void initialize_person(pnew) struct person *pnew;
+void initialize_person(struct person *pnew)
 
 {
   /***
@@ -144,7 +144,7 @@ void initialize_person(pnew) struct person *pnew;
   pnew->ltrans = NULL;
 }
 /************************************************************************/
-int sanity_check_person(p) struct person *p;
+int sanity_check_person(struct person *p)
 {
   /*
 This is called from read_initial_pop (and perhaps elsewhere latere)
@@ -183,8 +183,7 @@ inputs
   }
   return (result);
 }
-int read_initial_pop(fd)
-    FILE *fd;
+int read_initial_pop(FILE *fd)
 {
   struct person *p, *prev_p;
   char line[200];
@@ -260,8 +259,7 @@ int read_initial_pop(fd)
     p->NEXT_ON_MQUEUE = NULL;
     if (sanity_check_person(p) != 0)
     {
-      perror("dying after reading bad person from init opop");
-      exit(-1);
+      stop("dying after reading bad person from init opop");//exit(-1);
     }
     prev_p = p;
     /* increment group counter if nec */
@@ -269,7 +267,7 @@ int read_initial_pop(fd)
     if (install(PERSON_TAG, p->person_id, p, imother, ifather, iesibmom,
                 iesibdad, ilborn, ilastmar) == NULL)
     {
-      perror("hash table problems");
+      warning("hash table problems");
     }
 
 #ifdef ENHANCED
@@ -290,8 +288,7 @@ int read_initial_pop(fd)
     */
 }
 
-read_marlist(fd)
-    FILE *fd;
+void read_marlist(FILE *fd)
 {
   struct marriage *m, *prev_m;
   struct nlist *np;
@@ -390,16 +387,13 @@ read_marlist(fd)
   }
 }
 
-int read_xtra(fd, pop_rows)
+int read_xtra(FILE *fd, int pop_rows)
     /***********************************************************************
   Tue Feb  7 12:27:20 PST 2006  The goal now is to be able to read
   .opox without knowing what is in it. The first element in each row
   has to be a person id but beyond that -- everything is just floats
   that will be added onto the end of the egos_extra link list. 
 ***********************************************************************/
-
-    FILE *fd;
-int pop_rows;
 {
   char line[10]; /*might need to increase this*/
   struct nlist *np;
@@ -414,8 +408,7 @@ int pop_rows;
     char logstring[256];
     sprintf(logstring, "size_of_xtra is %d yet you want me to read an .opox file.  Set size_of_xtra to number of xtra variables in .sup or in more likely in enhancement code",
             size_of_extra);
-    logmsg("%s\n", logstring, 1);
-    exit(-1);
+    stop("%s\n", logstring, 1);// exit(-1);
   }
 
   row = 1;
@@ -425,18 +418,18 @@ int pop_rows;
     if (fscanf(fd, "%d", &id) != 1)
     {
       char logstring[256];
-      sprintf(logstring, "can't find person id in line %d of .opox file", row);
+      stop(logstring, "can't find person id in line %d of .opox file", row);
       logmsg("%s\n", logstring, 1);
-      exit(-1);
+      //exit(-1);
     }
     np = lookup(PERSON_TAG, id);
 
     if (np == NULL)
     {
       char logstring[256];
-      sprintf(logstring, "Error reading opox person id %d gives null pointer back", id);
+      stop(logstring, "Error reading opox person id %d gives null pointer back", id);
       logmsg("%s\n", logstring, 1);
-      exit(-1);
+      //exit(-1);
     }
     p = np->PP;
 
@@ -446,11 +439,11 @@ int pop_rows;
       {
         char logstring[256];
 
-        sprintf(logstring,
+        stop(logstring,
                 "bad input reading  %d'th col pid=%d of opox",
                 indx, id);
         logmsg("%s\n", logstring, 1);
-        exit(-1);
+        //exit(-1);
       }
       put_extra(p, indx, rval);
     }
@@ -477,8 +470,7 @@ int pop_rows;
 
 /********************************************************************/
 
-read_otx(fd)
-    FILE *fd;
+void read_otx(FILE *fd)
 {
   struct transition *tx, *newer = NULL;
   char line[200];
@@ -492,7 +484,7 @@ read_otx(fd)
                &pid, &tx->date, &tx->fromg, &tx->tog, &seq) != 5)
     {
       perror("otx file: invalid input");
-      exit;
+      stop("otx file: invalid input");//exit;
     }
 
     tx->prior = NULL;
@@ -511,7 +503,7 @@ read_otx(fd)
 }
 /**********************************************************************/
 
-delete_hash_table()
+void delete_hash_table()
 {
   struct nlist *np, *npp;
   int i;
@@ -528,7 +520,8 @@ delete_hash_table()
   }
 }
 
-fix_pop_pointers()
+
+void fix_pop_pointers()
 {
   struct person *p, *pp;
   struct marriage *mm;
@@ -736,8 +729,7 @@ fix_pop_pointers()
 
 */
 
-int
-    hash(val) int val;
+int hash(int val)
 /*long long int val;*/
 {
   /*return (((long long int) (val * val)) % 10000); */
@@ -753,9 +745,7 @@ int
 /* find the value in the table: it will give the index of the head of
  * the list*/
 
-struct nlist *
-    lookup(uniontag, val) int uniontag,
-    val;
+struct nlist * lookup(int uniontag, int val) 
 {
   struct nlist *np;
 
@@ -771,8 +761,7 @@ struct nlist *
   return NULL; /* not found */
 }
 
-struct nlist *
-    install(int uniontag, int val, void * p, int i1, int i2, int i3, int i4, int i5, int i6) 
+struct nlist * install(int uniontag, int val, void * p, int i1, int i2, int i3, int i4, int i5, int i6) 
 {
   struct nlist *np, *temp;
   int hashval;
@@ -806,7 +795,7 @@ struct nlist *
   return np;
 }
 
-int delete (uniontag, val) int uniontag, val;
+int delete_deprecated(int uniontag, int val)
 {
   struct nlist *np, *temp;
   int hashval;
@@ -844,7 +833,7 @@ int delete (uniontag, val) int uniontag, val;
   return 1;
 }
 
-dump_table()
+void dump_table()
 {
   int i;
   struct nlist *np;
@@ -872,8 +861,7 @@ dump_table()
   }
 }
 
-write_population(fd)
-    FILE *fd;
+void write_population(FILE *fd)
 {
   logmsg("writing population (.opop) ..\n", "", 1);
 
@@ -887,8 +875,7 @@ write_population(fd)
   fclose(fd);
 }
 
-write_person(p, fd) struct person *p;
-FILE *fd;
+void write_person(struct person *p, FILE *fd)
 {
   /* Mon Apr 12 17:08:38 PDT 2010
      adding space between elements in person output otherwise they run together
@@ -910,8 +897,7 @@ FILE *fd;
     */
 }
 
-write_marriages(fd)
-    FILE *fd;
+write_marriages(FILE *fd)
 {
   struct marriage *m;
   m = marriage0;
@@ -925,9 +911,7 @@ write_marriages(fd)
   fclose(fd);
 }
 
-write_marriage(m, fd)
-    FILE *fd;
-struct marriage *m;
+void write_marriage(marriage *m, FILE *fd)
 {
   /* chokes on zero'th marriage rec unclear why
      if block added by carlm 5/22/01 to avoid seg fault when writing 
@@ -956,8 +940,7 @@ struct marriage *m;
 /*  modifications for writing out wachters SWET .opox file see */
 /*  read_xtra for corresponding changes on input side */
 
-write_xtra(fd)
-    FILE *fd;
+void write_xtra(FILE *fd)
 {
   struct person *p;
   int indx;
@@ -1000,14 +983,12 @@ write_xtra(fd)
 }
 
 /**********************************************/
-void
-    write_otx(fd)
+void write_otx(FILE *fd)
     /**Wed Jun 23 04:47:33 PDT 2010
      write transition history file. There is no escaping the need to
      be able to determine when group transitions occurred.
      should not be called unless transition history is enabled.
   **/
-    FILE *fd;
 {
   struct person *p;
   int prior;
@@ -1033,9 +1014,7 @@ void
 
 /************************************/
 
-FILE *open_write(fname)
-
-    char *fname;
+FILE *open_write(char *fname)
 {
   /*********************************************
    ** opens fname for write on fd or complains
@@ -1053,7 +1032,7 @@ FILE *open_write(fname)
   return fd;
 }
 
-prepare_output_files(seg) int seg;
+void prepare_output_files(int seg)
 {
   /**************************************************
  ** Tue Oct 22 12:45:45 PDT 2002
@@ -1105,7 +1084,7 @@ prepare_output_files(seg) int seg;
 }
 
 /**  **/
-void write_popfiles(intermediate) int intermediate;
+void write_popfiles(int intermediate)
 {
   /** writes all population files at end of sim or where ever **/
 

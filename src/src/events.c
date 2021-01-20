@@ -9,11 +9,11 @@
 //#include <Rcpp.h>
 
 #include <Rcpp.h>
-using namespace Rcpp;
+//using namespace Rcpp;
 
 #include "census.c"
 #include "io.c"
-#include "load.cpp"
+#include "load.c"
 #include "random.c"
 #include "utils.c"
 #include "xevents.c"
@@ -109,28 +109,22 @@ char *c_tally_to_string[] = {
  
  
 // [[Rcpp::export]]
-int main22(int argc, char *argv[])
+int main(int argc, char *argv[])
 
 {
-  Rcpp::Rcout << "jabadabaduuuu-----------3! start!" << std::endl;
+  Rcpp::Rcout << "thistestobj" << std::endl;
 	clock_t timestart1,timestart2,timeend;
 	double timedif1,timedif2;
 
   	timestart1 = clock();
-  	
-  Rcpp::Rcout << timestart1 << std::endl;
-  Rcpp::Rcout << "bra1" << std::endl;
+	
 	char rate_file_name[1024];
 	char command_string[1024];
-	Rcpp::Rcout << "bra1.1" << std::endl;
 	struct queue_element *e, *q;
-	Rcpp::Rcout << "bra1.2" << std::endl;
 	int i, j, fy;
-	Rcpp::Rcout << "bra1.4" << std::endl;
 	char useage[1024];
 	char logstring[1024];
-	
-	Rcpp::Rcout << "bra1" << std::endl;
+
 	/* some initialization */
 	/*****************************************************************
      *It all starts here .sup file has not been read yet and the sim 
@@ -144,15 +138,14 @@ int main22(int argc, char *argv[])
 	current_offset = 0;
 	current_fstatus = CLOSED;
 
-	//return 12;
+	return 12;
 	
 	for (e = event_queue, i = 0; i < MAXUMONTHS; e++, i++)
 	{
 		e->first = NULL;
 		e->num = 0;
 	}
-	
-	Rcpp::Rcout << "bra2" << std::endl;
+
 	for (q = marriage_queue, i = MALE; i <= FEMALE; q++, i++)
 	{
 		q->first = NULL;
@@ -178,7 +171,6 @@ int main22(int argc, char *argv[])
 			}
 		}
 	}
-	Rcpp::Rcout << "bra4" << std::endl;
 
 	hetfert = 1;
 	alpha = 0;
@@ -194,8 +186,6 @@ int main22(int argc, char *argv[])
 	endogamy = 0;				/* default to random-ogamy */
 	marriage_eval = PREFERENCE; /* or PROB*/
 	marriage_queues = 2;
-	
-	Rcpp::Rcout << argv[0] << std::endl;
 	/** marriage_eval ==  PREFERENCE**/
 	marriage_peak_age = 36;
 	marriage_slope_ratio = 2;
@@ -223,26 +213,18 @@ int main22(int argc, char *argv[])
 	}
 	child_inherits_group = FROM_MOTHER;
 	parameter0 = parameter1 = parameter2 = parameter3 = parameter4 = parameter5 = 0;
-	
-	Rcpp::Rcout << argv[0] << std::endl;
-	
-	Rcpp::Rcout << "useage: ratefile random_number" << useage << argv[0] << std::endl;
+
 	size_of_extra = 0; /*no extra variables/.opox by default*/
 	if (argc < 3)
 	{
-	  warning("Warning: Unexpected condition occurred");
-	  //return 12;
-	  
-	  Rcpp::Rcout << "useage: ratefile random_number" << useage << argv[0] << std::endl;
-		warning("useage: %s ratefile random_number", useage);
-		error(useage);
-		stop("stop!");
+		warning(useage, "useage: %s ratefile random_number", argv[0]);
+		stop()
+		//perror(useage);
 		//exit(1);
 	}
-	
-	Rcpp::Rcout << "timestart1" << std::endl;
-	
+
 	strcpy(rate_file_name, *++argv);
+
 	ceed = atoi(*++argv);
 
 	// initstate(ceed, randstate, 256); //suggested by jim: replace with:
@@ -250,25 +232,16 @@ int main22(int argc, char *argv[])
 
 	/**srandom(ceed);  setting seed for random() NOT rrandom() **/ // todo:check if random is initialized correctly!
 	sprintf(log_file_name, "%s%d.log", rate_file_name, ceed);
-	
-	
-	Rcpp::Rcout << "buuuuuuuuuuuu." << std::endl;
-	Rcpp::Rcout << log_file_name << std::endl;
-	
-	//return 12;
+
 	/**debugging random numbercrap 
     fd_random = fopen("randomsex", "w");
     fd_allrandom = fopen("allrandom", "w");
     *****************************/
 	if ((fd_log = fopen(log_file_name, "w")) == NULL)
 	{
-	  
-	  Rcpp::Rcout << "bra5 . cant open file..." << std::endl;
 		perror("can't open file: log file\n");
 	}
-	
-	Rcpp::Rcout << "bra6" << std::endl;
-  //return 13;//
+
 	/**sprintf(logstring,"\n compiled from SVN revision %s on %s \n\n",
 	   SVN_REV, COMP_DATE);**/
 	logmsg("%s\n", logstring, 1);
@@ -278,15 +251,13 @@ int main22(int argc, char *argv[])
 	{
 		logmsg("\n\n marriage_queues==1 , consequently all availalbe males are always on the marriage queue\n\n"," ",   1);
 	}
-	//stop("stop15");
-	
-	Rcpp::Rcout << rate_file_name << std::endl;
-	warning(rate_file_name);
+
 	initialize_segment_vars();
-	warning("14.9");
-	if (load(rate_file_name) < 0)
-		stop("-1?");//exit(-1);
-	//stop("stop15");
+	if (load(rate_file_name) < 0){
+		stop("load rate_file_name");
+		//exit(-1);
+	}
+
 	if (marriage_eval == DISTRIBUTION)
 	{
 		/* sup file has been read; so if value is not -99 then it was
@@ -301,14 +272,12 @@ int main22(int argc, char *argv[])
 		initialize_marriage_targets();
 	}
 
-	warning("josidfjsssss");
-	//stop("stop15");
 	/*modify birth rates to account for bint MUST be called 
      BEFORE fill_rate_gaps*/
 	/*    if(bint != 0){*/
 	adjust_birth_for_bint();
 	/*    }*/
-	//stop("stop15");
+
 #ifdef ENHANCED
 	enhance_defaults();
 #endif
@@ -338,34 +307,30 @@ int main22(int argc, char *argv[])
 
 	if ((fd_pop = fopen(pop_file_name, "r")) == NULL)
 	{
-	  stop("can't open initial  pop file; can't simuluate..\n");//exit
-		perror("can't open initial  pop file; can't simuluate..\n");
+		warning("can't open initial  pop file; can't simuluate..\n");
+		stop("wefa");//exit;
 	}
 	if ((fd_mar = fopen(mar_file_name, "r")) == NULL)
 	{
-	  warning("can't openmarriage file Hope that's OK");//exit
-		//perror("can't open  marriage file Hope that's OK\n");
+		warning("can't open  marriage file Hope that's OK\n");
 	}
 
 	if ((fd_otx = fopen(otx_file_name, "r")) == NULL)
 	{
-	  warning("can't open  transition history file. Hope that's OK\n");
-	  //perror("can't open  transition history file. Hope that's OK\n");
+		warning("can't open  transition history file. Hope that's OK\n");
 	}
-  //stop("here we stop!");
+
 	if (read_xtra_file)
 	{
 		if ((fd_xtra = fopen(xtra_file_name, "r")) == NULL)
 		{
 			printf("xtra file is named %s\n", xtra_file_name);
-		  perror("can't open  xtra file despite being asked to\n");
-		  stop("can't open  xtra file despite being asked to\n");
-			//exit;
+			warning("can't open  xtra file despite being asked to\n");
+			stop("wefa xtrafile");//exit;exit;
 		}
 	}
 	/** open output files for writing**/
-	
-	warning("josidfjsssss2");
+
 	prepare_output_files(0);
 	fd_rn = open_write("random_number");
 	logmsg("opening pop pyramid file %s\n", pyr_file_name,1);
@@ -398,11 +363,10 @@ int main22(int argc, char *argv[])
 		{
 			if (p->mstatus != SINGLE)
 			{
-				sprintf(logstring, "\n\nEncountered personid=%d with mstatus=%d (NOT SINGLE)\nSince no initial .omar file was found this is madness and can only lead to tears", p->person_id, p->mstatus);
+				warning(logstring, "\n\nEncountered personid=%d with mstatus=%d (NOT SINGLE)\nSince no initial .omar file was found this is madness and can only lead to tears", p->person_id, p->mstatus);
 				logmsg("%s\n", logstring, 1);
-				perror("No one in initial .opop can be married if you do not supply an initial .omar file. Duhhhhh.\n...Exitting");
-				stop("No one in initial .opop can be married if you do not supply an initial .omar file. Duhhhhh.\n...Exitting");
-				//exit(-1);
+				warning("No one in initial .opop can be married if you do not supply an initial .omar file. Duhhhhh.\n...Exitting");
+				stop("wefa");//exit(-1);
 			}
 		}
 	}
@@ -416,12 +380,9 @@ int main22(int argc, char *argv[])
 	{
 		logmsg("No initial transition history file to read\n"," ", 1);
 	}
-	
-	warning("josidfjssss2.5");
-	//stop("blabla34");
+
 	fix_pop_pointers();
-	
-	warning("josidfjssss3s");
+
 	if (read_xtra_file)
 	{
 		int rows_read = 0;
@@ -447,9 +408,9 @@ int main22(int argc, char *argv[])
 	delete_hash_table();
 
 	current_month = last_event_date + 1;
-	warning("Starting month is %d\n", current_month);
-	warning("Initial size of pop %d  ", last_person->person_id);
-	warning("(living: %d)\n", size_of_pop[0]);
+	printf("Starting month is %d\n", current_month);
+	printf("Initial size of pop %d  ", last_person->person_id);
+	printf("(living: %d)\n", size_of_pop[0]);
 
 	if (fill_rate_gaps() < 0)
 		perror("bad rate set\n");
@@ -472,7 +433,6 @@ int main22(int argc, char *argv[])
 		printf("value of epsilon: %d table index %d \n",
 			   epsilon, (int)epsilon / 12);
 	}
-	//return 14;
 
 	while (current_segment <= num_segments)
 	{
@@ -499,8 +459,7 @@ int main22(int argc, char *argv[])
 		population_pyramid(fd_pyr); /*blows guts here*/
 
 		logmsg("Simulating...\n", "", 1);
-		Rcpp::Rcout << "Simulating...." << std::endl;
-		
+
 		/***
 	  dump_rates();
       ***/
@@ -691,13 +650,13 @@ int main22(int argc, char *argv[])
 			logmsg("about read rate file %s\n", rate_file_name, 0);
 
 			if (load(rate_file_name) < 0){
-			  stop("sdofijweoillll");
+				stop("wefasdfwefdd");//exit;
 			}
-				
+
 			adjust_birth_for_bint();
 
 			if (fill_rate_gaps() < 0)
-				perror("bad rate set\n");
+				warning("bad rate set\n");
 		}
 		else
 		{
@@ -1162,8 +1121,8 @@ this is going into purgatory  **/
 		}
 		else
 		{
-		  printf("unknown queue circumstances\n");
-		  stop("unknown queue circumstances\n");//exit(1);
+			stop("unknown queue circumstances\n");
+			//exit(1);
 		}
 	}
 }
@@ -1837,9 +1796,8 @@ int date_and_event(struct person *p)
 			m = m1;
 			if (marriage_queues == 1 && p->sex == MALE)
 			{
-			  logmsg("\nmarriage_queues==1 yet marriage event gen'ed for %d\n"," ",
-            p->person_id);
-			  stop("\nmarriage_queues==1 yet marriage event gen'ed for %d\n",p->person_id);//exit(-1);
+				stop("\nmarriage_queues==1 yet marriage event gen'ed for %d\n"," ",
+					   p->person_id);//exit(-1);
 			}
 		}
 	}
@@ -1937,7 +1895,7 @@ void initialize_segment_vars()
    ** original cell is cfreed. This prevents cfree of already
    ** dereferenced stuff. bald spot dedicated to this problem
    **/
-	//warning("beginning");
+
 	for (g = 0; g < MAXGROUPS * NUMEVENTS * NUMMARSTATUS * NUMSEXES; g++)
 	{
 		r_ptr = (&(rate_set[0][0][0][0]) + g);
@@ -1962,7 +1920,6 @@ void initialize_segment_vars()
 			*r_ptr = NULL;
 		}
 	}
-	//warning("beginning2");
 
 	/******************************
    ** Mon Jul 29 14:56:02 PDT 2002 this replaces code formerly above
@@ -1997,7 +1954,7 @@ void initialize_segment_vars()
 			*r_ptr = NULL;
 		}
 	}
-  //warning("begi3");
+
 	for (g = 1; g < MAXGROUPS; g++)
 	{
 		for (m = 0; m < NUMMARSTATUS; m++)
@@ -2005,8 +1962,7 @@ void initialize_segment_vars()
 			birth_rate_factors[g][m] = 1;
 		}
 	}
-	
-	//warning("begi4");
+
 	/* zero the duration_specific rates and rate factors */
 	for (g = 0; g < MAXGROUPS; g++)
 		for (e = 0; e < NUMEVENTS; e++)
@@ -2028,8 +1984,7 @@ void initialize_segment_vars()
    **  ax_vals,bx_vals,kt_vals are 
    ** just arrays of ptrs to doubles. 
    ****************************/
-	
-	//warning("begi4.2");
+
 	for (g = 0; g < MAXGROUPS * NUMSEXES; g++)
 	{
 		lc_ptr = (&(lc_rate_set[0][0]) + g);
@@ -2086,8 +2041,7 @@ void initialize_segment_vars()
 			*kt_ptr = NULL;
 		}
 	}
-	
-	//warning("begi5");
+
 	for (g = 1; g < MAXGROUPS; g++)
 	{
 		for (s = 0; s < NUMSEXES; s++)
@@ -2105,8 +2059,6 @@ void initialize_segment_vars()
 			}
 		}
 	}
-	
-	//warning("begi6");
 
 	for (g = 1; g < MAXGROUPS; g++)
 	{
@@ -2128,8 +2080,6 @@ void initialize_segment_vars()
 			}
 		}
 	}
-	
-	//warning("begi7");
 
 	for (g = 1; g < MAXGROUPS; g++)
 	{
@@ -2142,7 +2092,6 @@ void initialize_segment_vars()
 		}
 	}
 
-	//warning("gebi 8");
 	/* empty all the queues, if segment > 1 */
 
 	if (current_segment >= 1)
@@ -2180,7 +2129,6 @@ void initialize_segment_vars()
 			q->num = 0;
 		}
 	}
-	//warning("bogie bodi 9");
 	/* initialize variables to defaults or error-trigger values */
 	write_output = 0; /* only write intermediate pop files 
 		     if instructed to in each segment*/
@@ -2194,8 +2142,6 @@ void initialize_segment_vars()
 	random_epsilon = 0;
 	fixed_epsilon = 0;
 	numgroups = 0; /* this will be learned from reading rate sets and init pop*/
-	
-	//stop("begi 10!");
 }
 
 void population_pyramid(FILE *fd_pyr)

@@ -117,8 +117,7 @@ void enhance_divorce(p,spouse)
 }
 
 /************************************************************************/
-int  enhance_check_spouse(p, suitor)
-     struct person *p, *suitor;
+int  enhance_check_spouse(struct person *p, struct person *suitor)
 {
      /* This gets called from marriage_allowable before the incest,agediff
 	and whatever other checks are inflicted on suitors before marriage
@@ -129,8 +128,7 @@ int  enhance_check_spouse(p, suitor)
 
 /******************************************************************/
 
-void enhance_marriage_queue(p)
-  struct person *p;
+void enhance_marriage_queue(struct person *p)
 {
 
   /** this gets called from xevents:marriage IFF a spouse is not found

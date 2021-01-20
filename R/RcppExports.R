@@ -13,3 +13,7 @@ socsimMain <- function() {
     invisible(.Call(`_rsoc_socsimMain`))
 }
 
+socsimMain2 <- function() {
+    invisible(.Call(`_rsoc_socsimMain2`))
+}
+

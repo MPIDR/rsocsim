@@ -1,5 +1,5 @@
 /* %W% %G% */
-#include "defs.h"
+//#include "defs.h"
 #include <strings.h>
 #include <stdio.h>
 #include <sys/file.h>
@@ -31,8 +31,7 @@ int total1960[] = {78827, 80679, };
 double single_scale[2], notsingle_scale[2], total_scale[2];
 
 
-void marriage_tally(fd)
-     FILE *fd;
+void marriage_tally(FILE *fd)
 {
     struct person *p;
     int single_matrix[20][2][MAXGROUPS];
@@ -220,8 +219,7 @@ void marriage_tally(fd)
   }
 
 /**********************************************************************/
-void evaluate_marmkt(fd)
-     FILE *fd;
+void evaluate_marmkt(FILE *fd)
 {
 /* this makes sense only when MSCOREPROB is in effect. It will print the
    values in marriage_agetarget against those realized.  */

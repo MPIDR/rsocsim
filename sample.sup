@@ -1,0 +1,118 @@
+************************************************************************
+*  This file runs a very simple one segment simulation with all nearly
+*  all directives set to default values.  
+*  
+*  In the Rcode subdirectory there should be program called
+*  example.r that will read the output of this simulation and
+*  recover the effects of the rates and directives herein
+** type [path to socsim] run.sup 12345
+** to run socsim
+************************************************************************
+
+** number of simulation segments to execute
+segments 1
+
+**stem of input files implies start4grp.opop and start4grp.omar
+input_file start4grp
+**input_file start.5k
+
+** A possible use of execute is to create a directory for results
+**(you may wish to comment this out or change it if you don't have
+** a /72hours directory or if $USER does not resolve to something useful
+** NOTE that if the directory exists you will get an error message 
+** which you can generally ignore.
+
+execute "test -d SimResults || mkdir SimResults"
+
+** stem of output file it is wise to write output files into a sep folder
+** NOTE that this spec depends on the previous execute directive
+** so if you get rid of that, modify this too
+output_file SimResults/sample
+
+
+** duration of first simulation segment
+duration 3000
+** minimum interval in months between births
+*bint 9
+** heterogeneous fertility enabled
+*hetfert 1
+hetfert 0
+** inheritance of fertility multiplier defined by alpha/beta (disabled by def)
+** alpha == 1; beta==1 ==> complete inheritance 
+**  0<alpha<1
+*alpha 0
+*beta  1
+** proportion of births which are male
+*proportion_male .5112
+** synonym for proporion_male: sex_ratio 
+
+** read the file of "extra" characteristics--only used by enhanced versions
+**read_xtra
+** how many extra characteristics to read -- ONLY for enhanced versions
+**size_of_xtra
+
+** assign random males to be fathers if mother is unmarried
+random_father 1
+** minimum age of randomly assigned fathers
+*random_father_min_age 15
+
+** propensity to marry across groups. defaults to 0 = group
+** is NOT considered in evaluation of marriages; -1 = complete exogamy
+** 1= complete endogamy
+*endogamy 0
+
+
+** Evaluate marriages by "preference" or "distribution"
+*marriage_eval  preference
+marriage_eval  distribution
+
+
+
+** For marriage evaluation based on age-difference "preference" 
+** most preferred marriage age difference
+*marriage_peak_age 2
+** male older preferred 2x as female older matches
+*marriage_slope_ratio 2
+** maximum age difference allowed
+*marriage_agedif_max 1200
+** minimum age difference allowed
+*marriage_agedif_min -1200
+** For marriage evaluation based on age-difference "distribution" 
+** specify for each group in simulation
+*agedif_marriage_mean (group) 2
+agedif_marriage_mean 1 2
+*agedif_marriage_sd (group) 3
+agedif_marriage_sd 1 3
+
+
+
+** One or Two marriage queue system
+*marriage_queues 2
+marriage_queues 1
+
+
+
+** group inheritance at birth: from_father from_mother 
+** from_same_sex_parent or from_opposite_sex_parent
+*child_inherits_group from_father
+
+** parameter hooks for enhanced versions unused in standard Socsim
+*parameter1
+*parameter2
+*parameter3
+*parameter4
+*parameter5
+
+
+** Insert the contents of another file right here
+include ratefile.min
+
+** Write opop,omar etc after this segment. 
+** files will be written after last segment regardless
+*write_output 0
+
+** Stop processing this file and run the simulation
+run
+
+
+

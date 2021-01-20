@@ -159,10 +159,9 @@ double real_rrandom();
 double normal();
 double fertmult();
 double flog();
-double cycle();
 
 /* from events.c */
-int date_and_event();
+int date_and_event(struct person*);
 
 /* from load.c */
 char *index_to_sex[2];
@@ -171,26 +170,28 @@ char *index_to_event[NUMEVENTS + 1];
 char *index_to_mstatus[6];
 
 /* from xevents.c */
-struct person *random_spouse();
-struct person *random_spouse2();
-struct person *find_random_father();
-double score1();
-double score2();
-double score3();
+struct person *random_spouse(struct person *p);
+struct person *random_spouse2(struct person *p);
+struct person *find_random_father(struct person*);
+double score1(struct person*, struct person*);
+double score2(struct person*, struct person*);
+double score3(struct person*, struct person*);
 
 /* from utils.c */
-double ident();
-double twofold();
-double usefertmult();
-double usetransmult();
-double usedeathmult();
-double usenullmult();
-double lookup_cohab_prob();
-double table_lookup();
-float get_extra();
-void put_extra();
-int get_marity();
-int get_parity();
+double ident(struct person*, struct age_block*);
+double twofold(struct person*, struct age_block*);
+double usefertmult(struct person*, struct age_block*);
+double usetransmult(struct person*, struct age_block*);
+double usedeathmult(struct person*, struct age_block*);
+double usenullmult(struct person*, struct age_block*);
+//double lookup_cohab_prob();
+double table_lookup( int age,struct age_table*);
+float get_extra( struct person*, int);
+void put_extra(struct person*,int,float);
+void write_person(struct person*, FILE*);
+void write_marriage(struct marriage*, FILE*);
+int get_marity(struct person*);
+int get_parity(struct person*);
 /* from io.c */
 /*int make_random_socsim(); OBSOLETE */
 void initialize_person();
@@ -217,8 +218,8 @@ struct nlist
 #define H_LBORN i5
 #define H_LASTMAR i6
 
-struct nlist *install();
-struct nlist *lookup();
+struct nlist *install(int , int , void * , int, int , int, int, int, int);
+struct nlist *lookup( int , int);
 static struct nlist *hashtab[HASHSIZE];
 /** end of stuff from io.c **/
 /* CONSTANTS */
@@ -350,7 +351,7 @@ struct age_block
   double modified_lambda;
   struct age_block *previous;
   struct age_block *next;
-  double (*mult)();
+  double (*mult)(struct person*, struct age_block*);
 };
 
 struct age_table
@@ -419,7 +420,7 @@ int last_event_date;
 int size_of_pop[MAXGROUPS];
 int crnt_month_events[NUMEVENTS];
 double alpha; /* inheritance of fmult */
-double beta;  /* inheritance of fmult */
+double betaT;  /* inheritance of fmult */
 double bint;  /* minimum interval between births */
 double prop_males;
 int hhmigration;
@@ -568,8 +569,8 @@ struct person
   double tmult; /*transit mult not built in*/
   double dmult; /*death mult not built in*/
   struct person *down;
-  struct person *(*pref)();
-  double (*score)();
+  struct person *(*pref)(person*);
+  double (*score)(struct person*, struct person*);
   int pointer_type[2];
   union {
     struct person *next_on_mqueue;
@@ -680,7 +681,7 @@ void install_in_order(struct person *p, struct queue_element *e, int q_type);
 void transit(struct person * q);
 void assemble_household( struct person * p);
 void population_pyramid(FILE * fd_pyr);
-FILE *open_write();
+FILE *open_write(char*);
 void print_segment_info();
 void logmsg(char * frmt, char * msg, int where);
 void initialize_segment_vars();

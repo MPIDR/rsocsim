@@ -5,6 +5,8 @@
 
 //#include "defs.h"
 
+#include <Rcpp.h>
+using namespace Rcpp;
 
 /* the context needed to handle nested files */
 struct l_context
@@ -392,7 +394,7 @@ int l_process_line(char *line,struct l_context *cx,FILE *fp)
 	/* is the last group of rates complete? */
 	if (recall != NULL)
 	{
-		stop( "Incomplete rate set");
+		stop("Incomplete rate set");
 		//exit(-1);
 		/*return -1; */
 	}
@@ -551,7 +553,7 @@ int l_process_line(char *line,struct l_context *cx,FILE *fp)
 		marriage_queues = read_integer(cx, words[1]);
 		if (marriage_queues != 1 && marriage_queues != 2)
 		{
-			stop(cx, "marriage_queues out of range\n");
+			stop( "marriage_queues out of range\n");
 			//exit(-1);
 		}
 		sprintf(logstring, "marriage_queues : %d\n",
@@ -574,7 +576,7 @@ int l_process_line(char *line,struct l_context *cx,FILE *fp)
 		else
 		{
 
-			stop(cx, "ERROR:marriage_eval parameter makes no sense\n");
+			stop("ERROR:marriage_eval parameter makes no sense\n");
 			//exit(-1);
 		}
 		sprintf(logstring, "marriage_eval : %d\n",
@@ -615,7 +617,7 @@ int l_process_line(char *line,struct l_context *cx,FILE *fp)
 	case k_agedif_marriage_mean:
 		if (nwords != 3)
 		{
-			stop(cx, "agedif_marriage_mean : malformed wrong number of parameters\n");
+			stop("agedif_marriage_mean : malformed wrong number of parameters\n");
 			//exit(-1);
 		}
 		group = read_integer(cx, words[1]);
@@ -627,7 +629,7 @@ int l_process_line(char *line,struct l_context *cx,FILE *fp)
 		if (agedif_marriage_mean[group] > MAXUYEARS ||
 			agedif_marriage_mean[group] < -MAXUYEARS)
 		{
-			stop(cx, "agedif_marriage_mean gr out of bounds\n");
+			stop("agedif_marriage_mean gr out of bounds\n");
 			//exit(-1);
 		}
 		return 1;
@@ -636,7 +638,7 @@ int l_process_line(char *line,struct l_context *cx,FILE *fp)
 	case k_agedif_marriage_sd:
 		if (nwords != 3)
 		{
-			stop(cx, "agedif_marriage_sd : malformed wrong number of parameters\n");
+			stop( "agedif_marriage_sd : malformed wrong number of parameters\n");
 			//exit(-1);
 		}
 
@@ -651,7 +653,7 @@ int l_process_line(char *line,struct l_context *cx,FILE *fp)
 		if (agedif_marriage_sd[group] < 0)
 		{
 
-			stop(cx, "agedif_marriage_sd less than 0");
+			stop( "agedif_marriage_sd less than 0");
 			//exit(-1);
 		}
 		return 1;
@@ -742,7 +744,7 @@ int l_process_line(char *line,struct l_context *cx,FILE *fp)
 		sprintf(logstring, "alpha %lf\n", alpha);
 		if (alpha > 1 || alpha < 0)
 		{
-			stop(cx, "ERROR:alpha out of bounds 0<=alpha<=1\n");
+			stop("ERROR:alpha out of bounds 0<=alpha<=1\n");
 			//exit(-1);
 		}
 		logmsg("%s\n", logstring, 0);
@@ -2037,7 +2039,7 @@ index_to_event[e], index_to_sex[s], index_to_mstatus[m]);
 				char logsting[256];
 				sprintf(logstring, "ERROR birthtarget is set BUT  group %d has 0 or fewer expected births. This could result from the init pop having no females of childbearing age. Disable birthtarget for this group if you want results.", g);
 				logmsg("%s\n", logstring, 1);
-				stop("ERROR birthtarget is set BUT  group  has 0 or fewer expected births. This could result from the init pop having no females of childbearing age. Disable birthtarget for this group if you want results.");//exit(-1);
+				exit(-1);
 			}
 			else
 			{

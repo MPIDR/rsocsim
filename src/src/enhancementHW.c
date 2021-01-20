@@ -322,7 +322,7 @@ void enhance_birth(mom,child)
       child->sex =(child->e_sib_mom == NULL)? FEMALE : MALE;
       if (child->sex == FEMALE) {
 	child->fmult = alpha * mom->fmult + (1 - alpha) * fertmult();
-	child->fmult = 2.5 * exp(beta*log(child->fmult/2.5));
+	child->fmult = 2.5 * exp(betaT*log(child->fmult/2.5));
       } else {
 	child->fmult = 0;
       }
@@ -1066,10 +1066,10 @@ enhance_check_incest(p1, p2)
 
     break;
   default:
-    logmsg("\n%s\n",
+    stop("\n%s\n",
 	   "Nonesensical parameter2 value snuck by better crash\n",
 	   1);
-    exit -1;
+    //exit -1;
   }
   /*by default return 1 for marriage ok assume it will be
     incest checked elsewhere*/

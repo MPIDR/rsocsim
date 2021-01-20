@@ -332,7 +332,7 @@ void generate_extra(p)
     
   /**
      the usedeathmult function does not exponentiate (don't trust me on that
-     things chage) but if dmult is to function as X*Beta in a Cox prop haz
+     things chage) but if dmult is to function as X*BetaT in a Cox prop haz
      model, then it should be exponentiated before it gets used in 
      usedeathmult
   **/
