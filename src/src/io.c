@@ -1022,12 +1022,16 @@ FILE *open_write(char *fname)
    *********************************************/
   char emsg[1024];
   FILE *fd;
+  
+  fprintf(fd_pyr,"-------------OK: open_write: open file: %d", fname);
   if ((fd = fopen(fname, "w")) == NULL)
   {
     strcpy(emsg, "Error in open_write: can't open file:");
+    fprintf(fd_pyr, "-------------Error in open_write: can*t open file.");
     strcat(emsg, fname);
     perror(emsg);
   }
+  
 
   return fd;
 }

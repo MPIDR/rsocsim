@@ -35,12 +35,14 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
-// socsimMain2
-void socsimMain2();
-RcppExport SEXP _rsoc_socsimMain2() {
+// startSocsimWithFile
+void startSocsimWithFile(String supfile, int seed);
+RcppExport SEXP _rsoc_startSocsimWithFile(SEXP supfileSEXP, SEXP seedSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
-    socsimMain2();
+    Rcpp::traits::input_parameter< String >::type supfile(supfileSEXP);
+    Rcpp::traits::input_parameter< int >::type seed(seedSEXP);
+    startSocsimWithFile(supfile, seed);
     return R_NilValue;
 END_RCPP
 }
@@ -49,7 +51,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_rsoc_rcpp_hello_world", (DL_FUNC) &_rsoc_rcpp_hello_world, 0},
     {"_rsoc_timesTwo3", (DL_FUNC) &_rsoc_timesTwo3, 1},
     {"_rsoc_socsimMain", (DL_FUNC) &_rsoc_socsimMain, 0},
-    {"_rsoc_socsimMain2", (DL_FUNC) &_rsoc_socsimMain2, 0},
+    {"_rsoc_startSocsimWithFile", (DL_FUNC) &_rsoc_startSocsimWithFile, 2},
     {NULL, NULL, 0}
 };
 

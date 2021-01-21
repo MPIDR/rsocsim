@@ -13,7 +13,7 @@ socsimMain <- function() {
     invisible(.Call(`_rsoc_socsimMain`))
 }
 
-socsimMain2 <- function() {
-    invisible(.Call(`_rsoc_socsimMain2`))
+startSocsimWithFile <- function(supfile, seed) {
+    invisible(.Call(`_rsoc_startSocsimWithFile`, supfile, seed))
 }
 
