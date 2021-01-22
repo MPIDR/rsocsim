@@ -244,8 +244,9 @@ int load( char *file)
 		if ((fp = fopen(file, "r")) == 0)
 		{
 			/*    error("Can't open \"%s\"", "rate_file");*/
-			warning("Can't open ratefile: %s", file, 1);
-
+			warning("Can't open ratefile");
+		  warning("Can't open ratefile: %s", file);
+		  
 			/*return -1;*/
 			stop("cant open ratefile");
 			//exit(-1);
@@ -255,7 +256,7 @@ int load( char *file)
 	}
 
 	logmsg("openning %s \n", file, 1);
-	logmsg("starting  with line %d ", " ", current_lineno);
+	logmsg("starting  with line %d ", current_lineno);
 	logmsg("at %ld\n", " ",current_offset);
 	fseek(fp, current_offset, 0);
 	cx.file = file;

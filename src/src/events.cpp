@@ -112,13 +112,36 @@ char *c_tally_to_string[] = {
 int main1(int argc, char *argv[])
 
 {
+  char rate_file_name[1024];
   Rcpp::Rcout << "start socsim main \n" << std::endl;
+  
+  Rprintf("-0a-----------%s  \n", argv[0]);
+  Rprintf("-1a-----------%s  \n", argv[1]);
+  Rprintf("-2a-----------%s  \n", argv[2]);
+  Rprintf("-3a-----------%s  \n", argv[3]);
+  Rprintf("-0a-----------%d  \n", argv[0]);
+  Rprintf("-1a-----------%d  \n", argv[1]);
+  Rprintf("-2a-----------%d  \n", argv[2]);
+  Rprintf("-3a-----------%d  \n", argv[3]);
+  Rcpp::Rcout << "useage: ratefile random_number" << argv[0] << "!!" << std::endl;
+  Rcpp::Rcout << "start socsim main \n" << std::endl;
+  Rcpp::Rcout << "useage: ratefile random_number" << argv[1] << "!!" << std::endl;
+  Rcpp::Rcout << "start socsim main \n" << std::endl;
+  
+  Rcpp::Rcout << "start socsim main2 \n" << std::endl;
+  strcpy(rate_file_name, argv[1]);
+  //Rcpp::Rcout << "start socsim main 3\n" << std::endl;
+  //strcpy(rate_file_name, *++argv);
+  Rcpp::Rcout << "start socsim main 4\n" << std::endl;
+  
+  Rcpp::Rcout << "useage: ratefile random_number" << "!!"<< rate_file_name << std::endl;
+  Rcpp::Rcout << "useage: ratefile random_number" << "!!"<< argv[2] << std::endl;
+  
 	clock_t timestart1,timestart2,timeend;
 	double timedif1,timedif2;
 
   timestart1 = clock();
   	
-  char rate_file_name[1024];
 	char command_string[1024];
 	struct queue_element *e, *q;
 	int i, j, fy;
@@ -197,6 +220,14 @@ int main1(int argc, char *argv[])
        higher groups to lower group values we cannot initialize 
        until we know how many groups there are in the sim 
     */
+	
+	Rcpp::Rcout << "start socsim main 5\n" << std::endl;
+	sprintf(log_file_name, "%s%d.log", rate_file_name, ceed);
+	Rprintf(log_file_name, "%s%d.log", rate_file_name, ceed);
+	
+	Rcpp::Rcout << "\nstart socsim main 6\n" << std::endl;
+	
+	
 	int g = 0;
 	for (g = 0; g < MAXGROUPS; g++)
 	{
@@ -222,19 +253,26 @@ int main1(int argc, char *argv[])
 	  //return 12;
 	  
 	  Rcpp::Rcout << "useage: ratefile random_number" << useage << argv[0] << std::endl;
-		warning("useage: %s ratefile random_number", useage);
-		error(useage);
+	 	warning("useage: %s ratefile random_number", useage);
+		//error(useage);
 		stop("stop!");
 		//exit(1);
 	}
-	Rcpp::Rcout << "useage: ratefile random_number" << useage << argv[1] << argv[2] << std::endl;
+	//Rcpp::Rcout << "useage: ratefile random_number" << useage << argv[1] << argv[2] << std::endl;
 	
-	strcpy(rate_file_name, *++argv);
+	//strcpy(rate_file_name, *++argv);
+	
+	//Rcpp::Rcout << "useage: ratefile random_number" << useage << argv[1] << argv[2] << std::endl;
+	
 	ceed = atoi(*++argv);
-
+	
+	//Rcpp::Rcout << "useage: ratefile random_number" << useage << argv[1] << argv[2] << std::endl;
+	
 	// initstate(ceed, randstate, 256); //suggested by jim: replace with:
 	srand(ceed);
-
+	
+	//Rcpp::Rcout << "useage: ratefile random_number" << useage << argv[1] << argv[2] << std::endl;
+	
 	/**srandom(ceed);  setting seed for random() NOT rrandom() **/ // todo:check if random is initialized correctly!
 	sprintf(log_file_name, "%s%d.log", rate_file_name, ceed);
 	Rprintf(log_file_name, "%s%d.log", rate_file_name, ceed);
@@ -252,6 +290,10 @@ int main1(int argc, char *argv[])
 		perror("can't open file: log file\n");
 	}
 	
+	Rprintf("|%s|-\n",pop_out_name);
+	Rprintf("-----\n");
+	logmsg("--t start with logmessages?! \n"," ",1);
+	
 	/**sprintf(logstring,"\n compiled from SVN revision %s on %s \n\n",
 	   SVN_REV, COMP_DATE);**/
 	Rprintf("%s\n", logstring, 1);
@@ -262,10 +304,18 @@ int main1(int argc, char *argv[])
 		logmsg("\n\n marriage_queues==1 , consequently all availalbe males are always on the marriage queue\n\n"," ",   1);
 	}
 	
+	Rprintf("\n\n Socsim Version: %s\n\n",
+         ENHANCEMENT_NAME, 1);
+	Rprintf("------------1");
 	Rcpp::Rcout << rate_file_name << std::endl;
+	Rprintf("------------1");
 	initialize_segment_vars();
+	Rprintf("------------3\n");
+	Rprintf("------------3..\n");
+	Rprintf("------------3... %s\n",rate_file_name);
 	if (load(rate_file_name) < 0)
 		stop("-1?");//exit(-1);
+	Rprintf("------------4");
 	if (marriage_eval == DISTRIBUTION)
 	{
 		/* sup file has been read; so if value is not -99 then it was
@@ -279,11 +329,13 @@ int main1(int argc, char *argv[])
 		}
 		initialize_marriage_targets();
 	}
+	Rprintf("------------5");
 
 	/*modify birth rates to account for bint MUST be called 
      BEFORE fill_rate_gaps*/
 	/*    if(bint != 0){*/
 	adjust_birth_for_bint();
+	Rprintf("------------6");
 	/*    }*/
 	//stop("stop15");
 #ifdef ENHANCED
@@ -304,6 +356,8 @@ int main1(int argc, char *argv[])
 	strcat(pyr_file_name, ".pyr");
 	strcat(stat_file_name, ".stat");
 	strcat(otx_file_name, ".otx");
+	
+	Rprintf("------------7");
 	/*** Tue Oct 22 12:50:50 PDT 2002
 
     strcat(pop_out_name, ".opop");
@@ -315,6 +369,7 @@ int main1(int argc, char *argv[])
 
 	if ((fd_pop = fopen(pop_file_name, "r")) == NULL)
 	{
+	  Rprintf("------------pop_file error");
 	  
 	  logmsg("can't open initial  pop file; can't simuluate..\n"," ",1);//exit
 	  stop("can't open initial  pop file; can't simuluate..\n");//exit
@@ -326,12 +381,15 @@ int main1(int argc, char *argv[])
 	  warning("can't openmarriage file Hope that's OK");//exit
 		//perror("can't open  marriage file Hope that's OK\n");
 	}
+	
+	Rprintf("------------aa1");
 
 	if ((fd_otx = fopen(otx_file_name, "r")) == NULL)
 	{
 	  warning("can't open  transition history file. Hope that's OK\n");
 	  //perror("can't open  transition history file. Hope that's OK\n");
 	}
+	Rprintf("------------aa2");
   //stop("here we stop!");
 	if (read_xtra_file)
 	{
@@ -345,17 +403,31 @@ int main1(int argc, char *argv[])
 	}
 	/** open output files for writing**/
 	
+	Rprintf("\n %s|%s|%s|%s|%s|%s|",pop_file_name,mar_file_name,xtra_file_name,pyr_file_name,stat_file_name,otx_file_name);
+		
+		
+	logmsg("-----------------------------later prepare_output_files_1 \n"," ",1);
+	
+	Rprintf("------------aa3");
 	prepare_output_files(0);
+	
+	Rprintf("------------aa3a");
 	fd_rn = open_write("random_number");
+	
+	Rprintf("------------aa3b");
 	logmsg("opening pop pyramid file %s\n", pyr_file_name,1);
+	
+	Rprintf("------------aa3c");
 	fd_pyr = open_write(pyr_file_name);
-
+	
+	Rprintf("------------aa4d");
 	logmsg("Reading initial population file %s\n", pop_file_name,1);
 	/*    printf("Reading initial population file %s\n",pop_file_name);*/
 	int pop_rows = 0;
 	pop_rows = read_initial_pop(fd_pop);
 	fclose(fd_pop);
-
+	
+	Rprintf("------------aa5");
 	if (fd_mar != NULL)
 	{
 	  Rprintf("Reading initial marriage file %s\n", mar_file_name);
@@ -386,6 +458,8 @@ int main1(int argc, char *argv[])
 			}
 		}
 	}
+	
+	Rprintf("------------aa7");
 	if (fd_otx != NULL)
 	{
 		logmsg("Reading initial transition history file %s\n", otx_file_name,1);
@@ -396,9 +470,11 @@ int main1(int argc, char *argv[])
 	{
 		logmsg("No initial transition history file to read\n"," ", 1);
 	}
+	Rprintf("------------aa3");
 	
 	fix_pop_pointers();
 	
+	Rprintf("------------aa8");
 	if (read_xtra_file)
 	{
 		int rows_read = 0;
@@ -420,9 +496,11 @@ int main1(int argc, char *argv[])
 	/* numgroups willbe reset to reflect groups in initial pop if nec 
        in fill_rate_gaps
     */
-
+	
+	Rprintf("------------aa9");
 	delete_hash_table();
-
+	
+	Rprintf("------------aa3");
 	current_month = last_event_date + 1;
 	Rprintf("Starting month is %d\n", current_month);
 	Rprintf("Initial size of pop %d  ", last_person->person_id);
@@ -432,7 +510,8 @@ int main1(int argc, char *argv[])
 		perror("bad rate set\n");
 	  warning("bad rate set\n");
 	}
-
+	
+	Rprintf("------------aa3s");
 	/* dump_rates(); */
 
 	if (random_epsilon)
@@ -445,6 +524,7 @@ int main1(int argc, char *argv[])
 		printf("fixed epsilon ");
 		epsilon = epsilon % (max_e_index + 1);
 	}
+	Rprintf("------------aa32");
 
 	if (random_epsilon || fixed_epsilon)
 	{
@@ -471,20 +551,27 @@ int main1(int argc, char *argv[])
 			strcat(stat_file_name_seg, segnum);
 			fd_stat = open_write(stat_file_name_seg);
 		}
+		Rprintf("------------aa35");
 
+		logmsg("--aa35\n", "", 1);
 		print_segment_info(fd_log);
+		logmsg("--aa35\n", "", 1);
 		print_segment_info(stdout);
+		logmsg("--aa35\n", "", 1);
 		population_pyramid(fd_pyr); /*blows guts here*/
 
 		logmsg("Simulating...\n", "", 1);
 		Rcpp::Rcout << "Simulating...." << std::endl;
 		
+		Rprintf("------------aa3h");
+		logmsg("--ab36\n", "", 1);
 		/***
 	  dump_rates();
       ***/
 
 		new_events_for_all();
-
+		
+		Rprintf("------------b");
 		printf("New events generated for all living persons\n");
 		/*
 	  dump_queue();
@@ -500,6 +587,8 @@ int main1(int argc, char *argv[])
 	  printf("processing event queue\n");
 	*/
 		
+		Rprintf("------------b1");
+		logmsg("|m0|", "", 1);
 		timestart2 = clock();
 		int done = 0;
 		for (; current_month <= stop_month; current_month++)
@@ -507,6 +596,9 @@ int main1(int argc, char *argv[])
 			
 	    	//printf ("current month %d\n", current_month);
 	    	
+	    	Rprintf("-m-");
+		  
+		  logmsg("|m|", "", 1);
 			if (take_census)
 			{
 				if (((current_month - 1 - last_event_date) % 12) == 0)
@@ -573,8 +665,13 @@ int main1(int argc, char *argv[])
 				crnt_month_events[ecount] = 0;
 			}
 			
+	    	Rprintf("-mp1");
+			logmsg("|m2|", "", 1);
 	    	process_month();
-			
+	    	logmsg("|m2s|", "", 1);
+	    	
+	    	logmsg("|m3|", "", 1);
+	    	Rprintf("-mpend");
 	    	if (1)
 			{
 				struct queue_element *mqmales, *mqfems;
@@ -583,7 +680,8 @@ int main1(int argc, char *argv[])
 				/*increment marriage queue time counters*/
 				time_waiting[MALE] += mqmales->num;
 				time_waiting[FEMALE] += mqfems->num;
-
+				
+				logmsg("|m4|", "", 1);
 				if (current_month % 1==0){			
 					timeend = clock();
 					timedif1 = (double)(timeend - timestart1) / CLOCKS_PER_SEC;
@@ -609,7 +707,9 @@ int main1(int argc, char *argv[])
 				fflush(stdout);
 			}
 		}
-
+		
+		logmsg("|m5|", "", 1);
+	    Rprintf("-m|pa");
 		sprintf(logstring, "\nsegment %d complete current month: %d\n",	current_segment, current_month);
 		logmsg("%s\n", logstring, 1);
 
@@ -811,7 +911,8 @@ void initialize_marriage_targets()
 /********************************************************************/
 int process_month()
 {
-	
+  
+  logmsg("|pm|", "", 1);
 	int i, g, s;
 	struct queue_element *e;
 	struct person *p;
@@ -862,6 +963,7 @@ int process_month()
 				p = p->NEXT_PERSON;
 			}
 		}
+		logmsg("|pm1|", "", 1);
 
 	//printf ("3.2process month %d\n", "");
 		/*
@@ -926,8 +1028,14 @@ int process_month()
     */
 
 	/* prepare current month slot for MAXUMONTHSth kt_val*/
+	
+	Rprintf("|");
+	logmsg("|pm8|", "", 1);
 	for (g = 1; g <= numgroups; g++)
 	{
+		Rprintf("g#");
+	  
+	  logmsg("|g#|", "", 1);
 		for (s = 0; s < NUMSEXES; s++)
 		{
 			if (lc_rate_set[g][s] != NULL)
@@ -979,11 +1087,15 @@ int process_month()
 			}
 		}
 	}
-
+	Rprintf(":");
+	
+	logmsg(":", "", 1);
 	if (random_epsilon || fixed_epsilon)
 	{
+	  logmsg(":3\n", "", 1);
 		epsilon = (epsilon + 1) % (max_e_index + 1);
 	}
+	logmsg(":2\n", "", 1);
 
 	/*
     printf("done with new kt processing\n");
@@ -2224,6 +2336,7 @@ void population_pyramid(FILE *fd_pyr)
     * values of the index. Here, the sum array takes the role.
     */
 
+	logmsg("--write popu pyra\n", "", 1);
 	fflush(stdout);
 	while (p != NULL)
 	{

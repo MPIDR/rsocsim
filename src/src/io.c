@@ -1023,12 +1023,13 @@ FILE *open_write(char *fname)
   char emsg[1024];
   FILE *fd;
   
-  fprintf(fd_pyr,"-------------OK: open_write: open file: %d", fname);
+  //fprintf(fd_pyr,"-------------OK: open_write: open file: %d", fname);
   if ((fd = fopen(fname, "w")) == NULL)
   {
     strcpy(emsg, "Error in open_write: can't open file:");
     fprintf(fd_pyr, "-------------Error in open_write: can*t open file.");
     strcat(emsg, fname);
+    exit(0);
     perror(emsg);
   }
   
@@ -1048,7 +1049,8 @@ void prepare_output_files(int seg)
  ** after running this subroutine, all output filenames should be defined
  ** and all file descriptors should be nonnull
  ***********************************************/
-
+  
+  logmsg("--t prepare_output_files_1 \n"," ",1);
   char segnum[6];
 
   if (seg == 0)
@@ -1058,12 +1060,14 @@ void prepare_output_files(int seg)
     strcat(xtra_out_name, ".opox");
     strcat(otx_out_name, ".otx");
   }
+  logmsg("--t prepare_output_files_1.5 \n"," ",1);
 
   strcpy(pop_out_name_seg, pop_out_name);
   strcpy(mar_out_name_seg, mar_out_name);
   strcpy(xtra_out_name_seg, xtra_out_name);
   strcpy(otx_out_name_seg, otx_out_name);
 
+  logmsg("--t prepare_output_files_2 \n"," ",1);
   if (seg > 0)
   {
     sprintf(segnum, "%d", seg);
@@ -1079,12 +1083,21 @@ void prepare_output_files(int seg)
   }
   else
   {
+    
+    logmsg("--t prepare_output_files_3 \n"," ",1);
 
     fd_out_pop = open_write(pop_out_name);
+    
+    logmsg("--t prepare_output_files_4 \n"," ",1);
     fd_out_mar = open_write(mar_out_name);
+    logmsg("--t prepare_output_files_5 \n"," ",1);
     fd_out_xtra = open_write(xtra_out_name);
+    
+    logmsg("--t prepare_output_files_6 \n"," ",1);
     fd_out_otx = open_write(otx_out_name);
   }
+  
+  logmsg("--t prepare_output_files_5 \n"," ",1);
 }
 
 /**  **/
