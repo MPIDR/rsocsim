@@ -31,12 +31,10 @@ void startSocsimWithFile(String supfile, int seed){
   char *args[] = {
     (char*)"zerothArgument",
     (char*) supfile.get_cstring(),
-    (char*) "222222",
-    (char*) "333333",
-    (char*) "444444",
+    (char*) "1234",
     NULL
   };
-  main1(3, args);
+  main1(2, args);
   //main(3,["bla1","bla2","bla3"]);
 }
 

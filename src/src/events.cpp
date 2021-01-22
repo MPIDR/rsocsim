@@ -247,7 +247,7 @@ int main1(int argc, char *argv[])
 	parameter0 = parameter1 = parameter2 = parameter3 = parameter4 = parameter5 = 0;
 	
 	size_of_extra = 0; /*no extra variables/.opox by default*/
-	if (argc < 3)
+	if (argc < 2)
 	{
 	  warning("Warning: Unexpected condition occurred");
 	  //return 12;
@@ -525,6 +525,7 @@ int main1(int argc, char *argv[])
 		epsilon = epsilon % (max_e_index + 1);
 	}
 	Rprintf("------------aa32");
+	logmsg("-----aa32.\n", "", 1);
 
 	if (random_epsilon || fixed_epsilon)
 	{
@@ -591,6 +592,7 @@ int main1(int argc, char *argv[])
 		logmsg("|m0|", "", 1);
 		timestart2 = clock();
 		int done = 0;
+		//stop("just before month-loop");
 		for (; current_month <= stop_month; current_month++)
 		{
 			
@@ -598,7 +600,7 @@ int main1(int argc, char *argv[])
 	    	
 	    	Rprintf("-m-");
 		  
-		  logmsg("|m|", "", 1);
+		  //logmsg("|m|", "", 1);
 			if (take_census)
 			{
 				if (((current_month - 1 - last_event_date) % 12) == 0)
@@ -665,13 +667,13 @@ int main1(int argc, char *argv[])
 				crnt_month_events[ecount] = 0;
 			}
 			
-	    	Rprintf("-mp1");
-			logmsg("|m2|", "", 1);
+	    	//Rprintf("-mp1");
+		  	//logmsg("|m2|", "", 1);
 	    	process_month();
-	    	logmsg("|m2s|", "", 1);
+	    	//logmsg("|m2s|", "", 1);
 	    	
-	    	logmsg("|m3|", "", 1);
-	    	Rprintf("-mpend");
+	    	//logmsg("|m3|", "", 1);
+	    //	Rprintf("-mpend");
 	    	if (1)
 			{
 				struct queue_element *mqmales, *mqfems;
@@ -681,8 +683,8 @@ int main1(int argc, char *argv[])
 				time_waiting[MALE] += mqmales->num;
 				time_waiting[FEMALE] += mqfems->num;
 				
-				logmsg("|m4|", "", 1);
-				if (current_month % 1==0){			
+				//logmsg("|m4|", "", 1);
+				if (current_month % 5==0){			
 					timeend = clock();
 					timedif1 = (double)(timeend - timestart1) / CLOCKS_PER_SEC;
 					timedif2 =(double)(timeend - timestart2) / CLOCKS_PER_SEC;
@@ -709,7 +711,7 @@ int main1(int argc, char *argv[])
 		}
 		
 		logmsg("|m5|", "", 1);
-	    Rprintf("-m|pa");
+	  Rprintf("-m|pa");
 		sprintf(logstring, "\nsegment %d complete current month: %d\n",	current_segment, current_month);
 		logmsg("%s\n", logstring, 1);
 
@@ -912,7 +914,7 @@ void initialize_marriage_targets()
 int process_month()
 {
   
-  logmsg("|pm|", "", 1);
+  //logmsg("|pm|", "", 1);
 	int i, g, s;
 	struct queue_element *e;
 	struct person *p;
@@ -963,7 +965,7 @@ int process_month()
 				p = p->NEXT_PERSON;
 			}
 		}
-		logmsg("|pm1|", "", 1);
+		//logmsg("|pm1|", "", 1);
 
 	//printf ("3.2process month %d\n", "");
 		/*
@@ -1029,13 +1031,13 @@ int process_month()
 
 	/* prepare current month slot for MAXUMONTHSth kt_val*/
 	
-	Rprintf("|");
-	logmsg("|pm8|", "", 1);
+	//Rprintf("|");
+	//logmsg("|pm8|", "", 1);
 	for (g = 1; g <= numgroups; g++)
 	{
-		Rprintf("g#");
+		//Rprintf("g#");
 	  
-	  logmsg("|g#|", "", 1);
+	  //logmsg("|g#|", "", 1);
 		for (s = 0; s < NUMSEXES; s++)
 		{
 			if (lc_rate_set[g][s] != NULL)
@@ -1089,14 +1091,15 @@ int process_month()
 	}
 	Rprintf(":");
 	
-	logmsg(":", "", 1);
+	//logmsg(":", "", 1);
 	if (random_epsilon || fixed_epsilon)
 	{
-	  logmsg(":3\n", "", 1);
+	  //logmsg(":3\n", "", 1);
 		epsilon = (epsilon + 1) % (max_e_index + 1);
 	}
-	logmsg(":2\n", "", 1);
-
+	//logmsg("(2)\n", " ", 1);
+  
+  return 1;
 	/*
     printf("done with new kt processing\n");
     */

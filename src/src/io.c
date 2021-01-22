@@ -897,7 +897,7 @@ void write_person(struct person *p, FILE *fd)
     */
 }
 
-write_marriages(FILE *fd)
+void write_marriages(FILE *fd)
 {
   struct marriage *m;
   m = marriage0;
@@ -908,7 +908,9 @@ write_marriages(FILE *fd)
     write_marriage(m, fd);
     m = m->down;
   }
+  logmsg("writing marriages is done (.omar)..\n", "", 1);
   fclose(fd);
+  logmsg("writing marriages is done 2(.omar)..\n", "", 1);
 }
 
 void write_marriage(marriage *m, FILE *fd)
@@ -1029,7 +1031,7 @@ FILE *open_write(char *fname)
     strcpy(emsg, "Error in open_write: can't open file:");
     fprintf(fd_pyr, "-------------Error in open_write: can*t open file.");
     strcat(emsg, fname);
-    exit(0);
+    stop("-------------Error in open_write: can*t open file.");//exit(0);
     perror(emsg);
   }
   
@@ -1118,6 +1120,7 @@ void write_popfiles(int intermediate)
       write_xtra(fd_out_xtra_seg);
       fclose(fd_out_xtra_seg);
     }
+    logmsg("very after writing marriage list (.omar) ..\n", "", 1);
     if (numgroups > 1)
     {
       logmsg("writing transition history file (.otx) ..\n", "", 1);
@@ -1127,10 +1130,15 @@ void write_popfiles(int intermediate)
   else
   {
     write_population(fd_out_pop);
+    logmsg("before  g4 writing write_marriages..\n", "", 1);
     write_marriages(fd_out_mar);
+    logmsg("after h4 writing write_marriages..\n", "", 1);
     if (size_of_extra > 0)
     {
+      
+      logmsg("before writing write_extra..\n", "", 1);
       write_xtra(fd_out_xtra);
+      logmsg("after writing write_extra..\n", "", 1);
     }
     if (numgroups > 1)
     {
@@ -1138,4 +1146,6 @@ void write_popfiles(int intermediate)
       write_otx(fd_out_otx);
     }
   }
+  
+      logmsg("end of prepare_output_files..\n", "", 1);
 }
