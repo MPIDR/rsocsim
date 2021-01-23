@@ -244,9 +244,8 @@ int load( char *file)
 		if ((fp = fopen(file, "r")) == 0)
 		{
 			/*    error("Can't open \"%s\"", "rate_file");*/
-			warning("Can't open ratefile");
-		  warning("Can't open ratefile: %s", file);
-		  
+			warning("Can't open ratefile: %s", file, 1);
+
 			/*return -1;*/
 			stop("cant open ratefile");
 			//exit(-1);
@@ -256,7 +255,7 @@ int load( char *file)
 	}
 
 	logmsg("openning %s \n", file, 1);
-	logmsg("starting  with line %d ", current_lineno);
+	logmsg("starting  with line %d ", " ", current_lineno);
 	logmsg("at %ld\n", " ",current_offset);
 	fseek(fp, current_offset, 0);
 	cx.file = file;
@@ -2038,7 +2037,7 @@ index_to_event[e], index_to_sex[s], index_to_mstatus[m]);
 				char logsting[256];
 				sprintf(logstring, "ERROR birthtarget is set BUT  group %d has 0 or fewer expected births. This could result from the init pop having no females of childbearing age. Disable birthtarget for this group if you want results.", g);
 				logmsg("%s\n", logstring, 1);
-				stop("ERROR birthtarget is set BUT  group  has 0 or fewer expected births. This could result from the init pop having no females of childbearing age. Disable birthtarget for this group if you want results.");//exit(-1);
+				exit(-1);
 			}
 			else
 			{

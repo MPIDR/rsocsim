@@ -665,6 +665,9 @@ int main(int argc, char *argv[])
 		}
 	}
 	logmsg("\n Simulation Complete \n", "", 1);
+	
+	fprintf(fd_log, "agga %i \n",NUMBER_OF_GROUPS);
+	fprintf(fd_log, "agga %i \n",num_segments);
 
 	fprintf(fd_log, "males on queue\n");
 	/* this looks like it's just for debugging*/

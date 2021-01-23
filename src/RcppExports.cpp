@@ -36,12 +36,12 @@ BEGIN_RCPP
 END_RCPP
 }
 // startSocsimWithFile
-void startSocsimWithFile(String supfile, int seed);
+void startSocsimWithFile(String supfile, String seed);
 RcppExport SEXP _rsoc_startSocsimWithFile(SEXP supfileSEXP, SEXP seedSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< String >::type supfile(supfileSEXP);
-    Rcpp::traits::input_parameter< int >::type seed(seedSEXP);
+    Rcpp::traits::input_parameter< String >::type seed(seedSEXP);
     startSocsimWithFile(supfile, seed);
     return R_NilValue;
 END_RCPP

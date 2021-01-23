@@ -26,15 +26,17 @@ void socsimMain(){
 }
 
 // [[Rcpp::export]]
-void startSocsimWithFile(String supfile, int seed){
-  Rcpp::Rcout << "jabadabadujujujuku--------------1u! noch etwas frueher" << std::endl;
+void startSocsimWithFile(String supfile, String seed){
+  Rcpp::Rcout << "Start Socsim" << std::endl;
   char *args[] = {
     (char*)"zerothArgument",
     (char*) supfile.get_cstring(),
-    (char*) "1234",
+    (char*) seed.get_cstring(),
     NULL
   };
   main1(2, args);
+  Rcpp::Rcout << "Socsim Done" << std::endl;
+  
   //main(3,["bla1","bla2","bla3"]);
 }
 

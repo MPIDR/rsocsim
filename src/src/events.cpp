@@ -115,14 +115,14 @@ int main1(int argc, char *argv[])
   char rate_file_name[1024];
   Rcpp::Rcout << "start socsim main \n" << std::endl;
   
-  Rprintf("-0a-----------%s  \n", argv[0]);
-  Rprintf("-1a-----------%s  \n", argv[1]);
-  Rprintf("-2a-----------%s  \n", argv[2]);
-  Rprintf("-3a-----------%s  \n", argv[3]);
+  Rprintf("-0at-----------%s  \n", argv[0]);
+  Rprintf("-1at-----------%s  \n", argv[1]);
+  Rprintf("-2at-----------%s  \n", argv[2]);
+  //Rprintf("-3a-----------%s  \n", argv[3]);
   Rprintf("-0a-----------%d  \n", argv[0]);
   Rprintf("-1a-----------%d  \n", argv[1]);
   Rprintf("-2a-----------%d  \n", argv[2]);
-  Rprintf("-3a-----------%d  \n", argv[3]);
+  //Rprintf("-3a-----------%d  \n", argv[3]);
   Rcpp::Rcout << "useage: ratefile random_number" << argv[0] << "!!" << std::endl;
   Rcpp::Rcout << "start socsim main \n" << std::endl;
   Rcpp::Rcout << "useage: ratefile random_number" << argv[1] << "!!" << std::endl;
@@ -527,14 +527,19 @@ int main1(int argc, char *argv[])
 	Rprintf("------------aa32");
 	logmsg("-----aa32.\n", "", 1);
 
+
+	logmsg(" grogro001 \n", "", 1);
 	if (random_epsilon || fixed_epsilon)
 	{
 		printf("value of epsilon: %d table index %d \n",
 			   epsilon, (int)epsilon / 12);
 	}
 
+	logmsg(" grogro1111 \n", "", 1);
 	while (current_segment <= num_segments)
 	{
+		
+		logmsg(" grogroaa \n", "", 1);
 		/** open output files for pos seg writing **/
 
 		if (write_output)
@@ -598,7 +603,7 @@ int main1(int argc, char *argv[])
 			
 	    	//printf ("current month %d\n", current_month);
 	    	
-	    	Rprintf("-m-");
+	    	//Rprintf("-m-");
 		  
 		  //logmsg("|m|", "", 1);
 			if (take_census)
@@ -737,6 +742,11 @@ int main1(int argc, char *argv[])
 	 ** write out intermediate population files
 	 ** 
 	 **/
+	
+		logmsg(" grogro \n", "", 1);
+		
+	fprintf(fd_log, "agga lolo num_segments %i \n",num_segments);
+	fprintf(fd_log, "agga lolo curr_segment %i \n",current_segment);
 		if (current_segment < num_segments)
 		{
 			if (write_output)
@@ -787,6 +797,13 @@ int main1(int argc, char *argv[])
 	}
 	logmsg("\n Simulation Complete \n", "", 1);
 
+	fprintf(fd_log, "agga number of groups  %i \n",NUMBER_OF_GROUPS);
+	fprintf(fd_log, "agga num_segments %i \n",num_segments);
+	fprintf(fd_log, "agga curr_segment %i \n",current_segment);
+	
+	fprintf(fd_log, "agga read_xtra_file! %i \n",read_xtra_file);
+	fprintf(fd_log, "agga read_xtra_file! %d \n",read_xtra_file);
+
 	fprintf(fd_log, "males on queue\n");
 	/* this looks like it's just for debugging*/
 	if (marriage_queues == 1)
@@ -822,6 +839,7 @@ int main1(int argc, char *argv[])
 		evaluate_marmkt(fd_log);
 	}
 
+	fprintf(fd_log, "now printing popfiles..");
 	write_popfiles(0);
 
 	/*
@@ -836,10 +854,13 @@ int main1(int argc, char *argv[])
 		fprintf(fd_log, "living pop group %d  %d\n", i, size_of_pop[i]);
 	}
 
-	population_pyramid(stdout);
-	population_pyramid(fd_pyr);
-
+	fprintf(fd_log, "now printing populationpy");
+	//population_pyramid(stdout);
+	//population_pyramid(fd_pyr);
+	
 	fclose(fd_pyr);
+	Rcpp::Rcout << "\n\nSocsim Main Done" << std::endl;
+	return 1;
 	/*
     printf("done with population pyramid\n");
     */
@@ -1089,7 +1110,7 @@ int process_month()
 			}
 		}
 	}
-	Rprintf(":");
+	//Rprintf(":");
 	
 	//logmsg(":", "", 1);
 	if (random_epsilon || fixed_epsilon)

@@ -1680,13 +1680,16 @@ int fill_rate_gaps()
     once causing extremely suboptimal behavior **/
 
 	logmsg("Rates imply simulation will have %d groups\n", " ", numgroups);
+	fprintf(fd_log, "Simulation will have %i groups - fprintf \n",numgroups);
+	fprintf(fd_log, "Simulation will have %i groups in ipop - fprintf \n",numgroups_in_ipop);
 	logmsg("Initial population has max group id %d \n", " ",numgroups_in_ipop);
 	if (numgroups != numgroups_in_ipop)
 	{
 		numgroups = MAX(numgroups, numgroups_in_ipop);
 	}
-	logmsg("Simulation will have %d groups\n", " ", numgroups);
-
+	
+	fprintf(fd_log, "Simulation will have %i groups - fprintf \n",numgroups);
+	
 	zero_block = NEW(struct age_block);
 	zero_block->previous = NULL;
 	zero_block->upper_age = 1200;
