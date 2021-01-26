@@ -545,7 +545,9 @@ int l_process_line(char *line,struct l_context *cx,FILE *fp)
 			strcat(command, words[i]);
 			strcat(command, " ");
 		}
-		//int ignore = system(command);
+		
+		fprintf(fd_log, "process line, command: %s | - fprintf \n",command);
+		system(command);
 		return 1;
 		break;
 
