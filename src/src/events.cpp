@@ -415,13 +415,13 @@ int main1(int argc, char *argv[])
 	fd_rn = open_write("random_number");
 	
 	Rprintf("------------aa3b");
-	logmsg("opening pop pyramid file %s\n", pyr_file_name,1);
+	//logmsg("opening pop pyramid file %s\n", pyr_file_name,1);
 	
 	Rprintf("------------aa3c");
 	fd_pyr = open_write(pyr_file_name);
 	
 	Rprintf("------------aa4d");
-	logmsg("Reading initial population file %s\n", pop_file_name,1);
+	//logmsg("Reading initial population file %s\n", pop_file_name,1);
 	/*    printf("Reading initial population file %s\n",pop_file_name);*/
 	int pop_rows = 0;
 	pop_rows = read_initial_pop(fd_pop);
@@ -470,7 +470,7 @@ int main1(int argc, char *argv[])
 	{
 		logmsg("No initial transition history file to read\n"," ", 1);
 	}
-	Rprintf("------------aa3");
+	Rprintf("------------aa3hh");
 	
 	fix_pop_pointers();
 	
@@ -689,6 +689,7 @@ int main1(int argc, char *argv[])
 				time_waiting[FEMALE] += mqfems->num;
 				
 				//logmsg("|m4|", "", 1);
+				Rcpp::checkUserInterrupt();
 				if (current_month % 5==0){			
 					timeend = clock();
 					timedif1 = (double)(timeend - timestart1) / CLOCKS_PER_SEC;
@@ -854,9 +855,9 @@ int main1(int argc, char *argv[])
 		fprintf(fd_log, "living pop group %d  %d\n", i, size_of_pop[i]);
 	}
 
-	fprintf(fd_log, "now printing populationpy");
-	//population_pyramid(stdout);
-	//population_pyramid(fd_pyr);
+	fprintf(fd_log, "now printing populationpyramid");
+	population_pyramid(stdout);
+	population_pyramid(fd_pyr);
 	
 	fclose(fd_pyr);
 	Rcpp::Rcout << "\n\nSocsim Main Done" << std::endl;
