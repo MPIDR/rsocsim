@@ -840,7 +840,7 @@ int main1(int argc, char *argv[])
 		evaluate_marmkt(fd_log);
 	}
 
-	fprintf(fd_log, "now printing popfiles..");
+	fprintf(fd_log, "now printing popfiles..\n");
 	write_popfiles(0);
 
 	/*
@@ -860,6 +860,8 @@ int main1(int argc, char *argv[])
 	population_pyramid(fd_pyr);
 	
 	fclose(fd_pyr);
+	fclose(fd_log);
+	fclose(fd_rn);
 	Rcpp::Rcout << "\n\nSocsim Main Done" << std::endl;
 	return 1;
 	/*

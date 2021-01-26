@@ -417,19 +417,15 @@ int read_xtra(FILE *fd, int pop_rows)
 
     if (fscanf(fd, "%d", &id) != 1)
     {
-      char logstring[256];
-      stop(logstring, "can't find person id in line %d of .opox file", row);
-      logmsg("%s\n", logstring, 1);
+      fprintf(fd_log,"can't find person id in line %d of .opox file", row);
+      stop("can't find person id in line %d of .opox file");
       //exit(-1);
     }
     np = lookup(PERSON_TAG, id);
 
     if (np == NULL)
     {
-      char logstring[256];
-      stop(logstring, "Error reading opox person id %d gives null pointer back", id);
-      logmsg("%s\n", logstring, 1);
-      //exit(-1);
+	    fprintf(fd_log, "Error reading opox person id %d gives null pointer back", id);
     }
     p = np->PP;
 
@@ -910,7 +906,7 @@ void write_marriages(FILE *fd)
   }
   logmsg("writing marriages is done (.omar)..\n", "", 1);
   fclose(fd);
-  logmsg("writing marriages is done 2(.omar)..\n", "", 1);
+  logmsg("writing marriages is done 2 - file is closed(.omar)..\n", "", 1);
 }
 
 void write_marriage(marriage *m, FILE *fd)
@@ -1087,14 +1083,11 @@ void prepare_output_files(int seg)
   {
     
     logmsg("--t prepare_output_files_3 \n"," ",1);
-
     fd_out_pop = open_write(pop_out_name);
-    
     logmsg("--t prepare_output_files_4 \n"," ",1);
     fd_out_mar = open_write(mar_out_name);
     logmsg("--t prepare_output_files_5 \n"," ",1);
     fd_out_xtra = open_write(xtra_out_name);
-    
     logmsg("--t prepare_output_files_6 \n"," ",1);
     fd_out_otx = open_write(otx_out_name);
   }
@@ -1118,13 +1111,12 @@ void write_popfiles(int intermediate)
     {
       logmsg("writing extra file (.opox) ..\n", "", 1);
       write_xtra(fd_out_xtra_seg);
-      fclose(fd_out_xtra_seg);
     }
-    logmsg("very after writing marriage list (.omar) ..\n", "", 1);
+    //logmsg("very after writing marriage list (.omar) ..\n", "", 1);
     if (numgroups > 1)
     {
       logmsg("writing transition history file (.otx) ..\n", "", 1);
-      write_otx(fd_out_otx);
+      write_otx(fd_out_otx_seg);
     }
   }
   else
@@ -1132,7 +1124,7 @@ void write_popfiles(int intermediate)
     write_population(fd_out_pop);
     logmsg("before  g4 writing write_marriages..\n", "", 1);
     write_marriages(fd_out_mar);
-    logmsg("after h4 writing write_marriages..\n", "", 1);
+    //logmsg("after h4 writing write_marriages..\n", "", 1);
     if (size_of_extra > 0)
     {
       
@@ -1140,12 +1132,18 @@ void write_popfiles(int intermediate)
       write_xtra(fd_out_xtra);
       logmsg("after writing write_extra..\n", "", 1);
     }
+    logmsg("close extra file (.opox) ..\n", "", 1);
+    fclose(fd_out_xtra);//close file fd_out_xtra_seg regardless of whether it was written to
+    
     if (numgroups > 1)
     {
       logmsg("writing transition hist (.otx)..\n", "", 1);
       write_otx(fd_out_otx);
     }
+    
+    logmsg("closing transition history file (.otx) ..\n", "", 1);
+    fclose(fd_out_otx);//close file fd_out_otx regardless of whether it was written to
   }
   
-      logmsg("end of prepare_output_files..\n", "", 1);
+  logmsg("end of write_popfiles...\n", "", 1);
 }
