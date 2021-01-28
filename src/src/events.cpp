@@ -115,31 +115,33 @@ int main1(int argc, char *argv[])
   char rate_file_name[1024];
   Rcpp::Rcout << "start socsim main \n" << std::endl;
   
-  Rprintf("-0at-----------%s  \n", argv[0]);
-  Rprintf("-1at-----------%s  \n", argv[1]);
-  Rprintf("-2at-----------%s  \n", argv[2]);
+  //Rprintf("-0at-----------%s  \n", argv[0]);
+  //Rprintf("-1at-----------%s  \n", argv[1]);
+  //Rprintf("-2at-----------%s  \n", argv[2]);
   //Rprintf("-3a-----------%s  \n", argv[3]);
-  Rprintf("-0a-----------%d  \n", argv[0]);
-  Rprintf("-1a-----------%d  \n", argv[1]);
-  Rprintf("-2a-----------%d  \n", argv[2]);
+  //Rprintf("-0a-----------%d  \n", argv[0]);
+  //Rprintf("-1a-----------%d  \n", argv[1]);
+  //Rprintf("-2a-----------%d  \n", argv[2]);
   //Rprintf("-3a-----------%d  \n", argv[3]);
-  Rcpp::Rcout << "useage: ratefile random_number" << argv[0] << "!!" << std::endl;
-  Rcpp::Rcout << "start socsim main \n" << std::endl;
-  Rcpp::Rcout << "useage: ratefile random_number" << argv[1] << "!!" << std::endl;
-  Rcpp::Rcout << "start socsim main \n" << std::endl;
+  //Rcpp::Rcout << "useage: ratefile random_number" << argv[0] << "!!" << std::endl;
+  //Rcpp::Rcout << "useage: ratefile random_number" << argv[1] << "!!" << std::endl;
+  //Rcpp::Rcout << "start socsim main \n" << std::endl;
   
-  Rcpp::Rcout << "start socsim main2 \n" << std::endl;
+  //Rcpp::Rcout << "start socsim main2 \n" << std::endl;
   strcpy(rate_file_name, argv[1]);
   //Rcpp::Rcout << "start socsim main 3\n" << std::endl;
   //strcpy(rate_file_name, *++argv);
-  Rcpp::Rcout << "start socsim main 4\n" << std::endl;
+  //Rcpp::Rcout << "start socsim main 4\n" << std::endl;
   
-  Rcpp::Rcout << "useage: ratefile random_number" << "!!"<< rate_file_name << std::endl;
-  Rcpp::Rcout << "useage: ratefile random_number" << "!!"<< argv[2] << std::endl;
+  Rcpp::Rcout << "ratefile: "<< rate_file_name << "\n" << std::endl;
+  //Rcpp::Rcout << "useage: ratefile random_number" << "!!"<< argv[2] << std::endl;
   
 	clock_t timestart1,timestart2,timeend;
 	double timedif1,timedif2;
 
+	//perror("jooooo");
+
+	//stop("after perror jooo.");
   timestart1 = clock();
   	
 	char command_string[1024];
@@ -221,11 +223,10 @@ int main1(int argc, char *argv[])
        until we know how many groups there are in the sim 
     */
 	
-	Rcpp::Rcout << "start socsim main 5\n" << std::endl;
-	sprintf(log_file_name, "%s%d.log", rate_file_name, ceed);
-	Rprintf(log_file_name, "%s%d.log", rate_file_name, ceed);
+	//Rcpp::Rcout << "start socsim main 5\n" << std::endl;
+	//Rprintf(log_file_name, "%s%d.log", rate_file_name, ceed);
 	
-	Rcpp::Rcout << "\nstart socsim main 6\n" << std::endl;
+	//Rcpp::Rcout << "\nstart socsim main 6\n" << std::endl;
 	
 	
 	int g = 0;
@@ -249,7 +250,7 @@ int main1(int argc, char *argv[])
 	size_of_extra = 0; /*no extra variables/.opox by default*/
 	if (argc < 2)
 	{
-	  warning("Warning: Unexpected condition occurred");
+	  warning("Warning: Unexpected condition occurred - too few arguments");
 	  //return 12;
 	  
 	  Rcpp::Rcout << "useage: ratefile random_number" << useage << argv[0] << std::endl;
@@ -275,7 +276,7 @@ int main1(int argc, char *argv[])
 	
 	/**srandom(ceed);  setting seed for random() NOT rrandom() **/ // todo:check if random is initialized correctly!
 	sprintf(log_file_name, "%s%d.log", rate_file_name, ceed);
-	Rprintf(log_file_name, "%s%d.log", rate_file_name, ceed);
+	//Rprintf(log_file_name, "%s%d.log", rate_file_name, ceed);
 	
 	
 	//return 12;
@@ -286,36 +287,31 @@ int main1(int argc, char *argv[])
 	if ((fd_log = fopen(log_file_name, "w")) == NULL)
 	{
 	  
-	  Rcpp:Rprintf("can't open file:  %s ", log_file_name);
-		perror("can't open file: log file\n");
+	    Rcpp:Rprintf("can't open file:  %s ", log_file_name);
+		perror("can't open log file\n");
 	}
 	
-	Rprintf("|%s|-\n",pop_out_name);
-	Rprintf("-----\n");
-	logmsg("--t start with logmessages?! \n"," ",1);
+	//Rprintf("|%s|-\n",pop_out_name);
+	//Rprintf("-----\n");
+	logmsg("--t start with logmessages \n"," ",1);
 	
 	/**sprintf(logstring,"\n compiled from SVN revision %s on %s \n\n",
-	   SVN_REV, COMP_DATE);**/
-	Rprintf("%s\n", logstring, 1);
-	Rprintf("\n\n Socsim Version: %s\n\n",
+	   SVN_REV, COMP_DATE);*
+	Rprintf("%s\n", logstring, 1);*/
+	Rprintf("Socsim Version: %s\n",
 		   ENHANCEMENT_NAME, 1);
 	if (marriage_queues == 1)
 	{
-		logmsg("\n\n marriage_queues==1 , consequently all availalbe males are always on the marriage queue\n\n"," ",   1);
+		logmsg("\n marriage_queues==1 , consequently all availalbe males are always on the marriage queue\n\n"," ",   1);
 	}
-	
-	Rprintf("\n\n Socsim Version: %s\n\n",
-         ENHANCEMENT_NAME, 1);
-	Rprintf("------------1");
-	Rcpp::Rcout << rate_file_name << std::endl;
-	Rprintf("------------1");
+	Rprintf("initialize_segment_vars\n");
+	logmsg("initialize_segment_vars\n"," ",1);
 	initialize_segment_vars();
-	Rprintf("------------3\n");
-	Rprintf("------------3..\n");
-	Rprintf("------------3... %s\n",rate_file_name);
+	Rprintf("initialize_segment_vars done\n");
+	Rcpp::Rcout << "loading -.sup-file: " << rate_file_name << std::endl;
 	if (load(rate_file_name) < 0)
-		stop("-1?");//exit(-1);
-	Rprintf("------------4");
+		stop("can't load rate file! Stopping Simulation.");//exit(-1);
+	//Rprintf("------------4");
 	if (marriage_eval == DISTRIBUTION)
 	{
 		/* sup file has been read; so if value is not -99 then it was
@@ -329,13 +325,13 @@ int main1(int argc, char *argv[])
 		}
 		initialize_marriage_targets();
 	}
-	Rprintf("------------5");
+	//Rprintf("------------5");
 
 	/*modify birth rates to account for bint MUST be called 
      BEFORE fill_rate_gaps*/
 	/*    if(bint != 0){*/
 	adjust_birth_for_bint();
-	Rprintf("------------6");
+	//Rprintf("------------6");
 	/*    }*/
 	//stop("stop15");
 #ifdef ENHANCED
@@ -382,57 +378,56 @@ int main1(int argc, char *argv[])
 		//perror("can't open  marriage file Hope that's OK\n");
 	}
 	
-	Rprintf("------------aa1");
+	//Rprintf("------------aa1");
 
 	if ((fd_otx = fopen(otx_file_name, "r")) == NULL)
 	{
 	  warning("can't open  transition history file. Hope that's OK\n");
 	  //perror("can't open  transition history file. Hope that's OK\n");
 	}
-	Rprintf("------------aa2");
-  //stop("here we stop!");
+	//Rprintf("------------aa2");
+  	//stop("here we stop!");
 	if (read_xtra_file)
 	{
 		if ((fd_xtra = fopen(xtra_file_name, "r")) == NULL)
 		{
 			printf("xtra file is named %s\n", xtra_file_name);
-		  perror("can't open  xtra file despite being asked to\n");
-		  stop("can't open  xtra file despite being asked to\n");
+		    //perror("can't open  xtra file despite being asked to\n");
+		    stop("can't open  xtra file despite being asked to\n");
 			//exit;
 		}
 	}
 	/** open output files for writing**/
 	
-	Rprintf("\n %s|%s|%s|%s|%s|%s|",pop_file_name,mar_file_name,xtra_file_name,pyr_file_name,stat_file_name,otx_file_name);
+	Rprintf("\n output file names:\n %s|%s|%s|%s|%s|%s|\n",pop_file_name,mar_file_name,xtra_file_name,pyr_file_name,stat_file_name,otx_file_name);
+	fprintf(fd_log,"\n output file names:\n %s|%s|%s|%s|%s|%s|\n",pop_file_name,mar_file_name,xtra_file_name,pyr_file_name,stat_file_name,otx_file_name);
 		
-		
-	logmsg("-----------------------------later prepare_output_files_1 \n"," ",1);
+	logmsg("----------------------- prepare_output_files_1 \n"," ",1);
 	
-	Rprintf("------------aa3");
+	//Rprintf("------------aa3");
 	prepare_output_files(0);
 	
-	Rprintf("------------aa3a");
+	//Rprintf("------------aa3a");
 	fd_rn = open_write("random_number");
 	
-	Rprintf("------------aa3b");
+	//Rprintf("------------aa3b");
 	//logmsg("opening pop pyramid file %s\n", pyr_file_name,1);
 	
-	Rprintf("------------aa3c");
+	//Rprintf("------------aa3c");
 	fd_pyr = open_write(pyr_file_name);
 	
-	Rprintf("------------aa4d");
+	//Rprintf("------------aa4d");
 	//logmsg("Reading initial population file %s\n", pop_file_name,1);
 	/*    printf("Reading initial population file %s\n",pop_file_name);*/
 	int pop_rows = 0;
 	pop_rows = read_initial_pop(fd_pop);
 	fclose(fd_pop);
 	
-	Rprintf("------------aa5");
+	//Rprintf("------------aa5");
 	if (fd_mar != NULL)
 	{
-	  Rprintf("Reading initial marriage file %s\n", mar_file_name);
-		logmsg("Reading initial marriage file %s\n", mar_file_name, 1);
-
+	  	Rprintf("Reading initial marriage file %s\n", mar_file_name);
+		fprintf(fd_log,"Reading initial marriage file %s\n", mar_file_name);
 		read_marlist(fd_mar);
 		fclose(fd_mar);
 	}
@@ -452,17 +447,18 @@ int main1(int argc, char *argv[])
 			{
 				sprintf(logstring, "\n\nEncountered personid=%d with mstatus=%d (NOT SINGLE)\nSince no initial .omar file was found this is madness and can only lead to tears", p->person_id, p->mstatus);
 				logmsg("%s\n", logstring, 1);
-				perror("No one in initial .opop can be married if you do not supply an initial .omar file. Duhhhhh.\n...Exitting");
+				//perror("No one in initial .opop can be married if you do not supply an initial .omar file. Duhhhhh.\n...Exitting");
 				stop("No one in initial .opop can be married if you do not supply an initial .omar file. Duhhhhh.\n...Exitting");
 				//exit(-1);
 			}
 		}
 	}
 	
-	Rprintf("------------aa7");
+	//Rprintf("------------aa7");
 	if (fd_otx != NULL)
 	{
-		logmsg("Reading initial transition history file %s\n", otx_file_name,1);
+		//logmsg("Reading initial transition history file %s\n", otx_file_name,1);
+		fprintf(fd_log,"Reading initial transition history file %s\n", otx_file_name,1);
 		read_otx(fd_otx);
 		fclose(fd_otx);
 	}
@@ -470,37 +466,40 @@ int main1(int argc, char *argv[])
 	{
 		logmsg("No initial transition history file to read\n"," ", 1);
 	}
-	Rprintf("------------aa3hh");
+	Rprintf("fix pop pointers..\n");
 	
 	fix_pop_pointers();
 	
-	Rprintf("------------aa8");
+	//Rprintf("------------aa8");
 	if (read_xtra_file)
 	{
 		int rows_read = 0;
 		char logstring[128];
-		logmsg("\n\nReading initial xtra file %s\n", xtra_file_name, 1);
-
+		//logmsg("\n\nReading initial xtra file %s\n", xtra_file_name, 1);
+		fprintf(fd_log,"\n\nReading initial xtra file %s\n", xtra_file_name);
 		rows_read = read_xtra(fd_xtra, pop_rows);
-		sprintf(logstring, "%d observations read from %s",
+		// sprintf(logstring, "%d observations read from %s",
+		// 		rows_read, xtra_file_name);
+		//logmsg("%s\n", logstring, 0);
+		fprintf(fd_log,"%d observations read from %s\n",
 				rows_read, xtra_file_name);
-		logmsg("%s\n", logstring, 0);
 
 		fclose(fd_xtra);
 	}
 	else
 	{
-		logmsg("xtra file NOT read: read_extra_file=%d\n", " ",read_xtra_file);
+		//logmsg("xtra file NOT read: read_extra_file=%d\n", " ",read_xtra_file);
+		fprintf(fd_log,"xtra file NOT read: read_extra_file=%d\n", read_xtra_file);
 	}
 
 	/* numgroups willbe reset to reflect groups in initial pop if nec 
        in fill_rate_gaps
     */
 	
-	Rprintf("------------aa9");
+	//Rprintf("------------aa9");
 	delete_hash_table();
 	
-	Rprintf("------------aa3");
+	//Rprintf("------------aa3");
 	current_month = last_event_date + 1;
 	Rprintf("Starting month is %d\n", current_month);
 	Rprintf("Initial size of pop %d  ", last_person->person_id);
@@ -511,7 +510,7 @@ int main1(int argc, char *argv[])
 	  warning("bad rate set\n");
 	}
 	
-	Rprintf("------------aa3s");
+	//Rprintf("------------aa3s");
 	/* dump_rates(); */
 
 	if (random_epsilon)
@@ -524,22 +523,22 @@ int main1(int argc, char *argv[])
 		printf("fixed epsilon ");
 		epsilon = epsilon % (max_e_index + 1);
 	}
-	Rprintf("------------aa32");
-	logmsg("-----aa32.\n", "", 1);
+	//Rprintf("------------aa32");
+	//logmsg("-----aa32.\n", "", 1);
 
 
-	logmsg(" grogro001 \n", "", 1);
+	//logmsg(" grogro001 \n", "", 1);
 	if (random_epsilon || fixed_epsilon)
 	{
 		printf("value of epsilon: %d table index %d \n",
 			   epsilon, (int)epsilon / 12);
 	}
 
-	logmsg(" grogro1111 \n", "", 1);
+	//logmsg(" grogro1111 \n", "", 1);
 	while (current_segment <= num_segments)
 	{
 		
-		logmsg(" grogroaa \n", "", 1);
+		//logmsg(" grogroaa \n", "", 1);
 		/** open output files for pos seg writing **/
 
 		if (write_output)
@@ -557,28 +556,28 @@ int main1(int argc, char *argv[])
 			strcat(stat_file_name_seg, segnum);
 			fd_stat = open_write(stat_file_name_seg);
 		}
-		Rprintf("------------aa35");
+		//Rprintf("------------aa35");
 
-		logmsg("--aa35\n", "", 1);
+		//logmsg("--aa35\n", "", 1);
 		print_segment_info(fd_log);
-		logmsg("--aa35\n", "", 1);
+		//logmsg("--aa35\n", "", 1);
 		print_segment_info(stdout);
-		logmsg("--aa35\n", "", 1);
+		//logmsg("--aa35\n", "", 1);
 		population_pyramid(fd_pyr); /*blows guts here*/
 
 		logmsg("Simulating...\n", "", 1);
-		Rcpp::Rcout << "Simulating...." << std::endl;
+		//Rcpp::Rcout << "Simulating...." << std::endl;
 		
-		Rprintf("------------aa3h");
-		logmsg("--ab36\n", "", 1);
+		//Rprintf("------------aa3h");
+		//logmsg("--ab36\n", "", 1);
 		/***
 	  dump_rates();
       ***/
 
 		new_events_for_all();
 		
-		Rprintf("------------b");
-		printf("New events generated for all living persons\n");
+		//Rprintf("------------b");
+		Rprintf("New events generated for all living persons\n");
 		/*
 	  dump_queue();
 	*/
@@ -705,6 +704,14 @@ int main1(int argc, char *argv[])
 						timedif1,timedif2,1000000000*timedif2/(mqmales->num * mqmales->num +1));
 					if (current_month % 200==0){
 						printf("\n");
+						fprintf(fd_log,"month:%5d PopLive:%6d Brths:%4d Dths:%4d Mrgs:%3d Dvs:%3d Mq:%5d Fq:%d ti1: %.1f ti2: %.6f %.4f\n",
+						current_month, size_of_pop[0],
+						crnt_month_events[E_BIRTH],
+						crnt_month_events[E_DEATH],
+						crnt_month_events[E_MARRIAGE],
+						crnt_month_events[E_DIVORCE],
+						mqmales->num, mqfems->num,
+						timedif1,timedif2,1000000000*timedif2/(mqmales->num * mqmales->num +1));
 					}
 				}
 				if (size_of_pop[0] == 0 && !done)
@@ -716,10 +723,11 @@ int main1(int argc, char *argv[])
 			}
 		}
 		
-		logmsg("|m5|", "", 1);
-	  Rprintf("-m|pa");
-		sprintf(logstring, "\nsegment %d complete current month: %d\n",	current_segment, current_month);
-		logmsg("%s\n", logstring, 1);
+		//logmsg("|m5|", "", 1);
+	    //Rprintf("-m|pa");
+		fprintf(fd_log,"\nsegment %d complete current month: %d\n",	current_segment, current_month);
+		printf("\nsegment %d complete current month: %d\n",	current_segment, current_month);
+		//logmsg("%s\n", logstring, 1);
 
 		if (take_census)
 		{
@@ -775,14 +783,19 @@ int main1(int argc, char *argv[])
 				   current_segment);
 			printf("--------------------------------------------------\n");
 
-			logmsg("about to (re)initialize segment vars\n", "", 0);
+			logmsg("about to (re)initialize segment vars -----\n", "", 0);
+			fprintf(fd_log,"about to (re)initialize segment vars fprintf");
+			fflush(fd_log);
 			/* dump_rates(2); */
 			initialize_segment_vars();
 
-			logmsg("about read rate file %s\n", rate_file_name, 0);
-
+			fprintf(fd_log,"after (re)initializing segment vars");
+			fflush(fd_log);
+			//logmsg("about read rate file %s\n", rate_file_name, 0);
+			fprintf(fd_log,"about to read rate file %s\n", rate_file_name);
+			fflush(fd_log);
 			if (load(rate_file_name) < 0){
-			  stop("sdofijweoillll");
+			  stop("could not read rate_file_name %s",rate_file_name);
 			}
 				
 			adjust_birth_for_bint();
@@ -1954,8 +1967,8 @@ int date_and_event(struct person *p)
 			m = m1;
 			if (marriage_queues == 1 && p->sex == MALE)
 			{
-			  logmsg("\nmarriage_queues==1 yet marriage event gen'ed for %d\n"," ",
-            p->person_id);
+			  //logmsg("\nmarriage_queues==1 yet marriage event gen'ed for %d\n"," ", p->person_id);
+			  fprintf(fd_log,"\nmarriage_queues==1 yet marriage event gen'ed for %d\n",p->person_id);
 			  stop("\nmarriage_queues==1 yet marriage event gen'ed for %d\n",p->person_id);//exit(-1);
 			}
 		}
@@ -2054,7 +2067,7 @@ void initialize_segment_vars()
    ** original cell is cfreed. This prevents cfree of already
    ** dereferenced stuff. bald spot dedicated to this problem
    **/
-	//warning("beginning");
+	//warning("beginning");fprintf(fd_log,"begi1");
 	for (g = 0; g < MAXGROUPS * NUMEVENTS * NUMMARSTATUS * NUMSEXES; g++)
 	{
 		r_ptr = (&(rate_set[0][0][0][0]) + g);
@@ -2079,7 +2092,7 @@ void initialize_segment_vars()
 			*r_ptr = NULL;
 		}
 	}
-	//warning("beginning2");
+	//warning("beginning2");fprintf(fd_log,"begi2");
 
 	/******************************
    ** Mon Jul 29 14:56:02 PDT 2002 this replaces code formerly above
@@ -2114,7 +2127,7 @@ void initialize_segment_vars()
 			*r_ptr = NULL;
 		}
 	}
-  //warning("begi3");
+	//warning("begi3"); fprintf(fd_log,"begi3");
 	for (g = 1; g < MAXGROUPS; g++)
 	{
 		for (m = 0; m < NUMMARSTATUS; m++)
@@ -2246,8 +2259,7 @@ void initialize_segment_vars()
 		}
 	}
 	
-	//warning("begi7");
-
+	//warning("begi7");fprintf(fd_log,"begi7");
 	for (g = 1; g < MAXGROUPS; g++)
 	{
 		birth_target[g] = -1;
@@ -2259,7 +2271,7 @@ void initialize_segment_vars()
 		}
 	}
 
-	//warning("gebi 8");
+	//warning("gebi 8");fprintf(fd_log,"begi8");
 	/* empty all the queues, if segment > 1 */
 
 	if (current_segment >= 1)
@@ -2297,7 +2309,8 @@ void initialize_segment_vars()
 			q->num = 0;
 		}
 	}
-	//warning("bogie bodi 9");
+	warning("bogie bodi 9");
+	//fprintf(fd_log,"begi9");
 	/* initialize variables to defaults or error-trigger values */
 	write_output = 0; /* only write intermediate pop files 
 		     if instructed to in each segment*/
@@ -2394,10 +2407,9 @@ void population_pyramid(FILE *fd_pyr)
 					if (row >= limit)
 					{
 						/* someone lived too long*/
-						sprintf(logstring,
-								"person %d lived too long check group %d mortality rates ",
-								p->person_id, p->group);
-						logmsg("%s\n", logstring, 1);
+						//sprintf(logstring,"person %d lived too long check group %d mortality rates ",p->person_id, p->group);
+						fprintf(fd_log,"person %d lived too long check group %d mortality rates ",p->person_id, p->group);
+						//logmsg("%s\n", logstring, 1);
 						row = limit - 1;
 					}
 				}

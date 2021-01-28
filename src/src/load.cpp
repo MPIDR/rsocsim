@@ -246,7 +246,7 @@ int load( char *file)
 		if ((fp = fopen(file, "r")) == 0)
 		{
 			/*    error("Can't open \"%s\"", "rate_file");*/
-			warning("Can't open ratefile: %s", file, 1);
+			warning("Can't open ratefile: %s", file);
 
 			/*return -1;*/
 			stop("cant open ratefile");
@@ -256,15 +256,32 @@ int load( char *file)
 		current_offset = 0;
 	}
 
-	logmsg("openning %s \n", file, 1);
-	logmsg("starting  with line %d ", " ", current_lineno);
-	logmsg("at %ld\n", " ",current_offset);
-	fseek(fp, current_offset, 0);
+	//logmsg("openning %s \n", file, 1);
+	fprintf(fd_log,"\nopening %s \n", file);
+	fprintf(fd_log,"starting with line %d ", current_lineno);
+	fprintf(fd_log,"at %ld\n, seekset= %i", current_offset, SEEK_SET);
+	fflush(fd_log);
+	fseek(fp, current_offset, SEEK_SET); // before, SEEK_SET was 0
+	//somehow this jumps to the wrong position, if we don't start at the beginning.
+
+	fseek(fp,0,SEEK_SET);
+	int found = 0;
+	int count = 0;
+	while (!found && fgets(line, sizeof line, fp) != NULL) {
+		if (count == current_lineno){
+        	found = true;
+    	} else {
+        	count++;
+		}
+	}
 	cx.file = file;
 
 	while (fgets(line, sizeof line, fp) != 0)
 	{
 		cx.lineno++;
+		
+		fprintf(fd_log,"@FILE: %s LINE: %s \n", cx.file, line);
+		fflush(fd_log);
 		if (current_fstatus == OPEN) /*triggered by run command */
 			return 1;
 		if (l_process_line(line, &cx, fp) < 0)
@@ -272,6 +289,8 @@ int load( char *file)
 			/* just quit on any error for now */
 			(void)fclose(fp);
 			printf("FILE: %s LINE: %s\n", cx.file, line);
+			fprintf(fd_log,"Error in load..l_process_line;FILE: %s LINE: %s \n", cx.file, line);
+			fflush(fd_log);
 			return -1;
 		}
 	}
@@ -363,7 +382,8 @@ int l_process_line(char *line,struct l_context *cx,FILE *fp)
 			}
 			else
 			{
-				l_error(cx, "Not a valid rate/kt value line");
+				printf("\n line: %s\n", line);
+				l_error(cx, "\nNot a valid rate/kt value line\n");
 				return -1;
 			}
 
@@ -929,15 +949,14 @@ int l_process_line(char *line,struct l_context *cx,FILE *fp)
 		current_fstatus = OPEN;
 		current_lineno = cx->lineno;
 		/*printf("offset %ld line %d\n", current_offset, cx->lineno);*/
-		logmsg("offset %ld line", " ", current_offset);
-		logmsg("%d\n", " ", cx->lineno);
+		fprintf(fd_log,"\ncurrent_offset: %ld; line: %d\n", current_offset, cx->lineno);
 		current_fp = fp;
 		return 1;
 		break;
 	case k_include:
-		logmsg("loading %s ... ", words[1], 0);
+	    fprintf(fd_log,"loading %s ... ", words[1]);
 		load(words[1]);
-		logmsg("done loading %s\n", words[1], 0);
+		fprintf(fd_log,"done loading %s\n", words[1]);
 		return 1;
 		break;
 	case k_done:
@@ -1391,14 +1410,12 @@ l_create_rateset(register struct l_context *cx, char *name)
 void l_error(struct l_context *cx, char *message)
 	/* error message for load()  tells where error occurred in .sup file */
 {
-
 	/*  error("\"%s\" line %d: %s",  cx->file,   cx->lineno, message);*/
-	char logstring[256];
-	sprintf(logstring, "file: %s line:%d : %s",
+
+    fprintf(fd_log, "l_error - file: %s line:%d : %s",
 			cx->file,
 			cx->lineno,
 			message);
-	logmsg("%s\n", logstring, 1);
 }
 
 void add_rate_table(int years, int months, double prob)
@@ -1681,10 +1698,10 @@ int fill_rate_gaps()
     the rate set structures, it will free() the zero block MORE than
     once causing extremely suboptimal behavior **/
 
-	logmsg("Rates imply simulation will have %d groups\n", " ", numgroups);
+	//logmsg("Rates imply simulation will have %d groups\n", " ", numgroups);
 	fprintf(fd_log, "Simulation will have %i groups - fprintf \n",numgroups);
 	fprintf(fd_log, "Simulation will have %i groups in ipop - fprintf \n",numgroups_in_ipop);
-	logmsg("Initial population has max group id %d \n", " ",numgroups_in_ipop);
+	//logmsg("Initial population has max group id %d \n", " ",numgroups_in_ipop);
 	if (numgroups != numgroups_in_ipop)
 	{
 		numgroups = MAX(numgroups, numgroups_in_ipop);
@@ -2557,14 +2574,14 @@ void adjust_birth_for_bint()
 					logmsg("%s", endbit, 1);
 					block_ptr = birth_rate_set[g][m][p];
 					while (block_ptr != NULL)
-					{
-						/* lets print this stuf for now*/
+					{ 
+						/* lets print this stuf for now - or maybe not..
 						if (-(block_ptr->lambda) > 0.00001)
 						{
 							sprintf(logstring, "topAge: %d  width: %d lambda: %lf \n",
 									block_ptr->upper_age, block_ptr->width, -block_ptr->lambda);
 							logmsg("%s", logstring, 0);
-						} /* */
+						} / */
 						block_ptr = block_ptr->next;
 					}
 				} /* if not NULL */

@@ -1058,14 +1058,14 @@ void prepare_output_files(int seg)
     strcat(xtra_out_name, ".opox");
     strcat(otx_out_name, ".otx");
   }
-  logmsg("--t prepare_output_files_1.5 \n"," ",1);
+  //logmsg("--t prepare_output_files_1.5 \n"," ",1);
 
   strcpy(pop_out_name_seg, pop_out_name);
   strcpy(mar_out_name_seg, mar_out_name);
   strcpy(xtra_out_name_seg, xtra_out_name);
   strcpy(otx_out_name_seg, otx_out_name);
 
-  logmsg("--t prepare_output_files_2 \n"," ",1);
+  //logmsg("--t prepare_output_files_2 \n"," ",1);
   if (seg > 0)
   {
     sprintf(segnum, "%d", seg);
@@ -1082,17 +1082,17 @@ void prepare_output_files(int seg)
   else
   {
     
-    logmsg("--t prepare_output_files_3 \n"," ",1);
+    //logmsg("--t prepare_output_files_3 \n"," ",1);
     fd_out_pop = open_write(pop_out_name);
-    logmsg("--t prepare_output_files_4 \n"," ",1);
+    //logmsg("--t prepare_output_files_4 \n"," ",1);
     fd_out_mar = open_write(mar_out_name);
-    logmsg("--t prepare_output_files_5 \n"," ",1);
+    //logmsg("--t prepare_output_files_5 \n"," ",1);
     fd_out_xtra = open_write(xtra_out_name);
-    logmsg("--t prepare_output_files_6 \n"," ",1);
+    //logmsg("--t prepare_output_files_6 \n"," ",1);
     fd_out_otx = open_write(otx_out_name);
   }
   
-  logmsg("--t prepare_output_files_5 \n"," ",1);
+  //logmsg("--t prepare_output_files_5 \n"," ",1);
 }
 
 /**  **/
