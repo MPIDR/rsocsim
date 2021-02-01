@@ -231,6 +231,9 @@ char logstring[1024];
 
 int load( char *file)
 {
+	
+	fprintf(fd_log,"open: %i, load rate file: |%s\n",current_fstatus,file);
+	fflush(fd_log);
 	struct l_context cx;
 	char line[LINELENGTH];
 	FILE *fp;
@@ -259,7 +262,7 @@ int load( char *file)
 	//logmsg("openning %s \n", file, 1);
 	fprintf(fd_log,"\nopening %s \n", file);
 	fprintf(fd_log,"starting with line %d ", current_lineno);
-	fprintf(fd_log,"at %ld\n, seekset= %i", current_offset, SEEK_SET);
+	fprintf(fd_log,"at %ld, seekset= %i \n", current_offset, SEEK_SET);
 	fflush(fd_log);
 	fseek(fp, current_offset, SEEK_SET); // before, SEEK_SET was 0
 	//somehow this jumps to the wrong position, if we don't start at the beginning.
@@ -268,7 +271,7 @@ int load( char *file)
 	int found = 0;
 	int count = 0;
 	while (!found && fgets(line, sizeof line, fp) != NULL) {
-		if (count == current_lineno){
+		if (count == cx.lineno){
         	found = true;
     	} else {
         	count++;
@@ -525,7 +528,15 @@ int l_process_line(char *line,struct l_context *cx,FILE *fp)
 		break;
 
 	case k_input_file:
+		fprintf(fd_log,"I am here at load.cpp-k_input_file. |%s\n",pop_file_name);
+		//pop_file_name;
+		//memset(pop_file_name, 0, 1024);
+		memset(pop_file_name, 0, 1024 * (sizeof pop_file_name[0]) );
+		fprintf(fd_log,"I am here at load.cpp-k_input_file. |%s\n",pop_file_name);
+		//pop_file_name[0] = '\0';
 		strcpy(pop_file_name, words[1]);
+		fprintf(fd_log,"I am here at load.cpp-k_input_file. |%s\n",pop_file_name);
+		fflush(fd_log);
 		strcpy(mar_file_name, words[1]);
 		strcpy(xtra_file_name, words[1]);
 		strcpy(otx_file_name, words[1]);
