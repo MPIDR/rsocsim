@@ -257,7 +257,8 @@ int load( char *file)
 	logmsg("openning %s \n", file, 1);
 	logmsg("starting  with line %d ", " ", current_lineno);
 	logmsg("at %ld\n", " ",current_offset);
-	fseek(fp, current_offset, 0);
+	fseek(fp, current_offset, 0); 
+
 	cx.file = file;
 
 	while (fgets(line, sizeof line, fp) != 0)
@@ -1676,14 +1677,13 @@ int fill_rate_gaps()
 	 and the other rates b/c when initialize_segment_vars unwinds
     the rate set structures, it will free() the zero block MORE than
     once causing extremely suboptimal behavior **/
-
-	logmsg("Rates imply simulation will have %d groups\n", " ", numgroups);
-	logmsg("Initial population has max group id %d \n", " ",numgroups_in_ipop);
+	
+	fprintf(fd_log, "Simulation will have %i groups - fprintf \n",numgroups);
+	fprintf(fd_log, "Simulation will have %i groups in ipop - fprintf \n",numgroups_in_ipop);
 	if (numgroups != numgroups_in_ipop)
 	{
 		numgroups = MAX(numgroups, numgroups_in_ipop);
 	}
-	logmsg("Simulation will have %d groups\n", " ", numgroups);
 
 	zero_block = NEW(struct age_block);
 	zero_block->previous = NULL;
