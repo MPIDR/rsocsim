@@ -643,7 +643,9 @@ int main(int argc, char *argv[])
 				   current_segment);
 			printf("--------------------------------------------------\n");
 
-			logmsg("about to (re)initialize segment vars\n", "", 0);
+			logmsg("about to (re)initialize segment vars - gg\n", "", 0);
+			
+			fprintf(fd_log,"about to (re)initialize segment vars fprintf");
 			/* dump_rates(2); */
 			initialize_segment_vars();
 

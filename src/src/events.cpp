@@ -346,7 +346,11 @@ int main1(int argc, char *argv[])
     printf("current value of hetfert flag %d\n", hetfert);
     **/
   
+	fprintf(fd_log,"I am here at events.cpp-pop_file_name. |%s\n",pop_file_name);
+	//pop_file_name[0] = 0;
 	strcat(pop_file_name, ".opop");
+	fprintf(fd_log,"I am here at events.cpp-pop_file_name. |%s\n",pop_file_name);
+	fflush(fd_log);
 	strcat(mar_file_name, ".omar");
 	strcat(xtra_file_name, ".opox");
 	strcat(pyr_file_name, ".pyr");
@@ -367,8 +371,9 @@ int main1(int argc, char *argv[])
 	{
 	  Rprintf("------------pop_file error");
 	  
-	  logmsg("can't open initial  pop file; can't simuluate..\n"," ",1);//exit
-	  stop("can't open initial  pop file; can't simuluate..\n");//exit
+	  //logmsg("can't open initial  pop file; can't simuluate..%s \n",pop_file_name,1);//exit
+	  fprintf(fd_log,"can't open initial  pop file; can't simuluate..%s \n",pop_file_name);
+	  stop("can't open initial  pop file; can't simuluate.. %s \n",pop_file_name);//exit
 		perror("can't open initial  pop file; can't simuluate..\n");
 	}
 	if ((fd_mar = fopen(mar_file_name, "r")) == NULL)
@@ -2309,7 +2314,7 @@ void initialize_segment_vars()
 			q->num = 0;
 		}
 	}
-	warning("bogie bodi 9");
+	//warning("bogie bodi 9");
 	//fprintf(fd_log,"begi9");
 	/* initialize variables to defaults or error-trigger values */
 	write_output = 0; /* only write intermediate pop files 
@@ -2408,7 +2413,7 @@ void population_pyramid(FILE *fd_pyr)
 					{
 						/* someone lived too long*/
 						//sprintf(logstring,"person %d lived too long check group %d mortality rates ",p->person_id, p->group);
-						fprintf(fd_log,"person %d lived too long check group %d mortality rates ",p->person_id, p->group);
+						fprintf(fd_log,"person %d lived too long check group %d mortality rates \n",p->person_id, p->group);
 						//logmsg("%s\n", logstring, 1);
 						row = limit - 1;
 					}
