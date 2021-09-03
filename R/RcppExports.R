@@ -14,6 +14,6 @@ socsimMain <- function() {
 }
 
 startSocsimWithFile <- function(supfile, seed) {
-    invisible(.Call(`_rsoc_startSocsimWithFile`, supfile, seed))
+    .Call(`_rsoc_startSocsimWithFile`, supfile, seed)
 }
 

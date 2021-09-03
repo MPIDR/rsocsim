@@ -36,14 +36,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // startSocsimWithFile
-void startSocsimWithFile(String supfile, String seed);
+int startSocsimWithFile(String supfile, String seed);
 RcppExport SEXP _rsoc_startSocsimWithFile(SEXP supfileSEXP, SEXP seedSEXP) {
 BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< String >::type supfile(supfileSEXP);
     Rcpp::traits::input_parameter< String >::type seed(seedSEXP);
-    startSocsimWithFile(supfile, seed);
-    return R_NilValue;
+    rcpp_result_gen = Rcpp::wrap(startSocsimWithFile(supfile, seed));
+    return rcpp_result_gen;
 END_RCPP
 }
 

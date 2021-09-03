@@ -14,7 +14,13 @@ run1simulation <- function(rootfolder,folder, supfile,seed) {
   library(rsoc)
   
   setwd(paste0(rootfolder,"\\",folder[1]))
+  print(seed)
   startSocsimWithFile(supfile,seed)
   
 }
 test_all()
+
+
+
+
+detach("package:rsoc", unload=TRUE)

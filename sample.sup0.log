@@ -1,780 +1,670 @@
---t start with logmessages?! 
-openning sample.sup 
-starting  with line 17715925 at 17715925
+--t start with logmessages 
+initialize_segment_vars
+open: 0, load rate file: |sample.sup
+
+opening sample.sup 
+starting with line 114 at 0, seekset= 0 
+@FILE: sample.sup LINE: *  This file runs a very simple one segment simulation with all nearly
+ 
+@FILE: sample.sup LINE: *  all directives set to default values.  
+ 
+@FILE: sample.sup LINE: *  
+ 
+@FILE: sample.sup LINE: *  In the Rcode subdirectory there should be program called
+ 
+@FILE: sample.sup LINE: *  example.r that will read the output of this simulation and
+ 
+@FILE: sample.sup LINE: *  recover the effects of the rates and directives herein
+ 
+@FILE: sample.sup LINE: ** type [path to socsim] run.sup 12345
+ 
+@FILE: sample.sup LINE: ** to run socsim
+ 
+@FILE: sample.sup LINE: ************************************************************************
+ 
+@FILE: sample.sup LINE: 
+ 
+@FILE: sample.sup LINE: ** number of simulation segments to execute
+ 
+@FILE: sample.sup LINE: segments 1
+ 
 number of segments: 1
+@FILE: sample.sup LINE: 
+ 
+@FILE: sample.sup LINE: **stem of input files implies start4grp.opop and start4grp.omar
+ 
+@FILE: sample.sup LINE: input_file start4grp
+ 
+I am here at load.cpp-k_input_file. |start4grp.opop
+I am here at load.cpp-k_input_file. |
+I am here at load.cpp-k_input_file. |start4grp
+@FILE: sample.sup LINE: **input_file start.5k
+ 
+@FILE: sample.sup LINE: 
+ 
+@FILE: sample.sup LINE: ** A possible use of execute is to create a directory for results
+ 
+@FILE: sample.sup LINE: **(you may wish to comment this out or change it if you don't have
+ 
+@FILE: sample.sup LINE: ** a /72hours directory or if $USER does not resolve to something useful
+ 
+@FILE: sample.sup LINE: ** NOTE that if the directory exists you will get an error message 
+ 
+@FILE: sample.sup LINE: ** which you can generally ignore.
+ 
+@FILE: sample.sup LINE: 
+ 
+@FILE: sample.sup LINE: execute "test -d SimResults || mkdir SimResults"
+ 
 process line, command: test -d SimResults || mkdir SimResults  | - fprintf 
+@FILE: sample.sup LINE: 
+ 
+@FILE: sample.sup LINE: ** stem of output file it is wise to write output files into a sep folder
+ 
+@FILE: sample.sup LINE: ** NOTE that this spec depends on the previous execute directive
+ 
+@FILE: sample.sup LINE: ** so if you get rid of that, modify this too
+ 
+@FILE: sample.sup LINE: output_file SimResults/sample
+ 
+@FILE: sample.sup LINE: 
+ 
+@FILE: sample.sup LINE: 
+ 
+@FILE: sample.sup LINE: ** duration of first simulation segment
+ 
+@FILE: sample.sup LINE: duration 3000
+ 
 duration: 3000
+@FILE: sample.sup LINE: ** minimum interval in months between births
+ 
+@FILE: sample.sup LINE: *bint 9
+ 
+@FILE: sample.sup LINE: ** heterogeneous fertility enabled
+ 
+@FILE: sample.sup LINE: *hetfert 1
+ 
+@FILE: sample.sup LINE: hetfert 0
+ 
 no heterogeneous fertility
+@FILE: sample.sup LINE: ** inheritance of fertility multiplier defined by alpha/beta (disabled by def)
+ 
+@FILE: sample.sup LINE: ** alpha == 1; beta==1 ==> complete inheritance 
+ 
+@FILE: sample.sup LINE: **  0<alpha<1
+ 
+@FILE: sample.sup LINE: *alpha 0
+ 
+@FILE: sample.sup LINE: *beta  1
+ 
+@FILE: sample.sup LINE: ** proportion of births which are male
+ 
+@FILE: sample.sup LINE: *proportion_male .5112
+ 
+@FILE: sample.sup LINE: ** synonym for proporion_male: sex_ratio 
+ 
+@FILE: sample.sup LINE: 
+ 
+@FILE: sample.sup LINE: ** read the file of "extra" characteristics--only used by enhanced versions
+ 
+@FILE: sample.sup LINE: **read_xtra
+ 
+@FILE: sample.sup LINE: ** how many extra characteristics to read -- ONLY for enhanced versions
+ 
+@FILE: sample.sup LINE: **size_of_xtra
+ 
+@FILE: sample.sup LINE: 
+ 
+@FILE: sample.sup LINE: ** assign random males to be fathers if mother is unmarried
+ 
+@FILE: sample.sup LINE: random_father 1
+ 
 find random fathers 1
+@FILE: sample.sup LINE: ** minimum age of randomly assigned fathers
+ 
+@FILE: sample.sup LINE: *random_father_min_age 15
+ 
+@FILE: sample.sup LINE: 
+ 
+@FILE: sample.sup LINE: ** propensity to marry across groups. defaults to 0 = group
+ 
+@FILE: sample.sup LINE: ** is NOT considered in evaluation of marriages; -1 = complete exogamy
+ 
+@FILE: sample.sup LINE: ** 1= complete endogamy
+ 
+@FILE: sample.sup LINE: *endogamy 0
+ 
+@FILE: sample.sup LINE: 
+ 
+@FILE: sample.sup LINE: 
+ 
+@FILE: sample.sup LINE: ** Evaluate marriages by "preference" or "distribution"
+ 
+@FILE: sample.sup LINE: *marriage_eval  preference
+ 
+@FILE: sample.sup LINE: marriage_eval  distribution
+ 
 marriage_eval : 2
 
+@FILE: sample.sup LINE: 
+ 
+@FILE: sample.sup LINE: 
+ 
+@FILE: sample.sup LINE: 
+ 
+@FILE: sample.sup LINE: ** For marriage evaluation based on age-difference "preference" 
+ 
+@FILE: sample.sup LINE: ** most preferred marriage age difference
+ 
+@FILE: sample.sup LINE: *marriage_peak_age 2
+ 
+@FILE: sample.sup LINE: ** male older preferred 2x as female older matches
+ 
+@FILE: sample.sup LINE: *marriage_slope_ratio 2
+ 
+@FILE: sample.sup LINE: ** maximum age difference allowed
+ 
+@FILE: sample.sup LINE: *marriage_agedif_max 1200
+ 
+@FILE: sample.sup LINE: ** minimum age difference allowed
+ 
+@FILE: sample.sup LINE: *marriage_agedif_min -1200
+ 
+@FILE: sample.sup LINE: ** For marriage evaluation based on age-difference "distribution" 
+ 
+@FILE: sample.sup LINE: ** specify for each group in simulation
+ 
+@FILE: sample.sup LINE: *agedif_marriage_mean (group) 2
+ 
+@FILE: sample.sup LINE: agedif_marriage_mean 1 2
+ 
 agedif_mariage_mean (group 1)  : 2.000000
 
+@FILE: sample.sup LINE: *agedif_marriage_sd (group) 3
+ 
+@FILE: sample.sup LINE: agedif_marriage_sd 1 3
+ 
 agedif_mariage_sd (group 1) : 3.000000
 
+@FILE: sample.sup LINE: 
+ 
+@FILE: sample.sup LINE: 
+ 
+@FILE: sample.sup LINE: 
+ 
+@FILE: sample.sup LINE: ** One or Two marriage queue system
+ 
+@FILE: sample.sup LINE: *marriage_queues 2
+ 
+@FILE: sample.sup LINE: marriage_queues 1
+ 
 marriage_queues : 1
 
-loading ratefile.min ... openning ratefile.min 
-starting  with line 17715925 at 17715925
+@FILE: sample.sup LINE: 
+ 
+@FILE: sample.sup LINE: 
+ 
+@FILE: sample.sup LINE: 
+ 
+@FILE: sample.sup LINE: ** group inheritance at birth: from_father from_mother 
+ 
+@FILE: sample.sup LINE: ** from_same_sex_parent or from_opposite_sex_parent
+ 
+@FILE: sample.sup LINE: *child_inherits_group from_father
+ 
+@FILE: sample.sup LINE: 
+ 
+@FILE: sample.sup LINE: ** parameter hooks for enhanced versions unused in standard Socsim
+ 
+@FILE: sample.sup LINE: *parameter1
+ 
+@FILE: sample.sup LINE: *parameter2
+ 
+@FILE: sample.sup LINE: *parameter3
+ 
+@FILE: sample.sup LINE: *parameter4
+ 
+@FILE: sample.sup LINE: *parameter5
+ 
+@FILE: sample.sup LINE: 
+ 
+@FILE: sample.sup LINE: 
+ 
+@FILE: sample.sup LINE: ** Insert the contents of another file right here
+ 
+@FILE: sample.sup LINE: include ratefile.min
+ 
+loading ratefile.min ... open: 0, load rate file: |ratefile.min
+
+opening ratefile.min 
+starting with line 114 at 0, seekset= 0 
+@FILE: ratefile.min LINE: *rates are same for males and females, married, single and widowed
+ 
+@FILE: ratefile.min LINE: *divorced not included since divorce rates are set to 0
+ 
+@FILE: ratefile.min LINE: 
+ 
+@FILE: ratefile.min LINE: **  Note upper age bound is NOT included in rate age category
+ 
+@FILE: ratefile.min LINE: **  so 0 1 0.088135  means that the mort rate in the first
+ 
+@FILE: ratefile.min LINE: **  (or rather the zero-th) month of life is .088135  
+ 
+@FILE: ratefile.min LINE: 
+ 
+@FILE: ratefile.min LINE: death 1 F single
+ 
+@FILE: ratefile.min LINE: 0  1     0.088135 
+ 
+@FILE: ratefile.min LINE: 1  0     0.0083525
+ 
+@FILE: ratefile.min LINE: 5    0   0.0014636
+ 
+@FILE: ratefile.min LINE: 10   0   0.00034839
+ 
+@FILE: ratefile.min LINE: 15   0   0.000191579
+ 
+@FILE: ratefile.min LINE: 20   0   0.000310663
+ 
+@FILE: ratefile.min LINE: 25   0   0.000453001
+ 
+@FILE: ratefile.min LINE: 30   0   0.000460706
+ 
+@FILE: ratefile.min LINE: 35   0   0.000513193
+ 
+@FILE: ratefile.min LINE: 40   0   0.000631281
+ 
+@FILE: ratefile.min LINE: 45   0   0.000810408
+ 
+@FILE: ratefile.min LINE: 50   0   0.00107293
+ 
+@FILE: ratefile.min LINE: 55   0   0.00147561
+ 
+@FILE: ratefile.min LINE: 60   0   0.00207753
+ 
+@FILE: ratefile.min LINE: 65   0   0.00300088
+ 
+@FILE: ratefile.min LINE: 70   0   0.0045236
+ 
+@FILE: ratefile.min LINE: 75   0   0.00697976
+ 
+@FILE: ratefile.min LINE: 80   0   0.0108844
+ 
+@FILE: ratefile.min LINE: 85   0   0.0163323
+ 
+@FILE: ratefile.min LINE: 90   0   0.0251368
+ 
+@FILE: ratefile.min LINE: 95   0   0.0385987
+ 
+@FILE: ratefile.min LINE: 100   0   0.0590448
+ 
+@FILE: ratefile.min LINE: 
+ 
+@FILE: ratefile.min LINE: 
+ 
+@FILE: ratefile.min LINE: 
+ 
+@FILE: ratefile.min LINE: death 1 M single
+ 
+@FILE: ratefile.min LINE: 0  1   0.088135
+ 
+@FILE: ratefile.min LINE: 1  0   0.0083525
+ 
+@FILE: ratefile.min LINE: 5    0   0.0014636
+ 
+@FILE: ratefile.min LINE: 10   0   0.00034839
+ 
+@FILE: ratefile.min LINE: 15   0   0.000191579
+ 
+@FILE: ratefile.min LINE: 20   0   0.000310663
+ 
+@FILE: ratefile.min LINE: 25   0   0.000453001
+ 
+@FILE: ratefile.min LINE: 30   0   0.000460706
+ 
+@FILE: ratefile.min LINE: 35   0   0.000513193
+ 
+@FILE: ratefile.min LINE: 40   0   0.000631281
+ 
+@FILE: ratefile.min LINE: 45   0   0.000810408
+ 
+@FILE: ratefile.min LINE: 50   0   0.00107293
+ 
+@FILE: ratefile.min LINE: 55   0   0.00147561
+ 
+@FILE: ratefile.min LINE: 60   0   0.00207753
+ 
+@FILE: ratefile.min LINE: 65   0   0.00300088
+ 
+@FILE: ratefile.min LINE: 70   0   0.0045236
+ 
+@FILE: ratefile.min LINE: 75   0   0.00697976
+ 
+@FILE: ratefile.min LINE: 80   0   0.0108844
+ 
+@FILE: ratefile.min LINE: 85   0   0.0163323
+ 
+@FILE: ratefile.min LINE: 90   0   0.0251368
+ 
+@FILE: ratefile.min LINE: 95   0   0.0385987
+ 
+@FILE: ratefile.min LINE: 100   0   0.0590448
+ 
+@FILE: ratefile.min LINE: 
+ 
+@FILE: ratefile.min LINE: 
+ 
+@FILE: ratefile.min LINE: *fertility rate files based on Lese ASFRs
+ 
+@FILE: ratefile.min LINE: *rates are same for single, married and all others
+ 
+@FILE: ratefile.min LINE: *single and married default to zero others default to 
+ 
+@FILE: ratefile.min LINE: *divorced not included since divorce rates set to 0
+ 
+@FILE: ratefile.min LINE: 
+ 
+@FILE: ratefile.min LINE: birth 1 F single 0
+ 
+@FILE: ratefile.min LINE: 15   0   0.0
+ 
+@FILE: ratefile.min LINE: 16   0   0.001667
+ 
+@FILE: ratefile.min LINE: 17   0   0.001667
+ 
+@FILE: ratefile.min LINE: 18   0   0.003333
+ 
+@FILE: ratefile.min LINE: 19   0   0.006667
+ 
+@FILE: ratefile.min LINE: 20   0   0.013333   
+ 
+@FILE: ratefile.min LINE: 21   0   0.018833
+ 
+@FILE: ratefile.min LINE: 22   0   0.018833
+ 
+@FILE: ratefile.min LINE: 23   0   0.018833
+ 
+@FILE: ratefile.min LINE: 24   0   0.018833
+ 
+@FILE: ratefile.min LINE: 25   0   0.018833
+ 
+@FILE: ratefile.min LINE: 26   0   0.018333
+ 
+@FILE: ratefile.min LINE: 27   0   0.0175
+ 
+@FILE: ratefile.min LINE: 28   0   0.015833
+ 
+@FILE: ratefile.min LINE: 29   0   0.013333
+ 
+@FILE: ratefile.min LINE: 30   0   0.011667   
+ 
+@FILE: ratefile.min LINE: 31   0   0.01
+ 
+@FILE: ratefile.min LINE: 32   0   0.008917
+ 
+@FILE: ratefile.min LINE: 33   0   0.00875
+ 
+@FILE: ratefile.min LINE: 34   0   0.008667 
+ 
+@FILE: ratefile.min LINE: 35   0   0.008667
+ 
+@FILE: ratefile.min LINE: 36   0   0.008667
+ 
+@FILE: ratefile.min LINE: 37   0   0.008333
+ 
+@FILE: ratefile.min LINE: 38   0   0.008167
+ 
+@FILE: ratefile.min LINE: 39   0   0.008
+ 
+@FILE: ratefile.min LINE: 40   0   0.007667   
+ 
+@FILE: ratefile.min LINE: 41   0   0.007083
+ 
+@FILE: ratefile.min LINE: 42   0   0.00625
+ 
+@FILE: ratefile.min LINE: 43   0   0.005
+ 
+@FILE: ratefile.min LINE: 44   0   0.004167
+ 
+@FILE: ratefile.min LINE: 45   0   0.003333
+ 
+@FILE: ratefile.min LINE: 100  0   0.000   
+ 
+@FILE: ratefile.min LINE: 
+ 
+@FILE: ratefile.min LINE: 
+ 
+@FILE: ratefile.min LINE: birth 1 F married 0
+ 
+@FILE: ratefile.min LINE: 15   0   0.0
+ 
+@FILE: ratefile.min LINE: 16   0   0.001667
+ 
+@FILE: ratefile.min LINE: 17   0   0.001667
+ 
+@FILE: ratefile.min LINE: 18   0   0.003333
+ 
+@FILE: ratefile.min LINE: 19   0   0.006667
+ 
+@FILE: ratefile.min LINE: 20   0   0.013333   
+ 
+@FILE: ratefile.min LINE: 21   0   0.018833
+ 
+@FILE: ratefile.min LINE: 22   0   0.018833
+ 
+@FILE: ratefile.min LINE: 23   0   0.018833
+ 
+@FILE: ratefile.min LINE: 24   0   0.018833
+ 
+@FILE: ratefile.min LINE: 25   0   0.018833
+ 
+@FILE: ratefile.min LINE: 26   0   0.018333
+ 
+@FILE: ratefile.min LINE: 27   0   0.0175
+ 
+@FILE: ratefile.min LINE: 28   0   0.015833
+ 
+@FILE: ratefile.min LINE: 29   0   0.013333
+ 
+@FILE: ratefile.min LINE: 30   0   0.011667   
+ 
+@FILE: ratefile.min LINE: 31   0   0.01
+ 
+@FILE: ratefile.min LINE: 32   0   0.008917
+ 
+@FILE: ratefile.min LINE: 33   0   0.00875
+ 
+@FILE: ratefile.min LINE: 34   0   0.008667 
+ 
+@FILE: ratefile.min LINE: 35   0   0.008667
+ 
+@FILE: ratefile.min LINE: 36   0   0.008667
+ 
+@FILE: ratefile.min LINE: 37   0   0.008333
+ 
+@FILE: ratefile.min LINE: 38   0   0.008167
+ 
+@FILE: ratefile.min LINE: 39   0   0.008
+ 
+@FILE: ratefile.min LINE: 40   0   0.007667   
+ 
+@FILE: ratefile.min LINE: 41   0   0.007083
+ 
+@FILE: ratefile.min LINE: 42   0   0.00625
+ 
+@FILE: ratefile.min LINE: 43   0   0.005
+ 
+@FILE: ratefile.min LINE: 44   0   0.004167
+ 
+@FILE: ratefile.min LINE: 45   0   0.003333
+ 
+@FILE: ratefile.min LINE: 100  0   0.000   
+ 
+@FILE: ratefile.min LINE: 
+ 
+@FILE: ratefile.min LINE: 
+ 
+@FILE: ratefile.min LINE: **marriage rates are a bit silly
+ 
+@FILE: ratefile.min LINE: 
+ 
+@FILE: ratefile.min LINE: marriage 1 F single
+ 
+@FILE: ratefile.min LINE: 15   0   0.000
+ 
+@FILE: ratefile.min LINE: 20   0   .001
+ 
+@FILE: ratefile.min LINE: 25   0   .003
+ 
+@FILE: ratefile.min LINE: 35   0   .002
+ 
+@FILE: ratefile.min LINE: 45   0   .001
+ 
+@FILE: ratefile.min LINE: 100  0   .000
+ 
+@FILE: ratefile.min LINE: *100  0   .0005
+ 
+@FILE: ratefile.min LINE: *100  0   .999
+ 
+@FILE: ratefile.min LINE: 
+ 
+@FILE: ratefile.min LINE: marriage 1 F widowed
+ 
+@FILE: ratefile.min LINE: 15   0   0.000
+ 
+@FILE: ratefile.min LINE: 100  0   0
+ 
+@FILE: ratefile.min LINE: *100  0   .999
+ 
+@FILE: ratefile.min LINE: 
+ 
+@FILE: ratefile.min LINE: marriage 1 M single
+ 
+@FILE: ratefile.min LINE: 15   0   0.000
+ 
+@FILE: ratefile.min LINE: 100  0   .005
+ 
+@FILE: ratefile.min LINE: 
+ 
+@FILE: ratefile.min LINE: marriage 1 M widowed
+ 
+@FILE: ratefile.min LINE: 15   0   0.000
+ 
+@FILE: ratefile.min LINE: 100  0   .05
+ 
+@FILE: ratefile.min LINE: 
+ 
+@FILE: ratefile.min LINE: *divorce rate files assuming no divorce
+ 
+@FILE: ratefile.min LINE: 
+ 
+@FILE: ratefile.min LINE: divorce 1 F married
+ 
+@FILE: ratefile.min LINE: 100  0   0.000
+ 
+@FILE: ratefile.min LINE: 
+ 
+@FILE: ratefile.min LINE: divorce 1 M married
+ 
+@FILE: ratefile.min LINE: 100  0   0.000
+ 
+@FILE: ratefile.min LINE: 
+ 
+@FILE: ratefile.min LINE: transit 1 M single 2
+ 
 reading rates for: transit from 1 to 2
+@FILE: ratefile.min LINE: 20   0   0
+ 
+@FILE: ratefile.min LINE: 30   0   .01
+ 
+@FILE: ratefile.min LINE: 100  0   0
+ 
+@FILE: ratefile.min LINE: 
+ 
+@FILE: ratefile.min LINE: transit 2 M single 3
+ 
 reading rates for: transit from 2 to 3
+@FILE: ratefile.min LINE: 25   0   0
+ 
+@FILE: ratefile.min LINE: 35   0   .005
+ 
+@FILE: ratefile.min LINE: 100  0   0
+ 
+@FILE: ratefile.min LINE: 
+ 
+@FILE: ratefile.min LINE: transit 3 M single 4
+ 
 reading rates for: transit from 3 to 4
+@FILE: ratefile.min LINE: 30   0   0
+ 
+@FILE: ratefile.min LINE: 40   0   .003
+ 
+@FILE: ratefile.min LINE: 100  0   0
+ 
+@FILE: ratefile.min LINE: 
+ 
+@FILE: ratefile.min LINE: transit 4 M single 1
+ 
 reading rates for: transit from 4 to 1
+@FILE: ratefile.min LINE: 45   0   0
+ 
+@FILE: ratefile.min LINE: 55   0   .001
+ 
+@FILE: ratefile.min LINE: 100  0   0
+ 
+@FILE: ratefile.min LINE: 
+ 
+@FILE: ratefile.min LINE: transit 4 F single 3
+ 
 reading rates for: transit from 4 to 3
+@FILE: ratefile.min LINE: 60   0   0
+ 
+@FILE: ratefile.min LINE: 70   0   .03
+ 
+@FILE: ratefile.min LINE: 100  0   0
+ 
 done loading ratefile.min
-offset 17715925 line17715925
+@FILE: sample.sup LINE: 
+ 
+@FILE: sample.sup LINE: ** Write opop,omar etc after this segment. 
+ 
+@FILE: sample.sup LINE: ** files will be written after last segment regardless
+ 
+@FILE: sample.sup LINE: *write_output 0
+ 
+@FILE: sample.sup LINE: 
+ 
+@FILE: sample.sup LINE: ** Stop processing this file and run the simulation
+ 
+@FILE: sample.sup LINE: run
+ 
+
+current_offset: 3527; line: 114
+@FILE: sample.sup LINE: 
+ 
 
 
  Adjusting fertility rates for 9 month birth interval 
 reading fertility rates for: group=1 mstat=1 parity=0
 +
-topAge: 181  width: 1 lambda: 0.001667 
-topAge: 182  width: 1 lambda: 0.001670 
-topAge: 183  width: 1 lambda: 0.001673 
-topAge: 184  width: 1 lambda: 0.001675 
-topAge: 185  width: 1 lambda: 0.001678 
-topAge: 186  width: 1 lambda: 0.001681 
-topAge: 187  width: 1 lambda: 0.001684 
-topAge: 188  width: 1 lambda: 0.001687 
-topAge: 189  width: 1 lambda: 0.001690 
-topAge: 190  width: 1 lambda: 0.001692 
-topAge: 191  width: 1 lambda: 0.001692 
-topAge: 192  width: 1 lambda: 0.001692 
-topAge: 193  width: 1 lambda: 0.001692 
-topAge: 194  width: 1 lambda: 0.001692 
-topAge: 195  width: 1 lambda: 0.001692 
-topAge: 196  width: 1 lambda: 0.001692 
-topAge: 197  width: 1 lambda: 0.001692 
-topAge: 198  width: 1 lambda: 0.001692 
-topAge: 199  width: 1 lambda: 0.001692 
-topAge: 200  width: 1 lambda: 0.001692 
-topAge: 201  width: 1 lambda: 0.001692 
-topAge: 202  width: 1 lambda: 0.001692 
-topAge: 203  width: 1 lambda: 0.001692 
-topAge: 204  width: 1 lambda: 0.001692 
-topAge: 205  width: 1 lambda: 0.003384 
-topAge: 206  width: 1 lambda: 0.003389 
-topAge: 207  width: 1 lambda: 0.003395 
-topAge: 208  width: 1 lambda: 0.003401 
-topAge: 209  width: 1 lambda: 0.003407 
-topAge: 210  width: 1 lambda: 0.003413 
-topAge: 211  width: 1 lambda: 0.003418 
-topAge: 212  width: 1 lambda: 0.003424 
-topAge: 213  width: 1 lambda: 0.003430 
-topAge: 214  width: 1 lambda: 0.003436 
-topAge: 215  width: 1 lambda: 0.003436 
-topAge: 216  width: 1 lambda: 0.003436 
-topAge: 217  width: 1 lambda: 0.006873 
-topAge: 218  width: 1 lambda: 0.006896 
-topAge: 219  width: 1 lambda: 0.006920 
-topAge: 220  width: 1 lambda: 0.006944 
-topAge: 221  width: 1 lambda: 0.006968 
-topAge: 222  width: 1 lambda: 0.006992 
-topAge: 223  width: 1 lambda: 0.007017 
-topAge: 224  width: 1 lambda: 0.007041 
-topAge: 225  width: 1 lambda: 0.007066 
-topAge: 226  width: 1 lambda: 0.007091 
-topAge: 227  width: 1 lambda: 0.007091 
-topAge: 228  width: 1 lambda: 0.007091 
-topAge: 229  width: 1 lambda: 0.014181 
-topAge: 230  width: 1 lambda: 0.014281 
-topAge: 231  width: 1 lambda: 0.014383 
-topAge: 232  width: 1 lambda: 0.014486 
-topAge: 233  width: 1 lambda: 0.014591 
-topAge: 234  width: 1 lambda: 0.014697 
-topAge: 235  width: 1 lambda: 0.014805 
-topAge: 236  width: 1 lambda: 0.014914 
-topAge: 237  width: 1 lambda: 0.015025 
-topAge: 238  width: 1 lambda: 0.015137 
-topAge: 239  width: 1 lambda: 0.015137 
-topAge: 240  width: 1 lambda: 0.015137 
-topAge: 241  width: 1 lambda: 0.021382 
-topAge: 242  width: 1 lambda: 0.021514 
-topAge: 243  width: 1 lambda: 0.021648 
-topAge: 244  width: 1 lambda: 0.021783 
-topAge: 245  width: 1 lambda: 0.021920 
-topAge: 246  width: 1 lambda: 0.022059 
-topAge: 247  width: 1 lambda: 0.022200 
-topAge: 248  width: 1 lambda: 0.022343 
-topAge: 249  width: 1 lambda: 0.022487 
-topAge: 250  width: 1 lambda: 0.022633 
-topAge: 251  width: 1 lambda: 0.022633 
-topAge: 252  width: 1 lambda: 0.022633 
-topAge: 253  width: 1 lambda: 0.022633 
-topAge: 254  width: 1 lambda: 0.022633 
-topAge: 255  width: 1 lambda: 0.022633 
-topAge: 256  width: 1 lambda: 0.022633 
-topAge: 257  width: 1 lambda: 0.022633 
-topAge: 258  width: 1 lambda: 0.022633 
-topAge: 259  width: 1 lambda: 0.022633 
-topAge: 260  width: 1 lambda: 0.022633 
-topAge: 261  width: 1 lambda: 0.022633 
-topAge: 262  width: 1 lambda: 0.022633 
-topAge: 263  width: 1 lambda: 0.022633 
-topAge: 264  width: 1 lambda: 0.022633 
-topAge: 265  width: 1 lambda: 0.022633 
-topAge: 266  width: 1 lambda: 0.022633 
-topAge: 267  width: 1 lambda: 0.022633 
-topAge: 268  width: 1 lambda: 0.022633 
-topAge: 269  width: 1 lambda: 0.022633 
-topAge: 270  width: 1 lambda: 0.022633 
-topAge: 271  width: 1 lambda: 0.022633 
-topAge: 272  width: 1 lambda: 0.022633 
-topAge: 273  width: 1 lambda: 0.022633 
-topAge: 274  width: 1 lambda: 0.022633 
-topAge: 275  width: 1 lambda: 0.022633 
-topAge: 276  width: 1 lambda: 0.022633 
-topAge: 277  width: 1 lambda: 0.022633 
-topAge: 278  width: 1 lambda: 0.022633 
-topAge: 279  width: 1 lambda: 0.022633 
-topAge: 280  width: 1 lambda: 0.022633 
-topAge: 281  width: 1 lambda: 0.022633 
-topAge: 282  width: 1 lambda: 0.022633 
-topAge: 283  width: 1 lambda: 0.022633 
-topAge: 284  width: 1 lambda: 0.022633 
-topAge: 285  width: 1 lambda: 0.022633 
-topAge: 286  width: 1 lambda: 0.022633 
-topAge: 287  width: 1 lambda: 0.022633 
-topAge: 288  width: 1 lambda: 0.022633 
-topAge: 289  width: 1 lambda: 0.022633 
-topAge: 290  width: 1 lambda: 0.022633 
-topAge: 291  width: 1 lambda: 0.022633 
-topAge: 292  width: 1 lambda: 0.022633 
-topAge: 293  width: 1 lambda: 0.022633 
-topAge: 294  width: 1 lambda: 0.022633 
-topAge: 295  width: 1 lambda: 0.022633 
-topAge: 296  width: 1 lambda: 0.022633 
-topAge: 297  width: 1 lambda: 0.022633 
-topAge: 298  width: 1 lambda: 0.022633 
-topAge: 299  width: 1 lambda: 0.022633 
-topAge: 300  width: 1 lambda: 0.022633 
-topAge: 301  width: 1 lambda: 0.022032 
-topAge: 302  width: 1 lambda: 0.022020 
-topAge: 303  width: 1 lambda: 0.022007 
-topAge: 304  width: 1 lambda: 0.021994 
-topAge: 305  width: 1 lambda: 0.021981 
-topAge: 306  width: 1 lambda: 0.021968 
-topAge: 307  width: 1 lambda: 0.021955 
-topAge: 308  width: 1 lambda: 0.021942 
-topAge: 309  width: 1 lambda: 0.021929 
-topAge: 310  width: 1 lambda: 0.021916 
-topAge: 311  width: 1 lambda: 0.021916 
-topAge: 312  width: 1 lambda: 0.021916 
-topAge: 313  width: 1 lambda: 0.020920 
-topAge: 314  width: 1 lambda: 0.020900 
-topAge: 315  width: 1 lambda: 0.020880 
-topAge: 316  width: 1 lambda: 0.020859 
-topAge: 317  width: 1 lambda: 0.020839 
-topAge: 318  width: 1 lambda: 0.020819 
-topAge: 319  width: 1 lambda: 0.020798 
-topAge: 320  width: 1 lambda: 0.020778 
-topAge: 321  width: 1 lambda: 0.020758 
-topAge: 322  width: 1 lambda: 0.020738 
-topAge: 323  width: 1 lambda: 0.020738 
-topAge: 324  width: 1 lambda: 0.020738 
-topAge: 325  width: 1 lambda: 0.018762 
-topAge: 326  width: 1 lambda: 0.018726 
-topAge: 327  width: 1 lambda: 0.018690 
-topAge: 328  width: 1 lambda: 0.018654 
-topAge: 329  width: 1 lambda: 0.018618 
-topAge: 330  width: 1 lambda: 0.018582 
-topAge: 331  width: 1 lambda: 0.018546 
-topAge: 332  width: 1 lambda: 0.018511 
-topAge: 333  width: 1 lambda: 0.018475 
-topAge: 334  width: 1 lambda: 0.018440 
-topAge: 335  width: 1 lambda: 0.018440 
-topAge: 336  width: 1 lambda: 0.018440 
-topAge: 337  width: 1 lambda: 0.015528 
-topAge: 338  width: 1 lambda: 0.015484 
-topAge: 339  width: 1 lambda: 0.015440 
-topAge: 340  width: 1 lambda: 0.015396 
-topAge: 341  width: 1 lambda: 0.015352 
-topAge: 342  width: 1 lambda: 0.015309 
-topAge: 343  width: 1 lambda: 0.015265 
-topAge: 344  width: 1 lambda: 0.015223 
-topAge: 345  width: 1 lambda: 0.015180 
-topAge: 346  width: 1 lambda: 0.015137 
-topAge: 347  width: 1 lambda: 0.015137 
-topAge: 348  width: 1 lambda: 0.015137 
-topAge: 349  width: 1 lambda: 0.013246 
-topAge: 350  width: 1 lambda: 0.013221 
-topAge: 351  width: 1 lambda: 0.013197 
-topAge: 352  width: 1 lambda: 0.013172 
-topAge: 353  width: 1 lambda: 0.013148 
-topAge: 354  width: 1 lambda: 0.013123 
-topAge: 355  width: 1 lambda: 0.013099 
-topAge: 356  width: 1 lambda: 0.013075 
-topAge: 357  width: 1 lambda: 0.013051 
-topAge: 358  width: 1 lambda: 0.013027 
-topAge: 359  width: 1 lambda: 0.013027 
-topAge: 360  width: 1 lambda: 0.013027 
-topAge: 361  width: 1 lambda: 0.011166 
-topAge: 362  width: 1 lambda: 0.011145 
-topAge: 363  width: 1 lambda: 0.011125 
-topAge: 364  width: 1 lambda: 0.011104 
-topAge: 365  width: 1 lambda: 0.011084 
-topAge: 366  width: 1 lambda: 0.011064 
-topAge: 367  width: 1 lambda: 0.011044 
-topAge: 368  width: 1 lambda: 0.011024 
-topAge: 369  width: 1 lambda: 0.011004 
-topAge: 370  width: 1 lambda: 0.010984 
-topAge: 371  width: 1 lambda: 0.010984 
-topAge: 372  width: 1 lambda: 0.010984 
-topAge: 373  width: 1 lambda: 0.009794 
-topAge: 374  width: 1 lambda: 0.009783 
-topAge: 375  width: 1 lambda: 0.009771 
-topAge: 376  width: 1 lambda: 0.009760 
-topAge: 377  width: 1 lambda: 0.009748 
-topAge: 378  width: 1 lambda: 0.009737 
-topAge: 379  width: 1 lambda: 0.009725 
-topAge: 380  width: 1 lambda: 0.009714 
-topAge: 381  width: 1 lambda: 0.009703 
-topAge: 382  width: 1 lambda: 0.009691 
-topAge: 383  width: 1 lambda: 0.009691 
-topAge: 384  width: 1 lambda: 0.009691 
-topAge: 385  width: 1 lambda: 0.009510 
-topAge: 386  width: 1 lambda: 0.009508 
-topAge: 387  width: 1 lambda: 0.009506 
-topAge: 388  width: 1 lambda: 0.009505 
-topAge: 389  width: 1 lambda: 0.009503 
-topAge: 390  width: 1 lambda: 0.009501 
-topAge: 391  width: 1 lambda: 0.009500 
-topAge: 392  width: 1 lambda: 0.009498 
-topAge: 393  width: 1 lambda: 0.009496 
-topAge: 394  width: 1 lambda: 0.009494 
-topAge: 395  width: 1 lambda: 0.009494 
-topAge: 396  width: 1 lambda: 0.009494 
-topAge: 397  width: 1 lambda: 0.009404 
-topAge: 398  width: 1 lambda: 0.009404 
-topAge: 399  width: 1 lambda: 0.009403 
-topAge: 400  width: 1 lambda: 0.009402 
-topAge: 401  width: 1 lambda: 0.009401 
-topAge: 402  width: 1 lambda: 0.009400 
-topAge: 403  width: 1 lambda: 0.009399 
-topAge: 404  width: 1 lambda: 0.009398 
-topAge: 405  width: 1 lambda: 0.009398 
-topAge: 406  width: 1 lambda: 0.009397 
-topAge: 407  width: 1 lambda: 0.009397 
-topAge: 408  width: 1 lambda: 0.009397 
-topAge: 409  width: 1 lambda: 0.009397 
-topAge: 410  width: 1 lambda: 0.009397 
-topAge: 411  width: 1 lambda: 0.009397 
-topAge: 412  width: 1 lambda: 0.009397 
-topAge: 413  width: 1 lambda: 0.009397 
-topAge: 414  width: 1 lambda: 0.009397 
-topAge: 415  width: 1 lambda: 0.009397 
-topAge: 416  width: 1 lambda: 0.009397 
-topAge: 417  width: 1 lambda: 0.009397 
-topAge: 418  width: 1 lambda: 0.009397 
-topAge: 419  width: 1 lambda: 0.009397 
-topAge: 420  width: 1 lambda: 0.009397 
-topAge: 421  width: 1 lambda: 0.009397 
-topAge: 422  width: 1 lambda: 0.009397 
-topAge: 423  width: 1 lambda: 0.009397 
-topAge: 424  width: 1 lambda: 0.009397 
-topAge: 425  width: 1 lambda: 0.009397 
-topAge: 426  width: 1 lambda: 0.009397 
-topAge: 427  width: 1 lambda: 0.009397 
-topAge: 428  width: 1 lambda: 0.009397 
-topAge: 429  width: 1 lambda: 0.009397 
-topAge: 430  width: 1 lambda: 0.009397 
-topAge: 431  width: 1 lambda: 0.009397 
-topAge: 432  width: 1 lambda: 0.009397 
-topAge: 433  width: 1 lambda: 0.009035 
-topAge: 434  width: 1 lambda: 0.009031 
-topAge: 435  width: 1 lambda: 0.009028 
-topAge: 436  width: 1 lambda: 0.009025 
-topAge: 437  width: 1 lambda: 0.009022 
-topAge: 438  width: 1 lambda: 0.009018 
-topAge: 439  width: 1 lambda: 0.009015 
-topAge: 440  width: 1 lambda: 0.009012 
-topAge: 441  width: 1 lambda: 0.009009 
-topAge: 442  width: 1 lambda: 0.009006 
-topAge: 443  width: 1 lambda: 0.009006 
-topAge: 444  width: 1 lambda: 0.009006 
-topAge: 445  width: 1 lambda: 0.008826 
-topAge: 446  width: 1 lambda: 0.008825 
-topAge: 447  width: 1 lambda: 0.008823 
-topAge: 448  width: 1 lambda: 0.008821 
-topAge: 449  width: 1 lambda: 0.008820 
-topAge: 450  width: 1 lambda: 0.008818 
-topAge: 451  width: 1 lambda: 0.008817 
-topAge: 452  width: 1 lambda: 0.008815 
-topAge: 453  width: 1 lambda: 0.008814 
-topAge: 454  width: 1 lambda: 0.008812 
-topAge: 455  width: 1 lambda: 0.008812 
-topAge: 456  width: 1 lambda: 0.008812 
-topAge: 457  width: 1 lambda: 0.008632 
-topAge: 458  width: 1 lambda: 0.008630 
-topAge: 459  width: 1 lambda: 0.008629 
-topAge: 460  width: 1 lambda: 0.008627 
-topAge: 461  width: 1 lambda: 0.008626 
-topAge: 462  width: 1 lambda: 0.008624 
-topAge: 463  width: 1 lambda: 0.008623 
-topAge: 464  width: 1 lambda: 0.008621 
-topAge: 465  width: 1 lambda: 0.008620 
-topAge: 466  width: 1 lambda: 0.008618 
-topAge: 467  width: 1 lambda: 0.008618 
-topAge: 468  width: 1 lambda: 0.008618 
-topAge: 469  width: 1 lambda: 0.008259 
-topAge: 470  width: 1 lambda: 0.008256 
-topAge: 471  width: 1 lambda: 0.008253 
-topAge: 472  width: 1 lambda: 0.008250 
-topAge: 473  width: 1 lambda: 0.008248 
-topAge: 474  width: 1 lambda: 0.008245 
-topAge: 475  width: 1 lambda: 0.008242 
-topAge: 476  width: 1 lambda: 0.008239 
-topAge: 477  width: 1 lambda: 0.008236 
-topAge: 478  width: 1 lambda: 0.008233 
-topAge: 479  width: 1 lambda: 0.008233 
-topAge: 480  width: 1 lambda: 0.008233 
-topAge: 481  width: 1 lambda: 0.007606 
-topAge: 482  width: 1 lambda: 0.007601 
-topAge: 483  width: 1 lambda: 0.007596 
-topAge: 484  width: 1 lambda: 0.007592 
-topAge: 485  width: 1 lambda: 0.007587 
-topAge: 486  width: 1 lambda: 0.007582 
-topAge: 487  width: 1 lambda: 0.007578 
-topAge: 488  width: 1 lambda: 0.007573 
-topAge: 489  width: 1 lambda: 0.007568 
-topAge: 490  width: 1 lambda: 0.007563 
-topAge: 491  width: 1 lambda: 0.007563 
-topAge: 492  width: 1 lambda: 0.007563 
-topAge: 493  width: 1 lambda: 0.006674 
-topAge: 494  width: 1 lambda: 0.006668 
-topAge: 495  width: 1 lambda: 0.006662 
-topAge: 496  width: 1 lambda: 0.006656 
-topAge: 497  width: 1 lambda: 0.006650 
-topAge: 498  width: 1 lambda: 0.006645 
-topAge: 499  width: 1 lambda: 0.006639 
-topAge: 500  width: 1 lambda: 0.006633 
-topAge: 501  width: 1 lambda: 0.006627 
-topAge: 502  width: 1 lambda: 0.006621 
-topAge: 503  width: 1 lambda: 0.006621 
-topAge: 504  width: 1 lambda: 0.006621 
-topAge: 505  width: 1 lambda: 0.005297 
-topAge: 506  width: 1 lambda: 0.005290 
-topAge: 507  width: 1 lambda: 0.005283 
-topAge: 508  width: 1 lambda: 0.005276 
-topAge: 509  width: 1 lambda: 0.005269 
-topAge: 510  width: 1 lambda: 0.005262 
-topAge: 511  width: 1 lambda: 0.005256 
-topAge: 512  width: 1 lambda: 0.005249 
-topAge: 513  width: 1 lambda: 0.005242 
-topAge: 514  width: 1 lambda: 0.005235 
-topAge: 515  width: 1 lambda: 0.005235 
-topAge: 516  width: 1 lambda: 0.005235 
-topAge: 517  width: 1 lambda: 0.004363 
-topAge: 518  width: 1 lambda: 0.004359 
-topAge: 519  width: 1 lambda: 0.004355 
-topAge: 520  width: 1 lambda: 0.004352 
-topAge: 521  width: 1 lambda: 0.004348 
-topAge: 522  width: 1 lambda: 0.004344 
-topAge: 523  width: 1 lambda: 0.004340 
-topAge: 524  width: 1 lambda: 0.004336 
-topAge: 525  width: 1 lambda: 0.004333 
-topAge: 526  width: 1 lambda: 0.004329 
-topAge: 527  width: 1 lambda: 0.004329 
-topAge: 528  width: 1 lambda: 0.004329 
-topAge: 529  width: 1 lambda: 0.003463 
-topAge: 530  width: 1 lambda: 0.003460 
-topAge: 531  width: 1 lambda: 0.003457 
-topAge: 532  width: 1 lambda: 0.003454 
-topAge: 533  width: 1 lambda: 0.003451 
-topAge: 534  width: 1 lambda: 0.003448 
-topAge: 535  width: 1 lambda: 0.003445 
-topAge: 536  width: 1 lambda: 0.003442 
-topAge: 537  width: 1 lambda: 0.003439 
-topAge: 538  width: 1 lambda: 0.003436 
-topAge: 539  width: 1 lambda: 0.003436 
-topAge: 540  width: 1 lambda: 0.003436 
 reading fertility rates for: group=1 mstat=4 parity=0
 +
-topAge: 181  width: 1 lambda: 0.001667 
-topAge: 182  width: 1 lambda: 0.001670 
-topAge: 183  width: 1 lambda: 0.001673 
-topAge: 184  width: 1 lambda: 0.001675 
-topAge: 185  width: 1 lambda: 0.001678 
-topAge: 186  width: 1 lambda: 0.001681 
-topAge: 187  width: 1 lambda: 0.001684 
-topAge: 188  width: 1 lambda: 0.001687 
-topAge: 189  width: 1 lambda: 0.001690 
-topAge: 190  width: 1 lambda: 0.001692 
-topAge: 191  width: 1 lambda: 0.001692 
-topAge: 192  width: 1 lambda: 0.001692 
-topAge: 193  width: 1 lambda: 0.001692 
-topAge: 194  width: 1 lambda: 0.001692 
-topAge: 195  width: 1 lambda: 0.001692 
-topAge: 196  width: 1 lambda: 0.001692 
-topAge: 197  width: 1 lambda: 0.001692 
-topAge: 198  width: 1 lambda: 0.001692 
-topAge: 199  width: 1 lambda: 0.001692 
-topAge: 200  width: 1 lambda: 0.001692 
-topAge: 201  width: 1 lambda: 0.001692 
-topAge: 202  width: 1 lambda: 0.001692 
-topAge: 203  width: 1 lambda: 0.001692 
-topAge: 204  width: 1 lambda: 0.001692 
-topAge: 205  width: 1 lambda: 0.003384 
-topAge: 206  width: 1 lambda: 0.003389 
-topAge: 207  width: 1 lambda: 0.003395 
-topAge: 208  width: 1 lambda: 0.003401 
-topAge: 209  width: 1 lambda: 0.003407 
-topAge: 210  width: 1 lambda: 0.003413 
-topAge: 211  width: 1 lambda: 0.003418 
-topAge: 212  width: 1 lambda: 0.003424 
-topAge: 213  width: 1 lambda: 0.003430 
-topAge: 214  width: 1 lambda: 0.003436 
-topAge: 215  width: 1 lambda: 0.003436 
-topAge: 216  width: 1 lambda: 0.003436 
-topAge: 217  width: 1 lambda: 0.006873 
-topAge: 218  width: 1 lambda: 0.006896 
-topAge: 219  width: 1 lambda: 0.006920 
-topAge: 220  width: 1 lambda: 0.006944 
-topAge: 221  width: 1 lambda: 0.006968 
-topAge: 222  width: 1 lambda: 0.006992 
-topAge: 223  width: 1 lambda: 0.007017 
-topAge: 224  width: 1 lambda: 0.007041 
-topAge: 225  width: 1 lambda: 0.007066 
-topAge: 226  width: 1 lambda: 0.007091 
-topAge: 227  width: 1 lambda: 0.007091 
-topAge: 228  width: 1 lambda: 0.007091 
-topAge: 229  width: 1 lambda: 0.014181 
-topAge: 230  width: 1 lambda: 0.014281 
-topAge: 231  width: 1 lambda: 0.014383 
-topAge: 232  width: 1 lambda: 0.014486 
-topAge: 233  width: 1 lambda: 0.014591 
-topAge: 234  width: 1 lambda: 0.014697 
-topAge: 235  width: 1 lambda: 0.014805 
-topAge: 236  width: 1 lambda: 0.014914 
-topAge: 237  width: 1 lambda: 0.015025 
-topAge: 238  width: 1 lambda: 0.015137 
-topAge: 239  width: 1 lambda: 0.015137 
-topAge: 240  width: 1 lambda: 0.015137 
-topAge: 241  width: 1 lambda: 0.021382 
-topAge: 242  width: 1 lambda: 0.021514 
-topAge: 243  width: 1 lambda: 0.021648 
-topAge: 244  width: 1 lambda: 0.021783 
-topAge: 245  width: 1 lambda: 0.021920 
-topAge: 246  width: 1 lambda: 0.022059 
-topAge: 247  width: 1 lambda: 0.022200 
-topAge: 248  width: 1 lambda: 0.022343 
-topAge: 249  width: 1 lambda: 0.022487 
-topAge: 250  width: 1 lambda: 0.022633 
-topAge: 251  width: 1 lambda: 0.022633 
-topAge: 252  width: 1 lambda: 0.022633 
-topAge: 253  width: 1 lambda: 0.022633 
-topAge: 254  width: 1 lambda: 0.022633 
-topAge: 255  width: 1 lambda: 0.022633 
-topAge: 256  width: 1 lambda: 0.022633 
-topAge: 257  width: 1 lambda: 0.022633 
-topAge: 258  width: 1 lambda: 0.022633 
-topAge: 259  width: 1 lambda: 0.022633 
-topAge: 260  width: 1 lambda: 0.022633 
-topAge: 261  width: 1 lambda: 0.022633 
-topAge: 262  width: 1 lambda: 0.022633 
-topAge: 263  width: 1 lambda: 0.022633 
-topAge: 264  width: 1 lambda: 0.022633 
-topAge: 265  width: 1 lambda: 0.022633 
-topAge: 266  width: 1 lambda: 0.022633 
-topAge: 267  width: 1 lambda: 0.022633 
-topAge: 268  width: 1 lambda: 0.022633 
-topAge: 269  width: 1 lambda: 0.022633 
-topAge: 270  width: 1 lambda: 0.022633 
-topAge: 271  width: 1 lambda: 0.022633 
-topAge: 272  width: 1 lambda: 0.022633 
-topAge: 273  width: 1 lambda: 0.022633 
-topAge: 274  width: 1 lambda: 0.022633 
-topAge: 275  width: 1 lambda: 0.022633 
-topAge: 276  width: 1 lambda: 0.022633 
-topAge: 277  width: 1 lambda: 0.022633 
-topAge: 278  width: 1 lambda: 0.022633 
-topAge: 279  width: 1 lambda: 0.022633 
-topAge: 280  width: 1 lambda: 0.022633 
-topAge: 281  width: 1 lambda: 0.022633 
-topAge: 282  width: 1 lambda: 0.022633 
-topAge: 283  width: 1 lambda: 0.022633 
-topAge: 284  width: 1 lambda: 0.022633 
-topAge: 285  width: 1 lambda: 0.022633 
-topAge: 286  width: 1 lambda: 0.022633 
-topAge: 287  width: 1 lambda: 0.022633 
-topAge: 288  width: 1 lambda: 0.022633 
-topAge: 289  width: 1 lambda: 0.022633 
-topAge: 290  width: 1 lambda: 0.022633 
-topAge: 291  width: 1 lambda: 0.022633 
-topAge: 292  width: 1 lambda: 0.022633 
-topAge: 293  width: 1 lambda: 0.022633 
-topAge: 294  width: 1 lambda: 0.022633 
-topAge: 295  width: 1 lambda: 0.022633 
-topAge: 296  width: 1 lambda: 0.022633 
-topAge: 297  width: 1 lambda: 0.022633 
-topAge: 298  width: 1 lambda: 0.022633 
-topAge: 299  width: 1 lambda: 0.022633 
-topAge: 300  width: 1 lambda: 0.022633 
-topAge: 301  width: 1 lambda: 0.022032 
-topAge: 302  width: 1 lambda: 0.022020 
-topAge: 303  width: 1 lambda: 0.022007 
-topAge: 304  width: 1 lambda: 0.021994 
-topAge: 305  width: 1 lambda: 0.021981 
-topAge: 306  width: 1 lambda: 0.021968 
-topAge: 307  width: 1 lambda: 0.021955 
-topAge: 308  width: 1 lambda: 0.021942 
-topAge: 309  width: 1 lambda: 0.021929 
-topAge: 310  width: 1 lambda: 0.021916 
-topAge: 311  width: 1 lambda: 0.021916 
-topAge: 312  width: 1 lambda: 0.021916 
-topAge: 313  width: 1 lambda: 0.020920 
-topAge: 314  width: 1 lambda: 0.020900 
-topAge: 315  width: 1 lambda: 0.020880 
-topAge: 316  width: 1 lambda: 0.020859 
-topAge: 317  width: 1 lambda: 0.020839 
-topAge: 318  width: 1 lambda: 0.020819 
-topAge: 319  width: 1 lambda: 0.020798 
-topAge: 320  width: 1 lambda: 0.020778 
-topAge: 321  width: 1 lambda: 0.020758 
-topAge: 322  width: 1 lambda: 0.020738 
-topAge: 323  width: 1 lambda: 0.020738 
-topAge: 324  width: 1 lambda: 0.020738 
-topAge: 325  width: 1 lambda: 0.018762 
-topAge: 326  width: 1 lambda: 0.018726 
-topAge: 327  width: 1 lambda: 0.018690 
-topAge: 328  width: 1 lambda: 0.018654 
-topAge: 329  width: 1 lambda: 0.018618 
-topAge: 330  width: 1 lambda: 0.018582 
-topAge: 331  width: 1 lambda: 0.018546 
-topAge: 332  width: 1 lambda: 0.018511 
-topAge: 333  width: 1 lambda: 0.018475 
-topAge: 334  width: 1 lambda: 0.018440 
-topAge: 335  width: 1 lambda: 0.018440 
-topAge: 336  width: 1 lambda: 0.018440 
-topAge: 337  width: 1 lambda: 0.015528 
-topAge: 338  width: 1 lambda: 0.015484 
-topAge: 339  width: 1 lambda: 0.015440 
-topAge: 340  width: 1 lambda: 0.015396 
-topAge: 341  width: 1 lambda: 0.015352 
-topAge: 342  width: 1 lambda: 0.015309 
-topAge: 343  width: 1 lambda: 0.015265 
-topAge: 344  width: 1 lambda: 0.015223 
-topAge: 345  width: 1 lambda: 0.015180 
-topAge: 346  width: 1 lambda: 0.015137 
-topAge: 347  width: 1 lambda: 0.015137 
-topAge: 348  width: 1 lambda: 0.015137 
-topAge: 349  width: 1 lambda: 0.013246 
-topAge: 350  width: 1 lambda: 0.013221 
-topAge: 351  width: 1 lambda: 0.013197 
-topAge: 352  width: 1 lambda: 0.013172 
-topAge: 353  width: 1 lambda: 0.013148 
-topAge: 354  width: 1 lambda: 0.013123 
-topAge: 355  width: 1 lambda: 0.013099 
-topAge: 356  width: 1 lambda: 0.013075 
-topAge: 357  width: 1 lambda: 0.013051 
-topAge: 358  width: 1 lambda: 0.013027 
-topAge: 359  width: 1 lambda: 0.013027 
-topAge: 360  width: 1 lambda: 0.013027 
-topAge: 361  width: 1 lambda: 0.011166 
-topAge: 362  width: 1 lambda: 0.011145 
-topAge: 363  width: 1 lambda: 0.011125 
-topAge: 364  width: 1 lambda: 0.011104 
-topAge: 365  width: 1 lambda: 0.011084 
-topAge: 366  width: 1 lambda: 0.011064 
-topAge: 367  width: 1 lambda: 0.011044 
-topAge: 368  width: 1 lambda: 0.011024 
-topAge: 369  width: 1 lambda: 0.011004 
-topAge: 370  width: 1 lambda: 0.010984 
-topAge: 371  width: 1 lambda: 0.010984 
-topAge: 372  width: 1 lambda: 0.010984 
-topAge: 373  width: 1 lambda: 0.009794 
-topAge: 374  width: 1 lambda: 0.009783 
-topAge: 375  width: 1 lambda: 0.009771 
-topAge: 376  width: 1 lambda: 0.009760 
-topAge: 377  width: 1 lambda: 0.009748 
-topAge: 378  width: 1 lambda: 0.009737 
-topAge: 379  width: 1 lambda: 0.009725 
-topAge: 380  width: 1 lambda: 0.009714 
-topAge: 381  width: 1 lambda: 0.009703 
-topAge: 382  width: 1 lambda: 0.009691 
-topAge: 383  width: 1 lambda: 0.009691 
-topAge: 384  width: 1 lambda: 0.009691 
-topAge: 385  width: 1 lambda: 0.009510 
-topAge: 386  width: 1 lambda: 0.009508 
-topAge: 387  width: 1 lambda: 0.009506 
-topAge: 388  width: 1 lambda: 0.009505 
-topAge: 389  width: 1 lambda: 0.009503 
-topAge: 390  width: 1 lambda: 0.009501 
-topAge: 391  width: 1 lambda: 0.009500 
-topAge: 392  width: 1 lambda: 0.009498 
-topAge: 393  width: 1 lambda: 0.009496 
-topAge: 394  width: 1 lambda: 0.009494 
-topAge: 395  width: 1 lambda: 0.009494 
-topAge: 396  width: 1 lambda: 0.009494 
-topAge: 397  width: 1 lambda: 0.009404 
-topAge: 398  width: 1 lambda: 0.009404 
-topAge: 399  width: 1 lambda: 0.009403 
-topAge: 400  width: 1 lambda: 0.009402 
-topAge: 401  width: 1 lambda: 0.009401 
-topAge: 402  width: 1 lambda: 0.009400 
-topAge: 403  width: 1 lambda: 0.009399 
-topAge: 404  width: 1 lambda: 0.009398 
-topAge: 405  width: 1 lambda: 0.009398 
-topAge: 406  width: 1 lambda: 0.009397 
-topAge: 407  width: 1 lambda: 0.009397 
-topAge: 408  width: 1 lambda: 0.009397 
-topAge: 409  width: 1 lambda: 0.009397 
-topAge: 410  width: 1 lambda: 0.009397 
-topAge: 411  width: 1 lambda: 0.009397 
-topAge: 412  width: 1 lambda: 0.009397 
-topAge: 413  width: 1 lambda: 0.009397 
-topAge: 414  width: 1 lambda: 0.009397 
-topAge: 415  width: 1 lambda: 0.009397 
-topAge: 416  width: 1 lambda: 0.009397 
-topAge: 417  width: 1 lambda: 0.009397 
-topAge: 418  width: 1 lambda: 0.009397 
-topAge: 419  width: 1 lambda: 0.009397 
-topAge: 420  width: 1 lambda: 0.009397 
-topAge: 421  width: 1 lambda: 0.009397 
-topAge: 422  width: 1 lambda: 0.009397 
-topAge: 423  width: 1 lambda: 0.009397 
-topAge: 424  width: 1 lambda: 0.009397 
-topAge: 425  width: 1 lambda: 0.009397 
-topAge: 426  width: 1 lambda: 0.009397 
-topAge: 427  width: 1 lambda: 0.009397 
-topAge: 428  width: 1 lambda: 0.009397 
-topAge: 429  width: 1 lambda: 0.009397 
-topAge: 430  width: 1 lambda: 0.009397 
-topAge: 431  width: 1 lambda: 0.009397 
-topAge: 432  width: 1 lambda: 0.009397 
-topAge: 433  width: 1 lambda: 0.009035 
-topAge: 434  width: 1 lambda: 0.009031 
-topAge: 435  width: 1 lambda: 0.009028 
-topAge: 436  width: 1 lambda: 0.009025 
-topAge: 437  width: 1 lambda: 0.009022 
-topAge: 438  width: 1 lambda: 0.009018 
-topAge: 439  width: 1 lambda: 0.009015 
-topAge: 440  width: 1 lambda: 0.009012 
-topAge: 441  width: 1 lambda: 0.009009 
-topAge: 442  width: 1 lambda: 0.009006 
-topAge: 443  width: 1 lambda: 0.009006 
-topAge: 444  width: 1 lambda: 0.009006 
-topAge: 445  width: 1 lambda: 0.008826 
-topAge: 446  width: 1 lambda: 0.008825 
-topAge: 447  width: 1 lambda: 0.008823 
-topAge: 448  width: 1 lambda: 0.008821 
-topAge: 449  width: 1 lambda: 0.008820 
-topAge: 450  width: 1 lambda: 0.008818 
-topAge: 451  width: 1 lambda: 0.008817 
-topAge: 452  width: 1 lambda: 0.008815 
-topAge: 453  width: 1 lambda: 0.008814 
-topAge: 454  width: 1 lambda: 0.008812 
-topAge: 455  width: 1 lambda: 0.008812 
-topAge: 456  width: 1 lambda: 0.008812 
-topAge: 457  width: 1 lambda: 0.008632 
-topAge: 458  width: 1 lambda: 0.008630 
-topAge: 459  width: 1 lambda: 0.008629 
-topAge: 460  width: 1 lambda: 0.008627 
-topAge: 461  width: 1 lambda: 0.008626 
-topAge: 462  width: 1 lambda: 0.008624 
-topAge: 463  width: 1 lambda: 0.008623 
-topAge: 464  width: 1 lambda: 0.008621 
-topAge: 465  width: 1 lambda: 0.008620 
-topAge: 466  width: 1 lambda: 0.008618 
-topAge: 467  width: 1 lambda: 0.008618 
-topAge: 468  width: 1 lambda: 0.008618 
-topAge: 469  width: 1 lambda: 0.008259 
-topAge: 470  width: 1 lambda: 0.008256 
-topAge: 471  width: 1 lambda: 0.008253 
-topAge: 472  width: 1 lambda: 0.008250 
-topAge: 473  width: 1 lambda: 0.008248 
-topAge: 474  width: 1 lambda: 0.008245 
-topAge: 475  width: 1 lambda: 0.008242 
-topAge: 476  width: 1 lambda: 0.008239 
-topAge: 477  width: 1 lambda: 0.008236 
-topAge: 478  width: 1 lambda: 0.008233 
-topAge: 479  width: 1 lambda: 0.008233 
-topAge: 480  width: 1 lambda: 0.008233 
-topAge: 481  width: 1 lambda: 0.007606 
-topAge: 482  width: 1 lambda: 0.007601 
-topAge: 483  width: 1 lambda: 0.007596 
-topAge: 484  width: 1 lambda: 0.007592 
-topAge: 485  width: 1 lambda: 0.007587 
-topAge: 486  width: 1 lambda: 0.007582 
-topAge: 487  width: 1 lambda: 0.007578 
-topAge: 488  width: 1 lambda: 0.007573 
-topAge: 489  width: 1 lambda: 0.007568 
-topAge: 490  width: 1 lambda: 0.007563 
-topAge: 491  width: 1 lambda: 0.007563 
-topAge: 492  width: 1 lambda: 0.007563 
-topAge: 493  width: 1 lambda: 0.006674 
-topAge: 494  width: 1 lambda: 0.006668 
-topAge: 495  width: 1 lambda: 0.006662 
-topAge: 496  width: 1 lambda: 0.006656 
-topAge: 497  width: 1 lambda: 0.006650 
-topAge: 498  width: 1 lambda: 0.006645 
-topAge: 499  width: 1 lambda: 0.006639 
-topAge: 500  width: 1 lambda: 0.006633 
-topAge: 501  width: 1 lambda: 0.006627 
-topAge: 502  width: 1 lambda: 0.006621 
-topAge: 503  width: 1 lambda: 0.006621 
-topAge: 504  width: 1 lambda: 0.006621 
-topAge: 505  width: 1 lambda: 0.005297 
-topAge: 506  width: 1 lambda: 0.005290 
-topAge: 507  width: 1 lambda: 0.005283 
-topAge: 508  width: 1 lambda: 0.005276 
-topAge: 509  width: 1 lambda: 0.005269 
-topAge: 510  width: 1 lambda: 0.005262 
-topAge: 511  width: 1 lambda: 0.005256 
-topAge: 512  width: 1 lambda: 0.005249 
-topAge: 513  width: 1 lambda: 0.005242 
-topAge: 514  width: 1 lambda: 0.005235 
-topAge: 515  width: 1 lambda: 0.005235 
-topAge: 516  width: 1 lambda: 0.005235 
-topAge: 517  width: 1 lambda: 0.004363 
-topAge: 518  width: 1 lambda: 0.004359 
-topAge: 519  width: 1 lambda: 0.004355 
-topAge: 520  width: 1 lambda: 0.004352 
-topAge: 521  width: 1 lambda: 0.004348 
-topAge: 522  width: 1 lambda: 0.004344 
-topAge: 523  width: 1 lambda: 0.004340 
-topAge: 524  width: 1 lambda: 0.004336 
-topAge: 525  width: 1 lambda: 0.004333 
-topAge: 526  width: 1 lambda: 0.004329 
-topAge: 527  width: 1 lambda: 0.004329 
-topAge: 528  width: 1 lambda: 0.004329 
-topAge: 529  width: 1 lambda: 0.003463 
-topAge: 530  width: 1 lambda: 0.003460 
-topAge: 531  width: 1 lambda: 0.003457 
-topAge: 532  width: 1 lambda: 0.003454 
-topAge: 533  width: 1 lambda: 0.003451 
-topAge: 534  width: 1 lambda: 0.003448 
-topAge: 535  width: 1 lambda: 0.003445 
-topAge: 536  width: 1 lambda: 0.003442 
-topAge: 537  width: 1 lambda: 0.003439 
-topAge: 538  width: 1 lambda: 0.003436 
-topAge: 539  width: 1 lambda: 0.003436 
-topAge: 540  width: 1 lambda: 0.003436 
-can't openmarriage file Hope that's OK-----------------------------later prepare_output_files_1 
+I am here at events.cpp-pop_file_name. |start4grp
+I am here at events.cpp-pop_file_name. |start4grp.opop
+can't openmarriage file Hope that's OK
+ output file names:
+ start4grp.opop|start4grp.omar|start4grp.opox|SimResults/sample.pyr|SimResults/sample.stat|start4grp.otx|
+----------------------- prepare_output_files_1 
 --t prepare_output_files_1 
---t prepare_output_files_1.5 
---t prepare_output_files_2 
---t prepare_output_files_3 
---t prepare_output_files_4 
---t prepare_output_files_5 
---t prepare_output_files_6 
---t prepare_output_files_5 
 No initial marriage file to read
 No initial transition history file to read
-xtra file NOT read: read_extra_file=17715925
-Rates imply simulation will have 17715925 groups
+xtra file NOT read: read_extra_file=0
 Simulation will have 4 groups - fprintf 
 Simulation will have 4 groups in ipop - fprintf 
-Initial population has max group id 17715925 
 Simulation will have 4 groups - fprintf 
 
  checking rates for sanity
 WARNING marriage_queues==1  yet marriage rates are specified for unmarried males THESE RATES WILL BE IGNORED.
------aa32.
- grogro001 
- grogro1111 
- grogroaa 
---aa35
 
 
  - - - - - - - - - - - - - - - - - - - - - -  - - - - - 
@@ -811,14 +701,25 @@ child group identity :  inherited from MOTHER
 
   ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  ||
 
---aa35
---aa35
 --write popu pyra
 Simulating...
---ab36
-|m0||m5|
-segment 1 complete current month: 3640
+|m0|month:  800 PopLive:   444 Brths:   0 Dths:   0 Mrgs:  0 Dvs:  0 Mq:  220 Fq:0 ti1: 0.0 ti2: 0.000000 0.0000
+month: 1000 PopLive:   857 Brths:   4 Dths:   2 Mrgs:  1 Dvs:  0 Mq:  337 Fq:0 ti1: 0.0 ti2: 0.000000 0.0000
+month: 1200 PopLive:  1136 Brths:   1 Dths:   0 Mrgs:  0 Dvs:  0 Mq:  436 Fq:0 ti1: 0.0 ti2: 0.000000 0.0000
+month: 1400 PopLive:  1443 Brths:   1 Dths:   1 Mrgs:  1 Dvs:  0 Mq:  540 Fq:0 ti1: 0.1 ti2: 0.001000 3.4293
+month: 1600 PopLive:  1683 Brths:   3 Dths:   1 Mrgs:  1 Dvs:  0 Mq:  568 Fq:0 ti1: 0.1 ti2: 0.001000 3.0996
+month: 1800 PopLive:  2015 Brths:   5 Dths:   2 Mrgs:  2 Dvs:  0 Mq:  683 Fq:0 ti1: 0.1 ti2: 0.001000 2.1437
+month: 2000 PopLive:  2443 Brths:   8 Dths:   2 Mrgs:  0 Dvs:  0 Mq:  858 Fq:0 ti1: 0.1 ti2: 0.000000 0.0000
+month: 2200 PopLive:  2819 Brths:   4 Dths:   4 Mrgs:  0 Dvs:  0 Mq: 1019 Fq:0 ti1: 0.2 ti2: 0.000000 0.0000
+month: 2400 PopLive:  3273 Brths:   8 Dths:   4 Mrgs:  1 Dvs:  0 Mq: 1178 Fq:0 ti1: 0.3 ti2: 0.001000 0.7206
+month: 2600 PopLive:  3683 Brths:   7 Dths:  14 Mrgs:  1 Dvs:  0 Mq: 1338 Fq:0 ti1: 0.3 ti2: 0.001000 0.5586
+month: 2800 PopLive:  4280 Brths:   9 Dths:   6 Mrgs:  0 Dvs:  0 Mq: 1569 Fq:0 ti1: 0.4 ti2: 0.001000 0.4062
+month: 3000 PopLive:  4992 Brths:  11 Dths:   5 Mrgs:  0 Dvs:  0 Mq: 1763 Fq:0 ti1: 0.6 ti2: 0.002000 0.6435
+month: 3200 PopLive:  5830 Brths:  10 Dths:   5 Mrgs:  2 Dvs:  0 Mq: 2101 Fq:0 ti1: 0.7 ti2: 0.002000 0.4531
+month: 3400 PopLive:  6737 Brths:  11 Dths:   6 Mrgs:  2 Dvs:  0 Mq: 2461 Fq:0 ti1: 0.8 ti2: 0.003000 0.4953
+month: 3600 PopLive:  7909 Brths:  19 Dths:  14 Mrgs:  1 Dvs:  0 Mq: 2899 Fq:0 ti1: 0.9 ti2: 0.004000 0.4760
 
+segment 1 complete current month: 3640
  grogro 
 agga lolo num_segments 1 
 agga lolo curr_segment 2 
@@ -831,7 +732,7 @@ agga curr_segment 2
 agga read_xtra_file! 0 
 agga read_xtra_file! 0 
 males on queue
-person-years on queue: 285330
+person-years on queue: 855992
 females on queue
 person-years on queue: 0
 ageDiff	targetProp 	observedProp	E(mars)	O(mars)	excess	O/E	score
