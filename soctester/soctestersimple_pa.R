@@ -30,6 +30,16 @@ print_string_to_start_socsim_on_cmd <- function(rootfolder,folder, supfile,seed)
   results.df <- load("results.rda")
   
   
+  library("future")
+  f <- future({
+       cat("Hello world!\n")
+       3.14
+       
+       
+       startSocsimWithFile(supfilelist[i],toString(seedlist[i]))
+   })
+  v <- value(f)  
+  
   library(rsoc)
   for (i in 1:2) {
 
