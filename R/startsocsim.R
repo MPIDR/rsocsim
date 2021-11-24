@@ -14,8 +14,10 @@
 run1simulationwithfile <- function(rootfolder,folder, supfile,seed) {
   # use the "future" library to run a rcpp-socsim simulation
   # in a seperate process
+  print("Start run1simulationwithfile.")
   future::plan(future::multisession)
-  setwd(paste0(rootfolder,"\\",folder[1]))
+  print("after future::plan(future::multisession)")
+  setwd(paste0(rootfolder,"\\",folder))
   print(seed)
   
   f1 <- future({
