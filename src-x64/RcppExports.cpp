@@ -10,36 +10,6 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
-// rcpp_hello_world
-List rcpp_hello_world();
-RcppExport SEXP _rsoc_rcpp_hello_world() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(rcpp_hello_world());
-    return rcpp_result_gen;
-END_RCPP
-}
-// timesTwo3
-NumericVector timesTwo3(NumericVector x);
-RcppExport SEXP _rsoc_timesTwo3(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(timesTwo3(x));
-    return rcpp_result_gen;
-END_RCPP
-}
-// socsimMain
-void socsimMain();
-RcppExport SEXP _rsoc_socsimMain() {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    socsimMain();
-    return R_NilValue;
-END_RCPP
-}
 // startSocsimWithFile
 int startSocsimWithFile(String supfile, String seed);
 RcppExport SEXP _rsoc_startSocsimWithFile(SEXP supfileSEXP, SEXP seedSEXP) {
@@ -54,9 +24,6 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_rsoc_rcpp_hello_world", (DL_FUNC) &_rsoc_rcpp_hello_world, 0},
-    {"_rsoc_timesTwo3", (DL_FUNC) &_rsoc_timesTwo3, 1},
-    {"_rsoc_socsimMain", (DL_FUNC) &_rsoc_socsimMain, 0},
     {"_rsoc_startSocsimWithFile", (DL_FUNC) &_rsoc_startSocsimWithFile, 2},
     {NULL, NULL, 0}
 };
