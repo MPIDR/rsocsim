@@ -59,7 +59,7 @@ print_string_to_start_socsim_on_cmd <- function(rootfolder,folder, supfile,seed)
     results.df <- rbind(results.df, data.frame(newrow))
     save(results.df,file="results.rda")
   }
-  typeof(seedlist[1])
+    typeof(seedlist[1])
   
   
   detach(package:rsoc, unload=TRUE)#
