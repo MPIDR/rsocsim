@@ -16,7 +16,7 @@ run1simulationwithfile(rootfolder, folder, supfile, seed)
 \item{seed}{RNG seed}
 }
 \value{
-basically nothing
+The results will be written into the specified folder
 }
 \description{
 Run a socsim-simulation in a seperate process
