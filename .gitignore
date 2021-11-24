@@ -5,3 +5,6 @@
 src/*.o
 src/*.so
 src/*.dll
+*.log
+src-x64/*
+src-i386/*

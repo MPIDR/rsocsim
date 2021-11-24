@@ -1,29 +1,9 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-// This is a simple example of exporting a C++ function to R. You can
-// source this function into an R session using the Rcpp::sourceCpp 
-// function (or via the Source button on the editor toolbar). Learn
-// more about Rcpp at:
-//
-//   http://www.rcpp.org/
-//   http://adv-r.had.co.nz/Rcpp.html
-//   http://gallery.rcpp.org/
-//
-
-// [[Rcpp::export]]
-NumericVector timesTwo3(NumericVector x) {
-  return x * 2;
-}
-
 #include "src\events.cpp"
 //#include "src\random.c"
 
-
-// [[Rcpp::export]]
-void socsimMain(){
-  Rcpp::Rcout << "thistestobj" << std::endl;
-}
 
 // [[Rcpp::export]]
 int startSocsimWithFile(String supfile, String seed){
@@ -39,7 +19,6 @@ int startSocsimWithFile(String supfile, String seed){
   
   return 0;
   
-  //main(3,["bla1","bla2","bla3"]);
 }
 
 
@@ -48,6 +27,6 @@ int startSocsimWithFile(String supfile, String seed){
 // run after the compilation.
 //
 
-/*** R
-timesTwo(42)
-*/
+// /*** R
+// timesTwo(42)
+// */
