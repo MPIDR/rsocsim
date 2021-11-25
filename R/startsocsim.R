@@ -20,7 +20,7 @@ run1simulationwithfile <- function(rootfolder,folder, supfile,seed) {
   setwd(paste0(rootfolder,"\\",folder))
   print(seed)
   
-  f1 <- future({
+  f1 <- future::future({
     startSocsimWithFile(supfile,seed)
     v1 <- future::value(f1)
   })
