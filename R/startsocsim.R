@@ -50,10 +50,10 @@ run1simulationwithfile_inprocess <- function(rootfolder, supfile,seed) {
 run1simulationwithfile_apply <- function(folder, supfile,seed="23") {
   # use the "future" library to run a rcpp-socsim simulation
   # in a seperate process
-  #folder = "D:\\dev\\r\\socsimprojects\\CousinDiversity"
-  #supfile = "CousinDiversity.sup"
-  #seed = "23"
+  folder = "D:\\dev\\r\\socsimprojects\\CousinDiversity"
+  supfile = "CousinDiversity.sup"
+  seed = "23"
   numCores=1
   parallel::mclapply(c(1),run1simulationwithfile_inprocess(folder, supfile,seed), mc.cores = numCores)
-  
+  # now there is a mysterious error: startSocsimWithFile is not available somehow????? 
 }
