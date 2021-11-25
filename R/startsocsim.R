@@ -19,11 +19,14 @@ run1simulationwithfile <- function(rootfolder,folder, supfile,seed) {
   print("after future::plan(future::multisession)")
   setwd(paste0(rootfolder,"\\",folder))
   print(seed)
+  print(rootfolder)
+  print(folder)
   
   f1 <- future::future({
     startSocsimWithFile(supfile,seed)
     v1 <- future::value(f1)
   })
+  return(1)
 }
 
 #' Run a socsim-simulation in the r-process
@@ -41,6 +44,7 @@ run1simulationwithfile_inprocess <- function(rootfolder, supfile,seed) {
   setwd(paste0(rootfolder))
   print(seed)
   startSocsimWithFile(supfile,seed)
+  return(1)
 }
 
 
@@ -56,4 +60,5 @@ run1simulationwithfile_apply <- function(folder, supfile,seed="23") {
   numCores=1
   parallel::mclapply(c(1),run1simulationwithfile_inprocess(folder, supfile,seed), mc.cores = numCores)
   # now there is a mysterious error: startSocsimWithFile is not available somehow????? 
+  return(1)
 }
