@@ -73,20 +73,20 @@ run1simulationwithfile_inprocess <- function(folder, supfile,seed) {
 
 
 # Deprecated for now!
-run1simulationwithfile_apply <- function(folder, supfile,seed="23") {
-  # use the "future" library to run a rcpp-socsim simulation
-  # in a seperate process
-  folder = "D:\\dev\\r\\socsimprojects\\CousinDiversity"
-  supfile = "CousinDiversity.sup"
-  seed = "23"
-  numCores=2
-  cl <- parallel::makeCluster(numCores, type="PSOCK", outfile="")
-  parallel::clusterExport(cl, run1simulationwithfile_inprocess)
-  parallel::parLapply(cl,c(2),run1simulationwithfile_inprocess, folder=folder, supfile=supfile,seed=seed)
-  # now there is a mysterious error: startSocsimWithFile is not available somehow????? 
-  parallel::stopCluster(cl)
-  return(1)
-}
+#run1simulationwithfile_apply <- function(folder, supfile,seed="23") {
+#  # use the "future" library to run a rcpp-socsim simulation
+#  # in a seperate process
+#  folder = "D:\\dev\\r\\socsimprojects\\CousinDiversity"
+#  supfile = "CousinDiversity.sup"
+#  seed = "23"
+#  numCores=2
+#  cl <- parallel::makeCluster(numCores, type="PSOCK", outfile="")
+#  parallel::clusterExport(cl, run1simulationwithfile_inprocess)
+#  parallel::parLapply(cl,c(2),run1simulationwithfile_inprocess, folder=folder, supfile=supfile,seed=seed)
+#  # now there is a mysterious error: startSocsimWithFile is not available somehow????? 
+#  parallel::stopCluster(cl)
+#  return(1)
+#}
 
 run1simulationwithfile_clustercall <- function(supfile,seed="23") {
   # use the "future" library to run a rcpp-socsim simulation
