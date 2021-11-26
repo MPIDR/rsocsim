@@ -8,7 +8,7 @@ The results will be saved into that folder}
 run1simulationwithfile(
   folder,
   supfile,
-  seed = "1",
+  seed = "42",
   process_method = "inprocess"
 )
 }
@@ -22,7 +22,11 @@ folder}
 
 \item{process_method}{specify whether and how SOCSIM should be started in its
 own process or in the running R process. Use one of
- "inprocess" -}
+ "inprocess" - SOCSIM runs in the R-process. Beware if you run several different
+ simulations - they may affect later simulations
+ "future" - the safest option. A new process will be start via the "future"
+ package
+ "clustercall" - if the future package is not available, try this method instead}
 
 \item{rootfolder}{rootfolder...}
 }
