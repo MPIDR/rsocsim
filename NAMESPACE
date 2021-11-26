@@ -2,7 +2,8 @@
 
 export(run1simulationwithfile)
 export(run1simulationwithfile_apply)
+export(run1simulationwithfile_clustercall)
 export(run1simulationwithfile_inprocess)
-useDynLib(rsoc, .registration=TRUE)
 exportPattern("^[[:alpha:]]+")
-importFrom(Rcpp, evalCpp)
+importFrom(Rcpp,evalCpp)
+useDynLib(rsoc)

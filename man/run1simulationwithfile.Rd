@@ -2,22 +2,34 @@
 % Please edit documentation in R/startsocsim.R
 \name{run1simulationwithfile}
 \alias{run1simulationwithfile}
-\title{Run a socsim-simulation in a seperate process}
+\title{Run a single socsim-simulation with a given supplement-file and folder.
+The results will be saved into that folder}
 \usage{
-run1simulationwithfile(rootfolder, folder, supfile, seed)
+run1simulationwithfile(
+  folder,
+  supfile,
+  seed = "1",
+  process_method = "inprocess"
+)
 }
 \arguments{
+\item{folder}{base-directory of the simulation.}
+
+\item{supfile}{the .sup file to start the simulation, relative to the
+folder}
+
+\item{seed}{RNG seed as string, Default="42"}
+
+\item{process_method}{specify whether and how SOCSIM should be started in its
+own process or in the running R process. Use one of
+ "inprocess" -}
+
 \item{rootfolder}{rootfolder...}
-
-\item{folder}{folder name of the simulation}
-
-\item{supfile}{the .sup file to start the simulation}
-
-\item{seed}{RNG seed}
 }
 \value{
 The results will be written into the specified folder
 }
 \description{
-Run a socsim-simulation in a seperate process
+Run a single socsim-simulation with a given supplement-file and folder.
+The results will be saved into that folder
 }

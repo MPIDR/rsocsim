@@ -4,14 +4,14 @@
 \alias{run1simulationwithfile_inprocess}
 \title{Run a socsim-simulation in the r-process}
 \usage{
-run1simulationwithfile_inprocess(rootfolder, supfile, seed)
+run1simulationwithfile_inprocess(folder, supfile, seed, bla)
 }
 \arguments{
-\item{rootfolder}{rootfolder  name of the simulation}
-
 \item{supfile}{the .sup file to start the simulation}
 
 \item{seed}{RNG seed}
+
+\item{rootfolder}{rootfolder  name of the simulation}
 }
 \value{
 The results will be written into the specified folder

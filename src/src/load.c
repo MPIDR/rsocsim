@@ -243,7 +243,12 @@ int load( char *file)
 	{
 		if ((fp = fopen(file, "r")) == 0)
 		{
-			/*    error("Can't open \"%s\"", "rate_file");*/
+		  
+		  char path[255];
+		  
+			getcwd(path, 255);
+			warning("Current working directory: %s\n", path);
+		  /*    error("Can't open \"%s\"", "rate_file");*/
 			warning("Can't open ratefile: %s", file, 1);
 
 			/*return -1;*/
