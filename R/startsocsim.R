@@ -94,7 +94,7 @@ run1simulationwithfile_clustercall <- function(supfile,seed="23") {
   print("parallel::clusterCall")
   numCores=1
   cl <- parallel::makeCluster(numCores, type="PSOCK", outfile="socsim_clustercall.log")
-  parallel::clusterExport(cl, "bla")
+  parallel::clusterExport(cl, "startSocsimWithFile")
   parallel::clusterCall(cl,startSocsimWithFile, supfile=supfile,seed=seed)
   parallel::stopCluster(cl)
   return(1)
