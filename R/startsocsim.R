@@ -29,11 +29,11 @@ run1simulationwithfile <- function(folder, supfile,seed="42",process_method="inp
   
   result = NULL
   if ((process_method=="inprocess") | (process_method =="default")) {
-    result = run1simulationwithfile_inprocess(folder=folder, supfile=supfile,seed=seed)
+    result = run1simulationwithfile_inprocess(supfile=supfile,seed=seed)
   } else if (process_method=="future") {
-    result = run1simulationwithfile_future(folder=folder, supfile=supfile,seed=seed)
+    result = run1simulationwithfile_future(supfile=supfile,seed=seed)
   } else if (process_method=="clustercall") {
-    result = run1simulationwithfile_clustercall(folder=folder, supfile=supfile,seed=seed)
+    result = run1simulationwithfile_clustercall(supfile=supfile,seed=seed)
   }
   
   print(previous_wd)
@@ -43,20 +43,21 @@ run1simulationwithfile <- function(folder, supfile,seed="42",process_method="inp
   
 }
 
-run1simulationwithfile_future <- function(folder, supfile,seed="42") {
+run1simulationwithfile_future <- function(supfile,seed="42") {
   # use the "future" library to run a rcpp-socsim simulation
   # in a seperate process
-  print("Start future plan")
+  print("create future cluster")
   future::plan(future::multisession)
   print("after future::plan(future::multisession)")
-
+  print("start socsim simulation now. no output will be shown!")
   
   f1 <- future::future({
     startSocsimWithFile(supfile,seed)
-  })
+  },seed=TRUE)
   v1 <- future::value(f1)
   return(1)
 }
+
 
 #' Run a socsim-simulation in the r-process
 #'
@@ -70,8 +71,8 @@ run1simulationwithfile_inprocess <- function(folder, supfile,seed) {
 }
 
 
-#library(parallel)
-#
+
+# Deprecated for now!
 run1simulationwithfile_apply <- function(folder, supfile,seed="23") {
   # use the "future" library to run a rcpp-socsim simulation
   # in a seperate process
@@ -87,14 +88,14 @@ run1simulationwithfile_apply <- function(folder, supfile,seed="23") {
   return(1)
 }
 
-run1simulationwithfile_clustercall <- function(folder, supfile,seed="23") {
+run1simulationwithfile_clustercall <- function(supfile,seed="23") {
   # use the "future" library to run a rcpp-socsim simulation
   # in a seperate process
   print("parallel::clusterCall")
   numCores=1
   cl <- parallel::makeCluster(numCores, type="PSOCK", outfile="socsim_clustercall.log")
   parallel::clusterExport(cl, "bla")
-  parallel::clusterCall(cl,run1simulationwithfile_inprocess, folder=folder, supfile=supfile,seed=seed)
+  parallel::clusterCall(cl,startSocsimWithFile, supfile=supfile,seed=seed)
   parallel::stopCluster(cl)
   return(1)
 }
