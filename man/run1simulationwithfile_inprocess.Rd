@@ -4,7 +4,7 @@
 \alias{run1simulationwithfile_inprocess}
 \title{Run a socsim-simulation in the r-process}
 \usage{
-run1simulationwithfile_inprocess(folder, supfile, seed, bla)
+run1simulationwithfile_inprocess(folder, supfile, seed)
 }
 \arguments{
 \item{supfile}{the .sup file to start the simulation}

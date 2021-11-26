@@ -64,8 +64,7 @@ run1simulationwithfile_future <- function(folder, supfile,seed="42") {
 #' @param supfile the .sup file to start the simulation
 #' @param seed RNG seed
 #' @return The results will be written into the specified folder
-#' @export
-run1simulationwithfile_inprocess <- function(folder, supfile,seed,) {
+run1simulationwithfile_inprocess <- function(folder, supfile,seed) {
   startSocsimWithFile(supfile,seed)
   return(1)
 }
@@ -73,7 +72,6 @@ run1simulationwithfile_inprocess <- function(folder, supfile,seed,) {
 
 #library(parallel)
 #
-#' @export
 run1simulationwithfile_apply <- function(folder, supfile,seed="23") {
   # use the "future" library to run a rcpp-socsim simulation
   # in a seperate process
@@ -89,7 +87,6 @@ run1simulationwithfile_apply <- function(folder, supfile,seed="23") {
   return(1)
 }
 
-#' @export
 run1simulationwithfile_clustercall <- function(folder, supfile,seed="23") {
   # use the "future" library to run a rcpp-socsim simulation
   # in a seperate process
