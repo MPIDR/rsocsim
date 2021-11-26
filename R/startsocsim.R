@@ -100,15 +100,15 @@ run1simulationwithfile_clustercall <- function(supfile,seed="23") {
   return(1)
 }
 
-bla <- function(){
-  print("function bla")
-    folder = "D:\\dev\\r\\socsimprojects\\CousinDiversity"
-  supfile = "CousinDiversity.sup"
-  seed="33"
-  previous_wd = getwd()
-  setwd(paste0(folder))
-  print(seed)
-  startSocsimWithFile(supfile,seed)
-  setwd(previous_wd)
-  return(1) 
-}
+#bla <- function(){
+#  print("function bla")
+#    folder = "D:\\dev\\r\\socsimprojects\\CousinDiversity"
+#  supfile = "CousinDiversity.sup"
+#  seed="33"
+#  previous_wd = getwd()
+#  setwd(paste0(folder))
+#  print(seed)
+#  startSocsimWithFile(supfile,seed)
+#  setwd(previous_wd)
+#  return(1) 
+#}
