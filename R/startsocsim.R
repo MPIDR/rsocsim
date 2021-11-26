@@ -25,20 +25,25 @@ run1simulationwithfile <- function(folder, supfile,seed="42",process_method="inp
   print(folder)
   print(seed)
   previous_wd = getwd()
-  setwd(paste0(folder))
-  
   result = NULL
-  if ((process_method=="inprocess") | (process_method =="default")) {
-    result = run1simulationwithfile_inprocess(supfile=supfile,seed=seed)
-  } else if (process_method=="future") {
-    result = run1simulationwithfile_future(supfile=supfile,seed=seed)
-  } else if (process_method=="clustercall") {
-    result = run1simulationwithfile_clustercall(supfile=supfile,seed=seed)
+  tryCatch(expr = {
+    setwd(paste0(folder))
+    if ((process_method=="inprocess") | (process_method =="default")) {
+      result = run1simulationwithfile_inprocess(supfile=supfile,seed=seed)
+    } else if (process_method=="future") {
+      result = run1simulationwithfile_future(supfile=supfile,seed=seed)
+    } else if (process_method=="clustercall") {
+      result = run1simulationwithfile_clustercall(supfile=supfile,seed=seed)
+    }
+  },
+  error = function(w){
+    print("Error during execution of simulation!")
+  },
+  finally = {
+    print(previous_wd)
+    setwd(previous_wd)
   }
-  
-  print(previous_wd)
-  setwd(previous_wd)
-  
+  )
   return(result)
   
 }
@@ -112,3 +117,47 @@ run1simulationwithfile_clustercall <- function(supfile,seed="23") {
 #  setwd(previous_wd)
 #  return(1) 
 #}
+
+#' Run a single socsim-simulation with a socsim binary.
+#' the place
+#' The results will be saved into that folder
+#'
+#' @param rootfolder rootfolder...
+#' @param folder base-directory of the simulation. 
+#' @param supfile the .sup file to start the simulation, relative to the
+#' folder
+#' @param seed RNG seed as string, Default="42"
+#' @param socsim_path path+filename of a socsim-executable. Download one from https://github.com/tomthe/socsim/releases/download/0.3/socsim.exe
+#' @return The results will be written into the specified folder
+#' @export
+run1simulationwithfile_from_binary <- function(folder, supfile,seed="42",socsim_path=NULL) {
+  if (is.null(socsim_path)){
+    print("No socsim_path specified. So I will download the Windows-binary from github to a temporary directory!")
+    print("This will probably not work due to antivirus-software.")
+    print("please download an executable socsim from https://github.com/tomthe/socsim/releases/download/0.3/socsim.exe")
+    print("then save the whole path and specify it as socsim_path for this function!")
+    url = "https://github.com/tomthe/socsim/releases/download/0.3/socsim.exe"
+    socsim_path = paste0(tempdir(),"\\","socsim.exe")
+    download.file(url,socsim_path,method="auto")
+  }
+  seed = toString(seed)
+  print("Start run1simulationwithfile")
+  print(folder)
+  print(supfile)
+  print(paste0("socsim_path: ",socsim_path))
+  print(seed)
+  previous_wd = getwd()
+  setwd(paste0(folder))
+  
+  print(paste0("command:  ",socsim_path,args=paste0(" ",supfile," ", seed)))
+  
+  print(system2(socsim_path,args=c(supfile," ", seed)))
+  print(system(paste(socsim_path,supfile, seed)))
+  a = (system(paste(socsim_path,paste0(folder,"\\",supfile), seed)))
+  print(paste(socsim_path,paste0(folder,"\\",supfile), seed))
+  print(a)
+  print(previous_wd)
+  setwd(previous_wd)
+  
+  return(1)
+}
