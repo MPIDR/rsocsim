@@ -70,6 +70,7 @@ run1simulationwithfile_future <- function(supfile,seed="42") {
 #' @param supfile the .sup file to start the simulation
 #' @param seed RNG seed
 #' @return The results will be written into the specified folder
+
 run1simulationwithfile_inprocess <- function(folder, supfile,seed) {
   startSocsimWithFile(supfile,seed)
   return(1)

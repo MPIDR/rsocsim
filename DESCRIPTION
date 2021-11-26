@@ -1,11 +1,11 @@
 Package: rsoc
 Type: Package
-Title: Run Socsim
-Version: 1.1
+Title: SOCSIM with R
+Version: 1.2
 Date: 2021-01-11
 Author: MPIDR
 Maintainer: Tom Theile <theile@mpidr.de>
-Description: One paragraph description of what the package does as one or more full sentences.
+Description: Install and run SOCSIM from within R with this R-package.
 License: GPL (>= 2)
 Imports: Rcpp (>= 1.0.5),
     future,
