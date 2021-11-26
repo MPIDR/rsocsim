@@ -2,7 +2,10 @@
 
 ## Installation
 
-I am not entirely sure whether you need to have RTools installed. Please report back if you were able to use this package without RTools!
+### From Source
+
+To get the latest version, you need to have RTools and devtools installed
+and install from source directly from this repository
 
 * install devtools
 ````R
@@ -17,6 +20,17 @@ install.packages("rcpp")
 * install rsoc from Github with devtools:
 ````
 devtools::install_github("tomthe/rsoc")
+````
+
+### Install precompiled package (Windows only)
+
+You can also install a pre-compiled binary. This might be easier, but it might
+be not the most up-to-date version. You can find the most up-to-date binary release
+on https://github.com/tomthe/rsoc/releases
+
+````
+> url = "https://github.com/tomthe/rsoc/releases/download/binary/rsoc_1.1.zip"
+> install.packages(url, repos = NULL, type = "win.binary")
 ````
 
 ## Use rsoc
@@ -51,7 +65,7 @@ rsoc::run1simulationwithfile(folder,supfile,seed,process_method = "clustercall")
 ## Develop the package
 
 You need RTools, devtools and rcpp.
-Clone this repository, change something, hit "Build--clean and rebuild"
+Clone this repository, change something, hit "Build-->clean and rebuild"
 
 renew documentation and some stuff with:
 ```` devtools.document()````
@@ -60,7 +74,7 @@ renew documentation and some stuff with:
 
 * Testing and verification
 * including convenient R-functions for generating input and reading/processing output
- * possible options:
-  * include those functions into this package
-  * create another package that loads this package
+  * possible options:
+    * include those functions into this package
+    * create another package that loads this package
 
