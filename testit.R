@@ -11,3 +11,8 @@ rsoc::run1simulationwithfile(folder,supfile,seed,process_method = "clustercall")
 socsim_path = "D:\\downloads\\socsim1.exe"
 rsoc::run1simulationwithfile_from_binary(folder,supfile,seed)
 rsoc::run1simulationwithfile_from_binary(folder,supfile,seed,socsim_path)
+
+
+basename(socsim_path)
+dirname(socsim_path)
+dirname(folder)

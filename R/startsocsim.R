@@ -27,7 +27,7 @@ run1simulationwithfile <- function(folder, supfile,seed="42",process_method="inp
   previous_wd = getwd()
   result = NULL
   tryCatch(expr = {
-    setwd(paste0(folder))
+    setwd(paste0(dirname(folder)))
     if ((process_method=="inprocess") | (process_method =="default")) {
       result = run1simulationwithfile_inprocess(supfile=supfile,seed=seed)
     } else if (process_method=="future") {
@@ -154,8 +154,8 @@ run1simulationwithfile_from_binary <- function(folder, supfile,seed="42",socsim_
   
   print(system2(socsim_path,args=c(supfile," ", seed)))
   print(system(paste(socsim_path,supfile, seed)))
-  a = (system(paste(socsim_path,paste0(folder,"\\",supfile), seed)))
-  print(paste(socsim_path,paste0(folder,"\\",supfile), seed))
+  a = (system(paste(socsim_path,paste0(dirname(folder),"\\",supfile), seed)))
+  print(paste(socsim_path,paste0(dirname(folder),"\\",supfile), seed))
   print(a)
   print(previous_wd)
   setwd(previous_wd)
