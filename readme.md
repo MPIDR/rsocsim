@@ -18,7 +18,7 @@ install.packages("rcpp")
 ````
 
 * install rsoc from Github with devtools:
-````
+````R
 devtools::install_github("tomthe/rsoc")
 ````
 
@@ -28,14 +28,14 @@ You can also install a pre-compiled binary. This might be easier, but it might
 be not the most up-to-date version. You can find the most up-to-date binary release
 on https://github.com/tomthe/rsoc/releases
 
-````
+````R
 > url = "https://github.com/tomthe/rsoc/releases/download/binary/rsoc_1.1.zip"
 > install.packages(url, repos = NULL, type = "win.binary")
 ````
 
 ## Use rsoc
 
-````
+````R
 library("rsoc")
 
 # specify the working directory, where your supfile and ratefiles are:
