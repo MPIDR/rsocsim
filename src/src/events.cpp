@@ -416,7 +416,9 @@ int main1(int argc, char *argv[])
 	
 	//Rprintf("------------aa3a");
 	fd_rn = open_write("random_number");
-	fprintf(fd_rn, "%d\n%d\n", ceed, irandom());
+	fprintf(fd_rn, "%d\n", ceed);
+	fflush(fd_rn);
+	fprintf(fd_rn, "%d\n", irandom());
 	//Rprintf("------------aa3b");
 	//logmsg("opening pop pyramid file %s\n", pyr_file_name,1);
 	
