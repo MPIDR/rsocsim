@@ -15,7 +15,7 @@ int startSocsimWithFile(String supfile, String seed){
     NULL
   };
   main1(2, args);
-  Rcpp::Rcout << "Socsim Done." << 1.0/0.0 << std::endl;
+  Rcpp::Rcout << "Socsim Done."  << std::endl;
   
   return 0;
   
