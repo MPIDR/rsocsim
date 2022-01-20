@@ -431,7 +431,7 @@ double endogamy;
 int take_census;
 int fixed_epsilon, random_epsilon;
 int read_xtra_file;
-int ceed;
+long int ceed;
 static char randstate[2048]; /* for gcc's random number generator */
 int current_month;
 int stop_month;

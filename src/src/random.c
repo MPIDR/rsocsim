@@ -22,10 +22,11 @@ const long long MULTIPLIER = 1103515245; /* a */
 const long int  INCREMENT = 12345; /*c */
 
 double cycle(double,int);
+//long int ceed=12345678;
+
 
 int irandom()
 {
-    long int ceed;
     #if defined(_WIN32) || defined(WIN32) || defined(__CYGWIN__) || defined(__MINGW32__) //check if this is Windows, because win has no random(), only rand()
         //ceed = rand(); // rand() is not very good randomness.
         ceed = ((MULTIPLIER * ceed) + INCREMENT) % MODULUS; //implement our own https://en.wikipedia.org/wiki/Linear_congruential_generator ... leads to errors
@@ -35,12 +36,6 @@ int irandom()
     #endif
     printf("\nrand_max: %ld",RAND_MAX);
 
-
-  /* while ((ceed = ((MULTIPLIER * ceed) + INCREMENT) % MODULUS) <= 0)*/
-  //ceed=rand();//	;ceed=random()	;
-    /*
-    printf("irand: %d\n", ceed);
-    */
     return (int) ceed;
 }
 /***********************************************************************/

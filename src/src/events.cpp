@@ -264,10 +264,12 @@ int main1(int argc, char *argv[])
 	//strcpy(rate_file_name, *++argv);
 	
 	//Rcpp::Rcout << "useage: ratefile random_number" << useage << argv[1] << argv[2] << std::endl;
+	Rcpp::Rcout << "command-line argv[0]: " << argv[0] << "| argv[1]: " << argv[1] << "| argv[2]: " << argv[2] << std::endl;
 	
-	ceed = atoi(*++argv);
+	//ceed = atoi(*++argv);
+	ceed = atoi(argv[2]);
+	Rcpp::Rcout << "random_number seed: " << ceed << "| command-line argv[1]: " << argv[1] << "| argv[2]: " << argv[2] << std::endl;
 	
-	//Rcpp::Rcout << "useage: ratefile random_number" << useage << argv[1] << argv[2] << std::endl;
 	
 	// initstate(ceed, randstate, 256); //suggested by jim: replace with:
 	srand(ceed);
@@ -414,7 +416,7 @@ int main1(int argc, char *argv[])
 	
 	//Rprintf("------------aa3a");
 	fd_rn = open_write("random_number");
-	
+	fprintf(fd_rn, "%d\n%d\n", ceed, irandom());
 	//Rprintf("------------aa3b");
 	//logmsg("opening pop pyramid file %s\n", pyr_file_name,1);
 	
@@ -863,7 +865,6 @@ int main1(int argc, char *argv[])
 
 	/*
     */
-	fprintf(fd_rn, "%d\n", irandom());
 	sprintf(logstring, "total size of pop %d\n", last_person->person_id);
 	logmsg("%s\n", logstring, 1);
 	sprintf(logstring, "living size of pop %d\n", size_of_pop[0]);
@@ -1309,12 +1310,8 @@ void install_in_order(struct person *p, struct queue_element *e, int q_type)
 routine. It simply puts everyone at the front of the queue. It works
 and is much faster  **/
 
-//	struct person *p;
-//  struct queue_element *e;
-//  int q_type;
 {
 	struct person *after, *before;
-	int j;
 
 	/* printf("trying to install %d\n", p->person_id); */
 
