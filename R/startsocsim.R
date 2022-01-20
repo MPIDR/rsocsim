@@ -20,7 +20,7 @@
 #' @return The results will be written into the specified folder
 #' @export
 run1simulationwithfile <- function(folder, supfile,seed="42",process_method="inprocess") {
-  
+  seed= as.character(seed)
   print("Start run1simulationwithfile")
   print(folder)
   print(seed)
