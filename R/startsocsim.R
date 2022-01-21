@@ -27,7 +27,7 @@ run1simulationwithfile <- function(folder, supfile,seed="42",process_method="inp
   previous_wd = getwd()
   result = NULL
   tryCatch(expr = {
-    setwd(paste0(dirname(folder)))
+    setwd(folder)
     if ((process_method=="inprocess") | (process_method =="default")) {
       result = run1simulationwithfile_inprocess(supfile=supfile,seed=seed)
     } else if (process_method=="future") {
