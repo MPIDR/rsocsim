@@ -40,7 +40,7 @@ run1simulationwithfile <- function(folder, supfile,seed="42",process_method="inp
     print("Error during execution of simulation!")
   },
   finally = {
-    print(previous_wd)
+    print(paste0("restore previous working dir: ", previous_wd))
     setwd(previous_wd)
   }
   )

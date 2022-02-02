@@ -371,7 +371,8 @@ int main1(int argc, char *argv[])
 
 	if ((fd_pop = fopen(pop_file_name, "r")) == NULL)
 	{
-	  Rprintf("------------pop_file error");
+	  //   Rprintf("------------pop_file error");
+	  Rprintf("can't open file:  %s ", pop_file_name);
 	  
 	  //logmsg("can't open initial  pop file; can't simuluate..%s \n",pop_file_name,1);//exit
 	  fprintf(fd_log,"can't open initial  pop file; can't simuluate..%s \n",pop_file_name);
