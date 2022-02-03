@@ -153,12 +153,62 @@ run1simulationwithfile_from_binary <- function(folder, supfile,seed="42",socsim_
   print(paste0("command:  ",socsim_path,args=paste0(" ",supfile," ", seed)))
   
   print(system2(socsim_path,args=c(supfile," ", seed)))
-  print(system(paste(socsim_path,supfile, seed)))
-  a = (system(paste(socsim_path,paste0(dirname(folder),"\\",supfile), seed)))
-  print(paste(socsim_path,paste0(dirname(folder),"\\",supfile), seed))
+  print(system(paste(socsim_path, supfile, seed)))
+  a = (system(paste(socsim_path, paste0(dirname(folder), "\\", supfile), seed)))
+  print(paste(socsim_path, paste0(dirname(folder), "\\", supfile), seed))
   print(a)
   print(previous_wd)
   setwd(previous_wd)
-  
   return(1)
+}
+
+#' create a folder in the user-dir of the current user in the socsim-subfolder
+#' @param simulation_name optional name for the simulation
+#' @param basefolder optional base directory where the folder will be created
+#' @return the path to the folder
+#' @export
+create_simulation_folder <- function(simulation_name=NULL,basefolder=NULL) {
+  if (is.null(simulation_name)) {
+    # create a random name that starts with socsim_sim_
+    simulation_name = paste0("socsim_sim_",as.character(sample(1:100, 1)))
+  }
+  if (is.null(basefolder)) {
+    # check whether there is a "socsim" folder in the users home-directory:
+    # if not, create it
+    userdir <- dirname(path.expand("~"))
+    basefolder = paste0(userdir, "/", "socsim")
+  }
+  if (!file.exists(basefolder)) {
+    dir.create(basefolder)
+  }
+  # create the subfolder
+  subfolder <- paste0(basefolder, "/", simulation_name)
+  if (!file.exists(subfolder)) {
+    dir.create(subfolder)
+  }
+  return(subfolder)
+}
+
+#' create a basic .sup file for a simulation
+#' the simulation is only a simple one
+#' the file will be saved into the sim-folder
+#' @param simfolder the folder where the sup-file will be saved
+#' @param simname the name of the simulation
+#' @export
+create_sup_file <- function(simfolder, simname) {
+  sup <- "
+*Supervisory file for a stable population
+* 20220120
+marriage_queues 1
+bint 10
+segments 1
+marriage_eval distribution
+input_file init_new
+output_file output_pop
+*
+duration 1000
+include SWEfert2022
+include SWEmort2022
+run
+"
 }
