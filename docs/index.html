@@ -72,30 +72,51 @@ installed and install from source directly from this repository</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></code></pre></div>
 <ul>
-<li>install Rcpp (I am also not really sure whether you really need
-rcpp. Maybe not!)</li>
-</ul>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"rcpp"</span><span class="op">)</span></code></pre></div>
-<ul>
 <li>install rsoc from Github with devtools:</li>
 </ul>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/remote-reexports.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"tomthe/rsoc"</span><span class="op">)</span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="install-precompiled-package-windows-only">Install precompiled package (Windows only)<a class="anchor" aria-label="anchor" href="#install-precompiled-package-windows-only"></a>
 </h3>
-<p>You can also install a pre-compiled binary. This might be easier, but
-it might be not the most up-to-date version. You can find the most
-up-to-date binary release on <a href="https://github.com/tomthe/rsoc/releases" class="external-link uri">https://github.com/tomthe/rsoc/releases</a></p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> url <span class="ot">=</span> <span class="st">"https://github.com/tomthe/rsoc/releases/download/binary/rsoc_1.1.zip"</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">install.packages</span>(url, <span class="at">repos =</span> <span class="cn">NULL</span>, <span class="at">type =</span> <span class="st">"win.binary"</span>)</span></code></pre></div>
+<p>If the compilation from suorce fails, you can also install a
+pre-compiled binary. This might be easier, but it might be not the most
+up-to-date version. You can find the most up-to-date binary release on
+<a href="https://github.com/tomthe/rsoc/releases" class="external-link uri">https://github.com/tomthe/rsoc/releases</a></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> url <span class="ot">=</span> <span class="st">"https://github.com/tomthe/rsoc/releases/download/binary/rsoc_1.1.zip"</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">install.packages</span>(url, <span class="at">repos =</span> <span class="cn">NULL</span>, <span class="at">type =</span> <span class="st">"win.binary"</span>)</span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
 <h2 id="use-rsoc">Use rsoc<a class="anchor" aria-label="anchor" href="#use-rsoc"></a>
 </h2>
+<div class="section level3">
+<h3 id="getting-started">Getting started<a class="anchor" aria-label="anchor" href="#getting-started"></a>
+</h3>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st">"rsoc"</span><span class="op">)</span>
+
+<span class="co"># create a new folder for all the files related to a simulation.</span>
+<span class="co"># this will be in your home- or user-directory:</span>
+<span class="va">folder</span> <span class="op">=</span> <span class="fu">rsoc</span><span class="fu">::</span><span class="fu"><a href="reference/create_simulation_folder.html">create_simulation_folder</a></span><span class="op">(</span><span class="op">)</span>
+<span class="co">#folder = "C:/Users/tom/socsim/socsim_sim_3792/"</span>
+
+<span class="co"># create a new supplement-file. Supplement-files tell socsim what</span>
+<span class="co"># to simulate. create_sup_file will create a very basic supplement filee</span>
+<span class="co"># and it copies some rate-files that will also be needed into the </span>
+<span class="co"># simulation folder:</span>
+<span class="va">supfile</span> <span class="op">=</span> <span class="fu">rsoc</span><span class="fu">::</span><span class="fu"><a href="reference/create_sup_file.html">create_sup_file</a></span><span class="op">(</span><span class="va">folder</span><span class="op">)</span>
+
+<span class="co"># Choose a random-number seed:</span>
+<span class="va">seed</span> <span class="op">=</span> <span class="fl">300</span>
+
+<span class="co"># Start the simulation:</span>
+<span class="fu">rsoc</span><span class="fu">::</span><span class="fu"><a href="reference/run1simulationwithfile.html">run1simulationwithfile</a></span><span class="op">(</span><span class="va">folder</span>,<span class="va">supfile</span>,<span class="va">seed</span>,process_method <span class="op">=</span> <span class="st">"inprocess"</span><span class="op">)</span></code></pre></div>
+<p>The results will be saved into a subfolder of the
+simulation-`folder´. For more sophisticated simulations you will need to
+edit the supplement file and provide rate files for fertility, mortality
+and marriage rates.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st">"rsoc"</span><span class="op">)</span>
 
@@ -121,11 +142,12 @@ up-to-date binary release on <a href="https://github.com/tomthe/rsoc/releases" c
 <span class="fu">rsoc</span><span class="fu">::</span><span class="fu"><a href="reference/run1simulationwithfile.html">run1simulationwithfile</a></span><span class="op">(</span><span class="va">folder</span>,<span class="va">supfile</span>,<span class="va">seed</span>,process_method <span class="op">=</span> <span class="st">"clustercall"</span><span class="op">)</span>
 </code></pre></div>
 </div>
+</div>
 <div class="section level2">
 <h2 id="develop-the-package">Develop the package<a class="anchor" aria-label="anchor" href="#develop-the-package"></a>
 </h2>
-<p>You need RTools, devtools and rcpp. Clone this repository, change
-something, hit “Build–&gt;clean and rebuild”</p>
+<p>You will need RTools, devtools and rcpp. Clone this repository,
+change something, hit “Build–&gt;clean and rebuild”</p>
 <p>renew documentation and some stuff with:
 <code>devtools.document()</code></p>
 <div class="section level3">
@@ -169,8 +191,8 @@ reading/processing output
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li>Tom Theile <br><small class="roles"> Maintainer </small>  </li>
-<li><a href="authors.html">More about authors...</a></li>
+<li>tom Developer <br><small class="roles"> Author, maintainer </small>  </li>
+<li>Diego Developer <br><small class="roles"> Author </small>  </li>
 </ul>
 </div>
 
@@ -182,7 +204,7 @@ reading/processing output
 
       <footer><div class="copyright">
   <p></p>
-<p>Developed by Tom Theile.</p>
+<p>Developed by tom Developer, Diego Developer.</p>
 </div>
 
 <div class="pkgdown">
