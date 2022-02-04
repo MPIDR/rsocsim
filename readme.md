@@ -12,11 +12,6 @@ and install from source directly from this repository
 install.packages("devtools")
 ````
 
-* install Rcpp (I am also not really sure whether you really need rcpp. Maybe not!)
-````R
-install.packages("rcpp")
-````
-
 * install rsoc from Github with devtools:
 ````R
 devtools::install_github("tomthe/rsoc")
@@ -24,9 +19,7 @@ devtools::install_github("tomthe/rsoc")
 
 ### Install precompiled package (Windows only)
 
-You can also install a pre-compiled binary. This might be easier, but it might
-be not the most up-to-date version. You can find the most up-to-date binary release
-on https://github.com/tomthe/rsoc/releases
+If the compilation from suorce fails, you can also install a pre-compiled binary. This might be easier, but it might be not the most up-to-date version. You can find the most up-to-date binary release on https://github.com/tomthe/rsoc/releases
 
 ````R
 > url = "https://github.com/tomthe/rsoc/releases/download/binary/rsoc_1.1.zip"
@@ -34,6 +27,37 @@ on https://github.com/tomthe/rsoc/releases
 ````
 
 ## Use rsoc
+
+
+### Getting started
+
+````R
+library("rsoc")
+
+# create a new folder for all the files related to a simulation.
+# this will be in your home- or user-directory:
+folder = rsoc::create_simulation_folder()
+#folder = "C:/Users/tom/socsim/socsim_sim_3792/"
+
+# create a new supplement-file. Supplement-files tell socsim what
+# to simulate. create_sup_file will create a very basic supplement filee
+# and it copies some rate-files that will also be needed into the 
+# simulation folder:
+supfile = rsoc::create_sup_file(folder)
+
+# Choose a random-number seed:
+seed = 300
+
+# Start the simulation:
+rsoc::run1simulationwithfile(folder,supfile,seed,process_method = "inprocess")
+
+````
+
+The results will be saved into a subfolder of the  simulation-`folder´.
+For more sophisticated simulations you will need to edit the supplement
+file and provide rate files for fertility, mortality and marriage rates.
+
+
 
 ````R
 library("rsoc")
@@ -64,7 +88,7 @@ rsoc::run1simulationwithfile(folder,supfile,seed,process_method = "clustercall")
 
 ## Develop the package
 
-You need RTools, devtools and rcpp.
+You will need RTools, devtools and rcpp.
 Clone this repository, change something, hit "Build-->clean and rebuild"
 
 renew documentation and some stuff with:
