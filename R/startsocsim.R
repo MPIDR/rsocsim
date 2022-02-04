@@ -170,7 +170,7 @@ run1simulationwithfile_from_binary <- function(folder, supfile,seed="42",socsim_
 create_simulation_folder <- function(simulation_name=NULL,basefolder=NULL) {
   if (is.null(simulation_name)) {
     # create a random name that starts with socsim_sim_
-    simulation_name = paste0("socsim_sim_",as.character(sample(1:100, 1)))
+    simulation_name = paste0("socsim_sim_",as.character(sample(1:10000, 1)))
   }
   if (is.null(basefolder)) {
     # check whether there is a "socsim" folder in the users home-directory:
@@ -194,9 +194,11 @@ create_simulation_folder <- function(simulation_name=NULL,basefolder=NULL) {
 #' the file will be saved into the sim-folder
 #' @param simfolder the folder where the sup-file will be saved
 #' @param simname the name of the simulation
+#' @return sup.fn the filename of the supplementary file
+#' which is needed to start the simulation
 #' @export
 create_sup_file <- function(simfolder, simname) {
-  sup <- "
+  sup.content <- "
 *Supervisory file for a stable population
 * 20220120
 marriage_queues 1
@@ -211,4 +213,42 @@ include SWEfert2022
 include SWEmort2022
 run
 "
+  sup.fn <- "socsim.sup"
+  cat(sup.content,file=file.path(simfolder, sup.fn))
+  fn_SWEfert2022_source <- system.file("extdata", "SWEfert2022", package = "rsoc", mustWork = TRUE)
+  fn_SWEfert2022_dest <- file.path(simfolder, "SWEfert2022")
+  fn_SWEmort2022_source <- system.file("extdata", "SWEmort2022", package = "rsoc", mustWork = TRUE)
+  fn_SWEmort2022_dest <- file.path(simfolder, "SWEmort2022")
+  fn_init_source <- system.file("extdata", "init_new.opop", package = "rsoc", mustWork = TRUE)
+  fn_init_dest <- file.path(simfolder, "init_new.opop")
+  file.copy(fn_SWEfert2022_source,fn_SWEfert2022_dest)
+  file.copy(fn_SWEmort2022_source,fn_SWEmort2022_dest)
+  file.copy(fn_init_source,fn_init_dest)
+  return(sup.fn)
+}
+
+
+#' @param simfolder
+#' @param simname
+#' @return the content of the supplement file as a string
+#' @export
+get_supplement_content <- function(simfolder, sup_fn) {
+  if (is.null(sup_fn)) {
+    sup_fn <- "socsim.sup"
+  }
+  sup_content <- readLines(file.path(simfolder, sup_fn))
+  return(sup_content)
+}
+
+
+
+#' simulation_time_to_years
+#' convert the time measures.
+#' @param simulation time
+#' @param pre-simulation-time - how long the simulation ran to get a stable population
+#' @param start-year - the year the simulation started
+#' @return year, a number like 2022.2
+#' @export
+simulation_time_to_years <- function(simulation_time, pre_simulation_time, start_year) {
+  return(start_year + (simulation_time - pre_simulation_time)/12)
 }

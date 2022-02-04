@@ -313,7 +313,7 @@ static struct nlist *hashtab[HASHSIZE];
 FILE *fd_out_pop_seg, *fd_out_mar_seg, *fd_out_xtra_seg;
 
 FILE *fd_pop, *fd_mar, *fd_xtra, *fd_out_pop, *fd_out_mar, *fd_out_xtra;
-FILE *fd_rn, *fd_pyr, *fd_stat, *fd_log, *fd_otx, *fd_out_otx, *fd_out_otx_seg;
+FILE  *fd_pyr, *fd_stat, *fd_log, *fd_otx, *fd_out_otx, *fd_out_otx_seg; //*fd_rn,
 FILE *fd_random, *fd_allrandom; /** temp file for random number gen debugging **/
 /* structures and access to structures, and the globals */
 
@@ -463,6 +463,8 @@ char pop_file_name[1024], mar_file_name[1024], xtra_file_name[1024];
 char pop_out_name[1024], mar_out_name[1024], xtra_out_name[1024];
 char pyr_file_name[1024], stat_file_name[1024], prefix_out_name[1024];
 char log_file_name[1024], otx_file_name[1024], otx_out_name[1024];
+
+char rate_file_name[1024];
 
 char pop_out_name_seg[1024], mar_out_name_seg[1024], xtra_out_name_seg[1024];
 char pyr_file_name_seg[1024], stat_file_name_seg[1024], otx_out_name_seg[1024];

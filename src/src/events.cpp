@@ -112,7 +112,6 @@ char *c_tally_to_string[] = {
 int main1(int argc, char *argv[])
 
 {
-  char rate_file_name[1024];
   Rcpp::Rcout << "start socsim main \n" << std::endl;
   
   //Rprintf("-0at-----------%s  \n", argv[0]);
@@ -264,7 +263,7 @@ int main1(int argc, char *argv[])
 	//strcpy(rate_file_name, *++argv);
 	
 	//Rcpp::Rcout << "useage: ratefile random_number" << useage << argv[1] << argv[2] << std::endl;
-	Rcpp::Rcout << "command-line argv[0]: " << argv[0] << "| argv[1]: " << argv[1] << "| argv[2]: " << argv[2] << std::endl;
+	Rcpp::Rcout << "v17b-command-line argv[0]: " << argv[0] << "| argv[1]: " << argv[1] << "| argv[2]: " << argv[2] << std::endl;
 	
 	//ceed = atoi(*++argv);
 	ceed = atoi(argv[2]);
@@ -277,7 +276,7 @@ int main1(int argc, char *argv[])
 	//Rcpp::Rcout << "useage: ratefile random_number" << useage << argv[1] << argv[2] << std::endl;
 	
 	/**srandom(ceed);  setting seed for random() NOT rrandom() **/ // todo:check if random is initialized correctly!
-	sprintf(log_file_name, "%s%d.log", rate_file_name, ceed);
+	sprintf(log_file_name, "sim_results_%s_s%d.log", rate_file_name, ceed);
 	//Rprintf(log_file_name, "%s%d.log", rate_file_name, ceed);
 	
 	
@@ -416,10 +415,10 @@ int main1(int argc, char *argv[])
 	prepare_output_files(0);
 	
 	//Rprintf("------------aa3a");
-	fd_rn = open_write("random_number");
-	fprintf(fd_rn, "%d\n", ceed);
-	fflush(fd_rn);
-	fprintf(fd_rn, "%d\n", irandom());
+	// fd_rn = open_write("random_number");
+	// fprintf(fd_rn, "%d\n", ceed);
+	// fflush(fd_rn);
+	// fprintf(fd_rn, "%d\n", irandom());
 	//Rprintf("------------aa3b");
 	//logmsg("opening pop pyramid file %s\n", pyr_file_name,1);
 	
@@ -883,7 +882,7 @@ int main1(int argc, char *argv[])
 	
 	fclose(fd_pyr);
 	fclose(fd_log);
-	fclose(fd_rn);
+	// fclose(fd_rn);
 	Rcpp::Rcout << "\n\nSocsim Main Done" << std::endl;
 	return 1;
 	/*

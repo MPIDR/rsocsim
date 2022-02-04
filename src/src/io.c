@@ -21,7 +21,7 @@ extern FILE *fd_out_pop_seg, *fd_out_mar_seg, *fd_out_xtra_seg,
     *fd_out_otx_seg;
 
 extern FILE *fd_pop, *fd_mar, *fd_xtra, *fd_out_pop, *fd_out_mar, *fd_out_xtra;
-extern FILE *fd_rn, *fd_out_otx, *fd_out_otx_seg;
+extern FILE  *fd_out_otx, *fd_out_otx_seg; //*fd_rn,
 extern FILE *fd_pyr, *fd_stat, *fd_log;
 
 void logmsg(char * frmt, char * msg, int where)

@@ -548,13 +548,29 @@ int l_process_line(char *line,struct l_context *cx,FILE *fp)
 		return 1;
 		break;
 	case k_output_file:
-		strcpy(pop_out_name, words[1]);
-		strcpy(mar_out_name, words[1]);
-		strcpy(xtra_out_name, words[1]);
-		strcpy(pyr_file_name, words[1]);
-		strcpy(stat_file_name, words[1]);
-		strcpy(prefix_out_name, words[1]);
-		strcpy(otx_out_name, words[1]);
+		// todo: instead of words[1], create a string from
+		// * "sim_results_"
+		// * the name of the supplement-file
+		// * and the seed
+		// then create a subdirectory with that name
+		// and put the output files there
+
+		// concatenate "sim_results_" with the name of the supplement file:
+		//sprintf(output_file_name, "sim_results_%s", words[1]);
+		char buffer_output_dir [250];
+		char buffer_output_fn [250];
+		sprintf (buffer_output_dir, "sim_results_s%s_%d/", rate_file_name, ceed);
+		sprintf (buffer_output_fn, "%sresult", buffer_output_dir);
+
+		// create the directory:
+		mkdir(buffer_output_dir);
+		strcpy(pop_out_name, buffer_output_fn);
+		strcpy(mar_out_name, buffer_output_fn);
+		strcpy(xtra_out_name, buffer_output_fn);
+		strcpy(pyr_file_name, buffer_output_fn);
+		strcpy(stat_file_name, buffer_output_fn);
+		strcpy(prefix_out_name, buffer_output_fn);
+		strcpy(otx_out_name, buffer_output_fn);
 		return 1;
 		break;
 	case k_read_xtra:
