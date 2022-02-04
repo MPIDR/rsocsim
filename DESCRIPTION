@@ -4,14 +4,14 @@ Title: SOCSIM with R
 Version: 1.2
 Date: 2021-01-11
 Author: MPIDR
-Maintainer: Tom Theile <theile@mpidr.de>
+Maintainer: Tom Theile and Diego  Alburez-Gutierrez <theile@mpidr.de>  <alburezgutierrez@demogr.mpg.de>
 Description: Install and run SOCSIM from within R with this R-package.
 License: GPL (>= 2)
 Imports: Rcpp (>= 1.0.5),
     future,
     parallel
 LinkingTo: Rcpp
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3

@@ -3,28 +3,24 @@
 \alias{rsoc}
 \docType{package}
 \title{
-  A short title line describing what the package does
+  SOCSIM Package for R. Run Social microsimulations directly from R.
 }
 \description{
-  A more detailed description of what the package does. A length
-  of about one to five lines is recommended.
+  This package makes it easy to install socsim, run simulations, and
+  read the results.
 }
 \details{
-  This section should provide a more detailed overview of how to use the
-  package, including the most important functions.
+  
 }
 \author{
-Your Name, email optional.
-
-Maintainer: Your Name <your@email.com>
+Maintainer: Tom Theile <theile@mpidr.de>  and Diego  Alburez-Gutierrez <alburezgutierrez@demogr.mpg.de>
 }
 \references{
   This optional section can contain literature or other references for
   background information.
 }
 \keyword{ package }
-\seealso{
-  Optional links to other man pages
+\seealso{ 
 }
 \examples{
   \dontrun{

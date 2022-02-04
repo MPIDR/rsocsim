@@ -19,6 +19,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,18 +33,12 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">rsoc</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.2</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="reference/index.html">Reference</a>
 </li>
@@ -59,78 +55,86 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div id="rsoc---preliminary-socsim-r-package" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#rsoc---preliminary-socsim-r-package" class="anchor"></a>rsoc - preliminary socsim R package</h1></div>
-<div id="installation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#installation" class="anchor"></a>Installation</h2>
-<div id="from-source" class="section level3">
-<h3 class="hasAnchor">
-<a href="#from-source" class="anchor"></a>From Source</h3>
-<p>To get the latest version, you need to have RTools and devtools installed and install from source directly from this repository</p>
+<div class="section level1">
+<div class="page-header"><h1 id="rsoc---preliminary-socsim-r-package">rsoc - preliminary socsim R package<a class="anchor" aria-label="anchor" href="#rsoc---preliminary-socsim-r-package"></a>
+</h1></div>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
+<div class="section level3">
+<h3 id="from-source">From Source<a class="anchor" aria-label="anchor" href="#from-source"></a>
+</h3>
+<p>To get the latest version, you need to have RTools and devtools
+installed and install from source directly from this repository</p>
 <ul>
 <li>install devtools</li>
 </ul>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></code></pre></div>
 <ul>
-<li>install Rcpp (I am also not really sure whether you really need rcpp. Maybe not!)</li>
+<li>install Rcpp (I am also not really sure whether you really need
+rcpp. Maybe not!)</li>
 </ul>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"rcpp"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"rcpp"</span><span class="op">)</span></code></pre></div>
 <ul>
 <li>install rsoc from Github with devtools:</li>
 </ul>
-<pre><code>devtools::install_github("tomthe/rsoc")</code></pre>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/remote-reexports.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"tomthe/rsoc"</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="install-precompiled-package-windows-only" class="section level3">
-<h3 class="hasAnchor">
-<a href="#install-precompiled-package-windows-only" class="anchor"></a>Install precompiled package (Windows only)</h3>
-<p>You can also install a pre-compiled binary. This might be easier, but it might be not the most up-to-date version. You can find the most up-to-date binary release on <a href="https://github.com/tomthe/rsoc/releases" class="uri">https://github.com/tomthe/rsoc/releases</a></p>
-<pre><code>&gt; url = "https://github.com/tomthe/rsoc/releases/download/binary/rsoc_1.1.zip"
-&gt; install.packages(url, repos = NULL, type = "win.binary")</code></pre>
+<div class="section level3">
+<h3 id="install-precompiled-package-windows-only">Install precompiled package (Windows only)<a class="anchor" aria-label="anchor" href="#install-precompiled-package-windows-only"></a>
+</h3>
+<p>You can also install a pre-compiled binary. This might be easier, but
+it might be not the most up-to-date version. You can find the most
+up-to-date binary release on <a href="https://github.com/tomthe/rsoc/releases" class="external-link uri">https://github.com/tomthe/rsoc/releases</a></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> url <span class="ot">=</span> <span class="st">"https://github.com/tomthe/rsoc/releases/download/binary/rsoc_1.1.zip"</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">install.packages</span>(url, <span class="at">repos =</span> <span class="cn">NULL</span>, <span class="at">type =</span> <span class="st">"win.binary"</span>)</span></code></pre></div>
 </div>
 </div>
-<div id="use-rsoc" class="section level2">
-<h2 class="hasAnchor">
-<a href="#use-rsoc" class="anchor"></a>Use rsoc</h2>
-<pre><code><a href="https://rdrr.io/r/base/library.html">library("rsoc")
+<div class="section level2">
+<h2 id="use-rsoc">Use rsoc<a class="anchor" aria-label="anchor" href="#use-rsoc"></a>
+</h2>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st">"rsoc"</span><span class="op">)</span>
 
-# specify the working directory, where your supfile and ratefiles are:
-folder = "D:\\dev\\r\\socsimprojects\\CousinDiversity" 
+<span class="co"># specify the working directory, where your supfile and ratefiles are:</span>
+<span class="va">folder</span> <span class="op">=</span> <span class="st">"D:\\dev\\r\\socsimprojects\\CousinDiversity"</span> 
 
-# name of the supplement-file, relative to the above folder:
-supfile = "CousinDiversity.sup" 
+<span class="co"># name of the supplement-file, relative to the above folder:</span>
+<span class="va">supfile</span> <span class="op">=</span> <span class="st">"CousinDiversity.sup"</span> 
 
-# Random number generator seed:
-seed="33" 
+<span class="co"># Random number generator seed:</span>
+<span class="va">seed</span><span class="op">=</span><span class="st">"33"</span> 
 
-# run1simulationwithfile starts a simulation with the specified sup-file
-rsoc::run1simulationwithfile(folder,supfile,seed)
+<span class="co"># run1simulationwithfile starts a simulation with the specified sup-file</span>
+<span class="fu">rsoc</span><span class="fu">::</span><span class="fu"><a href="reference/run1simulationwithfile.html">run1simulationwithfile</a></span><span class="op">(</span><span class="va">folder</span>,<span class="va">supfile</span>,<span class="va">seed</span><span class="op">)</span>
 
-# if you run several simulations, previous simulations may influence/corrupt
-# later simulations. Use one of the options "future" or "clustercall" for
-# process_method to prevent this. "future" has problems on computers with more
-# than 64 cores. Note that these options prevent SOCSIM from writing to the
-# R-terminal.
+<span class="co"># if you run several simulations, previous simulations may influence/corrupt</span>
+<span class="co"># later simulations. Use one of the options "future" or "clustercall" for</span>
+<span class="co"># process_method to prevent this. "future" has problems on computers with more</span>
+<span class="co"># than 64 cores. Note that these options prevent SOCSIM from writing to the</span>
+<span class="co"># R-terminal.</span>
 
-rsoc::run1simulationwithfile(folder,supfile,seed,process_method = "future")
-rsoc::run1simulationwithfile(folder,supfile,seed,process_method = "clustercall")
-
-</a></code></pre>
+<span class="fu">rsoc</span><span class="fu">::</span><span class="fu"><a href="reference/run1simulationwithfile.html">run1simulationwithfile</a></span><span class="op">(</span><span class="va">folder</span>,<span class="va">supfile</span>,<span class="va">seed</span>,process_method <span class="op">=</span> <span class="st">"future"</span><span class="op">)</span>
+<span class="fu">rsoc</span><span class="fu">::</span><span class="fu"><a href="reference/run1simulationwithfile.html">run1simulationwithfile</a></span><span class="op">(</span><span class="va">folder</span>,<span class="va">supfile</span>,<span class="va">seed</span>,process_method <span class="op">=</span> <span class="st">"clustercall"</span><span class="op">)</span>
+</code></pre></div>
 </div>
-<div id="develop-the-package" class="section level2">
-<h2 class="hasAnchor">
-<a href="#develop-the-package" class="anchor"></a>Develop the package</h2>
-<p>You need RTools, devtools and rcpp. Clone this repository, change something, hit “Build–&gt;clean and rebuild”</p>
-<p>renew documentation and some stuff with: <code>devtools.document()</code></p>
-<div id="future-plans" class="section level3">
-<h3 class="hasAnchor">
-<a href="#future-plans" class="anchor"></a>Future plans</h3>
+<div class="section level2">
+<h2 id="develop-the-package">Develop the package<a class="anchor" aria-label="anchor" href="#develop-the-package"></a>
+</h2>
+<p>You need RTools, devtools and rcpp. Clone this repository, change
+something, hit “Build–&gt;clean and rebuild”</p>
+<p>renew documentation and some stuff with:
+<code>devtools.document()</code></p>
+<div class="section level3">
+<h3 id="future-plans">Future plans<a class="anchor" aria-label="anchor" href="#future-plans"></a>
+</h3>
 <ul>
 <li>Testing and verification</li>
-<li>including convenient R-functions for generating input and reading/processing output
+<li>including convenient R-functions for generating input and
+reading/processing output
 <ul>
 <li>possible options:
 <ul>
@@ -148,28 +152,43 @@ rsoc::run1simulationwithfile(folder,supfile,seed,process_method = "clustercall")
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="license">
-<h2>License</h2>
+<h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li>GPL (&gt;= 2)</li>
 </ul>
 </div>
-<div class="developers">
-<h2>Developers</h2>
+
+
+<div class="citation">
+<h2 data-toc-skip>Citation</h2>
 <ul class="list-unstyled">
-<li>Tom Theile <br><small class="roles"> Maintainer </small>  </li>
+<li><a href="authors.html#citation">Citing rsoc</a></li>
 </ul>
 </div>
+
+<div class="developers">
+<h2 data-toc-skip>Developers</h2>
+<ul class="list-unstyled">
+<li>Tom Theile <br><small class="roles"> Maintainer </small>  </li>
+<li><a href="authors.html">More about authors...</a></li>
+</ul>
+</div>
+
+
 
   </div>
 </div>
 
 
       <footer><div class="copyright">
-  <p>Developed by Tom Theile.</p>
+  <p></p>
+<p>Developed by Tom Theile.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+2.0.2.</p>
 </div>
 
       </footer>
@@ -177,6 +196,8 @@ rsoc::run1simulationwithfile(folder,supfile,seed,process_method = "clustercall")
 
   
 
+
+  
 
   </body>
 </html>

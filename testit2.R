@@ -1,6 +1,6 @@
 folder = rsoc::create_simulation_folder()
 folder
-folder = "C:/Users/tom/socsim/socsim_sim_3792/"
+#folder = "C:/Users/tom/socsim/socsim_sim_3792/"
 
 supfile = rsoc::create_sup_file(folder)
 supfile
@@ -16,7 +16,7 @@ seed="33"
 
 rsoc::simulation_time_to_years(4500, 1200, 1960)
 
-get_supplement_content(folder, supfile)
+rsoc::get_supplement_content(folder, supfile)
 
 
 rsoc::run1simulationwithfile(folder,supfile,seed,process_method = "inprocess")

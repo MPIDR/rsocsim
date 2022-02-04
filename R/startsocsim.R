@@ -206,7 +206,6 @@ bint 10
 segments 1
 marriage_eval distribution
 input_file init_new
-output_file output_pop
 *
 duration 1000
 include SWEfert2022
@@ -227,10 +226,11 @@ run
   return(sup.fn)
 }
 
-
-#' @param simfolder
-#' @param simname
-#' @return the content of the supplement file as a string
+#' read the content of the supplement file 
+#' @param simfolder base folder of the simulation
+#' @param simname name of the .sup-file
+#' @return the content of the supplement file as a string (TODO: Now it 
+#' returns a list of lines instead of a single string)
 #' @export
 get_supplement_content <- function(simfolder, sup_fn) {
   if (is.null(sup_fn)) {
