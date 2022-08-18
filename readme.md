@@ -22,7 +22,7 @@ devtools::install_github("tomthe/rsoc")
 If the compilation from suorce fails, you can also install a pre-compiled binary. This might be easier, but it might be not the most up-to-date version. You can find the most up-to-date binary release on https://github.com/tomthe/rsoc/releases
 
 ````R
-> url = "https://github.com/tomthe/rsoc/releases/download/binary/rsoc_1.1.zip"
+> url = "https://github.com/tomthe/rsoc/releases/download/1.3/rsoc_1.3.zip"
 > install.packages(url, repos = NULL, type = "win.binary")
 ````
 
