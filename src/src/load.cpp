@@ -1743,8 +1743,8 @@ int fill_rate_gaps()
 	
 	zero_block = NEW(struct age_block);
 	zero_block->previous = NULL;
-	zero_block->upper_age = 1200;
-	zero_block->width = 1200;
+	zero_block->upper_age = MAXUMONTHS;
+	zero_block->width = MAXUMONTHS;
 
 	zero_block->lambda = -0.00000000000001;
 	zero_block->mult = usenullmult;
@@ -1753,8 +1753,8 @@ int fill_rate_gaps()
 
 	zero_fert_block = NEW(struct age_block);
 	zero_fert_block->previous = NULL;
-	zero_fert_block->upper_age = 1200;
-	zero_fert_block->width = 1200;
+	zero_fert_block->upper_age = MAXUMONTHS;
+	zero_fert_block->width = MAXUMONTHS;
 
 	zero_fert_block->lambda = -0.0000000000001;
 	zero_fert_block->mult = usenullmult;

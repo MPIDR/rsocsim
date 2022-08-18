@@ -49,7 +49,7 @@ double enhance_couple_score();
 
 #define NEW(type) ((type *)malloc(sizeof(type)))
 
-#define MOD1200(x) (x) % 1200 + 1200 * ((int)((x) - (x) % 1200) / (x))
+/* #define MOD1200(x) (x) % 1200 + 1200 * ((int)((x) - (x) % 1200) / (x))*/
 
 /* bounds for static structures */
 #define MAXPARITY 10

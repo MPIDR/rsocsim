@@ -669,7 +669,7 @@ void create_working_mqueue(struct person *p)
     */
 
    /* 
-    this degrades the performance by a lot. In bigg populations, most of the time is spent here.
+    tomt: this degrades the performance by a lot. In bigg populations, most of the time is spent here.
     change: do not check all males on the marriage-queue, but only a random block of maybe 1000 males.
     first to check whether it improves performance: the 500 first
   */
