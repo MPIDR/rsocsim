@@ -239,8 +239,8 @@ int main1(int argc, char *argv[])
 		}
 		else
 		{
-			agedif_marriage_mean[g] = -99;
-			agedif_marriage_sd[g] = -99;
+			agedif_marriage_mean[g] = -(MAXUYEARS-1);
+			agedif_marriage_sd[g] = -(MAXUYEARS-1);
 		}
 	}
 	child_inherits_group = FROM_MOTHER;
@@ -263,7 +263,7 @@ int main1(int argc, char *argv[])
 	//strcpy(rate_file_name, *++argv);
 	
 	//Rcpp::Rcout << "useage: ratefile random_number" << useage << argv[1] << argv[2] << std::endl;
-	Rcpp::Rcout << "v17b-command-line argv[0]: " << argv[0] << "| argv[1]: " << argv[1] << "| argv[2]: " << argv[2] << std::endl;
+	Rcpp::Rcout << "v18a!-command-line argv[0]: " << argv[0] << "| argv[1]: " << argv[1] << "| argv[2]: " << argv[2] << std::endl;
 	
 	//ceed = atoi(*++argv);
 	ceed = atoi(argv[2]);
@@ -315,14 +315,14 @@ int main1(int argc, char *argv[])
 	//Rprintf("------------4");
 	if (marriage_eval == DISTRIBUTION)
 	{
-		/* sup file has been read; so if value is not -99 then it was
+		/* sup file has been read; so if value is not -99 (or (MAXUYEARS-1)) then it was
 	 user specified  agedif_marriage_{mean,sd}[0] holds the default
       value*/
 		int g = 1;
 		for (g = 1; g < MAXGROUPS; g++)
 		{
-			agedif_marriage_mean[g] = (agedif_marriage_mean[g] == -99) ? agedif_marriage_mean[g - 1] : agedif_marriage_mean[g];
-			agedif_marriage_sd[g] = (agedif_marriage_sd[g] == -99) ? agedif_marriage_sd[g - 1] : agedif_marriage_sd[g];
+			agedif_marriage_mean[g] = (agedif_marriage_mean[g] == -(MAXUYEARS-1)) ? agedif_marriage_mean[g - 1] : agedif_marriage_mean[g];
+			agedif_marriage_sd[g] = (agedif_marriage_sd[g] == -(MAXUYEARS-1)) ? agedif_marriage_sd[g - 1] : agedif_marriage_sd[g];
 		}
 		initialize_marriage_targets();
 	}
