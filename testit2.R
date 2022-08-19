@@ -1,6 +1,7 @@
 folder = rsoc::create_simulation_folder()
 folder
 #folder = "C:/Users/tom/socsim/socsim_sim_3792/"
+#folder= "C:/Users/tom/socsim/socsim_sim_6396/"
 
 supfile = rsoc::create_sup_file(folder)
 supfile

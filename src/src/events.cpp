@@ -309,22 +309,29 @@ int main1(int argc, char *argv[])
 	logmsg("initialize_segment_vars\n"," ",1);
 	initialize_segment_vars();
 	Rprintf("initialize_segment_vars done\n");
-	Rcpp::Rcout << "loading -.sup-file: " << rate_file_name << std::endl;
+	Rcpp::Rcout << "18b - loading -.sup-file: " << rate_file_name << std::endl;
 	if (load(rate_file_name) < 0)
 		stop("can't load rate file! Stopping Simulation.");//exit(-1);
-	//Rprintf("------------4");
+	Rprintf("------------4");
 	if (marriage_eval == DISTRIBUTION)
 	{
 		/* sup file has been read; so if value is not -99 (or (MAXUYEARS-1)) then it was
 	 user specified  agedif_marriage_{mean,sd}[0] holds the default
       value*/
+	  
+		Rcpp::Rcout << "marriage_eval == DISTRIBUTION . " << rate_file_name << std::endl;
 		int g = 1;
 		for (g = 1; g < MAXGROUPS; g++)
 		{
+			
+			Rcpp::Rcout << "| " << g << "  .  " << MAXUYEARS << "  .  " << MAXGROUPS << std::endl;
 			agedif_marriage_mean[g] = (agedif_marriage_mean[g] == -(MAXUYEARS-1)) ? agedif_marriage_mean[g - 1] : agedif_marriage_mean[g];
 			agedif_marriage_sd[g] = (agedif_marriage_sd[g] == -(MAXUYEARS-1)) ? agedif_marriage_sd[g - 1] : agedif_marriage_sd[g];
 		}
 		initialize_marriage_targets();
+	} else {
+		
+		Rcpp::Rcout << "marriage_eval != DISTRIBUTION . " << rate_file_name << std::endl;
 	}
 	//Rprintf("------------5");
 
@@ -332,7 +339,7 @@ int main1(int argc, char *argv[])
      BEFORE fill_rate_gaps*/
 	/*    if(bint != 0){*/
 	adjust_birth_for_bint();
-	//Rprintf("------------6");
+	Rprintf("------------6");
 	/*    }*/
 	//stop("stop15");
 #ifdef ENHANCED

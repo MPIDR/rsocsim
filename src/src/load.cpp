@@ -232,6 +232,7 @@ char logstring[1024];
 int load( char *file)
 {
 	
+	//Rcpp::Rcout << "18b-load rate file . " << file << std::endl;
 	fprintf(fd_log,"open: %i, load rate file: |%s\n",current_fstatus,file);
 	fflush(fd_log);
 	struct l_context cx;
@@ -268,6 +269,7 @@ int load( char *file)
 	fprintf(fd_log,"\nopening %s \n", file);
 	fprintf(fd_log,"starting with line %d ", current_lineno);
 	fprintf(fd_log,"at %ld, seekset= %i \n", current_offset, SEEK_SET);
+	Rcpp::Rcout << "18b-load.cpp->load . " << file << std::endl;
 	fflush(fd_log);
 	fseek(fp, current_offset, SEEK_SET); // before, SEEK_SET was 0
 	//somehow this jumps to the wrong position, if we don't start at the beginning.
@@ -284,14 +286,19 @@ int load( char *file)
 	}
 	cx.file = file;
 
+	Rcpp::Rcout << "#load.cpp->load 4. " << file << std::endl;
 	while (fgets(line, sizeof line, fp) != 0)
 	{
 		cx.lineno++;
 		
-		fprintf(fd_log,"@FILE: %s LINE: %s \n", cx.file, line);
-		fflush(fd_log);
+		Rcpp::Rcout << "18b-load.cpp->load . " << line << std::endl;
+		//fprintf(fd_log,"@FILE: %s LINE: %s \n", cx.file, line);
+		//fflush(fd_log);
 		if (current_fstatus == OPEN) /*triggered by run command */
+		{
+			Rcpp::Rcout << "18b-load.cpp->load . current_fstatus==OPEN " << std::endl;
 			return 1;
+		}
 		if (l_process_line(line, &cx, fp) < 0)
 		{
 			/* just quit on any error for now */
@@ -317,6 +324,8 @@ int load( char *file)
  */
 int l_process_line(char *line,struct l_context *cx,FILE *fp)
 {
+	//Rcpp::Rcout << "18b-l_process_line. beginning. line:|" << line << "|" ;//<< std::endl;
+					
 	char *words[LINELENGTH]; /* always big enough */
 	int i;
 	int nwords;
@@ -329,6 +338,7 @@ int l_process_line(char *line,struct l_context *cx,FILE *fp)
 	printf("%s\n", line);
 	*/
 	nwords = l_scan_line(line, words);
+	//Rcpp::Rcout << "18b-l_process_line. beginning2 line:|" << line << "| ---" << nwords << std::endl;
 	if (nwords == 0) /* blank line */
 		goto out;
 	if (**words == '*') /* comment */
@@ -352,6 +362,8 @@ int l_process_line(char *line,struct l_context *cx,FILE *fp)
 			l_create_rateset(cx, rateset);
 		*/
 		{
+			//Rcpp::Rcout << "18b-l_process_line. case-block 1 - numbers " << std::endl;
+					
 			int years, months;
 			double prob;
 			int kt_year;
@@ -412,18 +424,24 @@ int l_process_line(char *line,struct l_context *cx,FILE *fp)
 				else if (reading_rate_table == TRUE)
 					add_rate_table(years, months, prob);
 				else
+				
+					//Rcpp::Rcout << "18b-l_process_line. just before add_rate_block " << line << " | " << years << "y " << months << "m. prob: " << prob << std::endl;
 					add_rate_block(years, months, prob);
 			}
 		}
 		goto out;
 	}
+	//Rcpp::Rcout << "18b-l_process_line...after.." << std::endl;
 	/* not a line of rates, process command */
 
 	/* is the last group of rates complete? */
 	if (recall != NULL)
 	{
+		Rcpp::Rcout << "18b-l_process_line... recall!=NULL "<< std::endl;
+		Rcpp::Rcout << "Incomplete rate set: " << recall->upper_age << std::endl;
+		l_error(cx, "Incomplete rate set");
 		stop("Incomplete rate set");
-		//exit(-1);
+		exit(-1);
 		/*return -1; */
 	}
 
@@ -432,6 +450,7 @@ int l_process_line(char *line,struct l_context *cx,FILE *fp)
 	    print_rate_table(recall);
 	*/
 
+	//Rcpp::Rcout << "18b-l_process_line...befor switch l_lookup_keyword " << line << std::endl;
 	switch (k = l_lookup_keyword(*words))
 	{
 	case k_birth:
@@ -1155,6 +1174,7 @@ int l_process_line(char *line,struct l_context *cx,FILE *fp)
 		return -1;
 	}
 out:
+	//Rcpp::Rcout << "18b-l_process_line. just before out" << std::endl;
 	return 0;
 }
 
@@ -1533,12 +1553,14 @@ void add_rate_block(int years, int months, double prob)
 
 	if (current_block->upper_age < MAXUMONTHS)
 	{
+		Rcpp::Rcout << "18b-add_rate_block| current_block->upper_age < MAXUMONTHS | " << current_block->upper_age  << " upper age | "<< std::endl;
 		current_block->next = NEW(struct age_block);
 		current_block->next->previous = current_block;
 		current_block = current_block->next;
 	}
 	else
 	{
+		Rcpp::Rcout << "18b-add_rate_block| current_block->upper_age >= MAXUMONTHS | " << current_block->upper_age  << " upper age |---------last block "<< std::endl;
 		current_block->next = NULL;
 		recall = NULL;
 	}
@@ -2566,6 +2588,8 @@ void adjust_birth_for_bint()
 					new_fert->lambda = get_lambda(g, m, p, 0);
 					new_fert->previous = NULL;
 					new_fert->mult = old_fert->mult;
+					
+					Rcpp::Rcout << "18b-load.cpp->adjust_birth_for_bint. " << std::endl;
 					for (i = 1; i < MAXUMONTHS; i++)
 					{
 						prev_fert = new_fert;
