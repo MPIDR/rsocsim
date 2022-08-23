@@ -244,8 +244,14 @@ static struct nlist *hashtab[HASHSIZE];
 #define MAXUMONTHS 1440
 #define MAXUYEARS 120
 */
-#define MAXUMONTHS 1440
-#define MAXUYEARS 120
+
+#define MAXUMONTHS 1200
+#define MAXUYEARS 100
+
+/*
+int MAXUYEARS = 120;
+int MAXUMONTHS = MAXUYEARS * 12;
+*/
 
 /* sex */
 #define MALE 0

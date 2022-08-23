@@ -437,11 +437,21 @@ int l_process_line(char *line,struct l_context *cx,FILE *fp)
 	/* is the last group of rates complete? */
 	if (recall != NULL)
 	{
+		 /*
+		 
+		 old behavior: throw error. abort. If rates are not defined up to MAXUYEARS, then the program will crash.
+		 new behavior: extend the last age block to MAXUYEARS. or create a new one with the same rates up until Maxuyears
+		 
+		 */
+		 
 		Rcpp::Rcout << "18b-l_process_line... recall!=NULL "<< std::endl;
 		Rcpp::Rcout << "Incomplete rate set: " << recall->upper_age << std::endl;
-		l_error(cx, "Incomplete rate set");
-		stop("Incomplete rate set");
-		exit(-1);
+		current_block->upper_age = MAXUMONTHS;
+		current_block->next = NULL;
+		recall = NULL;
+		//l_error(cx, "Incomplete rate set");
+		//stop("Incomplete rate set");
+		//exit(-1);
 		/*return -1; */
 	}
 
@@ -1568,6 +1578,7 @@ void add_rate_block(int years, int months, double prob)
 
 void add_lc_rate_block(int years, int months, double prob)
 {
+	Rcpp::Rcout << "18b-add_lc_rate_block| | " << current_block->upper_age  << " upper age | " << read_ax_or_bx << std::endl;
 	if (read_ax_or_bx == BX)
 	{
 		if (current_block->upper_age != 12 * years + months)
@@ -1576,6 +1587,8 @@ void add_lc_rate_block(int years, int months, double prob)
 	    printf(" block %d compute %d\n",
 		current_block->upper_age, 12 * years + months);
 	    */
+	   	    Rcpp::Rcout << "18b-add_lc_rate_block BX.3| | " << current_block->upper_age  << " upper age | " << read_ax_or_bx << std::endl;
+			exit(-1);
 			error("\"Rate file ax and bx out of alignment\"");
 		}
 	}

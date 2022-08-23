@@ -112,8 +112,7 @@ char *c_tally_to_string[] = {
 int main1(int argc, char *argv[])
 
 {
-  Rcpp::Rcout << "start socsim main \n" << std::endl;
-  
+  Rcpp::Rcout << "start socsim main. MAXUYEARS: " << MAXUYEARS << "; MAXUMONTHS: " << MAXUMONTHS << std::endl;
   //Rprintf("-0at-----------%s  \n", argv[0]);
   //Rprintf("-1at-----------%s  \n", argv[1]);
   //Rprintf("-2at-----------%s  \n", argv[2]);
