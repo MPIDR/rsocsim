@@ -164,10 +164,10 @@ double flog();
 int date_and_event(struct person*);
 
 /* from load.c */
-char *index_to_sex[2];
+//char *index_to_sex[2];
 /*char *index_to_event[8]; */
-char *index_to_event[NUMEVENTS + 1];
-char *index_to_mstatus[6];
+//char *index_to_event[NUMEVENTS + 1];
+//char *index_to_mstatus[6];
 
 /* from xevents.c */
 struct person *random_spouse(struct person *p);
@@ -245,8 +245,8 @@ static struct nlist *hashtab[HASHSIZE];
 #define MAXUYEARS 120
 */
 
-#define MAXUMONTHS 1200
-#define MAXUYEARS 100
+#define MAXUMONTHS 1440
+#define MAXUYEARS 120
 
 /*
 int MAXUYEARS = 120;

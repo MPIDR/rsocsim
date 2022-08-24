@@ -127,8 +127,8 @@ struct age_block *recall = NULL;
 
 struct age_table *current_table;
 struct age_table *recall_table = NULL;
-/**
- * forward declarations *
+
+// * forward declarations *
 char *index_to_sex[] = {
 	"male",
 	"female",
@@ -210,7 +210,7 @@ char *index_to_mstatus[] =
 		"married",
 		"cohabiting",
 };
- **/
+
 char command[80];
 
 struct kt_holding_array
@@ -411,28 +411,40 @@ int l_process_line(char *line,struct l_context *cx,FILE *fp)
 			{
 				if ((years > MAXUYEARS) || (years < 0))
 				{
+					logmsg("-----18d - l_process_line.. (years > MAXUYEARS) || (years < 0)\n", "", 1);
 					l_error(cx, "Not a valid rate line");
 					return -1;
 				}
 				else if ((years + (int)months / 12 > MAXUYEARS) || (months < 0))
 				{
+					logmsg("-----18d - l_process_line.. (years + (int)months / 12 > MAXUYEARS)\n", "", 1);
 					l_error(cx, "Not a valid rate line");
 					return -1;
 				}
-				if (read_ax_or_bx != -1)
+				if (read_ax_or_bx != -1){
+					sprintf(logstring, "-18bx-l_process_line. just before add_lc_rate_block. year: %d, month: %d, prob: %f",years,months,prob );
+					logmsg("%s\n", logstring, 1);
 					add_lc_rate_block(years, months, prob);
-				else if (reading_rate_table == TRUE)
+				}
+				else if (reading_rate_table == TRUE){
+					sprintf(logstring, "-18bx-l_process_line. just before add_rate_table. year: %d, month: %d, prob: %f",years,months,prob );
+					logmsg("%s\n", logstring, 1);
 					add_rate_table(years, months, prob);
-				else
-				
+				}
+				else{				
 					//Rcpp::Rcout << "18b-l_process_line. just before add_rate_block " << line << " | " << years << "y " << months << "m. prob: " << prob << std::endl;
+					sprintf(logstring, "-18ba-l_process_line. just before add_rate_block. year: %d, month: %d, prob: %f",years,months,prob );
+					logmsg("%s\n", logstring, 1);
 					add_rate_block(years, months, prob);
+				}
 			}
 		}
 		goto out;
 	}
 	//Rcpp::Rcout << "18b-l_process_line...after.." << std::endl;
 	/* not a line of rates, process command */
+	logmsg("-----18e - not a line of rates, process command\n", "", 1);
+					
 
 	/* is the last group of rates complete? */
 	if (recall != NULL)
@@ -446,9 +458,15 @@ int l_process_line(char *line,struct l_context *cx,FILE *fp)
 		 
 		Rcpp::Rcout << "18b-l_process_line... recall!=NULL "<< std::endl;
 		Rcpp::Rcout << "Incomplete rate set: " << recall->upper_age << std::endl;
-		current_block->upper_age = MAXUMONTHS;
-		current_block->next = NULL;
-		recall = NULL;
+		
+		logmsg("-----18c - l_process_line.. recall!=NULL - Incomplete rate set.\n", "", 1);
+		
+		//add a last block that goes until MAXUYEARS and that has a
+		if (event == E_DEATH){
+			add_rate_block(MAXUYEARS, 0, 0.999999);
+		} else {
+			add_rate_block(MAXUYEARS, 0, 0.000001);
+		}
 		//l_error(cx, "Incomplete rate set");
 		//stop("Incomplete rate set");
 		//exit(-1);
@@ -1513,6 +1531,7 @@ void add_rate_block(int years, int months, double prob)
 		prob = 0.000000000001;
 
 	current_block->upper_age = 12 * years + months;
+	current_block->modified_lambda = 0.0; //newly added by tom 8/2022 to prevent crashes because of strange modified_lambdas...
 
 	if (current_block->previous == NULL)
 	{
@@ -1570,6 +1589,8 @@ void add_rate_block(int years, int months, double prob)
 	}
 	else
 	{
+		sprintf(logstring, "18b-add_rate_block| current_block->upper_age %d >= MAXUMONTHS %d| last block here. year: %d, month: %d, prob: %f",current_block->upper_age ,MAXUMONTHS, years,months,prob );
+		logmsg("%s\n", logstring, 1);
 		Rcpp::Rcout << "18b-add_rate_block| current_block->upper_age >= MAXUMONTHS | " << current_block->upper_age  << " upper age |---------last block "<< std::endl;
 		current_block->next = NULL;
 		recall = NULL;
@@ -1579,6 +1600,9 @@ void add_rate_block(int years, int months, double prob)
 void add_lc_rate_block(int years, int months, double prob)
 {
 	Rcpp::Rcout << "18b-add_lc_rate_block| | " << current_block->upper_age  << " upper age | " << read_ax_or_bx << std::endl;
+	
+	sprintf(logstring, "add_lc_rate_block. years: %d, months: %d, prob %f, read_ax_or_bx: %d current_block->upper_age: %d, ",years,months,prob,read_ax_or_bx,current_block->upper_age);
+	logmsg("%s\n", logstring, 1);
 	if (read_ax_or_bx == BX)
 	{
 		if (current_block->upper_age != 12 * years + months)
@@ -1588,7 +1612,9 @@ void add_lc_rate_block(int years, int months, double prob)
 		current_block->upper_age, 12 * years + months);
 	    */
 	   	    Rcpp::Rcout << "18b-add_lc_rate_block BX.3| | " << current_block->upper_age  << " upper age | " << read_ax_or_bx << std::endl;
-			exit(-1);
+			
+			logmsg("18b-add_lc_rate_block BX.3| |\n", "", 1);
+			stop("Rate file ax and bx out of alignment");//exit(-1);
 			error("\"Rate file ax and bx out of alignment\"");
 		}
 	}
@@ -1810,11 +1836,16 @@ int fill_rate_gaps()
 				prod2 = lc->ck[AX] * lc->ck[BX] * lc->ck[K_START_YEAR];
 				if (prod1 + prod2 < 1)
 				{
+					sprintf(logstring, "ERROR......abr");
+					logmsg("%s\n", logstring, 1);
 					error("\"incomplete LC rate set\"");
+				
 					return -1;
 				}
 				else if (prod1 + prod2 > 1)
 				{
+					sprintf(logstring, "ERROR......abr2");
+					logmsg("%s\n", logstring, 1);
 					error("\"inconsistent specifiation for LC rate set\"");
 					return -1;
 				}
@@ -2182,7 +2213,7 @@ index_to_event[e], index_to_sex[s], index_to_mstatus[m]);
     */
 
 	warn_about_rates(zero_block, zero_fert_block);
-
+	logmsg("%s\n", "after warn_about_rates in fill_rate_gaps",1);
 	return 1;
 }
 
@@ -2257,8 +2288,7 @@ void warn_about_rates( struct age_block *zero_block, struct age_block *zero_fert
 		{
 
 			logmsg("%s\n", "WARNING marriage_queues==1  yet marriage rates are \
-specified for unmarried males THESE RATES WILL BE IGNORED.",
-				   1);
+specified for unmarried males THESE RATES WILL BE IGNORED.",1);
 			/* exit(-1);*/
 
 			/*Zero those male marriage rates in a more ambitious world
@@ -2313,23 +2343,27 @@ specified for unmarried males THESE RATES WILL BE IGNORED.",
 					crnt = rate_set[grp][event][sex][mstat];
 					if (crnt != NULL && crnt != zero_block)
 					{
-						/*
-	    sprintf(logstring,
-			" CHECKING: group: %d - %s  - %s - %s",
+						
+	    	sprintf(logstring,
+			" CHECKING: group: %d - %d  - %d - %d - upperAge: %d",
 			grp,index_to_event[event],index_to_sex[sex],
-			index_to_mstatus[mstat]);
-			logmsg("%s\n",logstring); */
+			index_to_mstatus[mstat], crnt->upper_age);
+			logmsg("%s\n",logstring,0); 
 						while (crnt != NULL)
 						{
-							if (crnt->width <= 0)
+							//if (crnt->width != 12)
+							if (1)
 							{
 								sprintf(logstring,
 										"* - - - - - - - - - - - - - - - - - - - - - - \n"
-										"* group: %d event: %s  sex: %s mstatus: %s \n"
+										"* group: %d event: %d, %s  sex:%d, %s mstatus:%d, %s,  \n"
 										"* upper age: %d  has rate with zero duration\n"
-										"* - - - - - - - - - - - - - - - - - - - - - - \n",
-										grp, index_to_event[event], index_to_sex[sex],
-										index_to_mstatus[mstat], crnt->upper_age);
+										"* crnt->width: %d ; crnt->lambda: %7.4f\n  crnt->mu %7.4f, crnt->modified_lambda: %f"
+										"* - - - - - - - - - - - - - - - - - - - - - - ",
+										grp, event,index_to_event[event], sex, index_to_sex[sex], mstat,
+										index_to_mstatus[mstat], crnt->upper_age, crnt->width, 
+										crnt->lambda, crnt->mu,crnt->modified_lambda);
+
 								logmsg("%s\n", logstring,0);
 							}
 							crnt = crnt->next;
@@ -2339,9 +2373,10 @@ specified for unmarried males THESE RATES WILL BE IGNORED.",
 			}
 		}
 	}
+	logmsg("%s\n", "done with warn_About_Rates..",1);
 }
 
-dump_rates( int mgroup)
+void dump_rates( int mgroup)
 {
 
 	if ((mgroup < 1) || (mgroup > numgroups))

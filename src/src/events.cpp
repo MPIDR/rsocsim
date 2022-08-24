@@ -137,7 +137,8 @@ int main1(int argc, char *argv[])
 	clock_t timestart1,timestart2,timeend;
 	double timedif1,timedif2;
 
-	//perror("jooooo");
+	perror("test the print-error function of stdl");
+	// stop("test the stop-function..."); stops socsim and goes back to R
 
 	//stop("after perror jooo.");
   timestart1 = clock();
@@ -438,6 +439,7 @@ int main1(int argc, char *argv[])
 	pop_rows = read_initial_pop(fd_pop);
 	fclose(fd_pop);
 	
+	logmsg("-----aa31aa.\n", "", 1);
 	//Rprintf("------------aa5");
 	if (fd_mar != NULL)
 	{
@@ -483,6 +485,7 @@ int main1(int argc, char *argv[])
 	}
 	Rprintf("fix pop pointers..\n");
 	
+	logmsg("-----aa31a.\n", "", 1);
 	fix_pop_pointers();
 	
 	//Rprintf("------------aa8");
@@ -520,12 +523,17 @@ int main1(int argc, char *argv[])
 	Rprintf("Initial size of pop %d  ", last_person->person_id);
 	Rprintf("(living: %d)\n", size_of_pop[0]);
 
+	logmsg("-----aa31.\n", "", 1);
 	if (fill_rate_gaps() < 0){
-		perror("bad rate set\n");
-	  warning("bad rate set\n");
+		Rprintf("fill_rate_gaps < 0 - error");
+		sprintf(logstring, "ERROR......abr3");
+		logmsg("%s\n", logstring, 1);
+		// perror("bad rate set\n");
+	    warning("bad rate set\n");
 	}
 	
-	//Rprintf("------------aa3s");
+	Rprintf("------------aa3s");
+	logmsg("-----aa3s.\n", "", 1);
 	/* dump_rates(); */
 
 	if (random_epsilon)
@@ -538,8 +546,8 @@ int main1(int argc, char *argv[])
 		printf("fixed epsilon ");
 		epsilon = epsilon % (max_e_index + 1);
 	}
-	//Rprintf("------------aa32");
-	//logmsg("-----aa32.\n", "", 1);
+	Rprintf("------------aa32");
+	logmsg("-----aa32.\n", "", 1);
 
 
 	//logmsg(" grogro001 \n", "", 1);
@@ -815,8 +823,10 @@ int main1(int argc, char *argv[])
 				
 			adjust_birth_for_bint();
 
-			if (fill_rate_gaps() < 0)
+			if (fill_rate_gaps() < 0){
+				logmsg("bad rate set -\n", "", 0);
 				perror("bad rate set\n");
+			}
 		}
 		else
 		{
