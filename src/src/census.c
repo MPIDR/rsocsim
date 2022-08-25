@@ -225,8 +225,8 @@ void evaluate_marmkt(FILE *fd)
    values in marriage_agetarget against those realized.  */
 
   
-  int g,i,rxs,expected_marriages,observed_marriages;
-  double xs_mars=0,observedP=0,expectedP,oeratio=0,nwrong=0,pctwrong=0,score=0;
+  int g,i,rxs,expected_marriages;// observed_marriages;
+  double xs_mars=0,observedP=0,expectedP,oeratio=0,pctwrong=0,score=0;
   struct person *groom;
   struct person *bride;
     
@@ -248,7 +248,7 @@ void evaluate_marmkt(FILE *fd)
       expectedP=(marriage_agetarget[g][i]>0)?marriage_agetarget[g][i]:0;
       expected_marriages=(marriage_agetarget[g][i]*marriage_tots[g]);
       expected_marriages=(expected_marriages <0)?0:expected_marriages;
-      observed_marriages=marriage_ageobs[g][i];
+      //observed_marriages=marriage_ageobs[g][i];
       xs_mars= marriage_ageobs[g][i]-expected_marriages;
 
       rxs=round(xs_mars);

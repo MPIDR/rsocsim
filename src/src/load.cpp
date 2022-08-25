@@ -104,8 +104,8 @@ enum l_keyword
 //enum l_keyword l_lookup_keyword();
 enum l_keyword l_lookup_keyword(register char*);
 
-void l_error(struct l_context*, char*);
-void error(char*);//,char*,int, char*,char*,char*,char*);
+void l_error(const struct l_context*, const char*);
+void error(const char*);//,char*,int, char*,char*,char*,char*);
 void add_rate_block(int, int, double ) ;
 void add_rate_table(int, int, double ) ;
 int	read_integer(struct l_context*,char*);
@@ -129,11 +129,11 @@ struct age_table *current_table;
 struct age_table *recall_table = NULL;
 
 // * forward declarations *
-char *index_to_sex[] = {
+const char *index_to_sex[] = {
 	"male",
 	"female",
 };
-char *index_to_event[] =
+const char *index_to_event[] =
 	{
 		"birth",
 		"marriage",
@@ -201,7 +201,7 @@ char *index_to_event[] =
 		"transit60",
 		"null",
 };
-char *index_to_mstatus[] =
+const char *index_to_mstatus[] =
 	{
 		"null",
 		"single",
@@ -606,7 +606,7 @@ int l_process_line(char *line,struct l_context *cx,FILE *fp)
 		//sprintf(output_file_name, "sim_results_%s", words[1]);
 		char buffer_output_dir [250];
 		char buffer_output_fn [250];
-		sprintf (buffer_output_dir, "sim_results_s%s_%d/", rate_file_name, ceed);
+		sprintf (buffer_output_dir, "sim_results_s%s_%ld/", rate_file_name, ceed);
 		sprintf (buffer_output_fn, "%sresult", buffer_output_dir);
 
 		// create the directory:
@@ -1157,6 +1157,8 @@ int l_process_line(char *line,struct l_context *cx,FILE *fp)
 				return -1;
 			}
 			break;
+		default:
+			break; //remove warnings with this. this is only the nested switch!	
 		}
 		return 1;
 		break;
@@ -1309,7 +1311,7 @@ enum l_keyword l_lookup_keyword(register char *word)
 
 	struct tab
 	{
-		char *name;
+		const char *name;
 		enum l_keyword token;
 	};
 
@@ -1481,13 +1483,13 @@ enum l_keyword l_lookup_keyword(register char *word)
 	return p->token; /* k_unknown if no match*/
 }
 
-l_create_rateset(register struct l_context *cx, char *name)
+void l_create_rateset(register struct l_context *cx, char *name)
 {
 	cx->file = name;
 	printf("creating rate set\n");
 }
 
-void l_error(struct l_context *cx, char *message)
+void l_error(const struct l_context *cx, const char *message)
 	/* error message for load()  tells where error occurred in .sup file */
 {
 	/*  error("\"%s\" line %d: %s",  cx->file,   cx->lineno, message);*/
@@ -1759,7 +1761,7 @@ int	keyword_to_integer(struct l_context *cx, enum l_keyword k)
 
 int fill_rate_gaps()
 {
-	int s, p, g, m, e, i;
+	int s, p, g, m, e;
 	int expected;
 	struct lc_rates *lc;
 	struct age_block *cur, *zero_block, *zero_fert_block;
@@ -1844,9 +1846,9 @@ int fill_rate_gaps()
 				}
 				else if (prod1 + prod2 > 1)
 				{
-					sprintf(logstring, "ERROR......abr2");
+					sprintf(logstring, "ERROR. inconsistent specifiation for LC rate set");
 					logmsg("%s\n", logstring, 1);
-					error("\"inconsistent specifiation for LC rate set\"");
+					//error("\"\"");
 					return -1;
 				}
 				else
@@ -2156,7 +2158,7 @@ index_to_event[e], index_to_sex[s], index_to_mstatus[m]);
 			int Bexpected = get_expected_number_of_births(g);
 			if (Bexpected <= 0)
 			{
-				char logsting[256];
+				//char logsting[256];
 				sprintf(logstring, "ERROR birthtarget is set BUT  group %d has 0 or fewer expected births. This could result from the init pop having no females of childbearing age. Disable birthtarget for this group if you want results.", g);
 				logmsg("%s\n", logstring, 1);
 				stop("-1 fill-rate-gaps - Birthtarget is set But grou .......");
@@ -2345,7 +2347,7 @@ specified for unmarried males THESE RATES WILL BE IGNORED.",1);
 					{
 						
 	    	sprintf(logstring,
-			" CHECKING: group: %d - %d  - %d - %d - upperAge: %d",
+			" CHECKING: group: %d - %s  - %s - %s - upperAge: %d",
 			grp,index_to_event[event],index_to_sex[sex],
 			index_to_mstatus[mstat], crnt->upper_age);
 			logmsg("%s\n",logstring,0); 
@@ -2427,7 +2429,7 @@ void print_rate_table(struct age_block *r)
     */
 }
 
-print_prob_table(struct age_table *t)
+void print_prob_table(struct age_table *t)
 {
 	struct age_table *cur;
 	cur = t;
@@ -2499,7 +2501,7 @@ char *command;
 }
 */
 
-void error(char *fmt)//,char *a,int b, char *c,char *d,char *e,char *f)
+void error(const char *fmt)//,char *a,int b, char *c,char *d,char *e,char *f)
 {
 	char buf[1024];
 	register char *p;
@@ -2516,7 +2518,7 @@ void error(char *fmt)//,char *a,int b, char *c,char *d,char *e,char *f)
 double get_lambda(int g, int m, int p, int age)
 /* select appropriate lambda from ferts for group,mstat,parity, age a */
 {
-	int i;
+	//int i;
 	struct age_block *current;
 	struct age_block *ferts;
 	p = MAX(p, 0);
@@ -2604,7 +2606,7 @@ void adjust_birth_for_bint()
 			{
 				/** have to max -> 0 with parity */
 
-				if (p == 0 & birth_rate_set[g][m][1] != NULL)
+				if ((p == 0) & (birth_rate_set[g][m][1] != NULL))
 				{
 					break;
 				}

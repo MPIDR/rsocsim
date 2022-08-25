@@ -50,7 +50,7 @@ void evaluate_marmkt(FILE*);
 
 int global_verbose = 0;
 
-char *a_tally_to_string[] = {
+const char *a_tally_to_string[] = {
 	"SELF",
 	"SPOU",
 	"BKID",
@@ -63,7 +63,7 @@ char *a_tally_to_string[] = {
 	"SDAUBKID",
 };
 
-char *c_tally_to_string[] = {
+const char *c_tally_to_string[] = {
 	"SELF",
 	"SPOU",
 	"BDAD",
@@ -143,7 +143,7 @@ int main1(int argc, char *argv[])
 	//stop("after perror jooo.");
   timestart1 = clock();
   	
-	char command_string[1024];
+	//char command_string[1024];
 	struct queue_element *e, *q;
 	int i, j, fy;
 	char useage[1024];
@@ -276,7 +276,7 @@ int main1(int argc, char *argv[])
 	//Rcpp::Rcout << "useage: ratefile random_number" << useage << argv[1] << argv[2] << std::endl;
 	
 	/**srandom(ceed);  setting seed for random() NOT rrandom() **/ // todo:check if random is initialized correctly!
-	sprintf(log_file_name, "sim_results_%s_s%d.log", rate_file_name, ceed);
+	sprintf(log_file_name, "sim_results_%s_s%ld.log", rate_file_name, ceed);
 	//Rprintf(log_file_name, "%s%d.log", rate_file_name, ceed);
 	
 	
@@ -288,7 +288,7 @@ int main1(int argc, char *argv[])
 	if ((fd_log = fopen(log_file_name, "w")) == NULL)
 	{
 	  
-	    Rcpp:Rprintf("can't open file:  %s ", log_file_name);
+	    Rprintf("can't open file:  %s ", log_file_name);
 		perror("can't open log file\n");
 	}
 	
@@ -475,7 +475,7 @@ int main1(int argc, char *argv[])
 	if (fd_otx != NULL)
 	{
 		//logmsg("Reading initial transition history file %s\n", otx_file_name,1);
-		fprintf(fd_log,"Reading initial transition history file %s\n", otx_file_name,1);
+		fprintf(fd_log,"Reading initial transition history file %s\n", otx_file_name);
 		read_otx(fd_otx);
 		fclose(fd_otx);
 	}
@@ -492,7 +492,7 @@ int main1(int argc, char *argv[])
 	if (read_xtra_file)
 	{
 		int rows_read = 0;
-		char logstring[128];
+		//char logstring[128];
 		//logmsg("\n\nReading initial xtra file %s\n", xtra_file_name, 1);
 		fprintf(fd_log,"\n\nReading initial xtra file %s\n", xtra_file_name);
 		rows_read = read_xtra(fd_xtra, pop_rows);
@@ -571,7 +571,7 @@ int main1(int argc, char *argv[])
 		{
 			/* stat_file needs to be open if take_census specified
 	   other output files are independent of this */
-			char stat_file_seg[1024];
+			//char stat_file_seg[1024];
 			char segnum[6];
 			strcpy(stat_file_name_seg, stat_file_name);
 			sprintf(segnum, "%d", current_segment);
@@ -863,8 +863,8 @@ int main1(int argc, char *argv[])
 	 the female marriage queue is NOT empty**/
 		if (marriage_queues == 1)
 		{
-			struct queue_element *femq;
-			femq = marriage_queue + 0;
+			// struct queue_element *femq;
+			// femq = marriage_queue + 0;
 
 			if (time_waiting[FEMALE] > 0)
 			{
@@ -1169,7 +1169,7 @@ int process_month()
 void new_events_for_all()
 {
 	struct person *p;
-	int m;
+	//int m;
 
 	p = person0;
 
@@ -1202,7 +1202,7 @@ void new_events_for_all()
 			p->mqueue_month = current_month;
 		}
 		/** Normal situation **/
-		m = date_and_event(p);
+		int m = date_and_event(p);
 		/** print event before scheduling**
 	  if(p->next_event == E_BIRTH){
 	  char logstring[256];
@@ -1212,7 +1212,7 @@ void new_events_for_all()
 	  p->next_event,(m - p->birthdate));
 	  logmsg("%s\n",logstring,1);
 	  }
-	  /** end print shtick**/
+	  ///end print shtick */
 		m %= MAXUMONTHS;
 		install_in_order(p, event_queue + m, EVENT_QUEUE);
 		/**
@@ -1329,7 +1329,7 @@ routine. It simply puts everyone at the front of the queue. It works
 and is much faster  **/
 
 {
-	struct person *after, *before;
+	// struct person *after, *before;
 
 	/* printf("trying to install %d\n", p->person_id); */
 
@@ -2070,7 +2070,7 @@ int date_and_event(struct person *p)
 
 void initialize_segment_vars()
 {
-	int g, gd, e, s, m, p, i;
+	int g, gd, e, s, m, i; // p,
 	struct age_block *b, *bb, **r_ptr, **s_ptr;
 
 	struct age_table *t, *tt;
@@ -2359,7 +2359,7 @@ void population_pyramid(FILE *fd_pyr)
 	/*    char leftline[80], rightline[80];*/
 	char leftline[81], rightline[81];
 
-	char logstring[256];
+	//char logstring[256];
 
 	/**disable for now until we can figure out why it crashs on small
     pop  --carlm10/99**/

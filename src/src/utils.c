@@ -242,7 +242,11 @@ p->tmult is set before it is used.  the value of hettrans is read from
 
 	/*  if (! p->egos_extra->tmult )*/
 	if (!p->tmult)
-		perror("attempt to modify transit rate no tmult found");
+	{
+	  perror("attempt to modify transit rate no tmult found");
+	  stop("attempt to modify transit rate no tmult found");
+	}
+	  
 	else
 		return p->tmult * crnt_block->lambda;
 }
@@ -284,7 +288,7 @@ void census()
 	struct person *mbubbe, *mzayde, *pbubbe, *pzayde;
 	struct person *stepmbubbe, *stepmzayde, *steppbubbe, *steppzayde;
 	struct marriage *m;
-	FILE *fd_tmp;
+	//FILE *fd_tmp;
 	int fy, i;
 
 	char tmp_name[100];
@@ -659,7 +663,7 @@ void child_census()
 	struct person *stepmbubbe, *stepmzayde, *steppbubbe, *steppzayde;
 	struct person *auntuncle, *greatauntuncle;
 	struct marriage *m;
-	FILE *fd_tmp;
+	//FILE *fd_tmp;
 	int i, fy, sex;
 	char tmp_name[100];
 
@@ -1328,7 +1332,7 @@ void child_census()
  ************************************************************************/
 float get_extra( struct person *p, int i)
 {
-	struct extra_data *first;
+	//struct extra_data *first;
 	struct extra_data *current;
 	int indx;
 	if ((i < 0) || (i > size_of_extra))
@@ -1374,7 +1378,7 @@ float get_extra( struct person *p, int i)
 void put_extra(struct person *p,int i,float x)
 {
 	struct extra_data *current;
-	struct extra_data *first;
+	//struct extra_data *first;
 
 	int indx;
 	if ((i < 0) || (i > size_of_extra))

@@ -34,7 +34,7 @@ int irandom()
     //Linux has random() which gives proper random-numbers:
         ceed = random();
     #endif
-    printf("\nrand_max: %ld",RAND_MAX);
+    printf("\nrand_max: %d",RAND_MAX);
 
     return (int) ceed;
 }

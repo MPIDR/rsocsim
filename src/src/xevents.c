@@ -28,7 +28,7 @@ int check_agedif(struct person *, struct person *);
 void create_working_mqueue(struct person*);
 void destroy_working_mqueue();
 
-int add_minor_children(struct person *);
+void add_minor_children(struct person *);
 int check_endogamy(struct person *, struct person *);
 int check_incest(struct person *, struct person *);
 
@@ -386,7 +386,7 @@ void marriage(struct person *p)
     /* p->pref is a function random_spouse2() */
     spouse = (*(p->pref))(p);
 
-    int mq_count_tmp = mq_count;
+    //int mq_count_tmp = mq_count;
     destroy_working_mqueue();
 
     if (spouse != NULL)
@@ -1034,7 +1034,7 @@ double score3(struct person *p, struct person *suitor)
 {
   struct person *w, *m;
   double x;
-  double bonus = 1;
+  //double bonus = 1;
   double maxS = 2;
   double rightSlope = .0005; /* oldest can man 
 				marry newborn girl theoreticlly*/
@@ -1109,49 +1109,10 @@ double score3(struct person *p, struct person *suitor)
     /*
        */
   } /*end of typical scoring algorithm*/
+  stop("reached end of score3 without returning score... should be impossible ");
+  return -1;
 }
-/**************************************************************************/
 
-/** Marcia's old score3 that does not make sense 
-double
-score3_OBSOLETE(p, suitor)
-
-struct person *p, *suitor;
-{
-    struct person *w, *m;
-    double width = 3;
-    double skewness = 0.3;
-    double peak = 0.6532;
-    double x, left, right;
-    double bonus = 0;
-
-    if( score2(p,suitor)== -1){
-      return -1;
-    }
-
-    if (p->sex == FEMALE){
-	      w = p;
-	      m = suitor;
-    } else {
-	      m = p;
-	w = suitor;
-    }
-
-WRONG Marcia!  subtracting birthdates not ages!
-    x = (double) (m->birthdate - w->birthdate);
-
-    left = 1 / (1 + ((width * width)/(x * x)));
-    right = 2 / (1 + exp(-1 * skewness * x));
-    /*
-      if (w->egos_extra->marity == m->egos_extra->marity)
-        bonus = .1;
-
-    if(get_marity(w) == get_marity(p)) bonus=.1;
-    return left * right + bonus;
-    /*
-
-}
-    */
 /********************************************************************/
 int check_endogamy(struct person *p, struct person *suitor)
 {
@@ -1252,6 +1213,10 @@ int check_endogamy(struct person *p, struct person *suitor)
     }
   }
 
+  logmsg("Reached the end of check_endogamy without return! This shouldn't happen\n", "", 1);
+  stop("Reached the end of check_endogamy without return! This shouldn't happen");
+  return(-1);
+    
   /*
    */
 }
@@ -1407,7 +1372,7 @@ void transit(struct person *q)
 void assemble_household(struct person *p)
 {
   struct marriage *p_prior;
-  struct person *current_child;
+  //struct person *current_child;
 
   /* start with self */
   tl0 = tl;
@@ -1506,7 +1471,7 @@ void assemble_household(struct person *p)
     */
 }
 
-int add_minor_children(struct person *p)
+void add_minor_children(struct person *p)
 {
   int overage = FALSE;
   struct person *current_child;
@@ -1545,7 +1510,7 @@ int add_minor_children(struct person *p)
   }
 }
 
-print_migrants()
+void print_migrants()
 {
   tl0 = tl;
   while (tl0 != NULL)
@@ -1601,7 +1566,7 @@ struct person * find_random_father(struct person *child)
     e = event_queue + (tries % MAXUMONTHS);
     nth = e->num;
     p = e->first;
-    char logstring[256];
+    //char logstring[256];
     int marallowed = 0;
     /*It turns out that the event queue is stored in person_id order so it is
       necessary to randomize within months.  So this means that we are going

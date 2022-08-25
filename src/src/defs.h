@@ -245,8 +245,8 @@ static struct nlist *hashtab[HASHSIZE];
 #define MAXUYEARS 120
 */
 
-#define MAXUMONTHS 1440
-#define MAXUYEARS 120
+#define MAXUMONTHS 1200
+#define MAXUYEARS 100
 
 /*
 int MAXUYEARS = 120;
@@ -438,7 +438,7 @@ int take_census;
 int fixed_epsilon, random_epsilon;
 int read_xtra_file;
 long int ceed;
-static char randstate[2048]; /* for gcc's random number generator */
+//static char randstate[2048]; /* for gcc's random number generator *///not needed here?!?!
 int current_month;
 int stop_month;
 int current_segment;
@@ -691,7 +691,7 @@ void assemble_household( struct person * p);
 void population_pyramid(FILE * fd_pyr);
 FILE *open_write(char*);
 void print_segment_info();
-void logmsg(char * frmt, char * msg, int where);
+void logmsg(const char * frmt, const char * msg, int where);
 void initialize_segment_vars();
 void initialize_marriage_targets();
 void new_events_for_all();

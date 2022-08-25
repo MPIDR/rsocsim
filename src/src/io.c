@@ -24,7 +24,7 @@ extern FILE *fd_pop, *fd_mar, *fd_xtra, *fd_out_pop, *fd_out_mar, *fd_out_xtra;
 extern FILE  *fd_out_otx, *fd_out_otx_seg; //*fd_rn,
 extern FILE *fd_pyr, *fd_stat, *fd_log;
 
-void logmsg(char * frmt, char * msg, int where)
+void logmsg(const char * frmt, const char * msg, int where)
 {
 
   /** This would be better if it could be treated as a pintf as it is
@@ -44,66 +44,8 @@ void logmsg(char * frmt, char * msg, int where)
   return;
 }
 
-/***************************
-
-int make_random_socsim_NEVERUSED (){
-  /****************************************
-   * This will check for existance of file random.socsim. if it finds it
-   * it will read it and create a linked list of random uniforms. If not
-   * it will write 100K random uniforms to the file and then open it 
-   * and read it and create the linked list
-   ***************************************
-  FILE *fd_random_socsim;
-  struct stat bla; 
-  int fexists,i,command_line_ceed;
-  double runif;
-  fexists = (stat("random.socsim",&bla)==0);
-  
-  command_line_ceed= ceed;
-
-  if (! fexists){
-    
-    logmsg("random.socsim file not found ... creating it now\n","",1);
-    ceed = RECYCLE_SEED;
-    if((fd_random_socsim = fopen("random.socsim","w")) == NULL){
-      perror("Can't open file: random.socsim\n");
-    }
-    
-    for (i=1;i<=100000;i++){
-      runif=real_rrandom();
-      fprintf(fd_random_socsim,"%.18f\n",runif);
-    }
-    fclose(fd_random_socsim);
-    logmsg("random.socsim written\n","",1);
-    
-  } /* random.socsim not found and therefore created */
-
-/* read from random.socsim and create linked list 
-
-  if((fd_random_socsim = fopen("random.socsim","r")) == NULL){
-    perror("Can't open file: random.socsim for reading...?\n");
-  }
-  logmsg("reading random numbers from  file\n","",1);
-  first_random_number = NEW(struct random_number);
-  int junk = fscanf(fd_random_socsim,"%lf",&runif);
-  first_random_number->value=runif;
-  current_random_number=first_random_number;
-  while(fscanf(fd_random_socsim, "%lf",&runif) != EOF){
-    current_random_number->next = NEW(struct random_number);
-    current_random_number=current_random_number->next;
-    current_random_number->value=runif;
-  }
-  current_random_number->next=first_random_number;
-  current_random_number=first_random_number;
-  logmsg("random number table read from file\n","",1);
-  for (i=1;i<=command_line_ceed; i++){
-    current_random_number=current_random_number->next;
-  }
-  }  ***/
 /***********************************************************************/
-void initialize_person(struct person *pnew)
-
-{
+void initialize_person(struct person *pnew) {
   /***
       This will plug a bunch of NULL and zero values into a 
       person struct. It is nec because solaris and no doubt other
@@ -397,7 +339,7 @@ int read_xtra(FILE *fd, int pop_rows)
 {
   char line[10]; /*might need to increase this*/
   struct nlist *np;
-  int id, val, indx, row;
+  int id, indx, row;
   float rval;
   struct person *p;
 
@@ -450,8 +392,10 @@ int read_xtra(FILE *fd, int pop_rows)
     row++;
     if (!feof(fd))
     {
-      char *junk = fgets(line, 1, fd); /* stupid way to toss 
-					 the rest of the line*/
+      fgets(line, 1, fd); /* stupid way to toss 
+       the rest of the line*/
+      /* char *junk = fgets(line, 1, fd); stupid way to toss 
+       the rest of the line*/
     }
   }
   if (row != pop_rows)
@@ -519,8 +463,8 @@ void delete_hash_table()
 
 void fix_pop_pointers()
 {
-  struct person *p, *pp;
-  struct marriage *mm;
+  struct person *p; //*pp;
+  //struct marriage *mm;
   struct nlist *np, *npp;
 
   last_person_id = 0;
@@ -969,7 +913,7 @@ void write_xtra(FILE *fd)
 #ifdef ENHANCED
       enhance_write_extra(fd, p);
 #endif
-      fprintf(fd, "\n", "");
+      fprintf(fd, "\n");
     }
     else
     {
@@ -990,7 +934,7 @@ void write_otx(FILE *fd)
 {
   struct person *p;
   int prior;
-  struct transition *ctrans, *ftrans;
+  struct transition *ctrans;// *ftrans;
   p = person0;
 
   while (p != NULL)
