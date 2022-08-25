@@ -145,7 +145,7 @@ run1simulationwithfile_from_binary <- function(folder, supfile,seed="42",socsim_
   print("Start run1simulationwithfile")
   print(folder)
   print(supfile)
-  print(paste0("socsim_path: ",socsim_path))
+  print(paste0("socsim_path: ", socsim_path))
   print(seed)
   previous_wd = getwd()
   setwd(paste0(folder))
