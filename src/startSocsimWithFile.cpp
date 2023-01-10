@@ -6,12 +6,13 @@ using namespace Rcpp;
 
 
 // [[Rcpp::export]]
-int startSocsimWithFile(String supfile, String seed){
+int startSocsimWithFile(String supfile, String seed, String compatibility_mode){
   Rcpp::Rcout << "Start Socsim" << std::endl;
   char *args[] = {
     (char*)"zerothArgument",
     (char*) supfile.get_cstring(),
     (char*) seed.get_cstring(),
+    (char*) compatibility_mode.get_cstring(),
     NULL
   };
   main1(2, args);

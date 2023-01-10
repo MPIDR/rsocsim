@@ -19,8 +19,9 @@
 #'  "clustercall" - if the future package is not available, try this method instead
 #' @return The results will be written into the specified folder
 #' @export
-run1simulationwithfile <- function(folder, supfile,seed="42",process_method="inprocess") {
+run1simulationwithfile <- function(folder, supfile,seed="42",process_method="inprocess",compatibility_mode="1") {
   seed= as.character(seed)
+  compatibility_mode = as.character(compatibility_mode)
   print("Start run1simulationwithfile")
   print(folder)
   print(seed)
@@ -29,11 +30,11 @@ run1simulationwithfile <- function(folder, supfile,seed="42",process_method="inp
   tryCatch(expr = {
     setwd(folder)
     if ((process_method=="inprocess") | (process_method =="default")) {
-      result = run1simulationwithfile_inprocess(supfile=supfile,seed=seed)
+      result = run1simulationwithfile_inprocess(supfile=supfile,seed=seed,compatibility_mode=compatibility_mode)
     } else if (process_method=="future") {
-      result = run1simulationwithfile_future(supfile=supfile,seed=seed)
+      result = run1simulationwithfile_future(supfile=supfile,seed=seed,compatibility_mode=compatibility_mode)
     } else if (process_method=="clustercall") {
-      result = run1simulationwithfile_clustercall(supfile=supfile,seed=seed)
+      result = run1simulationwithfile_clustercall(supfile=supfile,seed=seed,compatibility_mode=compatibility_mode)
     }
   },
   error = function(w){
@@ -48,7 +49,7 @@ run1simulationwithfile <- function(folder, supfile,seed="42",process_method="inp
   
 }
 
-run1simulationwithfile_future <- function(supfile,seed="42") {
+run1simulationwithfile_future <- function(supfile,seed="42",compatibility_mode="1") {
   # use the "future" library to run a rcpp-socsim simulation
   # in a seperate process
   print("create future cluster")
@@ -57,7 +58,7 @@ run1simulationwithfile_future <- function(supfile,seed="42") {
   print("start socsim simulation now. no output will be shown!")
   
   f1 <- future::future({
-    startSocsimWithFile(supfile,seed)
+    startSocsimWithFile(supfile,seed,compatibility_mode)
   },seed=TRUE)
   v1 <- future::value(f1)
   return(1)
@@ -71,8 +72,8 @@ run1simulationwithfile_future <- function(supfile,seed="42") {
 #' @param seed RNG seed
 #' @return The results will be written into the specified folder
 
-run1simulationwithfile_inprocess <- function(folder, supfile,seed) {
-  startSocsimWithFile(supfile,seed)
+run1simulationwithfile_inprocess <- function(folder, supfile,seed,compatibility_mode="1") {
+  startSocsimWithFile(supfile,seed,compatibility_mode)
   return(1)
 }
 
@@ -94,14 +95,14 @@ run1simulationwithfile_inprocess <- function(folder, supfile,seed) {
 #  return(1)
 #}
 
-run1simulationwithfile_clustercall <- function(supfile,seed="23") {
+run1simulationwithfile_clustercall <- function(supfile,seed="23",compatibility_mode="1") {
   # use the "future" library to run a rcpp-socsim simulation
   # in a seperate process
   print("parallel::clusterCall")
   numCores=1
   cl <- parallel::makeCluster(numCores, type="PSOCK", outfile="socsim_clustercall.log")
   parallel::clusterExport(cl, "startSocsimWithFile")
-  parallel::clusterCall(cl,startSocsimWithFile, supfile=supfile,seed=seed)
+  parallel::clusterCall(cl,startSocsimWithFile, supfile=supfile,seed=seed,compatibility_mode=compatibility_mode)
   parallel::stopCluster(cl)
   return(1)
 }
@@ -131,7 +132,7 @@ run1simulationwithfile_clustercall <- function(supfile,seed="23") {
 #' @param socsim_path path+filename of a socsim-executable. Download one from https://github.com/tomthe/socsim/releases/download/0.3/socsim.exe
 #' @return The results will be written into the specified folder
 #' @export
-run1simulationwithfile_from_binary <- function(folder, supfile,seed="42",socsim_path=NULL) {
+run1simulationwithfile_from_binary <- function(folder, supfile,seed="42",compatibility_mode="1",socsim_path=NULL) {
   if (is.null(socsim_path)){
     print("No socsim_path specified. So I will download the Windows-binary from github to a temporary directory!")
     print("This will probably not work due to antivirus-software.")
@@ -150,12 +151,12 @@ run1simulationwithfile_from_binary <- function(folder, supfile,seed="42",socsim_
   previous_wd = getwd()
   setwd(paste0(folder))
   
-  print(paste0("command:  ",socsim_path,args=paste0(" ",supfile," ", seed)))
+  print(paste0("command:  ",socsim_path,args=paste0(" ",supfile," ", seed," ", compatibility_mode)))
   
-  print(system2(socsim_path,args=c(supfile," ", seed)))
-  print(system(paste(socsim_path, supfile, seed)))
-  a = (system(paste(socsim_path, paste0(dirname(folder), "\\", supfile), seed)))
-  print(paste(socsim_path, paste0(dirname(folder), "\\", supfile), seed))
+  print(system2(socsim_path,args=c(supfile," ", seed, " ",compatibility_mode)))
+  print(system(paste(socsim_path, supfile, seed,compatibility_mode)))
+  a = (system(paste(socsim_path, paste0(dirname(folder), "\\", supfile), seed, compatibility_mode)))
+  print(paste(socsim_path, paste0(dirname(folder), "\\", supfile), seed,compatibility_mode))
   print(a)
   print(previous_wd)
   setwd(previous_wd)

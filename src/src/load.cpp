@@ -463,9 +463,10 @@ int l_process_line(char *line,struct l_context *cx,FILE *fp)
 		
 		//add a last block that goes until MAXUYEARS and that has a
 		if (event == E_DEATH){
-			add_rate_block(MAXUYEARS, 0, 0.999999);
+			current_block->previous->upper_age = current_block->previous->upper_age - 10; //to emulate old behavior, where people had to die in month MAXUYEARS-1
+			add_rate_block(MAXUYEARS, 0, 0.999999999);
 		} else {
-			add_rate_block(MAXUYEARS, 0, 0.000001);
+			add_rate_block(MAXUYEARS, 0, 0.000000001);
 		}
 		//l_error(cx, "Incomplete rate set");
 		//stop("Incomplete rate set");

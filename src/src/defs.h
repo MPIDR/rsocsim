@@ -245,12 +245,12 @@ static struct nlist *hashtab[HASHSIZE];
 #define MAXUYEARS 120
 */
 
-#define MAXUMONTHS 1200
-#define MAXUYEARS 100
+#define MAXUMONTHS 2400
+#define MAXUYEARS 200
 
 /*
-int MAXUYEARS = 120;
-int MAXUMONTHS = MAXUYEARS * 12;
+const int MAXUYEARS = 120;
+const int MAXUMONTHS = MAXUYEARS * 12;
 */
 
 /* sex */
@@ -417,6 +417,8 @@ double read_kt_vals[MAXGROUPS][NUMSEXES][MAXKT];
 int e_index, max_e_index, current_e_index, epsilon;
 struct age_table *lc_epsilon[MAXGROUPS][NUMSEXES][MAXKT];
 int kword;
+
+int compatibility_mode = 1;
 
 int birth_target[MAXGROUPS];
 int transit_target[MAXGROUPS][MAXGROUPS];

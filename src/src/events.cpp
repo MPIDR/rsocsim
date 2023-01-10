@@ -263,13 +263,22 @@ int main1(int argc, char *argv[])
 	//strcpy(rate_file_name, *++argv);
 	
 	//Rcpp::Rcout << "useage: ratefile random_number" << useage << argv[1] << argv[2] << std::endl;
-	Rcpp::Rcout << "v18a!-command-line argv[0]: " << argv[0] << "| argv[1]: " << argv[1] << "| argv[2]: " << argv[2] << std::endl;
+	Rcpp::Rcout << "v18a!-command-line argv[0]: " << argv[0] << "| argv[1]: " << argv[1] << "| argv[2]: " << argv[2]  << "| argv[3]: " << argv[3] << std::endl;
 	
 	//ceed = atoi(*++argv);
 	ceed = atoi(argv[2]);
+	compatibility_mode = atoi(argv[3]);
+	
 	Rcpp::Rcout << "random_number seed: " << ceed << "| command-line argv[1]: " << argv[1] << "| argv[2]: " << argv[2] << std::endl;
 	
+	Rcpp::Rcout << "compatibility_mode: " << compatibility_mode << "| command-line argv[3]: " << argv[3] << std::endl;
 	
+	//logmsg("compatibility_mode: %d \n", compatibility_mode, 1);
+	
+	//sprintf(logstring, "compatibility_mode: %d \n",compatibility_mode );
+	//logmsg("%s\n", logstring, 1);	
+		
+		
 	// initstate(ceed, randstate, 256); //suggested by jim: replace with:
 	srand(ceed);
 	
@@ -1516,7 +1525,7 @@ void queue_delete( struct person *p, int q_type)
 
 	if (p == NULL){
 		perror("bad pointer returned from queue delete");
-		printf("peroor - p==Null! ");
+		printf("peroor - p == Null! ");
 	}
 	p->pointer_type[q_type] = PTR_NULL;
 	SET_NEXT_ELEMENT(p, NULL);
@@ -1609,7 +1618,11 @@ int	datev(struct age_block *first_block,int age, int time_shift)
 		perror("datev: got here with a null rate set\n");
 
 	/*    age =  MIN(age + time_shift, 1199);*/
-	age = MIN(age + time_shift, (MAXUMONTHS - 1));
+	if(compatibility_mode==1){
+		age = MIN(age + time_shift, (1200 - 1));
+	} else {
+		age = MIN(age + time_shift, (MAXUMONTHS - 1));
+	}
 	first_possible_month = current_month + time_shift;
 	crnt_block = first_block;
 
@@ -1837,11 +1850,16 @@ int date_and_event(struct person *p)
        month We need to police this b/c geriatric married people can
        have new events generated during their 1199th month if their
        spouse dies before their own scheduled death is executed. */
-
-	if ((current_month - p->birthdate) == (MAXUMONTHS - 1))
-	{
-		p->next_event = E_DEATH;
-		return (current_month);
+	if(compatibility_mode==1){
+		if ((current_month - p->birthdate) == (1200-1)){
+			p->next_event = E_DEATH;
+			return (current_month);
+		}
+	} else {
+		if ((current_month - p->birthdate) == (MAXUMONTHS - 1)){
+			p->next_event = E_DEATH;
+			return (current_month);
+		}
 	}
 
 	if (lc_rate_set[p->group][p->sex] == NULL)
