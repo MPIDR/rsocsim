@@ -1,6 +1,6 @@
-\name{rsoc-package}
-\alias{rsoc-package}
-\alias{rsoc}
+\name{rsocsim-package}
+\alias{rsocsim-package}
+\alias{rsocsim}
 \docType{package}
 \title{
   SOCSIM Package for R. Run Social microsimulations directly from R.

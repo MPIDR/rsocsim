@@ -1,5 +1,5 @@
 #library("future")
-#library(rsoc)
+#library(rsocsim)
 
 
 #' Run a single socsim-simulation with a given supplement-file and folder.
@@ -215,11 +215,11 @@ run
 "
   sup.fn <- "socsim.sup"
   cat(sup.content,file=file.path(simfolder, sup.fn))
-  fn_SWEfert2022_source <- system.file("extdata", "SWEfert2022", package = "rsoc", mustWork = TRUE)
+  fn_SWEfert2022_source <- system.file("extdata", "SWEfert2022", package = "rsocsim", mustWork = TRUE)
   fn_SWEfert2022_dest <- file.path(simfolder, "SWEfert2022")
-  fn_SWEmort2022_source <- system.file("extdata", "SWEmort2022", package = "rsoc", mustWork = TRUE)
+  fn_SWEmort2022_source <- system.file("extdata", "SWEmort2022", package = "rsocsim", mustWork = TRUE)
   fn_SWEmort2022_dest <- file.path(simfolder, "SWEmort2022")
-  fn_init_source <- system.file("extdata", "init_new.opop", package = "rsoc", mustWork = TRUE)
+  fn_init_source <- system.file("extdata", "init_new.opop", package = "rsocsim", mustWork = TRUE)
   fn_init_dest <- file.path(simfolder, "init_new.opop")
   file.copy(fn_SWEfert2022_source,fn_SWEfert2022_dest)
   file.copy(fn_SWEmort2022_source,fn_SWEmort2022_dest)

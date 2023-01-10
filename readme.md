@@ -1,4 +1,4 @@
-# rsoc - preliminary socsim R package
+# rsocsim - Socsim R package
 
 ## Installation
 
@@ -12,9 +12,9 @@ and install from source directly from this repository
 install.packages("devtools")
 ````
 
-* install rsoc from Github with devtools:
+* install rsocsim from Github with devtools:
 ````R
-devtools::install_github("tomthe/rsoc")
+devtools::install_github("MPIDR/rsocsim")
 ````
 
 ### Install precompiled package (Windows only)
@@ -22,34 +22,33 @@ devtools::install_github("tomthe/rsoc")
 If the compilation from suorce fails, you can also install a pre-compiled binary. This might be easier, but it might be not the most up-to-date version. You can find the most up-to-date binary release on https://github.com/tomthe/rsoc/releases
 
 ````R
-> url = "https://github.com/tomthe/rsoc/releases/download/1.3/rsoc_1.3.zip"
+> url = "https://github.com/tomthe/rsoc/releases/download/1.3/rsocsim_1.3.zip"
 > install.packages(url, repos = NULL, type = "win.binary")
 ````
 
-## Use rsoc
+## Use rsocsim
 
 
 ### Getting started
 
 ````R
-library("rsoc")
+library("rsocsim")
 
 # create a new folder for all the files related to a simulation.
 # this will be in your home- or user-directory:
-folder = rsoc::create_simulation_folder()
-#folder = "C:/Users/tom/socsim/socsim_sim_3792/"
+folder = rsocsim::create_simulation_folder()
 
 # create a new supplement-file. Supplement-files tell socsim what
 # to simulate. create_sup_file will create a very basic supplement filee
 # and it copies some rate-files that will also be needed into the 
 # simulation folder:
-supfile = rsoc::create_sup_file(folder)
+supfile = rsocsim::create_sup_file(folder)
 
 # Choose a random-number seed:
 seed = 300
 
 # Start the simulation:
-rsoc::run1simulationwithfile(folder,supfile,seed,process_method = "inprocess")
+rsocsim::run1simulationwithfile(folder,supfile,seed,process_method = "inprocess")
 
 ````
 
@@ -60,7 +59,7 @@ file and provide rate files for fertility, mortality and marriage rates.
 
 
 ````R
-library("rsoc")
+library("rsocsim")
 
 # specify the working directory, where your supfile and ratefiles are:
 folder = "D:\\dev\\r\\socsimprojects\\CousinDiversity" 
@@ -72,7 +71,7 @@ supfile = "CousinDiversity.sup"
 seed="33" 
 
 # run1simulationwithfile starts a simulation with the specified sup-file
-rsoc::run1simulationwithfile(folder,supfile,seed)
+rsocsim::run1simulationwithfile(folder,supfile,seed)
 
 # if you run several simulations, previous simulations may influence/corrupt
 # later simulations. Use one of the options "future" or "clustercall" for
@@ -80,8 +79,8 @@ rsoc::run1simulationwithfile(folder,supfile,seed)
 # than 64 cores. Note that these options prevent SOCSIM from writing to the
 # R-terminal.
 
-rsoc::run1simulationwithfile(folder,supfile,seed,process_method = "future")
-rsoc::run1simulationwithfile(folder,supfile,seed,process_method = "clustercall")
+rsocsim::run1simulationwithfile(folder,supfile,seed,process_method = "future")
+rsocsim::run1simulationwithfile(folder,supfile,seed,process_method = "clustercall")
 
 
 ````

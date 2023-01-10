@@ -1,4 +1,4 @@
-#' @useDynLib rsoc
+#' @useDynLib rsocsim
 #' @importFrom Rcpp evalCpp
 #' @exportPattern "^[[:alpha:]]+"
 NULL

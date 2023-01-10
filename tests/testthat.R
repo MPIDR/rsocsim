@@ -1,4 +1,4 @@
 library(testthat)
-library(rsoc)
+library(rsocsim)
 
-test_check("rsoc")
+test_check("rsocsim")

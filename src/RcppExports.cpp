@@ -12,7 +12,7 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 
 // startSocsimWithFile
 int startSocsimWithFile(String supfile, String seed, String compatibility_mode);
-RcppExport SEXP _rsoc_startSocsimWithFile(SEXP supfileSEXP, SEXP seedSEXP, SEXP compatibility_modeSEXP) {
+RcppExport SEXP _rsocsim_startSocsimWithFile(SEXP supfileSEXP, SEXP seedSEXP, SEXP compatibility_modeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -25,11 +25,11 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_rsoc_startSocsimWithFile", (DL_FUNC) &_rsoc_startSocsimWithFile, 3},
+    {"_rsocsim_startSocsimWithFile", (DL_FUNC) &_rsocsim_startSocsimWithFile, 3},
     {NULL, NULL, 0}
 };
 
-RcppExport void R_init_rsoc(DllInfo *dll) {
+RcppExport void R_init_rsocsim(DllInfo *dll) {
     R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
     R_useDynamicSymbols(dll, FALSE);
 }
