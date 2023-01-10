@@ -2414,7 +2414,7 @@ void population_pyramid(FILE *fd_pyr)
     * values of the index. Here, the sum array takes the role.
     */
 
-	logmsg("--write popu pyra\n", "", 1);
+	logmsg("--write population pyramid\n", "", 1);
 	fflush(stdout);
 	while (p != NULL)
 	{

@@ -291,12 +291,12 @@ int load( char *file)
 	{
 		cx.lineno++;
 		
-		Rcpp::Rcout << "18b-load.cpp->load . " << line << std::endl;
+		// Rcpp::Rcout << "18b-load.cpp->load . " << line << std::endl;
 		//fprintf(fd_log,"@FILE: %s LINE: %s \n", cx.file, line);
 		//fflush(fd_log);
 		if (current_fstatus == OPEN) /*triggered by run command */
 		{
-			Rcpp::Rcout << "18b-load.cpp->load . current_fstatus==OPEN " << std::endl;
+			// Rcpp::Rcout << "18b-load.cpp->load . current_fstatus==OPEN " << std::endl;
 			return 1;
 		}
 		if (l_process_line(line, &cx, fp) < 0)
@@ -422,18 +422,18 @@ int l_process_line(char *line,struct l_context *cx,FILE *fp)
 					return -1;
 				}
 				if (read_ax_or_bx != -1){
-					sprintf(logstring, "-18bx-l_process_line. just before add_lc_rate_block. year: %d, month: %d, prob: %f",years,months,prob );
+					// sprintf(logstring, "-18bx-l_process_line. just before add_lc_rate_block. year: %d, month: %d, prob: %f",years,months,prob );
 					logmsg("%s\n", logstring, 1);
 					add_lc_rate_block(years, months, prob);
 				}
 				else if (reading_rate_table == TRUE){
-					sprintf(logstring, "-18bx-l_process_line. just before add_rate_table. year: %d, month: %d, prob: %f",years,months,prob );
+					// sprintf(logstring, "-18bx-l_process_line. just before add_rate_table. year: %d, month: %d, prob: %f",years,months,prob );
 					logmsg("%s\n", logstring, 1);
 					add_rate_table(years, months, prob);
 				}
 				else{				
 					//Rcpp::Rcout << "18b-l_process_line. just before add_rate_block " << line << " | " << years << "y " << months << "m. prob: " << prob << std::endl;
-					sprintf(logstring, "-18ba-l_process_line. just before add_rate_block. year: %d, month: %d, prob: %f",years,months,prob );
+					// sprintf(logstring, "-18ba-l_process_line. just before add_rate_block. year: %d, month: %d, prob: %f",years,months,prob );
 					logmsg("%s\n", logstring, 1);
 					add_rate_block(years, months, prob);
 				}
@@ -456,10 +456,10 @@ int l_process_line(char *line,struct l_context *cx,FILE *fp)
 		 
 		 */
 		 
-		Rcpp::Rcout << "18b-l_process_line... recall!=NULL "<< std::endl;
+		// Rcpp::Rcout << "18b-l_process_line... recall!=NULL "<< std::endl;
 		Rcpp::Rcout << "Incomplete rate set: " << recall->upper_age << std::endl;
 		
-		logmsg("-----18c - l_process_line.. recall!=NULL - Incomplete rate set.\n", "", 1);
+		// logmsg("-----18c - l_process_line.. recall!=NULL - Incomplete rate set.\n", "", 1);
 		
 		//add a last block that goes until MAXUYEARS and that has a
 		if (event == E_DEATH){
@@ -1585,16 +1585,16 @@ void add_rate_block(int years, int months, double prob)
 
 	if (current_block->upper_age < MAXUMONTHS)
 	{
-		Rcpp::Rcout << "18b-add_rate_block| current_block->upper_age < MAXUMONTHS | " << current_block->upper_age  << " upper age | "<< std::endl;
+		// Rcpp::Rcout << "18b-add_rate_block| current_block->upper_age < MAXUMONTHS | " << current_block->upper_age  << " upper age | "<< std::endl;
 		current_block->next = NEW(struct age_block);
 		current_block->next->previous = current_block;
 		current_block = current_block->next;
 	}
 	else
 	{
-		sprintf(logstring, "18b-add_rate_block| current_block->upper_age %d >= MAXUMONTHS %d| last block here. year: %d, month: %d, prob: %f",current_block->upper_age ,MAXUMONTHS, years,months,prob );
+		// sprintf(logstring, "18b-add_rate_block| current_block->upper_age %d >= MAXUMONTHS %d| last block here. year: %d, month: %d, prob: %f",current_block->upper_age ,MAXUMONTHS, years,months,prob );
 		logmsg("%s\n", logstring, 1);
-		Rcpp::Rcout << "18b-add_rate_block| current_block->upper_age >= MAXUMONTHS | " << current_block->upper_age  << " upper age |---------last block "<< std::endl;
+		// Rcpp::Rcout << "18b-add_rate_block| current_block->upper_age >= MAXUMONTHS | " << current_block->upper_age  << " upper age |---------last block "<< std::endl;
 		current_block->next = NULL;
 		recall = NULL;
 	}
@@ -1602,7 +1602,7 @@ void add_rate_block(int years, int months, double prob)
 
 void add_lc_rate_block(int years, int months, double prob)
 {
-	Rcpp::Rcout << "18b-add_lc_rate_block| | " << current_block->upper_age  << " upper age | " << read_ax_or_bx << std::endl;
+	// Rcpp::Rcout << "18b-add_lc_rate_block| | " << current_block->upper_age  << " upper age | " << read_ax_or_bx << std::endl;
 	
 	sprintf(logstring, "add_lc_rate_block. years: %d, months: %d, prob %f, read_ax_or_bx: %d current_block->upper_age: %d, ",years,months,prob,read_ax_or_bx,current_block->upper_age);
 	logmsg("%s\n", logstring, 1);
@@ -2640,7 +2640,7 @@ void adjust_birth_for_bint()
 					new_fert->previous = NULL;
 					new_fert->mult = old_fert->mult;
 					
-					Rcpp::Rcout << "18b-load.cpp->adjust_birth_for_bint. " << std::endl;
+					// Rcpp::Rcout << "18b-load.cpp->adjust_birth_for_bint. " << std::endl;
 					for (i = 1; i < MAXUMONTHS; i++)
 					{
 						prev_fert = new_fert;
