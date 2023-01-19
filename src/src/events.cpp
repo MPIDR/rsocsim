@@ -1705,7 +1705,7 @@ int	datev(struct age_block *first_block,int age, int time_shift)
     */
 
 	return first_possible_month + waiting_time;
-};
+}
 
 int lc_datev(int g, int s, int age,struct person *p)
 {
@@ -1819,7 +1819,7 @@ int lc_datev(int g, int s, int age,struct person *p)
       */
 
 	return first_possible_month + waiting_time;
-};
+}
 
 /*************************************************************************/
 

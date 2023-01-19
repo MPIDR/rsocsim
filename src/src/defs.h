@@ -448,9 +448,9 @@ int num_segments;
 /*int random_recycling; OBSOLETE */
 int size_of_extra; /* number of floats in extra default 0, read in .sup*/
 int numgroups;
-;
+
 int numgroups_in_ipop; /*set in read_initial_pop*/
-;
+
 int duration_of_segment;
 int write_output;         /* write out .oxxx files after current segment */
 int child_inherits_group; /* from_mother,from_fater,from_same_sex_parent
