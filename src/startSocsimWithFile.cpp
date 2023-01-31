@@ -4,10 +4,9 @@ using namespace Rcpp;
 #include "src\events.cpp"
 //#include "src\random.c"
 
-
 // [[Rcpp::export]]
 int startSocsimWithFile(String supfile, String seed, String compatibility_mode){
-  Rcpp::Rcout << "Start Socsim" << std::endl;
+  Rcpp::Rcout << "Start socsim" << std::endl;
   char *args[] = {
     (char*)"zerothArgument",
     (char*) supfile.get_cstring(),

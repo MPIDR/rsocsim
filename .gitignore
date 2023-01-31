@@ -8,3 +8,4 @@ src/*.dll
 *.log
 src-x64/*
 src-i386/*
+.vscode/c_cpp_properties.json

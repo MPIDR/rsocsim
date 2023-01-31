@@ -10,6 +10,7 @@ run1simulationwithfile_from_binary(
   folder,
   supfile,
   seed = "42",
+  compatibility_mode = "1",
   socsim_path = NULL
 )
 }

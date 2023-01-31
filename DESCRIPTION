@@ -6,14 +6,15 @@ Date: 2021-01-11
 Author: Tom Theile and Diego Alburez-Gutierrez
 Maintainer: Tom Theile <theile@demogr.mpg.de>
 Authors@R: c(person("Tom Theile", "Developer", role = c("aut", "cre"), email = "theile@demogr.mpg.de"),person("Diego Alburez-Gutierrez", "Developer", role = c("aut", "cre")))
-Description: Install and run SOCSIM from within R with this R-package.
+Description: Install and run socsim from within R with this R-package.
 License: GPL (>= 2)
 Imports: Rcpp (>= 1.0.5),
     future,
     parallel
 LinkingTo: Rcpp
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.1
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 URL: https://github.com/MPIDR/rsocsim
+Encoding: UTF-8

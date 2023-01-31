@@ -5,8 +5,8 @@
 #' Run a single socsim-simulation with a given supplement-file and folder.
 #' The results will be saved into that folder
 #'
-#' @param rootfolder rootfolder...
 #' @param folder base-directory of the simulation. 
+#' Every SUP- and rate-file should be named relative to this folder. 
 #' @param supfile the .sup file to start the simulation, relative to the
 #' folder
 #' @param seed RNG seed as string, Default="42"
@@ -19,7 +19,7 @@
 #'  "clustercall" - if the future package is not available, try this method instead
 #' @return The results will be written into the specified folder
 #' @export
-run1simulationwithfile <- function(folder, supfile,seed="42",process_method="inprocess",compatibility_mode="1") {
+socsim <- function(folder, supfile,seed="42",process_method="inprocess",compatibility_mode="1") {
   seed= as.character(seed)
   compatibility_mode = as.character(compatibility_mode)
   print("Start run1simulationwithfile")
