@@ -48,7 +48,7 @@ supfile = rsocsim::create_sup_file(folder)
 seed = 300
 
 # Start the simulation:
-rsocsim::run1simulationwithfile(folder,supfile,seed,process_method = "inprocess")
+rsocsim::socsim(folder,supfile,seed,process_method = "inprocess")
 
 ````
 
@@ -70,8 +70,8 @@ supfile = "CousinDiversity.sup"
 # Random number generator seed:
 seed="33" 
 
-# run1simulationwithfile starts a simulation with the specified sup-file
-rsocsim::run1simulationwithfile(folder,supfile,seed)
+# socsim starts a simulation with the specified sup-file
+rsocsim::socsim(folder,supfile,seed)
 
 # if you run several simulations, previous simulations may influence/corrupt
 # later simulations. Use one of the options "future" or "clustercall" for
@@ -79,8 +79,8 @@ rsocsim::run1simulationwithfile(folder,supfile,seed)
 # than 64 cores. Note that these options prevent SOCSIM from writing to the
 # R-terminal.
 
-rsocsim::run1simulationwithfile(folder,supfile,seed,process_method = "future")
-rsocsim::run1simulationwithfile(folder,supfile,seed,process_method = "clustercall")
+rsocsim::socsim(folder,supfile,seed,process_method = "future")
+rsocsim::socsim(folder,supfile,seed,process_method = "clustercall")
 
 
 ````
