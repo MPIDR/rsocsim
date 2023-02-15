@@ -734,7 +734,7 @@ int main1(int argc, char *argv[])
 						crnt_month_events[E_DIVORCE],
 						mqmales->num, mqfems->num,
 						timedif1,timedif2,1000000000*timedif2/(mqmales->num * mqmales->num +1));
-					if (current_month % 200==0){
+					if (current_month % 100==0){
 						printf("\n");
 						fprintf(fd_log,"month:%5d PopLive:%6d Brths:%4d Dths:%4d Mrgs:%3d Dvs:%3d Mq:%5d Fq:%d ti1: %.1f ti2: %.6f %.4f\n",
 						current_month, size_of_pop[0],
@@ -744,6 +744,17 @@ int main1(int argc, char *argv[])
 						crnt_month_events[E_DIVORCE],
 						mqmales->num, mqfems->num,
 						timedif1,timedif2,1000000000*timedif2/(mqmales->num * mqmales->num +1));
+
+						Rprintf("month:%5d PopLive:%6d Brths:%4d Dths:%4d Mrgs:%3d Dvs:%3d Mq:%5d Fq:%d ti1: %.1f ti2: %.6f %.4f\n",
+						current_month, size_of_pop[0],
+						crnt_month_events[E_BIRTH],
+						crnt_month_events[E_DEATH],
+						crnt_month_events[E_MARRIAGE],
+						crnt_month_events[E_DIVORCE],
+						mqmales->num, mqfems->num,
+						timedif1,timedif2,1000000000*timedif2/(mqmales->num * mqmales->num +1));
+						fflush(fd_log);
+						
 					}
 				}
 				if (size_of_pop[0] == 0 && !done)

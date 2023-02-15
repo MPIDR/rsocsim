@@ -1,5 +1,9 @@
 # rsocsim - Socsim R package
 
+Socsim stands for Social Simulator.
+It is a microsimulation to simulate populations and their kinship structure.
+
+
 ## Installation
 
 ### From Source

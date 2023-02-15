@@ -49,17 +49,50 @@ socsim <- function(folder, supfile,seed="42",process_method="inprocess",compatib
   
 }
 
+processFile = function(filepath,lastline) {
+  con = file(filepath, "r")
+  while ( TRUE ) {
+    line = readLines(con, n = 1)
+    if ( length(line) == 0 ) {
+      if(lastline != line2){
+        #print(paste0(lastline,"  <-ll"));
+        print(line2);
+      }
+      break
+    }
+    # print(line)
+    line2 <- line
+  }
+  close(con)
+  #print(paste0(line2,"  <--line2, end"))
+  return(line2)
+}
+
 run1simulationwithfile_future <- function(supfile,seed="42",compatibility_mode="1") {
   # use the "future" library to run a rcpp-socsim simulation
   # in a seperate process
   print("create future cluster")
   future::plan(future::multisession)
-  print("after future::plan(future::multisession)")
+  #print("after future::plan(future::multisession)")
   print("start socsim simulation now. no output will be shown!")
   
   f1 <- future::future({
     startSocsimWithFile(supfile,seed,compatibility_mode)
   },seed=TRUE)
+  print("started!")
+  # start a loop and check whether the simulation in the future is finished.
+  # if it is not yet finished, read the output file and print the last line
+  # to the console
+  outfn = paste0("sim_results_",supfile,"_s",seed,".log")
+  print("wait for simulation to finish")
+  lastline = ""
+  while (!future::resolved(f1)) {
+    Sys.sleep(1)
+    lastline = processFile(outfn,lastline)
+    #print(lastline)
+  }
+  print("simulation finished")
+  
   v1 <- future::value(f1)
   return(1)
 }
@@ -100,9 +133,17 @@ run1simulationwithfile_clustercall <- function(supfile,seed="23",compatibility_m
   # in a seperate process
   print("parallel::clusterCall")
   numCores=1
-  cl <- parallel::makeCluster(numCores, type="PSOCK", outfile="socsim_clustercall.log")
+  outfile="socsim_clustercall.log"
+  cl <- parallel::makeCluster(numCores, type="PSOCK", outfile=outfile)
   parallel::clusterExport(cl, "startSocsimWithFile")
   parallel::clusterCall(cl,startSocsimWithFile, supfile=supfile,seed=seed,compatibility_mode=compatibility_mode)
+  print("started!")
+  print("------------------------------------l4a")
+  processFile(outfile)
+  print("------------------------------------l4b")
+  Sys.sleep(2) 
+  processFile(outfile)
+  print("------------------------------------l4c")
   parallel::stopCluster(cl)
   return(1)
 }
