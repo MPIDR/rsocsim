@@ -3,27 +3,36 @@
 Socsim stands for Social Simulator.
 It is a microsimulation to simulate populations and their kinship structure.
 
+rsocsim is still under development. You might find some bugs or unexpected behavior,
+the API might change without warnings in the next weeks.
+If you encounter an error or bug, we are happy to hear from you in the issues.
 
 ## Installation
 
 ### From Source
 
-To get the latest version, you need to have RTools and devtools installed
-and install from source directly from this repository
+
+
+To get the latest version, you need to have the package devtools and a 
+Rcpp compatible compiler installed ([RTools](https://cran.r-project.org/bin/windows/Rtools/index.html)
+on Windows, Xcode command line tools on Mac: `xcode-select --install`, 
+`sudo apt-get install r-base-dev` on Linux,
+all according to https://teuder.github.io/rcpp4everyone_en/020_install.html)
+
 
 * install devtools
 ````R
 install.packages("devtools")
 ````
 
-* install rsocsim from Github with devtools:
+Then you can use devtools to install rsocsim from Github:
 ````R
 devtools::install_github("MPIDR/rsocsim")
 ````
 
 ### Install precompiled package (Windows only)
 
-If the compilation from suorce fails, you can also install a pre-compiled binary. This might be easier, but it might be not the most up-to-date version. You can find the most up-to-date binary release on https://github.com/tomthe/rsoc/releases
+If the compilation from source fails, you can also install a pre-compiled binary. This might be easier, but it might be not the most up-to-date version. You can find the most up-to-date binary release on https://github.com/tomthe/rsoc/releases
 
 ````R
 > url = "https://github.com/tomthe/rsoc/releases/download/1.3/rsocsim_1.3.zip"
@@ -93,9 +102,19 @@ rsocsim::socsim(folder,supfile,seed,process_method = "clustercall")
 
 You will need RTools, devtools and rcpp.
 Clone this repository, change something, hit "Build-->clean and rebuild"
+(If that fails because the package is in use, you can restart the R-session (CTRL-SHIFT-F10)).
+
 
 renew documentation and some stuff with:
-```` devtools.document()````
+```
+devtools.document()
+```
+
+build source and binary package:
+```
+devtools::build(binary=FALSE)
+devtools::build(binary=TRUE)
+```
 
 ### Future plans
 
