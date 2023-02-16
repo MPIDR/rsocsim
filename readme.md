@@ -35,8 +35,8 @@ devtools::install_github("MPIDR/rsocsim")
 If the compilation from source fails, you can also install a pre-compiled binary. This might be easier, but it might be not the most up-to-date version. You can find the most up-to-date binary release on https://github.com/tomthe/rsoc/releases
 
 ````R
-> url = "https://github.com/tomthe/rsoc/releases/download/1.3/rsocsim_1.3.zip"
-> install.packages(url, repos = NULL, type = "win.binary")
+url = "https://github.com/tomthe/rsoc/releases/download/1.3/rsocsim_1.3.zip"
+install.packages(url, repos = NULL, type = "win.binary")
 ````
 
 ## Use rsocsim
@@ -61,7 +61,7 @@ supfile = rsocsim::create_sup_file(folder)
 seed = 300
 
 # Start the simulation:
-rsocsim::socsim(folder,supfile,seed,process_method = "inprocess")
+rsocsim::socsim(folder,supfile,seed)
 
 ````
 
@@ -93,7 +93,6 @@ rsocsim::socsim(folder,supfile,seed)
 # R-terminal.
 
 rsocsim::socsim(folder,supfile,seed,process_method = "future")
-rsocsim::socsim(folder,supfile,seed,process_method = "clustercall")
 
 
 ````

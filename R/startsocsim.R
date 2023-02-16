@@ -50,22 +50,28 @@ socsim <- function(folder, supfile,seed="42",process_method="inprocess",compatib
 }
 
 processFile = function(filepath,lastline) {
-  con = file(filepath, "r")
-  while ( TRUE ) {
-    line = readLines(con, n = 1)
-    if ( length(line) == 0 ) {
-      if(lastline != line2){
-        #print(paste0(lastline,"  <-ll"));
-        print(line2);
+  tryCatch({
+    con = file(filepath, "r")
+    while ( TRUE ) {
+      line = readLines(con, n = 1)
+      if ( length(line) == 0 ) {
+        if(lastline != line2){
+          #print(paste0(lastline,"  <-ll"));
+          print(line2);
+        }
+        break
       }
-      break
+      # print(line)
+      line2 <- line
     }
-    # print(line)
-    line2 <- line
-  }
-  close(con)
-  #print(paste0(line2,"  <--line2, end"))
-  return(line2)
+    close(con)
+    #print(paste0(line2,"  <--line2, end"))
+    return(line2)
+  }, error = function(e) {
+    warning("Error while reading file")
+    warning(e)
+    return("err0")
+  })
 }
 
 run1simulationwithfile_future <- function(supfile,seed="42",compatibility_mode="1") {
@@ -84,12 +90,14 @@ run1simulationwithfile_future <- function(supfile,seed="42",compatibility_mode="
   # if it is not yet finished, read the output file and print the last line
   # to the console
   outfn = paste0("sim_results_",supfile,"_s",seed,".log")
-  print("wait for simulation to finish")
+  print(paste0("wait for simulation to finish, log file: ",outfn))
   lastline = ""
   while (!future::resolved(f1)) {
     Sys.sleep(1)
     lastline = processFile(outfn,lastline)
-    #print(lastline)
+    if (lastline=="err0"){
+      break;
+    }
   }
   print("simulation finished")
   

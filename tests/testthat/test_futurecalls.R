@@ -15,7 +15,7 @@ supfile = "socsim.sup" #rsocsim::create_sup_file(folder)
 seed = 300
 
 # Start the simulation:
-rsocsim::socsim(folder,supfile,seed,process_method = "inprocess")
+rsocsim::socsim(folder,supfile,seed)
 
 
 rsocsim::socsim(folder,supfile,seed,process_method = "future")
