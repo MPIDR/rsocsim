@@ -38,7 +38,8 @@ socsim <- function(folder, supfile,seed="42",process_method="inprocess",compatib
     }
   },
   error = function(w){
-    print("Error during execution of simulation!")
+    warning("Error during execution of simulation!")
+    warning(w)
   },
   finally = {
     print(paste0("restore previous working dir: ", previous_wd))
@@ -49,26 +50,24 @@ socsim <- function(folder, supfile,seed="42",process_method="inprocess",compatib
   
 }
 
-processFile = function(filepath,lastline) {
+print_last_line_of_logfile = function(logfilename, lastline = "") {
   tryCatch({
-    con = file(filepath, "r")
+    con = file(logfilename, "r")
     while ( TRUE ) {
       line = readLines(con, n = 1)
       if ( length(line) == 0 ) {
         if(lastline != line2){
-          #print(paste0(lastline,"  <-ll"));
           print(line2);
         }
         break
       }
-      # print(line)
       line2 <- line
     }
     close(con)
-    #print(paste0(line2,"  <--line2, end"))
     return(line2)
   }, error = function(e) {
     warning("Error while reading file")
+    warning(logfilename)
     warning(e)
     return("err0")
   })
@@ -78,7 +77,7 @@ run1simulationwithfile_future <- function(supfile,seed="42",compatibility_mode="
   # use the "future" library to run a rcpp-socsim simulation
   # in a seperate process
   print("create future cluster")
-  future::plan(future::multisession)
+  future::plan(future::multisession, workers=2)
   #print("after future::plan(future::multisession)")
   print("start socsim simulation now. no output will be shown!")
   
@@ -94,7 +93,7 @@ run1simulationwithfile_future <- function(supfile,seed="42",compatibility_mode="
   lastline = ""
   while (!future::resolved(f1)) {
     Sys.sleep(1)
-    lastline = processFile(outfn,lastline)
+    lastline = print_last_line_of_logfile(outfn, lastline)
     if (lastline=="err0"){
       break;
     }
@@ -112,7 +111,6 @@ run1simulationwithfile_future <- function(supfile,seed="42",compatibility_mode="
 #' @param supfile the .sup file to start the simulation
 #' @param seed RNG seed
 #' @return The results will be written into the specified folder
-
 run1simulationwithfile_inprocess <- function(folder, supfile,seed,compatibility_mode="1") {
   startSocsimWithFile(supfile,seed,compatibility_mode)
   return(1)
@@ -147,10 +145,14 @@ run1simulationwithfile_clustercall <- function(supfile,seed="23",compatibility_m
   parallel::clusterCall(cl,startSocsimWithFile, supfile=supfile,seed=seed,compatibility_mode=compatibility_mode)
   print("started!")
   print("------------------------------------l4a")
-  processFile(outfile)
+  print_last_line_of_logfile(outfile)
   print("------------------------------------l4b")
-  Sys.sleep(2) 
-  processFile(outfile)
+  Sys.sleep(1) 
+  print_last_line_of_logfile(outfile)
+  Sys.sleep(1) 
+  print_last_line_of_logfile(outfile)
+  Sys.sleep(1) 
+  print_last_line_of_logfile(outfile)
   print("------------------------------------l4c")
   parallel::stopCluster(cl)
   return(1)
