@@ -69,7 +69,6 @@ For more sophisticated simulations you will need to edit the supplement
 file and provide rate files for fertility, mortality and marriage rates.
 
 
-
 ````R
 library("rsocsim")
 
@@ -98,7 +97,8 @@ rsocsim::socsim(folder,supfile,seed,process_method = "future")
 
 ## Background and applications
 
-SOCSIM is an open source and extensible demographic microsimulation program [1,3].^[The following description was adapted from the Supplementary Materials of [4].] 
+The following description of SOCSIM was adapted from the Supplementary Materials of [4]. 
+SOCSIM is an open source and extensible demographic microsimulation program [1,3]. 
 It is written in the C programming language and relies heavily on arrays of linked lists to keep track of kinship relationships and to store information about simulated individuals. 
 The simulator takes as input initial population files and monthly age-specific fertility and mortality demographic rates. 
 The individual is the unit of analysis of the simulator. 
