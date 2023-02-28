@@ -3,6 +3,9 @@
 #include <math.h>
 #include <stdlib.h>
 
+#include <iostream>
+#include <filesystem>
+
 #ifdef WINDOWS
 #include <direct.h>
 #define GetCurrentDir _getcwd
