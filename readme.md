@@ -1,4 +1,3 @@
-
 # rsocsim - Socsim R package
 
 <img align="left" width="144" alt="2023-MPIDR_rsocsim-web-144" src="https://user-images.githubusercontent.com/5939967/221559559-1233e070-0e0a-43a1-b451-a3215c0b7d4c.png">
