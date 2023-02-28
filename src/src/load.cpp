@@ -627,7 +627,7 @@ int l_process_line(char *line,struct l_context *cx,FILE *fp)
 
 		// create the directory:
 		#if defined(_WIN32)
-		_mkdir(buffer_output_dir);
+		mkdir(buffer_output_dir);
 		#else 
 		mkdir(buffer_output_dir, 0777); // notice that 777 is different than 0777
 		#endif
