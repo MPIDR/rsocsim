@@ -60,8 +60,137 @@
   </div>
 </nav><div class="container template-home">
 <div class="row">
-  <main id="main" class="col-md-9">
-Install and run socsim from within R with this R-package.
+  <main id="main" class="col-md-9"><div class="section level1">
+<div class="page-header"><h1 id="rsocsim---socsim-r-package">rsocsim - Socsim R package<a class="anchor" aria-label="anchor" href="#rsocsim---socsim-r-package"></a>
+</h1></div>
+<p><img align="left" width="144" alt="2023-MPIDR_rsocsim-web-144" src="https://user-images.githubusercontent.com/5939967/221559559-1233e070-0e0a-43a1-b451-a3215c0b7d4c.png"></p>
+<p>Socsim (‘Social Simulator’) is an open source stochastic microsimulation platform used to produce synthetic populations with plausible kinship structures using demographic rates as input. We stand on the shoulders of giants: Socsim was originally developed for Unix at UC Berkeley [1-2], where it has been mantained for decades. The current release of <code>rsocsim</code> aims to be OS-agnostic and, for the most part, back-compatible with the original Socsim distribution (<a href="https://lab.demog.berkeley.edu/socsim/" class="external-link uri">https://lab.demog.berkeley.edu/socsim/</a>).</p>
+<p><code>rsocsim</code> is still under development. You might find some bugs or unexpected behavior, the API might change without warnings in the next weeks. If you encounter an error or bug, we are happy to hear from you in the issues.</p>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
+<div class="section level3">
+<h3 id="from-source">From Source<a class="anchor" aria-label="anchor" href="#from-source"></a>
+</h3>
+<p>To get the latest version, you need to have the package devtools and a Rcpp compatible compiler installed (<a href="https://cran.r-project.org/bin/windows/Rtools/index.html" class="external-link">RTools</a> on Windows, Xcode command line tools on Mac: <code>xcode-select --install</code>, <code>sudo apt-get install r-base-dev</code> on Linux, all according to <a href="https://teuder.github.io/rcpp4everyone_en/020_install.html" class="external-link uri">https://teuder.github.io/rcpp4everyone_en/020_install.html</a>)</p>
+<ul>
+<li>install devtools</li>
+</ul>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></span></code></pre></div>
+<p>Then you can use devtools to install rsocsim from Github:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"MPIDR/rsocsim"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="install-precompiled-package-windows-only">Install precompiled package (Windows only)<a class="anchor" aria-label="anchor" href="#install-precompiled-package-windows-only"></a>
+</h3>
+<p>If the compilation from source fails, you can also install a pre-compiled binary. This might be easier, but it might be not the most up-to-date version. You can find the most up-to-date binary release on <a href="https://github.com/tomthe/rsoc/releases" class="external-link uri">https://github.com/tomthe/rsoc/releases</a></p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">url</span> <span class="op">=</span> <span class="st">"https://github.com/tomthe/rsoc/releases/download/1.3/rsocsim_1.3.zip"</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="va">url</span>, repos <span class="op">=</span> <span class="cn">NULL</span>, type <span class="op">=</span> <span class="st">"win.binary"</span><span class="op">)</span></span></code></pre></div>
+</div>
+</div>
+<div class="section level2">
+<h2 id="use-rsocsim">Use rsocsim<a class="anchor" aria-label="anchor" href="#use-rsocsim"></a>
+</h2>
+<div class="section level3">
+<h3 id="getting-started">Getting started<a class="anchor" aria-label="anchor" href="#getting-started"></a>
+</h3>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/MPIDR/rsocsim" class="external-link">"rsocsim"</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># create a new folder for all the files related to a simulation.</span></span>
+<span><span class="co"># this will be in your home- or user-directory:</span></span>
+<span><span class="va">folder</span> <span class="op">=</span> <span class="fu">rsocsim</span><span class="fu">::</span><span class="fu"><a href="reference/create_simulation_folder.html">create_simulation_folder</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># create a new supplement-file. Supplement-files tell socsim what</span></span>
+<span><span class="co"># to simulate. create_sup_file will create a very basic supplement filee</span></span>
+<span><span class="co"># and it copies some rate-files that will also be needed into the </span></span>
+<span><span class="co"># simulation folder:</span></span>
+<span><span class="va">supfile</span> <span class="op">=</span> <span class="fu">rsocsim</span><span class="fu">::</span><span class="fu"><a href="reference/create_sup_file.html">create_sup_file</a></span><span class="op">(</span><span class="va">folder</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Choose a random-number seed:</span></span>
+<span><span class="va">seed</span> <span class="op">=</span> <span class="fl">300</span></span>
+<span></span>
+<span><span class="co"># Start the simulation:</span></span>
+<span><span class="fu">rsocsim</span><span class="fu">::</span><span class="fu"><a href="reference/socsim.html">socsim</a></span><span class="op">(</span><span class="va">folder</span>,<span class="va">supfile</span>,<span class="va">seed</span><span class="op">)</span></span></code></pre></div>
+<p>The results will be saved into a subfolder of the simulation-`folder´. For more sophisticated simulations you will need to edit the supplement file and provide rate files for fertility, mortality and marriage rates.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/MPIDR/rsocsim" class="external-link">"rsocsim"</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># specify the working directory, where your supfile and ratefiles are:</span></span>
+<span><span class="va">folder</span> <span class="op">=</span> <span class="st">"D:\\dev\\r\\socsimprojects\\CousinDiversity"</span> </span>
+<span></span>
+<span><span class="co"># name of the supplement-file, relative to the above folder:</span></span>
+<span><span class="va">supfile</span> <span class="op">=</span> <span class="st">"CousinDiversity.sup"</span> </span>
+<span></span>
+<span><span class="co"># Random number generator seed:</span></span>
+<span><span class="va">seed</span><span class="op">=</span><span class="st">"33"</span> </span>
+<span></span>
+<span><span class="co"># socsim starts a simulation with the specified sup-file</span></span>
+<span><span class="fu">rsocsim</span><span class="fu">::</span><span class="fu"><a href="reference/socsim.html">socsim</a></span><span class="op">(</span><span class="va">folder</span>,<span class="va">supfile</span>,<span class="va">seed</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># if you run several simulations, previous simulations may influence/corrupt</span></span>
+<span><span class="co"># later simulations. Use one of the options "future" or "clustercall" for</span></span>
+<span><span class="co"># process_method to prevent this. "future" has problems on computers with more</span></span>
+<span><span class="co"># than 64 cores. Note that these options prevent SOCSIM from writing to the</span></span>
+<span><span class="co"># R-terminal.</span></span>
+<span></span>
+<span><span class="fu">rsocsim</span><span class="fu">::</span><span class="fu"><a href="reference/socsim.html">socsim</a></span><span class="op">(</span><span class="va">folder</span>,<span class="va">supfile</span>,<span class="va">seed</span>,process_method <span class="op">=</span> <span class="st">"future"</span><span class="op">)</span></span></code></pre></div>
+</div>
+</div>
+<div class="section level2">
+<h2 id="background-and-applications">Background and applications<a class="anchor" aria-label="anchor" href="#background-and-applications"></a>
+</h2>
+<p>The following description of SOCSIM was adapted from the Supplementary Materials of [4]. SOCSIM is an open source and extensible demographic microsimulation program [1,3]. It is written in the C programming language and relies heavily on arrays of linked lists to keep track of kinship relationships and to store information about simulated individuals. The simulator takes as input initial population files and monthly age-specific fertility and mortality demographic rates. The individual is the unit of analysis of the simulator. Each person is subject to a set of rates, expressed as monthly probabilities of events, given certain demographic characteristics, like age and sex. Every month, each individual faces the risk of experiencing a number of events, including childbirth, death, and marriage. The selection of the event and the waiting time until the event occurs are determined stochastically using a competing risk model. Some other constraints are included in the simulation program in order to draw events only for individuals that are eligible for the events (e.g. to allow for a minimum interval of time between births from the same mother, to avoid social taboos such as incest, etc.). Each event for which the individual is at risk is modeled as a piece-wise exponential distribution. The waiting time until each event occurs is randomly generated according to the associated demographic rates. The individual’s next event is the one with the shortest waiting time. At the end of the simulation, population files that contain a list of everyone who has ever lived in the population are created. In these files, each individual is an observation in a rectangular data file with records of demographic characteristics for the individual, and identification numbers for key kinship relations. SOCSIM models “closed” populations. Individuals may enter and exit the simulation only by (simulated) birth and death.</p>
+<p>SOCSIM has been used extensively in social science research to study, among other things, dynamics of kin availability [5-7], generational overlap [4,8], and kin loss [9-11].</p>
+</div>
+<div class="section level2">
+<h2 id="develop-the-package">Develop the package<a class="anchor" aria-label="anchor" href="#develop-the-package"></a>
+</h2>
+<p>You will need RTools, devtools and rcpp. Clone this repository, change something, hit “Build–&gt;clean and rebuild” (If that fails because the package is in use, you can restart the R-session (CTRL-SHIFT-F10)).</p>
+<p>renew documentation and some stuff with:</p>
+<pre><code><span><span class="fu">devtools.document</span><span class="op">(</span><span class="op">)</span></span></code></pre>
+<p>build source and binary package:</p>
+<pre><code><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">build</span><span class="op">(</span>binary<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">build</span><span class="op">(</span>binary<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre>
+<div class="section level3">
+<h3 id="future-plans">Future plans<a class="anchor" aria-label="anchor" href="#future-plans"></a>
+</h3>
+<ul>
+<li>Testing and verification</li>
+<li>including convenient R-functions for generating input and reading/processing output
+<ul>
+<li>possible options:
+<ul>
+<li>include those functions into this package</li>
+<li>create another package that loads this package</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section level2">
+<h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
+<ol style="list-style-type: decimal">
+<li><p>Hammel, E., Hutchinson, D., Wachter, K., Lundy, R., and Deuel, R. (1976). The SOCSIM Demographic-Sociological Microsimulation Program: Operating Manual. University of California Berkeley. Institute of International Studies.</p></li>
+<li><p>Wachter, K.W. (1997). Kinship resources for the elderly. Philosophical Transactions of the Royal Society of London. Series B: Biological Sciences 352(1363):1811–1817. <a href="doi:10.1098/rstb.1997.0166" class="uri">doi:10.1098/rstb.1997.0166</a>.</p></li>
+<li><p>Mason, Carl. (2016). Socsim Oversimplified. Accesed on 24 Feb 2023 from: <a href="https://lab.demog.berkeley.edu/socsim/CurrentDocs/socsimOversimplified.pdf" class="external-link uri">https://lab.demog.berkeley.edu/socsim/CurrentDocs/socsimOversimplified.pdf</a></p></li>
+<li><p>Alburez‐Gutierrez, D., Mason, C., and Zagheni, E. (2021). The “Sandwich Generation” Revisited: Global Demographic Drivers of Care Time Demands. Population and Development Review 47(4):997–1023. <a href="doi:10.1111/padr.12436" class="uri">doi:10.1111/padr.12436</a>.</p></li>
+<li><p>Hammel, E.A. (2005). Demographic dynamics and kinship in anthropological populations. Proceedings of the National Academy of Sciences 102(6):2248–2253. <a href="doi:10.1073/pnas.0409762102" class="uri">doi:10.1073/pnas.0409762102</a>.</p></li>
+<li><p>Verdery, A.M. and Margolis, R. (2017). Projections of white and black older adults without living kin in the United States, 2015 to 2060. Proceedings of the National Academy of Sciences 114(42):11109–11114. <a href="doi:10.1073/pnas.1710341114" class="uri">doi:10.1073/pnas.1710341114</a>.</p></li>
+<li><p>Murphy, M. (2011). Long-Term Effects of the Demographic Transition on Family and Kinship Networks in Britain. Population and Development Review 37:55–80. <a href="doi:10.1111/j.1728-4457.2011.00378.x" class="uri">doi:10.1111/j.1728-4457.2011.00378.x</a>.</p></li>
+<li><p>Margolis, R. and Verdery, A.M. (2019). A Cohort Perspective on the Demography of Grandparenthood: Past, Present, and Future Changes in Race and Sex Disparities in the United States. Demography 56(4):1495–1518. <a href="doi:10.1007/s13524-019-00795-1" class="uri">doi:10.1007/s13524-019-00795-1</a>.</p></li>
+<li><p>Zagheni, E. (2011). The Impact of the HIV/AIDS Epidemic on Kinship Resources for Orphans in Zimbabwe. Population and Development Review 37(4):761–783. <a href="doi:10.1111/j.1728-4457.2011.00456.x" class="uri">doi:10.1111/j.1728-4457.2011.00456.x</a>.</p></li>
+<li><p>Verdery, A.M., Smith-Greenaway, E., Margolis, R., and Daw, J. (2020). Tracking the reach of COVID-19 kin loss with a bereavement multiplier applied to the United States. Proceedings of the National Academy of Sciences 117(30):17695. <a href="doi:10.1073/pnas.2007476117" class="uri">doi:10.1073/pnas.2007476117</a>.</p></li>
+<li><p>Snyder, M., Alburez-Gutierrez, D., Williams, I., and Zagheni, E. (2022). Estimates from 31 countries show the significant impact of COVID-19 excess mortality on the incidence of family bereavement. Proceedings of the National Academy of Sciences 119(26):e2202686119. <a href="doi:10.1073/pnas.2202686119" class="uri">doi:10.1073/pnas.2202686119</a>.</p></li>
+</ol>
+</div>
+</div>
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
