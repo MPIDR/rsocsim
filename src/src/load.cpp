@@ -268,7 +268,7 @@ int load( char *file)
 			
    			GetCurrentDir( path, 255 );
 			warning("Current working directory: %s\n", path);
-			warning("Current working directory: %s\n", std::filesystem::current_path());
+			// warning("Current working directory: %s\n", std::filesystem::current_path());
 			/*    error("Can't open \"%s\"", "rate_file");*/
 			warning("Can not open ratefile: %s", file);
 
