@@ -3,6 +3,14 @@
 #include <math.h>
 #include <stdlib.h>
 
+#ifdef WINDOWS
+#include <direct.h>
+#define GetCurrentDir _getcwd
+#else
+#include <unistd.h>
+#define GetCurrentDir getcwd
+#endif
+
 //#include "defs.h"
 
 #include <Rcpp.h>
@@ -252,8 +260,12 @@ int load( char *file)
 		  
 			char path[255];
 			
-			getcwd(path, 255);
+			// getcwd(path, 255);
+			// getcwd(temp, sizeof(temp)) ? std::string( temp ) : std::string("")
+			
+   			GetCurrentDir( path, 255 )
 			warning("Current working directory: %s\n", path);
+			warning("Current working directory: %s\n", std::filesystem::current_path());
 			/*    error("Can't open \"%s\"", "rate_file");*/
 			warning("Can not open ratefile: %s", file);
 
