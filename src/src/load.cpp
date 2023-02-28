@@ -623,7 +623,8 @@ int l_process_line(char *line,struct l_context *cx,FILE *fp)
 		sprintf (buffer_output_fn, "%sresult", buffer_output_dir);
 
 		// create the directory:
-		mkdir(buffer_output_dir);
+		mkdir(buffer_output_dir,0);
+		
 		strcpy(pop_out_name, buffer_output_fn);
 		strcpy(mar_out_name, buffer_output_fn);
 		strcpy(xtra_out_name, buffer_output_fn);
