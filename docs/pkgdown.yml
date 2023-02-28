@@ -1,6 +1,9 @@
-pandoc: 2.17.0.1
-pkgdown: 2.0.2
+pandoc: 2.19.2
+pkgdown: 2.0.6
 pkgdown_sha: ~
 articles: {}
-last_built: 2022-02-04T16:03Z
+last_built: 2023-02-28T14:53Z
+urls:
+  reference: https://mpidr.github.io/rsocsim/reference
+  article: https://mpidr.github.io/rsocsim/articles
 
