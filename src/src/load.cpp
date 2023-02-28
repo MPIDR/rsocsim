@@ -626,7 +626,11 @@ int l_process_line(char *line,struct l_context *cx,FILE *fp)
 		sprintf (buffer_output_fn, "%sresult", buffer_output_dir);
 
 		// create the directory:
-		mkdir(buffer_output_dir,0);
+		#if defined(_WIN32)
+		_mkdir(buffer_output_dir);
+		#else 
+		mkdir(buffer_output_dir, 0777); // notice that 777 is different than 0777
+		#endif
 		
 		strcpy(pop_out_name, buffer_output_fn);
 		strcpy(mar_out_name, buffer_output_fn);
