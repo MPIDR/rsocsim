@@ -263,7 +263,7 @@ int load( char *file)
 			// getcwd(path, 255);
 			// getcwd(temp, sizeof(temp)) ? std::string( temp ) : std::string("")
 			
-   			GetCurrentDir( path, 255 )
+   			GetCurrentDir( path, 255 );
 			warning("Current working directory: %s\n", path);
 			warning("Current working directory: %s\n", std::filesystem::current_path());
 			/*    error("Can't open \"%s\"", "rate_file");*/
