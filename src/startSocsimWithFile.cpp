@@ -1,7 +1,7 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-#include "src\events.cpp"
+#include "./src/events.cpp"
 //#include "src\random.c"
 
 // [[Rcpp::export]]
