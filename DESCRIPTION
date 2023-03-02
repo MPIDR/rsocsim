@@ -9,7 +9,7 @@ Authors@R: c(
     person("Tom", "Theile", role = c("aut", "cre"), email = "theile@demogr.mpg.de", comment = c(ORCID = "0000-0003-0573-9093")),
     person("Diego", "Alburez-Gutierrez", role = c("aut", "cre"), comment = c(ORCID = "0000-0003-0573-9093")),
     person("Mallika", "Snyder", role = c("aut", "cre")),
-    person("Liliana", "Calderón", role = c("aut", "cre")),
+    person("Liliana", "Calderon", role = c("aut", "cre"))
     )
 Description: Install and run socsim microsimulations from within R with this R-package.
 License: GPL (>= 2)
