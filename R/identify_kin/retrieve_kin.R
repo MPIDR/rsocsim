@@ -294,6 +294,8 @@ getKin <- function(opop = opop, KidsOf = KidsOf, pid,
   for (i in 1:length(names(res))) {
     res[[i]][sapply(res[[i]], function(x) length(x)==0)] <- NA #removing NULLs and integer(0) with NA
   }
+
+  # "Additional lines of code from Mallika"
   res$ggparents <- lapply(pid, function(pid){
     as.vector(
       unlist(
