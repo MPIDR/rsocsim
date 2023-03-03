@@ -9,7 +9,7 @@ supfile
 
 seed = 300
 
-rsocsim::run1simulationwithfile(folder,supfile,seed,process_method = "inprocess")
+rsocsim::socsim(folder,supfile,seed)#,process_method = "inprocess")
 
 
 supfile = "CousinDiversity.sup"
@@ -21,9 +21,10 @@ rsocsim::simulation_time_to_years(4500, 1200, 1960)
 rsocsim::get_supplement_content(folder, supfile)
 
 
-rsocsim::run1simulationwithfile(folder,supfile,seed,process_method = "inprocess")
-rsocsim::run1simulationwithfile(folder,supfile,seed,process_method = "future")
-rsocsim::run1simulationwithfile(folder,supfile,seed,process_method = "clustercall")
+rsocsim::socsim(folder,supfile,seed,process_method = "inprocess")
+rsocsim::socsim(folder,supfile,seed,process_method = "future")
+
+rsocsim::socsim(folder,supfile,seed,process_method = "clustercall")
 
 #rsocsim::run1simulationwithfile_clustercall(folder,supfile,seed)
 
