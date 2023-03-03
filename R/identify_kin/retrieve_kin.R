@@ -294,6 +294,21 @@ getKin <- function(opop = opop, KidsOf = KidsOf, pid,
   for (i in 1:length(names(res))) {
     res[[i]][sapply(res[[i]], function(x) length(x)==0)] <- NA #removing NULLs and integer(0) with NA
   }
+  res$ggparents <- lapply(pid, function(pid){
+    as.vector(
+      unlist(
+        opop[opop$pid == pid, c("MMM","MMF","MFM","MFF","FMM","FMF","FFM","FFF")]
+      )
+    )
+  })
   
+  if(kin_by_sex){ 
+    res$ggmothers <- lapply(pid,function(pid){
+      as.vector(unlist(opop[opop$pid == pid, c("MMM","FMM", "FFM", "MFM")]))
+    })
+    res$ggfathers <- lapply(pid, function(pid){
+      as.vector(unlist(opop[opop$pid == pid, c("FFF", "MMF", "MFF", "FMF")]))
+    })
+  }
   return(res)
 }
