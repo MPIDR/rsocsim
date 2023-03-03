@@ -388,14 +388,12 @@ int read_xtra(FILE *fd, int pop_rows)
 #ifdef ENHANCED
     enhance_read_extra(fd, p);
 #endif
-
     row++;
-    if (!feof(fd))
-    {
-      fgets(line, 1, fd); /* stupid way to toss 
-       the rest of the line*/
-      /* char *junk = fgets(line, 1, fd); stupid way to toss 
-       the rest of the line*/
+    
+    // Discard the rest of the line
+    int c;
+    while ((c = fgetc(fd)) != EOF && c != '\n') {
+      // Keep reading until end of line or end of file
     }
   }
   if (row != pop_rows)

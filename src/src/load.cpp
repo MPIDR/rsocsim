@@ -2521,20 +2521,28 @@ char *command;
     _exit(1);
 }
 */
-
-void error(const char *fmt)//,char *a,int b, char *c,char *d,char *e,char *f)
-{
-	char buf[1024];
-	register char *p;
-
-	(void)sprintf(buf, fmt); //a, b, c, d, e, f);
-	for (p = buf; *p++;)
-		;
-	p[-1] = '.';
-	*p = 0;
-	*p++ = '\n';
-	*p = 0;
-	fputs(buf, stderr);
+/*
+#include <iostream>
+#include <string>
+#include <cstring>
+#include <cstdio>
+*/
+void error(const char* fmt, ...) {
+  char buf[1024];
+  va_list args;
+  va_start(args, fmt);
+  std::vsnprintf(buf, sizeof(buf), fmt, args);
+  va_end(args);
+  
+  // Replace last non-null character with a period and append a newline
+  size_t len = std::strlen(buf);
+  if (len > 0 && buf[len - 1] != '\n') {
+    buf[len - 1] = '.';
+    buf[len] = '\n';
+    buf[len + 1] = '\0';
+  }
+  
+  std::cerr << buf;
 }
 double get_lambda(int g, int m, int p, int age)
 /* select appropriate lambda from ferts for group,mstat,parity, age a */
