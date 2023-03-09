@@ -10,6 +10,8 @@ If you encounter an error or bug, we are happy to hear from you in the issues.
 
 ## Installation
 
+Please note that this package may not work on Linux and Mac at the moment. We are working on better compatibility right now.
+
 ### From Source
 
 
