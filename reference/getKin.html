@@ -79,15 +79,13 @@ efficiency, the function will by default only identify an individual's
  grandparents ("gparents"), parents, 
  siblings, spouse, children, and grandchildren ("gchildren"). 
  However, by selecting one or more of the following 
- kin types, the kin network generated will also include these individuals:
- itemize
-  "gunclesaunts": Great-uncles and great-aunts
-  "unclesaunts": Uncles and aunts
-  "firstcousins": First cousins (Children of uncles and aunts)
-  "niblings": Nieces and nephews (Children of siblings)
-  "inlaws": Parents-in-law (parents of spouse) and brothers and sisters
- in law (siblings of spouse and spouse of siblings)
- itemize</p></dd>
+ kin types, the kin network generated will also include these individuals:</p><ul><li><p>"gunclesaunts": Great-uncles and great-aunts</p></li>
+<li><p>"unclesaunts": Uncles and aunts</p></li>
+<li><p>"firstcousins": First cousins (Children of uncles and aunts)</p></li>
+<li><p>"niblings": Nieces and nephews (Children of siblings)</p></li>
+<li><p>"inlaws": Parents-in-law (parents of spouse) and brothers and sisters
+ in law (siblings of spouse and spouse of siblings)</p></li>
+</ul></dd>
 
 
 <dt>kin_by_sex</dt>
@@ -116,87 +114,45 @@ With kin_by_sex set to TRUE and extra_kintypes set to c(c("gunclesaunts",
  "unclesaunts", "firstcousins", "niblings", "inlaws")), 
  the full list of kin relations identified are:</p>
 <p></p>
-<p>itemize</p>
-<p></p>
-<p>"ggparents": great-grandparents</p>
-<p></p>
-<p>"ggmothers": great-grandmothers</p>
-<p></p>
-<p>"ggfathers": great-grandfathers</p>
-<p></p>
-<p>"gparents": grandparents</p>
-<p></p>
-<p>"gmothers": grandmothers</p>
-<p></p>
-<p>"gfathers": grandfathers</p>
-<p></p>
-<p>"gunclesaunts": great-uncles and great-aunts</p>
-<p></p>
-<p>"guncles": great-uncles</p>
-<p></p>
-<p>"gaunts": great-aunts</p>
-<p></p>
-<p>"parents": parents</p>
-<p></p>
-<p>"mother": mother</p>
-<p></p>
-<p>"father": father</p>
-<p></p>
-<p>"unclesaunts": uncles and aunts (siblings of parents)</p>
-<p></p>
-<p>"uncles": uncles</p>
-<p></p>
-<p>"aunts": aunts</p>
-<p></p>
-<p>"siblings": siblings</p>
-<p></p>
-<p>"sisters": sisters</p>
-<p></p>
-<p>"brothers": brothers</p>
-<p></p>
-<p>"firstcousins": first cousins</p>
-<p></p>
-<p>"firstcousinsfemale": female first cousins</p>
-<p></p>
-<p>"firstcousinsmale": male first cousins</p>
-<p></p>
-<p>"children": children</p>
-<p></p>
-<p>"daughters": daughters</p>
-<p></p>
-<p>"sons": sons</p>
-<p></p>
-<p>"gchildren": grandchildren</p>
-<p></p>
-<p>"gdaughters": granddaughters</p>
-<p></p>
-<p>"gsons": grandsons</p>
-<p></p>
-<p>"niblings": nephews and nieces</p>
-<p></p>
-<p>"nieces": nieces</p>
-<p></p>
-<p>"nephews": nephews</p>
-<p></p>
-<p>"spouse": spouse (based on final marriage, in the case of 
- multiple marriages)</p>
-<p></p>
-<p>"parentsinlaw": parents-in-law</p>
-<p></p>
-<p>"motherinlaw": mother-in-law</p>
-<p></p>
-<p>"fatherinlaw": father-in-law</p>
-<p></p>
-<p>"siblingsinlaw": brothers and sisters in law</p>
-<p></p>
-<p>"sistersinlaw": sisters-in-law</p>
-<p></p>
-<p>"brothersinlaw": brothers-in-law</p>
-<p></p>
-<p>itemize</p>
-
-
-    </div>
+<ul><li><p>"ggparents": great-grandparents</p></li>
+<li><p>"ggmothers": great-grandmothers</p></li>
+<li><p>"ggfathers": great-grandfathers</p></li>
+<li><p>"gparents": grandparents</p></li>
+<li><p>"gmothers": grandmothers</p></li>
+<li><p>"gfathers": grandfathers</p></li>
+<li><p>"gunclesaunts": great-uncles and great-aunts</p></li>
+<li><p>"guncles": great-uncles</p></li>
+<li><p>"gaunts": great-aunts</p></li>
+<li><p>"parents": parents</p></li>
+<li><p>"mother": mother</p></li>
+<li><p>"father": father</p></li>
+<li><p>"unclesaunts": uncles and aunts (siblings of parents)</p></li>
+<li><p>"uncles": uncles</p></li>
+<li><p>"aunts": aunts</p></li>
+<li><p>"siblings": siblings</p></li>
+<li><p>"sisters": sisters</p></li>
+<li><p>"brothers": brothers</p></li>
+<li><p>"firstcousins": first cousins</p></li>
+<li><p>"firstcousinsfemale": female first cousins</p></li>
+<li><p>"firstcousinsmale": male first cousins</p></li>
+<li><p>"children": children</p></li>
+<li><p>"daughters": daughters</p></li>
+<li><p>"sons": sons</p></li>
+<li><p>"gchildren": grandchildren</p></li>
+<li><p>"gdaughters": granddaughters</p></li>
+<li><p>"gsons": grandsons</p></li>
+<li><p>"niblings": nephews and nieces</p></li>
+<li><p>"nieces": nieces</p></li>
+<li><p>"nephews": nephews</p></li>
+<li><p>"spouse": spouse (based on final marriage, in the case of 
+ multiple marriages)</p></li>
+<li><p>"parentsinlaw": parents-in-law</p></li>
+<li><p>"motherinlaw": mother-in-law</p></li>
+<li><p>"fatherinlaw": father-in-law</p></li>
+<li><p>"siblingsinlaw": brothers and sisters in law</p></li>
+<li><p>"sistersinlaw": sisters-in-law</p></li>
+<li><p>"brothersinlaw": brothers-in-law</p></li>
+</ul></div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
