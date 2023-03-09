@@ -141,6 +141,8 @@ int main1(int argc, char *argv[])
 	// stop("test the stop-function..."); stops socsim and goes back to R
 
 	//stop("after perror jooo.");
+
+	create_output_fn_dir();
   timestart1 = clock();
   	
 	//char command_string[1024];

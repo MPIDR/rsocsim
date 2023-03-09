@@ -334,6 +334,39 @@ int load( char *file)
 	return 0;
 }
 
+int create_output_fn_dir(){
+	// concatenate "sim_results_" with the name of the supplement file:
+	//sprintf(output_file_name, "sim_results_%s", words[1]);
+	char buffer_output_dir [250];
+	char buffer_output_fn [250];
+	sprintf (buffer_output_dir, "sim_results_%s_%ld/", rate_file_name, ceed);
+	sprintf (buffer_output_fn, "%sresult", buffer_output_dir);
+
+	// create the directory:
+	#if defined(_WIN32)
+	mkdir(buffer_output_dir);
+	#else 
+	mkdir(buffer_output_dir, 0777); // notice that 777 is different than 0777
+	#endif
+	
+	strcpy(pop_out_name, buffer_output_fn);
+	strcpy(mar_out_name, buffer_output_fn);
+	strcpy(xtra_out_name, buffer_output_fn);
+	strcpy(pyr_file_name, buffer_output_fn);
+	strcpy(stat_file_name, buffer_output_fn);
+	strcpy(prefix_out_name, buffer_output_fn);
+	strcpy(otx_out_name, buffer_output_fn);
+
+	// copy the .sup-file into the subfolder:
+	char buffer_sup_fn [250];
+	sprintf (buffer_sup_fn, "%s.sup", rate_file_name);
+	char buffer_sup_fn_dest [250];
+	sprintf (buffer_sup_fn_dest, "%s%s", buffer_output_dir, buffer_sup_fn);
+	
+
+	return 1;
+}
+
 /*
  * Process a line
  */
