@@ -17,6 +17,8 @@ rsocsim::run1simulationwithfile_from_binary(folder,supfile,seed,socsim_path)
 
 rsocsim::get_asfr_socsim()
 
+rsocsim::getKin()
+
 basename(socsim_path)
 dirname(socsim_path)
 dirname(folder)

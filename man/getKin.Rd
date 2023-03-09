@@ -21,14 +21,14 @@ efficiency, the function will by default only identify an individual's
  siblings, spouse, children, and grandchildren ("gchildren"). 
  However, by selecting one or more of the following 
  kin types, the kin network generated will also include these individuals:
- \begin{itemize}
+ \itemize{
  \item "gunclesaunts": Great-uncles and great-aunts
  \item "unclesaunts": Uncles and aunts
  \item "firstcousins": First cousins (Children of uncles and aunts)
  \item "niblings": Nieces and nephews (Children of siblings)
  \item "inlaws": Parents-in-law (parents of spouse) and brothers and sisters
  in law (siblings of spouse and spouse of siblings)
- \end{itemize}}
+}}
 
 \item{kin_by_sex}{A logical value indicating whether output should include
 kin relations additionally disaggregated by the sex of the relative. Setting
@@ -48,7 +48,7 @@ the persons of interest provided to the function input).
 With kin_by_sex set to TRUE and extra_kintypes set to c(c("gunclesaunts",
  "unclesaunts", "firstcousins", "niblings", "inlaws")), 
  the full list of kin relations identified are:
- \begin{itemize}
+ \itemize{
  \item "ggparents": great-grandparents
  \item "ggmothers": great-grandmothers
  \item "ggfathers": great-grandfathers
@@ -87,7 +87,7 @@ With kin_by_sex set to TRUE and extra_kintypes set to c(c("gunclesaunts",
  \item "siblingsinlaw": brothers and sisters in law
  \item "sistersinlaw": sisters-in-law
  \item "brothersinlaw": brothers-in-law
- \end{itemize}
+ }
 }
 \description{
 Identify members of a kin network for an individual or individuals of 
