@@ -1083,7 +1083,7 @@ int process_month()
 			    before birthing the little twirp--obviously only if not 
 			    currenty married*/
 			    if(p->sex == MALE){
-			      logmsg("Male id %d attempting to give birth \n",p->person_id,1);
+			      logmsg("Male id attempting to give birth \n","",1);
 			    }
 			    if(p->mstatus != MARRIED){
 			      marriage(p);
