@@ -340,7 +340,7 @@ int create_output_fn_dir(){
 	//sprintf(output_file_name, "sim_results_%s", words[1]);
 	char buffer_output_dir [250];
 	char buffer_output_fn [250];
-	sprintf (buffer_output_dir, "sim_results_%s_%ld/", rate_file_name, ceed);
+	sprintf (buffer_output_dir, "sim_results_%s_%ld/", rate_file_name, original_seed);
 	sprintf (buffer_output_fn, "%sresult", buffer_output_dir);
 
 	// create the directory:
@@ -656,7 +656,7 @@ int l_process_line(char *line,struct l_context *cx,FILE *fp)
 		//sprintf(output_file_name, "sim_results_%s", words[1]);
 		char buffer_output_dir [250];
 		char buffer_output_fn [250];
-		sprintf (buffer_output_dir, "sim_results_s%s_%ld/", rate_file_name, ceed);
+		sprintf (buffer_output_dir, "sim_results_s%s_%ld/", rate_file_name, original_seed);
 		sprintf (buffer_output_fn, "%sresult", buffer_output_dir);
 
 		// create the directory:

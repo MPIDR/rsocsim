@@ -142,7 +142,6 @@ int main1(int argc, char *argv[])
 
 	//stop("after perror jooo.");
 
-	create_output_fn_dir();
   timestart1 = clock();
   	
 	//char command_string[1024];
@@ -269,7 +268,10 @@ int main1(int argc, char *argv[])
 	
 	//ceed = atoi(*++argv);
 	ceed = atoi(argv[2]);
+	original_seed = ceed;
 	compatibility_mode = atoi(argv[3]);
+	
+	create_output_fn_dir();
 	
 	Rcpp::Rcout << "random_number seed: " << ceed << "| command-line argv[1]: " << argv[1] << "| argv[2]: " << argv[2] << std::endl;
 	
@@ -287,7 +289,7 @@ int main1(int argc, char *argv[])
 	//Rcpp::Rcout << "useage: ratefile random_number" << useage << argv[1] << argv[2] << std::endl;
 	
 	/**srandom(ceed);  setting seed for random() NOT rrandom() **/ // todo:check if random is initialized correctly!
-	sprintf(log_file_name, "sim_results_%s_s%ld.log", rate_file_name, ceed);
+	sprintf(log_file_name, "sim_results_%s_s%ld.log", rate_file_name, original_seed);
 	//Rprintf(log_file_name, "%s%d.log", rate_file_name, ceed);
 	
 	

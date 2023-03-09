@@ -440,6 +440,7 @@ int take_census;
 int fixed_epsilon, random_epsilon;
 int read_xtra_file;
 long int ceed;
+long int original_seed = -4;
 //static char randstate[2048]; /* for gcc's random number generator *///not needed here?!?!
 int current_month;
 int stop_month;

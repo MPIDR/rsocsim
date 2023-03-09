@@ -7,7 +7,7 @@ supfile = rsocsim::create_sup_file(folder)
 supfile = "socsim.sup"
 supfile
 
-seed = 300
+seed = 305
 
 rsocsim::socsim(folder,supfile,seed)#,process_method = "inprocess")
 
