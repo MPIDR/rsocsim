@@ -132,7 +132,7 @@ To run Socsim you must provide the following:
     short as a single month, while others are many years or decades
     wide.
     
-    ~~The rate, given in per month terms, is the third number. Socsim
+    The rate, given in per month terms, is the third number. ~~Socsim
     insists that there be a line specifying an age category with an
     upper bound of 100 years. Obviously this last rate can be 1 or zero.~~
     
@@ -140,9 +140,9 @@ To run Socsim you must provide the following:
     For more details on specifying rates See
     Section [8](#sec:rateFiles).
 
-When all of the above bits are in place, Socsim can be executed from the
+When all of the above bits are in place, Socsim can be ~~executed from the
 Unix shell:  
-` /path/to/socsim supervisoryfile.sup 12345`  
+` /path/to/socsim supervisoryfile.sup 12345`~~
 The result will be a considerable amount of screen output indicating
 which options are set and how the simulation is proceeding. Or just a
 short complaint about an inconsistency in the various input files.
@@ -205,7 +205,7 @@ events for all living people. If there is no subsequent segment, then
 Socsim finishes by writing the population (.opop), marriage (.oar),
 extra variables (.opox), and population pyramid (.pyr) files.
 
-# Extending Socsim
+# Extending Socsim (outdated!)
 
 Socsim is open source so modifying the code to take account of cultural
 norms, ethnological truths, or behavioral theories is encouraged. Since

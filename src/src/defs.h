@@ -489,6 +489,8 @@ double marriage_slope_ratio;
 int marriage_agedif_max;
 int marriage_agedif_min;
 
+int option_marriage_after_childbirth = 0;
+
 /* some ad hoc stuff */
 
 #define A_SELF 0

@@ -1078,8 +1078,20 @@ int process_month()
 #ifdef ENHANCED
 			enhance_birth_pre(p);
 #else
-			//logmsg("next event... birth 1  \n", "", 1);
-			birth(p);
+		if (option_marriage_after_childbirth==1){		
+			/* For global sandwich land we want mother to find a husband quickly
+			    before birthing the little twirp--obviously only if not 
+			    currenty married*/
+			    if(p->sex == MALE){
+			      logmsg("Male id %d attempting to give birth \n",p->person_id,1);
+			    }
+			    if(p->mstatus != MARRIED){
+			      marriage(p);
+			      /*new_marriage generates event for  p and puts back in queue*/
+			      queue_delete(p, EVENT_QUEUE); 
+			    }
+		}
+		birth(p);
 #endif
 		}
 		else if (p->next_event == E_DIVORCE)

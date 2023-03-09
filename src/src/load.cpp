@@ -94,6 +94,7 @@ enum l_keyword
 	k_agedif_marriage_sd,
 	k_marriage_eval,
 	k_marriage_queues,
+	k_marriage_after_childbirth,
 	k_firstyear,
 	k_hettrans,
 	k_write_output,
@@ -719,6 +720,18 @@ int l_process_line(char *line,struct l_context *cx,FILE *fp)
 
 		/** determine the marriage evaluation scheme 1 or 2**/
 		/** aka preference or distribution **/
+	case k_marriage_after_childbirth:
+		/* new option: if k_marriage_after_childbirth is set to 1, it is checked whether the mother
+		is married before giving birth. If she is not, she will be married 
+		immediately. This way the child will have a father id
+		Useful if no marriage rates are provided */
+		option_marriage_after_childbirth = read_integer(cx, words[1]);
+		
+		sprintf(logstring, "k_marriage_after_childbirth : %d\n",
+				option_marriage_after_childbirth);
+		logmsg("%s\n", logstring, 0);
+		return 1;
+		break;
 	case k_marriage_eval:
 		if (strcmp(words[1], "preference") == 0)
 		{
@@ -1493,6 +1506,8 @@ enum l_keyword l_lookup_keyword(register char *word)
 		k_marriage_eval,
 		"marriage_queues",
 		k_marriage_queues,
+		"marriage_after_childbirth",
+		k_marriage_after_childbirth,
 
 		"marriage_peak_age",
 		k_marriage_peak_age,
