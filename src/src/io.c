@@ -337,7 +337,7 @@ int read_xtra(FILE *fd, int pop_rows)
   that will be added onto the end of the egos_extra link list. 
 ***********************************************************************/
 {
-  char line[10]; /*might need to increase this*/
+  // char line[10]; /*might need to increase this*/
   struct nlist *np;
   int id, indx, row;
   float rval;
