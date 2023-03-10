@@ -11,21 +11,22 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // startSocsimWithFile
-int startSocsimWithFile(String supfile, String seed, String compatibility_mode);
-RcppExport SEXP _rsocsim_startSocsimWithFile(SEXP supfileSEXP, SEXP seedSEXP, SEXP compatibility_modeSEXP) {
+int startSocsimWithFile(String supfile, String seed, String compatibility_mode, String result_suffix);
+RcppExport SEXP _rsocsim_startSocsimWithFile(SEXP supfileSEXP, SEXP seedSEXP, SEXP compatibility_modeSEXP, SEXP result_suffixSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< String >::type supfile(supfileSEXP);
     Rcpp::traits::input_parameter< String >::type seed(seedSEXP);
     Rcpp::traits::input_parameter< String >::type compatibility_mode(compatibility_modeSEXP);
-    rcpp_result_gen = Rcpp::wrap(startSocsimWithFile(supfile, seed, compatibility_mode));
+    Rcpp::traits::input_parameter< String >::type result_suffix(result_suffixSEXP);
+    rcpp_result_gen = Rcpp::wrap(startSocsimWithFile(supfile, seed, compatibility_mode, result_suffix));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_rsocsim_startSocsimWithFile", (DL_FUNC) &_rsocsim_startSocsimWithFile, 3},
+    {"_rsocsim_startSocsimWithFile", (DL_FUNC) &_rsocsim_startSocsimWithFile, 4},
     {NULL, NULL, 0}
 };
 

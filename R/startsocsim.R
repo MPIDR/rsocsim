@@ -19,7 +19,7 @@
 #'  "clustercall" - if the future package is not available, try this method instead
 #' @return The results will be written into the specified folder
 #' @export
-socsim <- function(folder, supfile,seed="42",process_method="inprocess",compatibility_mode="1") {
+socsim <- function(folder, supfile,seed="42",process_method="inprocess",compatibility_mode="1",suffix="") {
   seed= as.character(seed)
   compatibility_mode = as.character(compatibility_mode)
   print("Start run1simulationwithfile")
@@ -30,11 +30,11 @@ socsim <- function(folder, supfile,seed="42",process_method="inprocess",compatib
   tryCatch(expr = {
     setwd(folder)
     if ((process_method=="inprocess") | (process_method =="default")) {
-      result = run1simulationwithfile_inprocess(supfile=supfile,seed=seed,compatibility_mode=compatibility_mode)
+      result = run1simulationwithfile_inprocess(supfile=supfile,seed=seed,compatibility_mode=compatibility_mode,suffix=suffix)
     } else if (process_method=="future") {
-      result = run1simulationwithfile_future(supfile=supfile,seed=seed,compatibility_mode=compatibility_mode)
+      result = run1simulationwithfile_future(supfile=supfile,seed=seed,compatibility_mode=compatibility_mode,suffix=suffix)
     } else if (process_method=="clustercall") {
-      result = run1simulationwithfile_clustercall(supfile=supfile,seed=seed,compatibility_mode=compatibility_mode)
+      result = run1simulationwithfile_clustercall(supfile=supfile,seed=seed,compatibility_mode=compatibility_mode,suffix=suffix)
     }
   },
   error = function(w){
@@ -73,7 +73,7 @@ print_last_line_of_logfile = function(logfilename, lastline = "") {
   })
 }
 
-run1simulationwithfile_future <- function(supfile,seed="42",compatibility_mode="1") {
+run1simulationwithfile_future <- function(supfile,seed="42",compatibility_mode="1",suffix="") {
   # use the "future" library to run a rcpp-socsim simulation
   # in a seperate process
   print("create future cluster")
@@ -82,7 +82,7 @@ run1simulationwithfile_future <- function(supfile,seed="42",compatibility_mode="
   print("start socsim simulation now. no output will be shown!")
   
   f1 <- future::future({
-    startSocsimWithFile(supfile,seed,compatibility_mode)
+    startSocsimWithFile(supfile,seed,compatibility_mode,result_suffix=suffix)
   },seed=TRUE)
   print("started!")
   # start a loop and check whether the simulation in the future is finished.
@@ -111,8 +111,8 @@ run1simulationwithfile_future <- function(supfile,seed="42",compatibility_mode="
 #' @param supfile the .sup file to start the simulation
 #' @param seed RNG seed
 #' @return The results will be written into the specified folder
-run1simulationwithfile_inprocess <- function(folder, supfile,seed,compatibility_mode="1") {
-  startSocsimWithFile(supfile,seed,compatibility_mode)
+run1simulationwithfile_inprocess <- function(folder, supfile,seed,compatibility_mode="1",suffix="") {
+  startSocsimWithFile(supfile,seed,compatibility_mode,result_suffix=suffix)
   return(1)
 }
 
@@ -134,7 +134,7 @@ run1simulationwithfile_inprocess <- function(folder, supfile,seed,compatibility_
 #  return(1)
 #}
 
-run1simulationwithfile_clustercall <- function(supfile,seed="23",compatibility_mode="1") {
+run1simulationwithfile_clustercall <- function(supfile,seed="23",compatibility_mode="1",suffix="") {
   # use the "future" library to run a rcpp-socsim simulation
   # in a seperate process
   print("parallel::clusterCall")
@@ -142,7 +142,7 @@ run1simulationwithfile_clustercall <- function(supfile,seed="23",compatibility_m
   outfile="socsim_clustercall.log"
   cl <- parallel::makeCluster(numCores, type="PSOCK", outfile=outfile)
   parallel::clusterExport(cl, "startSocsimWithFile")
-  parallel::clusterCall(cl,startSocsimWithFile, supfile=supfile,seed=seed,compatibility_mode=compatibility_mode)
+  parallel::clusterCall(cl,startSocsimWithFile, supfile=supfile,seed=seed,compatibility_mode=compatibility_mode,result_suffix=suffix)
   print("started!")
   print("------------------------------------l4a")
   print_last_line_of_logfile(outfile)
@@ -158,18 +158,6 @@ run1simulationwithfile_clustercall <- function(supfile,seed="23",compatibility_m
   return(1)
 }
 
-#bla <- function(){
-#  print("function bla")
-#    folder = "D:\\dev\\r\\socsimprojects\\CousinDiversity"
-#  supfile = "CousinDiversity.sup"
-#  seed="33"
-#  previous_wd = getwd()
-#  setwd(paste0(folder))
-#  print(seed)
-#  startSocsimWithFile(supfile,seed)
-#  setwd(previous_wd)
-#  return(1) 
-#}
 
 #' Run a single socsim-simulation with a socsim binary.
 #' the place
@@ -257,9 +245,10 @@ marriage_queues 1
 bint 10
 segments 1
 marriage_eval distribution
+marriage_after_childbirth 1
 input_file init_new
 *
-duration 1000
+duration 1200
 include SWEfert2022
 include SWEmort2022
 run

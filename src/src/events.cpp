@@ -270,6 +270,7 @@ int main1(int argc, char *argv[])
 	ceed = atoi(argv[2]);
 	original_seed = ceed;
 	compatibility_mode = atoi(argv[3]);
+	strcpy(result_suffix, argv[4]);
 	
 	create_output_fn_dir();
 
@@ -289,8 +290,6 @@ int main1(int argc, char *argv[])
 	//Rcpp::Rcout << "useage: ratefile random_number" << useage << argv[1] << argv[2] << std::endl;
 	
 	/**srandom(ceed);  setting seed for random() NOT rrandom() **/ // todo:check if random is initialized correctly!
-	sprintf(log_file_name, "./sim_results_%s_%ld/logfile.log", rate_file_name, original_seed);
-	//Rprintf(log_file_name, "%s%d.log", rate_file_name, ceed);
 	
 	
 	//return 12;

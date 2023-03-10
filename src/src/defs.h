@@ -474,6 +474,7 @@ char pyr_file_name[1024], stat_file_name[1024], prefix_out_name[1024];
 char log_file_name[1024], otx_file_name[1024], otx_out_name[1024];
 
 char rate_file_name[1024];
+char result_suffix[128];
 
 char pop_out_name_seg[1024], mar_out_name_seg[1024], xtra_out_name_seg[1024];
 char pyr_file_name_seg[1024], stat_file_name_seg[1024], otx_out_name_seg[1024];

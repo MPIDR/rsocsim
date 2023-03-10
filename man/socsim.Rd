@@ -10,7 +10,8 @@ socsim(
   supfile,
   seed = "42",
   process_method = "inprocess",
-  compatibility_mode = "1"
+  compatibility_mode = "1",
+  suffix = ""
 )
 }
 \arguments{

@@ -5,13 +5,14 @@ using namespace Rcpp;
 //#include "src\random.c"
 
 // [[Rcpp::export]]
-int startSocsimWithFile(String supfile, String seed, String compatibility_mode){
+int startSocsimWithFile(String supfile, String seed, String compatibility_mode, String result_suffix){
   Rcpp::Rcout << "Start socsim" << std::endl;
   char *args[] = {
     (char*)"zerothArgument",
     (char*) supfile.get_cstring(),
     (char*) seed.get_cstring(),
     (char*) compatibility_mode.get_cstring(),
+    (char*) result_suffix.get_cstring(),
     NULL
   };
   main1(2, args);

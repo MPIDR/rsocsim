@@ -7,9 +7,9 @@ supfile = rsocsim::create_sup_file(folder)
 supfile = "socsim.sup"
 supfile
 
-seed = 305
+seed = 47
 
-rsocsim::socsim(folder,supfile,seed)#,process_method = "inprocess")
+rsocsim::socsim(folder,supfile,seed,suffix="te/st1")#,process_method = "inprocess")
 
 
 supfile = "CousinDiversity.sup"

@@ -340,7 +340,7 @@ int create_output_fn_dir(){
 	//sprintf(output_file_name, "sim_results_%s", words[1]);
 	char buffer_output_dir [250];
 	char buffer_output_fn [250];
-	sprintf (buffer_output_dir, "sim_results_%s_%ld/", rate_file_name, original_seed);
+	sprintf (buffer_output_dir, "sim_results_%s_%ld_%s/", rate_file_name, original_seed,result_suffix);
 	sprintf (buffer_output_fn, "%sresult", buffer_output_dir);
 
 	// create the directory:
@@ -357,6 +357,11 @@ int create_output_fn_dir(){
 	strcpy(stat_file_name, buffer_output_fn);
 	strcpy(prefix_out_name, buffer_output_fn);
 	strcpy(otx_out_name, buffer_output_fn);
+
+	sprintf(log_file_name, "%slogfile.log", buffer_output_dir);
+	//Rprintf(log_file_name, "%s%d.log", rate_file_name, ceed);
+	
+
 
 	// copy the .sup-file (rate_file_name) into the subfolder:
 	char buffer_sup_fn_dest [250];
@@ -478,18 +483,18 @@ int l_process_line(char *line,struct l_context *cx,FILE *fp)
 				}
 				if (read_ax_or_bx != -1){
 					// sprintf(logstring, "-18bx-l_process_line. just before add_lc_rate_block. year: %d, month: %d, prob: %f",years,months,prob );
-					logmsg("%s\n", logstring, 1);
+					// logmsg("%s\n", logstring, 1);
 					add_lc_rate_block(years, months, prob);
 				}
 				else if (reading_rate_table == TRUE){
 					// sprintf(logstring, "-18bx-l_process_line. just before add_rate_table. year: %d, month: %d, prob: %f",years,months,prob );
-					logmsg("%s\n", logstring, 1);
+					// logmsg("%s\n", logstring, 1);
 					add_rate_table(years, months, prob);
 				}
 				else{				
 					//Rcpp::Rcout << "18b-l_process_line. just before add_rate_block " << line << " | " << years << "y " << months << "m. prob: " << prob << std::endl;
 					// sprintf(logstring, "-18ba-l_process_line. just before add_rate_block. year: %d, month: %d, prob: %f",years,months,prob );
-					logmsg("%s\n", logstring, 1);
+					// logmsg("%s\n", logstring, 1);
 					add_rate_block(years, months, prob);
 				}
 			}
@@ -498,7 +503,7 @@ int l_process_line(char *line,struct l_context *cx,FILE *fp)
 	}
 	//Rcpp::Rcout << "18b-l_process_line...after.." << std::endl;
 	/* not a line of rates, process command */
-	logmsg("-----18e - not a line of rates, process command\n", "", 1);
+	// logmsg("-----18e - not a line of rates, process command\n", "", 1);
 					
 
 	/* is the last group of rates complete? */
@@ -651,34 +656,13 @@ int l_process_line(char *line,struct l_context *cx,FILE *fp)
 		return 1;
 		break;
 	case k_output_file:
-		// todo: instead of words[1], create a string from
-		// * "sim_results_"
-		// * the name of the supplement-file
-		// * and the seed
-		// then create a subdirectory with that name
-		// and put the output files there
-
-		// concatenate "sim_results_" with the name of the supplement file:
-		//sprintf(output_file_name, "sim_results_%s", words[1]);
-		char buffer_output_dir [250];
-		char buffer_output_fn [250];
-		sprintf (buffer_output_dir, "sim_results_s%s_%ld/", rate_file_name, original_seed);
-		sprintf (buffer_output_fn, "%sresult", buffer_output_dir);
-
-		// create the directory:
-		#if defined(_WIN32)
-		mkdir(buffer_output_dir);
-		#else 
-		mkdir(buffer_output_dir, 0777); // notice that 777 is different than 0777
-		#endif
-		
-		strcpy(pop_out_name, buffer_output_fn);
-		strcpy(mar_out_name, buffer_output_fn);
-		strcpy(xtra_out_name, buffer_output_fn);
-		strcpy(pyr_file_name, buffer_output_fn);
-		strcpy(stat_file_name, buffer_output_fn);
-		strcpy(prefix_out_name, buffer_output_fn);
-		strcpy(otx_out_name, buffer_output_fn);
+		/* name the result-files 
+		  March 2023: This is now called automatically at the start of the simulation
+		  with create_output_fn_dir().
+		  We could change this behavior: if this is called in the sup-file,
+		  we do the old behavior where the user has to specify everything.
+		  todo!
+		*/
 		return 1;
 		break;
 	case k_read_xtra:
