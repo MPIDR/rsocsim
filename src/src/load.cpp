@@ -659,9 +659,9 @@ int l_process_line(char *line,struct l_context *cx,FILE *fp)
 		/* name the result-files 
 		  March 2023: This is now called automatically at the start of the simulation
 		  with create_output_fn_dir().
-		  We could change this behavior: if this is called in the sup-file,
+		  if this (output_file filename) is called in the sup-file,
 		  we do the old behavior where the user has to specify everything.
-		  todo!
+		  folders have to be created manually!
 		*/
 		strcpy(pop_out_name, words[1]);
 		strcpy(mar_out_name, words[1]);
