@@ -1569,7 +1569,7 @@ void l_error(const struct l_context *cx, const char *message)
 void add_rate_table(int years, int months, double prob)
 {
 	if ((prob < 0) && (!reading_epsilons))
-		error("\"Rate table contains a negative probability\"");
+		warning("\"Rate table contains a negative probability\"");
 
 	current_table->upper_age = 12 * years + months;
 	current_table->prob = prob;
@@ -1594,7 +1594,7 @@ void add_rate_block(int years, int months, double prob)
 {
 
 	if (prob < 0)
-		error("\"Rate file contains a negative rate\"");
+		warning("\"Rate file contains a negative rate\"");
 	if (prob == 0)
 		prob = 0.000000000001;
 
@@ -1683,7 +1683,7 @@ void add_lc_rate_block(int years, int months, double prob)
 			
 			logmsg("18b-add_lc_rate_block BX.3| |\n", "", 1);
 			stop("Rate file ax and bx out of alignment");//exit(-1);
-			error("\"Rate file ax and bx out of alignment\"");
+			warning("\"Rate file ax and bx out of alignment\"");
 		}
 	}
 	else
@@ -1906,7 +1906,7 @@ int fill_rate_gaps()
 				{
 					sprintf(logstring, "ERROR......abr");
 					logmsg("%s\n", logstring, 1);
-					error("\"incomplete LC rate set\"");
+					warning("\"incomplete LC rate set\"");
 				
 					return -1;
 				}
@@ -2572,20 +2572,20 @@ char *command;
 #include <cstring>
 #include <cstdio>
 */
-void error(const char *fmt)//,char *a,int b, char *c,char *d,char *e,char *f)
-{
-	char buf[1024];
-	register char *p;
+// void error(const char *fmt)//,char *a,int b, char *c,char *d,char *e,char *f)
+// {
+// 	char buf[1024];
+// 	register char *p;
 
-	(void)sprintf(buf, fmt); //a, b, c, d, e, f);
-	for (p = buf; *p++;)
-		;
-	p[-1] = '.';
-	*p = 0;
-	*p++ = '\n';
-	*p = 0;
-	fputs(buf, stderr);
-}
+// 	(void)sprintf(buf, fmt); //a, b, c, d, e, f);
+// 	for (p = buf; *p++;)
+// 		;
+// 	p[-1] = '.';
+// 	*p = 0;
+// 	*p++ = '\n';
+// 	*p = 0;
+// 	fputs(buf, stderr);
+// }
 double get_lambda(int g, int m, int p, int age)
 /* select appropriate lambda from ferts for group,mstat,parity, age a */
 {

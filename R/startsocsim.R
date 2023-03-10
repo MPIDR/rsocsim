@@ -215,7 +215,7 @@ create_simulation_folder <- function(simulation_name=NULL,basefolder=NULL) {
   if (is.null(basefolder)) {
     # check whether there is a "socsim" folder in the users home-directory:
     # if not, create it
-    userdir <- dirname(path.expand("~"))
+    userdir <- dirname(path.expand("~//"))
     basefolder = paste0(userdir, "/", "socsim")
   }
   if (!file.exists(basefolder)) {
