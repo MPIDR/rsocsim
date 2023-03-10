@@ -663,6 +663,13 @@ int l_process_line(char *line,struct l_context *cx,FILE *fp)
 		  we do the old behavior where the user has to specify everything.
 		  todo!
 		*/
+		strcpy(pop_out_name, words[1]);
+		strcpy(mar_out_name, words[1]);
+		strcpy(xtra_out_name, words[1]);
+		strcpy(pyr_file_name, words[1]);
+		strcpy(stat_file_name, words[1]);
+		strcpy(prefix_out_name, words[1]);
+		strcpy(otx_out_name, words[1]);
 		return 1;
 		break;
 	case k_read_xtra:
