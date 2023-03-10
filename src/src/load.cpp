@@ -358,12 +358,18 @@ int create_output_fn_dir(){
 	strcpy(prefix_out_name, buffer_output_fn);
 	strcpy(otx_out_name, buffer_output_fn);
 
-	// copy the .sup-file into the subfolder:
-	char buffer_sup_fn [250];
-	sprintf (buffer_sup_fn, "%s.sup", rate_file_name);
+	// copy the .sup-file (rate_file_name) into the subfolder:
 	char buffer_sup_fn_dest [250];
-	sprintf (buffer_sup_fn_dest, "%s%s", buffer_output_dir, buffer_sup_fn);
-	
+	sprintf (buffer_sup_fn_dest, "%s%s", buffer_output_dir, rate_file_name);
+    FILE *source = fopen(rate_file_name, "rb");
+    FILE *destination = fopen(buffer_sup_fn_dest, "wb");
+    char buffer[1024];
+    size_t bytes_read;
+    while ((bytes_read = fread(buffer, 1, sizeof(buffer), source)) > 0) {
+        fwrite(buffer, 1, bytes_read, destination);
+    }
+    fclose(source);
+    fclose(destination);
 
 	return 1;
 }
