@@ -991,7 +991,7 @@ void prepare_output_files(int seg)
  ***********************************************/
   
   logmsg("--t prepare_output_files_1 \n"," ",1);
-  char segnum[6];
+  char segnum[10];
 
   if (seg == 0)
   {

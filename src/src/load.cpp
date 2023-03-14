@@ -338,8 +338,8 @@ int load( char *file)
 int create_output_fn_dir(){
 	// concatenate "sim_results_" with the name of the supplement file:
 	//sprintf(output_file_name, "sim_results_%s", words[1]);
-	char buffer_output_dir [250];
-	char buffer_output_fn [250];
+	char buffer_output_dir [1024];
+	char buffer_output_fn [1024];
 	sprintf (buffer_output_dir, "sim_results_%s_%ld_%s/", rate_file_name, original_seed,result_suffix);
 	sprintf (buffer_output_fn, "%sresult", buffer_output_dir);
 
@@ -364,7 +364,7 @@ int create_output_fn_dir(){
 
 
 	// copy the .sup-file (rate_file_name) into the subfolder:
-	char buffer_sup_fn_dest [250];
+	char buffer_sup_fn_dest [1024];
 	sprintf (buffer_sup_fn_dest, "%s%s", buffer_output_dir, rate_file_name);
     FILE *source = fopen(rate_file_name, "rb");
     FILE *destination = fopen(buffer_sup_fn_dest, "wb");
@@ -2387,7 +2387,7 @@ specified for unmarried males THESE RATES WILL BE IGNORED.",1);
 		}
 		if (rates_test == 0)
 		{
-			char logstring[512];
+			// char logstring[512];
 			sprintf(logstring,
 					"   ***NO  DEATH RATES specified for  SINGLE %ss \n"
 					"   ***of ANY group This is unusual -- are you SURE you know \n"
@@ -2423,11 +2423,11 @@ specified for unmarried males THESE RATES WILL BE IGNORED.",1);
 							if (1)
 							{
 								sprintf(logstring,
-										"* - - - - - - - - - - - - - - - - - - - - - - \n"
+										"* \n\n"
 										"* group: %d event: %d, %s  sex:%d, %s mstatus:%d, %s,  \n"
 										"* upper age: %d  has rate with zero duration\n"
 										"* crnt->width: %d ; crnt->lambda: %7.4f\n  crnt->mu %7.4f, crnt->modified_lambda: %f"
-										"* - - - - - - - - - - - - - - - - - - - - - - ",
+										"* \n",
 										grp, event,index_to_event[event], sex, index_to_sex[sex], mstat,
 										index_to_mstatus[mstat], crnt->upper_age, crnt->width, 
 										crnt->lambda, crnt->mu,crnt->modified_lambda);
