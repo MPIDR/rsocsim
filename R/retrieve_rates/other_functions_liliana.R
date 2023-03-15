@@ -57,7 +57,6 @@ get_women_reproductive_age_socsim <- function(df, final_sim_year, year, age_brea
 
 ## Census SOCSIM (Mid-year population, 1st July)
 # Returns population by sex and age alive on the 1st of July of a given year, including right-censored
-
 census_socsim <- function(df, year, final_sim_year, age_levels_census) {
   
   last_month <- max(df$dob)

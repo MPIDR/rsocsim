@@ -33,7 +33,7 @@
 #'                      age_group = 5)
 #' }
 #' @export
-get_asmr_socsim <- function(opop, final_sim_year, year_min, year_max, year_group, age_max_mort, age_group) {
+estimate_mortality_rates <- function(opop, final_sim_year, year_min, year_max, year_group, age_max_mort, age_group) {
   last_month <- max(opop$dob)
   # Year range and breaks 
   year_range <- year_min:(year_max-1)

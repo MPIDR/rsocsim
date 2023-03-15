@@ -35,7 +35,7 @@
 #'                      age_group = 5)
 #' }
 #' @export
-get_asfr_socsim <- function(opop, final_sim_year, year_min, year_max, year_group = 5, age_min_fert = 15, age_max_fert = 50, age_group = 5) {
+estimate_fertility_rates <- function(opop, final_sim_year, year_min, year_max, year_group = 5, age_min_fert = 15, age_max_fert = 50, age_group = 5) {
   last_month <- max(opop$dob)
   # Year range and breaks
   year_range <- year_min:(year_max-1)
