@@ -1,7 +1,7 @@
 #' Identify members of a kin network for an individual or individuals of 
 #' interest. 
-#' @param opop An R object from SOCSIM microsimulation output (population file). 
-#' @param omar An R object from SOCSIM microsimulation output (marriage file).
+#' @param opop An R object from SOCSIM microsimulation output (population file). Create this object with the function read_opop().
+#' @param omar An R object from SOCSIM microsimulation output (marriage file). Create this object with the function read_omar().
 #' @param pid A character vector of person IDs, indicating persons of interest
 #' for whom these kin networks should be identified.
 #' @param extra_kintypes A vector of character values indicating which
@@ -85,7 +85,7 @@
 #' }
 #' 
 #' @export
-getKin <- function(opop = opop, KidsOf = KidsOf, pid, 
+getKin <- function(opop = opop, omar = omar, KidsOf = KidsOf, pid, 
                    extra_kintypes, 
                    kin_by_sex) {
   
@@ -294,8 +294,8 @@ getKin <- function(opop = opop, KidsOf = KidsOf, pid,
   for (i in 1:length(names(res))) {
     res[[i]][sapply(res[[i]], function(x) length(x)==0)] <- NA #removing NULLs and integer(0) with NA
   }
-
-  # "Additional lines of code from Mallika"
+  
+    # "Additional lines of code from Mallika"
   res$ggparents <- lapply(pid, function(pid){
     as.vector(
       unlist(
