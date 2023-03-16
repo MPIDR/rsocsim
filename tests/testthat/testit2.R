@@ -53,3 +53,20 @@ devtools::build(binary = TRUE, args = c('--preclean'))
 install.packages('rsocsim')
 
 devtools::install(dependencies = TRUE, build = TRUE, args = c('--preclean'))
+
+
+
+# retrieve Kin:
+# Try it out -----
+
+opop <- read_opop("output_pop.opop")
+omar <- read_omar("output_pop.omar")
+
+#Obtain partial kinship network, with omar and opop already in R environment
+pid <- opop$pid[1:3]
+
+kin_network <- getKin(opop = opop, omar = omar, pid = pid, extra_kintypes = c("unclesaunts", "niblings"), kin_by_sex = TRUE)
+
+kin_network$ggparents
+
+# ISSUES -----
