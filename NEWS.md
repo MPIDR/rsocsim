@@ -1,5 +1,6 @@
 # rsocsim 1.5.6
  * read_opop and read_omar
+ * works on linux and windows, also with future and clustercall. Mac not tested, linux sometimes flaky
 
 # rsocsim 1.5.5
  * compiles and runs on Linux again

@@ -27,10 +27,10 @@ kin_network
 kin_network$ggparents
 kin_network$gdaughters
 
-rsocsim::socsim(folder,supfile,seed,process_method = "inprocess")
-rsocsim::socsim(folder,supfile,seed,process_method = "future")
+rsocsim::socsim(folder,supfile,seed,process_method = "inprocess",suffix=suffix)
+rsocsim::socsim(folder,supfile,seed,process_method = "future",suffix=suffix)
 
-rsocsim::socsim(folder,supfile,seed,process_method = "clustercall")
+rsocsim::socsim(folder,supfile,seed,process_method = "clustercall",suffix=suffix)
 
 #rsocsim::run1simulationwithfile_clustercall(folder,supfile,seed)
 
