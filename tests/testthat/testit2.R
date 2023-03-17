@@ -7,19 +7,24 @@ supfile = rsocsim::create_sup_file(folder)
 supfile = "socsim.sup"
 supfile
 
-seed = 47
+seed = 777
+suffix="sufffi"
 
-rsocsim::socsim(folder,supfile,seed,suffix="test1")#,process_method = "inprocess")
+rsocsim::socsim(folder,supfile,seed,suffix=suffix)#,process_method = "inprocess")
 
+opop <- rsocsim::read_opop(folder,supfile,seed,suffix)
+opop
+omar <- rsocsim::read_omar(folder,supfile,seed,suffix)
+omar
+#Obtain partial kinship network, with omar and opop already in R environment
+pid <- c(1000,1001) #opop$pid[-3:-1]
+pid
 
-supfile = "CousinDiversity.sup"
-seed="33"
+kin_network <- rsocsim::getKin(opop = opop, omar = omar, pid = pid, extra_kintypes = c("unclesaunts", "niblings"), kin_by_sex = TRUE)
 
+kin_network
 
-rsocsim::simulation_time_to_years(4500, 1200, 1960)
-
-rsocsim::get_supplement_content(folder, supfile)
-
+kin_network$ggparents
 
 rsocsim::socsim(folder,supfile,seed,process_method = "inprocess")
 rsocsim::socsim(folder,supfile,seed,process_method = "future")
@@ -62,11 +67,6 @@ devtools::install(dependencies = TRUE, build = TRUE, args = c('--preclean'))
 opop <- read_opop("output_pop.opop")
 omar <- read_omar("output_pop.omar")
 
-#Obtain partial kinship network, with omar and opop already in R environment
-pid <- opop$pid[1:3]
 
-kin_network <- getKin(opop = opop, omar = omar, pid = pid, extra_kintypes = c("unclesaunts", "niblings"), kin_by_sex = TRUE)
-
-kin_network$ggparents
 
 # ISSUES -----

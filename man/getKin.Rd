@@ -5,10 +5,19 @@
 \title{Identify members of a kin network for an individual or individuals of 
 interest.}
 \usage{
-getKin(opop = opop, KidsOf = KidsOf, pid, extra_kintypes, kin_by_sex)
+getKin(
+  opop = opop,
+  omar = omar,
+  KidsOf = KidsOf,
+  pid,
+  extra_kintypes,
+  kin_by_sex
+)
 }
 \arguments{
-\item{opop}{An R object from SOCSIM microsimulation output (population file).}
+\item{opop}{An R object from SOCSIM microsimulation output (population file). Create this object with the function read_opop().}
+
+\item{omar}{An R object from SOCSIM microsimulation output (marriage file). Create this object with the function read_omar().}
 
 \item{pid}{A character vector of person IDs, indicating persons of interest
 for whom these kin networks should be identified.}
@@ -34,8 +43,6 @@ efficiency, the function will by default only identify an individual's
 kin relations additionally disaggregated by the sex of the relative. Setting
 this value to TRUE will result in additional objects being generated
 to identify individuals' relatives by sex.}
-
-\item{omar}{An R object from SOCSIM microsimulation output (marriage file).}
 }
 \value{
 An R object containing a list of lists with person IDs

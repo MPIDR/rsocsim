@@ -1,6 +1,3 @@
-
-
-
 # SOCSIM oversimplified
 
 ## Table of Content

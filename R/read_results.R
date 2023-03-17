@@ -16,16 +16,14 @@
 #' you can either provide the complete `path` to the file or the `folder`, supfilename, seed and suffix with which you
 #' started the simulation
 #' 
-#' @param folder
-#' @param supfile
-#' @param seed
-#' @param suffix
+#' @param folder simulation base folder ("~/socsim/simulation_235/")
+#' @param supfile name of supplement-file ("socsim.sup")
+#' @param seed random number seed (42)
+#' @param suffix optional suffix for the results-directory (default="")
 #' @param fn complete path to the file. If not provided, it will be created from the other arguments
 #'
 #' @return Data frame with the information of the output population file
 #' 
-#' @examples
-#'
 #' @export
 read_omar <- function(folder=NULL, supfile="socsim.sup",seed=42,suffix="",fn=NULL){
 
@@ -35,7 +33,7 @@ read_omar <- function(folder=NULL, supfile="socsim.sup",seed=42,suffix="",fn=NUL
   } else {
     fn <- fn
   }
-  
+  print(paste0("read marriage file: ",fn))
   omar<-read.table(file = fn, header = F, as.is = T)
   names(omar)<-c("mid","wpid","hpid","dstart","dend", "rend","wprior","hprior")
   return(omar)
@@ -68,16 +66,14 @@ read_omar <- function(folder=NULL, supfile="socsim.sup",seed=42,suffix="",fn=NUL
 #' you can either provide the complete `path` to the file or the `folder`, supfilename, seed and suffix with which you
 #' started the simulation
 #' 
-#' @param folder
-#' @param supfile
-#' @param seed
-#' @param suffix
-#' @param fn
+#' @param folder simulation base folder ("~/socsim/simulation_235/")
+#' @param supfile name of supplement-file ("socsim.sup")
+#' @param seed random number seed (42)
+#' @param suffix optional suffix for the results-directory (default="")
+#' @param fn complete path to the file. If not provided, it will be created from the other arguments
 #'
 #' @return Data frame with the information of the output population file
 #' 
-#' @examples
-#'
 #' @export
 read_opop <- function(folder=NULL, supfile="socsim.sup",seed=42,suffix="",fn=NULL){
 
@@ -87,7 +83,9 @@ read_opop <- function(folder=NULL, supfile="socsim.sup",seed=42,suffix="",fn=NUL
   } else {
     fn <- fn
   }
-  opop <- read.table(file=path,header=F,as.is=T)  
+  
+  print(paste0("read population file: ",fn))
+  opop <- read.table(file=fn,header=F,as.is=T)  
   ## assign names to columns
   names(opop)<-c("pid","fem","group",
                  "nev","dob","mom","pop","nesibm","nesibp",

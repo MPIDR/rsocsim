@@ -336,7 +336,7 @@ int main1(int argc, char *argv[])
 		for (g = 1; g < MAXGROUPS; g++)
 		{
 			
-			Rcpp::Rcout << "| " << g << "  .  " << MAXUYEARS << "  .  " << MAXGROUPS << std::endl;
+			// Rcpp::Rcout << "| " << g << "  .  " << MAXUYEARS << "  .  " << MAXGROUPS << std::endl;
 			agedif_marriage_mean[g] = (agedif_marriage_mean[g] == -(MAXUYEARS-1)) ? agedif_marriage_mean[g - 1] : agedif_marriage_mean[g];
 			agedif_marriage_sd[g] = (agedif_marriage_sd[g] == -(MAXUYEARS-1)) ? agedif_marriage_sd[g - 1] : agedif_marriage_sd[g];
 		}
