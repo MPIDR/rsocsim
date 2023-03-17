@@ -4,11 +4,11 @@ folder
 #folder= "C:\Users\tom\socsim\socsim_sim_2541"
 
 supfile = rsocsim::create_sup_file(folder)
-supfile = "socsim.sup"
+# supfile = "socsim.sup"
 supfile
 
 seed = 777
-suffix="sufffi"
+suffix="sufffi33f"
 
 rsocsim::socsim(folder,supfile,seed,suffix=suffix)#,process_method = "inprocess")
 
@@ -25,6 +25,7 @@ kin_network <- rsocsim::getKin(opop = opop, omar = omar, pid = pid, extra_kintyp
 kin_network
 
 kin_network$ggparents
+kin_network$gdaughters
 
 rsocsim::socsim(folder,supfile,seed,process_method = "inprocess")
 rsocsim::socsim(folder,supfile,seed,process_method = "future")

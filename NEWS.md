@@ -1,3 +1,6 @@
+# rsocsim 1.5.6
+ * read_opop and read_omar
+
 # rsocsim 1.5.5
  * compiles and runs on Linux again
  * reorganized contributed code from Liliana and Mallika

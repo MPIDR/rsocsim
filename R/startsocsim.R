@@ -88,7 +88,7 @@ run1simulationwithfile_future <- function(supfile,seed="42",compatibility_mode="
   # start a loop and check whether the simulation in the future is finished.
   # if it is not yet finished, read the output file and print the last line
   # to the console
-  outfn = paste0("sim_results_",supfile,"_s",seed,".log")
+  outfn = paste0("sim_results_",supfile,"_",seed,"_",suffix,"/logfile.log")
   print(paste0("wait for simulation to finish, log file: ",outfn))
   lastline = ""
   while (!future::resolved(f1)) {
@@ -139,20 +139,20 @@ run1simulationwithfile_clustercall <- function(supfile,seed="23",compatibility_m
   # in a seperate process
   print("parallel::clusterCall")
   numCores=1
-  outfile="socsim_clustercall.log"
-  cl <- parallel::makeCluster(numCores, type="PSOCK", outfile=outfile)
+  outfn = paste0("sim_results_",supfile,"_",seed,"_",suffix,"/logfile.log")
+  cl <- parallel::makeCluster(numCores, type="PSOCK", outfile=outfn)
   parallel::clusterExport(cl, "startSocsimWithFile")
   parallel::clusterCall(cl,startSocsimWithFile, supfile=supfile,seed=seed,compatibility_mode=compatibility_mode,result_suffix=suffix)
   print("started!")
   print("------------------------------------l4a")
-  print_last_line_of_logfile(outfile)
+  print_last_line_of_logfile(outfn)
   print("------------------------------------l4b")
   Sys.sleep(1) 
-  print_last_line_of_logfile(outfile)
+  print_last_line_of_logfile(outfn)
   Sys.sleep(1) 
-  print_last_line_of_logfile(outfile)
+  print_last_line_of_logfile(outfn)
   Sys.sleep(1) 
-  print_last_line_of_logfile(outfile)
+  print_last_line_of_logfile(outfn)
   print("------------------------------------l4c")
   parallel::stopCluster(cl)
   return(1)
