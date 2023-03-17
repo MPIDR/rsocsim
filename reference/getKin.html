@@ -57,13 +57,24 @@ interest.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">getKin</span><span class="op">(</span>opop <span class="op">=</span> <span class="va">opop</span>, KidsOf <span class="op">=</span> <span class="va">KidsOf</span>, <span class="va">pid</span>, <span class="va">extra_kintypes</span>, <span class="va">kin_by_sex</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">getKin</span><span class="op">(</span></span>
+<span>  opop <span class="op">=</span> <span class="va">opop</span>,</span>
+<span>  omar <span class="op">=</span> <span class="va">omar</span>,</span>
+<span>  KidsOf <span class="op">=</span> <span class="va">KidsOf</span>,</span>
+<span>  <span class="va">pid</span>,</span>
+<span>  <span class="va">extra_kintypes</span>,</span>
+<span>  <span class="va">kin_by_sex</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>opop</dt>
-<dd><p>An R object from SOCSIM microsimulation output (population file).</p></dd>
+<dd><p>An R object from SOCSIM microsimulation output (population file). Create this object with the function read_opop().</p></dd>
+
+
+<dt>omar</dt>
+<dd><p>An R object from SOCSIM microsimulation output (marriage file). Create this object with the function read_omar().</p></dd>
 
 
 <dt>pid</dt>
@@ -93,10 +104,6 @@ efficiency, the function will by default only identify an individual's
 kin relations additionally disaggregated by the sex of the relative. Setting
 this value to TRUE will result in additional objects being generated
 to identify individuals' relatives by sex.</p></dd>
-
-
-<dt>omar</dt>
-<dd><p>An R object from SOCSIM microsimulation output (marriage file).</p></dd>
 
 </dl></div>
     <div class="section level2">
