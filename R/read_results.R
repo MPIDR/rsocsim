@@ -1,7 +1,7 @@
 
 #' Title
 #' 
-
+#'
 #' | **position** | **name** | **description**                                                    |
 #' | -----------: | :------- | :----------------------------------------------------------------- |
 #' |            1 | mid      | Marriage id number (unique sequential integer)                     |
@@ -23,6 +23,8 @@
 #' @param fn complete path to the file. If not provided, it will be created from the other arguments
 #'
 #' @return Data frame with the information of the output population file
+#'
+#' @md
 #' 
 #' @export
 read_omar <- function(folder=NULL, supfile="socsim.sup",seed=42,suffix="",fn=NULL){
@@ -73,6 +75,8 @@ read_omar <- function(folder=NULL, supfile="socsim.sup",seed=42,suffix="",fn=NUL
 #' @param fn complete path to the file. If not provided, it will be created from the other arguments
 #'
 #' @return Data frame with the information of the output population file
+#' 
+#' @md
 #' 
 #' @export
 read_opop <- function(folder=NULL, supfile="socsim.sup",seed=42,suffix="",fn=NULL){
