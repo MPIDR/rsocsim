@@ -85,7 +85,7 @@
 #' }
 #' 
 #' @export
-getKin <- function(opop = opop, omar = omar, KidsOf = KidsOf, pid, 
+retrieve_kin <- function(opop = opop, omar = omar, KidsOf = KidsOf, pid, 
                    extra_kintypes, 
                    kin_by_sex) {
   
