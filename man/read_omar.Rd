@@ -2,7 +2,7 @@
 % Please edit documentation in R/read_results.R
 \name{read_omar}
 \alias{read_omar}
-\title{Title}
+\title{Read output marriage file into a data frame}
 \usage{
 read_omar(
   folder = NULL,
@@ -27,18 +27,18 @@ read_omar(
 Data frame with the information of the output population file
 }
 \description{
-| **position** | **name** | **description**                                                    |
-| -----------: | :------- | :----------------------------------------------------------------- |
-|            1 | mid      | Marriage id number (unique sequential integer)                     |
-|            2 | wpid     | Wife’s person id                                                   |
-|            3 | hpid     | Husband’s person id                                                |
-|            4 | dstart   | Date marriage began                                                |
-|            5 | dend     | Date marriage ended or zero if still in force at end of simulation |
-|            6 | rend     | Reason marriage ended 2 = divorce; 3 = death of one partner        |
-|            7 | wprior   | Marriage id of wife’s next most recent prior marriage              |
-|            8 | hprior   | Marriage id of husband’s next most recent prior marriage           |
+\tabular{rll}{
+\link{,1} \tab 1   \tab mid \tab Marriage id number (unique sequential integer) \cr
+\link{,2} \tab 2   \tab wpid \tab Wife’s person id \cr
+\link{,3} \tab 3   \tab hpid \tab Husband’s person id \cr
+\link{,4} \tab 4   \tab dstart \tab Date marriage began \cr
+\link{,5} \tab 5   \tab dend \tab Date marriage ended or zero if still in force at end of simulation \cr
+\link{,6} \tab 6   \tab rend \tab Reason marriage ended 2 = divorce; 3 = death of one partner \cr
+\link{,7} \tab 7   \tab wprior \tab Marriage id of wife’s next most recent prior marriage \cr
+\link{,8} \tab 8   \tab hprior \tab Marriage id of husband’s next most recent prior marriage \cr
+}
 }
 \details{
-you can either provide the complete `path` to the file or the `folder`, supfilename, seed and suffix with which you
+you can either provide the complete \code{path} to the file or the \code{folder}, supfilename, seed and suffix with which you
 started the simulation
 }

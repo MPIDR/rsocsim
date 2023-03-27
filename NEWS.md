@@ -1,3 +1,10 @@
+# rsocsim 1.5.8
+ * renamed getKin() to retrieve_kin()
+ * bugfixes
+
+# rsocsim 1.5.7
+ * bugfixes
+
 # rsocsim 1.5.6
  * read_opop and read_omar
  * works on linux and windows, also with future and clustercall. Mac not tested, linux sometimes flaky

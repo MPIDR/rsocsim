@@ -10,9 +10,13 @@ simulation_time_to_years(simulation_time, pre_simulation_time, start_year)
 \arguments{
 \item{simulation}{time}
 
-\item{pre-simulation-time}{- how long the simulation ran to get a stable population}
+\item{pre-simulation-time}{\itemize{
+\item how long the simulation ran to get a stable population
+}}
 
-\item{start-year}{- the year the simulation started}
+\item{start-year}{\itemize{
+\item the year the simulation started
+}}
 }
 \value{
 year, a number like 2022.2

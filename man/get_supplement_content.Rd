@@ -12,7 +12,7 @@ get_supplement_content(simfolder, sup_fn)
 \item{simname}{name of the .sup-file}
 }
 \value{
-the content of the supplement file as a string (TODO: Now it 
+the content of the supplement file as a string (TODO: Now it
 returns a list of lines instead of a single string)
 }
 \description{

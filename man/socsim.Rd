@@ -15,7 +15,7 @@ socsim(
 )
 }
 \arguments{
-\item{folder}{base-directory of the simulation. 
+\item{folder}{base-directory of the simulation.
 Every SUP- and rate-file should be named relative to this folder.}
 
 \item{supfile}{the .sup file to start the simulation, relative to the
@@ -25,11 +25,11 @@ folder}
 
 \item{process_method}{specify whether and how SOCSIM should be started in its
 own process or in the running R process. Use one of
- "inprocess" - SOCSIM runs in the R-process. Beware if you run several different
- simulations - they may affect later simulations
- "future" - the safest option. A new process will be start via the "future"
- package
- "clustercall" - if the future package is not available, try this method instead}
+"inprocess" - SOCSIM runs in the R-process. Beware if you run several different
+simulations - they may affect later simulations
+"future" - the safest option. A new process will be start via the "future"
+package
+"clustercall" - if the future package is not available, try this method instead}
 }
 \value{
 The results will be written into the specified folder

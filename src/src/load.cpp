@@ -517,7 +517,7 @@ int l_process_line(char *line,struct l_context *cx,FILE *fp)
 		 */
 		 
 		// Rcpp::Rcout << "18b-l_process_line... recall!=NULL "<< std::endl;
-		Rcpp::Rcout << "Incomplete rate set: " << recall->upper_age << std::endl;
+		Rcpp::Rcout << "Incomplete rate set, will add rate till MAXUYEARS (death-->1.0; others:0.0) " << recall->upper_age << std::endl;
 		
 		// logmsg("-----18c - l_process_line.. recall!=NULL - Incomplete rate set.\n", "", 1);
 		

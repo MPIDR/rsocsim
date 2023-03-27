@@ -18,6 +18,9 @@
 #' Grouped year and age ranges (i.e., if `year_group > 1` or `age_group > 1`) 
 #' are created as [year;year+year_group). Mortality rates always start from 0 
 #' [0,0+age_group). 
+#' 
+#' @importFrom magrittr %>%
+#' 
 #' @return A data.frame with yearly age-specific mortality rates by year and age.
 #'@examples
 #' \dontrun{
@@ -118,6 +121,8 @@ estimate_mortality_rates <- function(opop, final_sim_year, year_min, year_max, y
 #' Grouped year and age ranges (i.e., if `year_group > 1` or `age_group > 1`) 
 #' are created as [year;year+year_group). 
 #' @return A data.frame with age-specific fertility rates by year and age.
+#' 
+#' @importFrom magrittr %>%
 #' 
 #'@examples
 #' \dontrun{

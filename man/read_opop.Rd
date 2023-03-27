@@ -28,27 +28,27 @@ Data frame with the information of the output population file
 }
 \description{
 after the end of the simulation, socsim writes every person of the simulation into
-a file called result.opop. This file contains the following information about
-each person:
+a file called result.opop                                                              |
 }
 \details{
-| **position** | **name** | **description**                                                                       |
-| -----------: | :------- | :------------------------------------------------------------------------------------ |
-|            1 | pid      | Person id unique identifier assigned as integer in birth order                        |
-|            2 | fem      | 1 if female 0 if male                                                                 |
-|            3 | group    | Group identifier 1..60 current group membership of individual                         |
-|            4 | nev      | Next scheduled event                                                                  |
-|            5 | dob      | Date of birth integer month number                                                    |
-|            6 | mom      | Person id of mother                                                                   |
-|            7 | pop      | Person id of father                                                                   |
-|            8 | nesibm   | Person id of next eldest sibling through mother                                       |
-|            9 | nesibp   | Person id of next eldest sibling through father                                       |
-|           10 | lborn    | Person id of last born child                                                          |
-|           11 | marid    | Id of marriage in .omar file                                                          |
-|           12 | mstat    | Marital status at end of simulation integer 1=single;2=divorced; 3=widowed; 4=married |
-|           13 | dod      | Date of death or 0 if alive at end of simulation                                      |
-|           14 | fmult    | Fertility multiplier                                                                  |
+\tabular{rll}{
+\link{,1} \tab 1   \tab pid \tab Person id unique identifier assigned as integer in birth order \cr
+\link{,2} \tab 2   \tab fem \tab 1 if female 0 if male \cr
+\link{,3} \tab 3   \tab group \tab Group identifier 1..60 current group membership of individual \cr
+\link{,4} \tab 4   \tab nev \tab Next scheduled event \cr
+\link{,5} \tab 5   \tab dob \tab Date of birth integer month number \cr
+\link{,6} \tab 6   \tab mom \tab Person id of mother \cr
+\link{,7} \tab 7   \tab pop \tab Person id of father \cr
+\link{,8} \tab 8   \tab nesibm \tab Person id of next eldest sibling through mother \cr
+\link{,9} \tab 9   \tab nesibp \tab Person id of next eldest sibling through father \cr
+\link{,10} \tab 10  \tab lborn \tab Person id of last born child \cr
+\link{,11} \tab 11  \tab marid \tab Id of marriage in .omar file \cr
+\link{,12} \tab 12  \tab mstat \tab Marital status at end of simulation integer 1=single;2=divorced; 3=widowed; 4=married \cr
+\link{,13} \tab 13  \tab dod \tab Date of death or 0 if alive at end of simulation \cr
+\link{,14} \tab 14  \tab fmult \tab Fertility multiplier \cr
+}
 
-you can either provide the complete `path` to the file or the `folder`, supfilename, seed and suffix with which you
+This table explains the columns of the opop file and the columns of the output data frame.
+You can either provide the complete \code{path} to the file or the \code{folder}, supfilename, seed and suffix with which you
 started the simulation
 }
