@@ -10,35 +10,33 @@ If you encounter an error or bug, we are happy to hear from you in the issues.
 
 ## Installation
 
-Please note that this package may not work on Linux and Mac at the moment. We are working on better compatibility right now.
 
 ### From Source
 
 
-
 To get the latest version, you need to have the package devtools and a 
 Rcpp compatible compiler installed ([RTools](https://cran.r-project.org/bin/windows/Rtools/index.html)
-on Windows, Xcode command line tools on Mac: `xcode-select --install`, 
+on Windows; Xcode command line tools on Mac: `xcode-select --install`; 
 `sudo apt-get install r-base-dev` on Linux,
 all according to https://teuder.github.io/rcpp4everyone_en/020_install.html)
 
 
-* install devtools
+Then install the devtools R-package:
 ````R
 install.packages("devtools")
 ````
 
-Then you can use devtools to install rsocsim from Github:
+Then you can use devtools to install rsocsim:
 ````R
 devtools::install_github("MPIDR/rsocsim")
 ````
 
 ### Install precompiled package (Windows only)
 
-If the compilation from source fails, you can also install a pre-compiled binary. This might be easier, but it might be not the most up-to-date version. You can find the most up-to-date binary release on https://github.com/tomthe/rsoc/releases
+If the compilation from source fails, you can also install a pre-compiled binary. This might be easier, but it might be not the most up-to-date version. You can find the most up-to-date binary release on https://github.com/MPIDR/rsocsim/releases
 
 ````R
-url = "https://github.com/tomthe/rsoc/releases/download/1.3/rsocsim_1.3.zip"
+url = "https://github.com/tomthe/rsoc/releases/download/1.5.5/rsocsim_1.5.5.zip"
 install.packages(url, repos = NULL, type = "win.binary")
 ````
 
