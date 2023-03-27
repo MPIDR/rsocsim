@@ -69,26 +69,23 @@
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>Please note that this package may not work on Linux and Mac at the moment. We are working on better compatibility right now.</p>
 <div class="section level3">
 <h3 id="from-source">From Source<a class="anchor" aria-label="anchor" href="#from-source"></a>
 </h3>
-<p>To get the latest version, you need to have the package devtools and a Rcpp compatible compiler installed (<a href="https://cran.r-project.org/bin/windows/Rtools/index.html" class="external-link">RTools</a> on Windows, Xcode command line tools on Mac: <code>xcode-select --install</code>, <code>sudo apt-get install r-base-dev</code> on Linux, all according to <a href="https://teuder.github.io/rcpp4everyone_en/020_install.html" class="external-link uri">https://teuder.github.io/rcpp4everyone_en/020_install.html</a>)</p>
-<ul>
-<li>install devtools</li>
-</ul>
+<p>To get the latest version, you need to have the package devtools and a Rcpp compatible compiler installed (<a href="https://cran.r-project.org/bin/windows/Rtools/index.html" class="external-link">RTools</a> on Windows; Xcode command line tools on Mac: <code>xcode-select --install</code>; <code>sudo apt-get install r-base-dev</code> on Linux, all according to <a href="https://teuder.github.io/rcpp4everyone_en/020_install.html" class="external-link uri">https://teuder.github.io/rcpp4everyone_en/020_install.html</a>)</p>
+<p>Then install the devtools R-package:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></span></code></pre></div>
-<p>Then you can use devtools to install rsocsim from Github:</p>
+<p>Then you can use devtools to install rsocsim:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"MPIDR/rsocsim"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="install-precompiled-package-windows-only">Install precompiled package (Windows only)<a class="anchor" aria-label="anchor" href="#install-precompiled-package-windows-only"></a>
 </h3>
-<p>If the compilation from source fails, you can also install a pre-compiled binary. This might be easier, but it might be not the most up-to-date version. You can find the most up-to-date binary release on <a href="https://github.com/tomthe/rsoc/releases" class="external-link uri">https://github.com/tomthe/rsoc/releases</a></p>
+<p>If the compilation from source fails, you can also install a pre-compiled binary. This might be easier, but it might be not the most up-to-date version. You can find the most up-to-date binary release on <a href="https://github.com/MPIDR/rsocsim/releases" class="external-link uri">https://github.com/MPIDR/rsocsim/releases</a></p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">url</span> <span class="op">=</span> <span class="st">"https://github.com/tomthe/rsoc/releases/download/1.3/rsocsim_1.3.zip"</span></span>
+<code class="sourceCode R"><span><span class="va">url</span> <span class="op">=</span> <span class="st">"https://github.com/tomthe/rsoc/releases/download/1.5.5/rsocsim_1.5.5.zip"</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="va">url</span>, repos <span class="op">=</span> <span class="cn">NULL</span>, type <span class="op">=</span> <span class="st">"win.binary"</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
