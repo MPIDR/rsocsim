@@ -70,32 +70,12 @@ The results will be saved into a subfolder of the  simulation-`folder´.
 For more sophisticated simulations you will need to edit the supervisory
 file and provide rate files for fertility, mortality and marriage rates.
 
-
-````R
-library("rsocsim")
-
-# specify the working directory, where your supfile and ratefiles are:
-folder = "D:\\dev\\r\\socsimprojects\\CousinDiversity" 
-
-# name of the supervisory-file, relative to the above folder:
-supfile = "CousinDiversity.sup" 
-
-# Random number generator seed:
-seed="33" 
-
-# socsim starts a simulation with the specified sup-file
-rsocsim::socsim(folder,supfile,seed)
-
-# if you run several simulations, previous simulations may influence/corrupt
-# later simulations. Use one of the options "future" or "clustercall" for
-# process_method to prevent this. "future" has problems on computers with more
-# than 64 cores. Note that these options prevent SOCSIM from writing to the
-# R-terminal.
-
+If you run more than one simulation, previous simulations may corrupt
+later simulations. Use the option `process_method = "future"` to prevent this:
+```
 rsocsim::socsim(folder,supfile,seed,process_method = "future")
+```
 
-
-````
 
 ## Background and applications
 
