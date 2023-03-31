@@ -16,7 +16,7 @@ man
 *.Rd
 man/estimate_fertility_rates.Rd
 man/estimate_mortality_rates.Rd
-man/get_supplement_content.Rd
+man/get_supervisory_content.Rd
 man/read_omar.Rd
 man/read_opop.Rd
 man/simulation_time_to_years.Rd

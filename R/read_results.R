@@ -16,7 +16,7 @@
 #' started the simulation
 #' 
 #' @param folder simulation base folder ("~/socsim/simulation_235/")
-#' @param supfile name of supplement-file ("socsim.sup")
+#' @param supfile name of supervisory-file ("socsim.sup")
 #' @param seed random number seed (42)
 #' @param suffix optional suffix for the results-directory (default="")
 #' @param fn complete path to the file. If not provided, it will be created from the other arguments
@@ -68,7 +68,7 @@ read_omar <- function(folder=NULL, supfile="socsim.sup",seed=42,suffix="",fn=NUL
 #' started the simulation
 #' 
 #' @param folder simulation base folder ("~/socsim/simulation_235/")
-#' @param supfile name of supplement-file ("socsim.sup")
+#' @param supfile name of supervisory-file ("socsim.sup")
 #' @param seed random number seed (42)
 #' @param suffix optional suffix for the results-directory (default="")
 #' @param fn complete path to the file. If not provided, it will be created from the other arguments

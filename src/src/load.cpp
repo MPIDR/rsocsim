@@ -336,7 +336,7 @@ int load( char *file)
 }
 
 int create_output_fn_dir(){
-	// concatenate "sim_results_" with the name of the supplement file:
+	// concatenate "sim_results_" with the name of the supervisory file:
 	//sprintf(output_file_name, "sim_results_%s", words[1]);
 	char buffer_output_dir [1024];
 	char buffer_output_fn [1024];

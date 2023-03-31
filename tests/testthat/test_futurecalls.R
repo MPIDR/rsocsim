@@ -5,8 +5,8 @@ library("rsocsim")
 # this will be in your home- or user-directory:
 folder = socsim::create_simulation_folder()
 
-# create a new supplement-file. Supplement-files tell socsim what
-# to simulate. create_sup_file will create a very basic supplement filee
+# create a new supervisory-file. supervisory-files tell socsim what
+# to simulate. create_sup_file will create a very basic supervisory filee
 # and it copies some rate-files that will also be needed into the 
 # simulation folder:
 supfile = "socsim.sup" #rsocsim::create_sup_file(folder)

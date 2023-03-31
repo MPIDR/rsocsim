@@ -2,7 +2,7 @@
 #library(rsocsim)
 
 
-#' Run a single socsim-simulation with a given supplement-file and folder.
+#' Run a single socsim-simulation with a given supervisory-file and folder.
 #' The results will be saved into that folder
 #'
 #' @param folder base-directory of the simulation. 
@@ -234,7 +234,7 @@ create_simulation_folder <- function(simulation_name=NULL,basefolder=NULL) {
 #' the file will be saved into the sim-folder
 #' @param simfolder the folder where the sup-file will be saved
 #' @param simname the name of the simulation
-#' @return sup.fn the filename of the supplementary file
+#' @return sup.fn the filename of the supervisoryary file
 #' which is needed to start the simulation
 #' @export
 create_sup_file <- function(simfolder, simname) {
@@ -267,13 +267,13 @@ run
   return(sup.fn)
 }
 
-#' read the content of the supplement file 
+#' read the content of the supervisory file 
 #' @param simfolder base folder of the simulation
 #' @param simname name of the .sup-file
-#' @return the content of the supplement file as a string (TODO: Now it 
+#' @return the content of the supervisory file as a string (TODO: Now it 
 #' returns a list of lines instead of a single string)
 #' @export
-get_supplement_content <- function(simfolder, sup_fn) {
+get_supervisory_content <- function(simfolder, sup_fn) {
   if (is.null(sup_fn)) {
     sup_fn <- "socsim.sup"
   }

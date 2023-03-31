@@ -52,8 +52,8 @@ library("rsocsim")
 # this will be in your home- or user-directory:
 folder = rsocsim::create_simulation_folder()
 
-# create a new supplement-file. Supplement-files tell socsim what
-# to simulate. create_sup_file will create a very basic supplement filee
+# create a new supervisoryy-file.supervisoryyt-files tell socsim what
+# to simulate. create_sup_file will create a very basic supervisoryy filee
 # and it copies some rate-files that will also be needed into the 
 # simulation folder:
 supfile = rsocsim::create_sup_file(folder)
@@ -67,7 +67,7 @@ rsocsim::socsim(folder,supfile,seed)
 ````
 
 The results will be saved into a subfolder of the  simulation-`folder´.
-For more sophisticated simulations you will need to edit the supplement
+For more sophisticated simulations you will need to edit the supervisory
 file and provide rate files for fertility, mortality and marriage rates.
 
 
@@ -77,7 +77,7 @@ library("rsocsim")
 # specify the working directory, where your supfile and ratefiles are:
 folder = "D:\\dev\\r\\socsimprojects\\CousinDiversity" 
 
-# name of the supplement-file, relative to the above folder:
+# name of the supervisory-file, relative to the above folder:
 supfile = "CousinDiversity.sup" 
 
 # Random number generator seed:
