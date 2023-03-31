@@ -15,7 +15,7 @@ read_omar(
 \arguments{
 \item{folder}{simulation base folder ("~/socsim/simulation_235/")}
 
-\item{supfile}{name of supplement-file ("socsim.sup")}
+\item{supfile}{name of supervisory-file ("socsim.sup")}
 
 \item{seed}{random number seed (42)}
 
@@ -28,14 +28,14 @@ Data frame with the information of the output population file
 }
 \description{
 \tabular{rll}{
-\link{,1} \tab 1   \tab mid \tab Marriage id number (unique sequential integer) \cr
-\link{,2} \tab 2   \tab wpid \tab Wife’s person id \cr
-\link{,3} \tab 3   \tab hpid \tab Husband’s person id \cr
-\link{,4} \tab 4   \tab dstart \tab Date marriage began \cr
-\link{,5} \tab 5   \tab dend \tab Date marriage ended or zero if still in force at end of simulation \cr
-\link{,6} \tab 6   \tab rend \tab Reason marriage ended 2 = divorce; 3 = death of one partner \cr
-\link{,7} \tab 7   \tab wprior \tab Marriage id of wife’s next most recent prior marriage \cr
-\link{,8} \tab 8   \tab hprior \tab Marriage id of husband’s next most recent prior marriage \cr
+1   \tab mid \tab Marriage id number (unique sequential integer) \cr
+2   \tab wpid \tab Wife’s person id \cr
+3   \tab hpid \tab Husband’s person id \cr
+4   \tab dstart \tab Date marriage began \cr
+5   \tab dend \tab Date marriage ended or zero if still in force at end of simulation \cr
+6   \tab rend \tab Reason marriage ended 2 = divorce; 3 = death of one partner \cr
+7   \tab wprior \tab Marriage id of wife’s next most recent prior marriage \cr
+8   \tab hprior \tab Marriage id of husband’s next most recent prior marriage \cr
 }
 }
 \details{

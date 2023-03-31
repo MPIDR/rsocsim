@@ -15,7 +15,7 @@ read_opop(
 \arguments{
 \item{folder}{simulation base folder ("~/socsim/simulation_235/")}
 
-\item{supfile}{name of supplement-file ("socsim.sup")}
+\item{supfile}{name of supervisory-file ("socsim.sup")}
 
 \item{seed}{random number seed (42)}
 
@@ -32,20 +32,20 @@ a file called result.opop                                                       
 }
 \details{
 \tabular{rll}{
-\link{,1} \tab 1   \tab pid \tab Person id unique identifier assigned as integer in birth order \cr
-\link{,2} \tab 2   \tab fem \tab 1 if female 0 if male \cr
-\link{,3} \tab 3   \tab group \tab Group identifier 1..60 current group membership of individual \cr
-\link{,4} \tab 4   \tab nev \tab Next scheduled event \cr
-\link{,5} \tab 5   \tab dob \tab Date of birth integer month number \cr
-\link{,6} \tab 6   \tab mom \tab Person id of mother \cr
-\link{,7} \tab 7   \tab pop \tab Person id of father \cr
-\link{,8} \tab 8   \tab nesibm \tab Person id of next eldest sibling through mother \cr
-\link{,9} \tab 9   \tab nesibp \tab Person id of next eldest sibling through father \cr
-\link{,10} \tab 10  \tab lborn \tab Person id of last born child \cr
-\link{,11} \tab 11  \tab marid \tab Id of marriage in .omar file \cr
-\link{,12} \tab 12  \tab mstat \tab Marital status at end of simulation integer 1=single;2=divorced; 3=widowed; 4=married \cr
-\link{,13} \tab 13  \tab dod \tab Date of death or 0 if alive at end of simulation \cr
-\link{,14} \tab 14  \tab fmult \tab Fertility multiplier \cr
+1   \tab pid \tab Person id unique identifier assigned as integer in birth order \cr
+2   \tab fem \tab 1 if female 0 if male \cr
+3   \tab group \tab Group identifier 1..60 current group membership of individual \cr
+4   \tab nev \tab Next scheduled event \cr
+5   \tab dob \tab Date of birth integer month number \cr
+6   \tab mom \tab Person id of mother \cr
+7   \tab pop \tab Person id of father \cr
+8   \tab nesibm \tab Person id of next eldest sibling through mother \cr
+9   \tab nesibp \tab Person id of next eldest sibling through father \cr
+10  \tab lborn \tab Person id of last born child \cr
+11  \tab marid \tab Id of marriage in .omar file \cr
+12  \tab mstat \tab Marital status at end of simulation integer 1=single;2=divorced; 3=widowed; 4=married \cr
+13  \tab dod \tab Date of death or 0 if alive at end of simulation \cr
+14  \tab fmult \tab Fertility multiplier \cr
 }
 
 This table explains the columns of the opop file and the columns of the output data frame.

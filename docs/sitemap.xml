@@ -25,6 +25,15 @@
     <loc>https://mpidr.github.io/rsocsim/reference/create_sup_file.html</loc>
   </url>
   <url>
+    <loc>https://mpidr.github.io/rsocsim/reference/estimate_fertility_rates.html</loc>
+  </url>
+  <url>
+    <loc>https://mpidr.github.io/rsocsim/reference/estimate_mortality_rates.html</loc>
+  </url>
+  <url>
+    <loc>https://mpidr.github.io/rsocsim/reference/get_supervisory_content.html</loc>
+  </url>
+  <url>
     <loc>https://mpidr.github.io/rsocsim/reference/get_supplement_content.html</loc>
   </url>
   <url>
@@ -32,6 +41,15 @@
   </url>
   <url>
     <loc>https://mpidr.github.io/rsocsim/reference/rcpp_hello_world.html</loc>
+  </url>
+  <url>
+    <loc>https://mpidr.github.io/rsocsim/reference/read_omar.html</loc>
+  </url>
+  <url>
+    <loc>https://mpidr.github.io/rsocsim/reference/read_opop.html</loc>
+  </url>
+  <url>
+    <loc>https://mpidr.github.io/rsocsim/reference/retrieve_kin.html</loc>
   </url>
   <url>
     <loc>https://mpidr.github.io/rsocsim/reference/rsoc-package.html</loc>
@@ -50,5 +68,8 @@
   </url>
   <url>
     <loc>https://mpidr.github.io/rsocsim/reference/socsim.html</loc>
+  </url>
+  <url>
+    <loc>https://mpidr.github.io/rsocsim/socsim_oversimplified.html</loc>
   </url>
 </urlset>

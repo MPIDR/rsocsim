@@ -6,7 +6,7 @@ library("rsocsim")
 folder = socsim::create_simulation_folder()
 
 # create a new supervisory-file. supervisory-files tell socsim what
-# to simulate. create_sup_file will create a very basic supervisory filee
+# to simulate. create_sup_file will create a very basic supervisory file
 # and it copies some rate-files that will also be needed into the 
 # simulation folder:
 supfile = "socsim.sup" #rsocsim::create_sup_file(folder)

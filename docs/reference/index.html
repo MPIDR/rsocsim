@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">rsocsim</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.5.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.5.8</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -68,9 +68,37 @@ the simulation is only a simple one
 the file will be saved into the sim-folder</dd>
       </dl><dl><dt>
           
-          <code><a href="get_supplement_content.html">get_supplement_content()</a></code> 
+          <code><a href="estimate_fertility_rates.html">estimate_fertility_rates()</a></code> 
         </dt>
-        <dd>read the content of the supplement file</dd>
+        <dd>Estimate yearly age-specific fertility rates (ASFR) from a SOCSIM-generated
+population file</dd>
+      </dl><dl><dt>
+          
+          <code><a href="estimate_mortality_rates.html">estimate_mortality_rates()</a></code> 
+        </dt>
+        <dd>Estimate yearly age-specific mortality rates (ASMR) from a SOCSIM-generated
+population file</dd>
+      </dl><dl><dt>
+          
+          <code><a href="get_supervisory_content.html">get_supervisory_content()</a></code> 
+        </dt>
+        <dd>read the content of the supervisory file</dd>
+      </dl><dl><dt>
+          
+          <code><a href="read_omar.html">read_omar()</a></code> 
+        </dt>
+        <dd>Read output marriage file into a data frame</dd>
+      </dl><dl><dt>
+          
+          <code><a href="read_opop.html">read_opop()</a></code> 
+        </dt>
+        <dd>Read output population file into a data frame</dd>
+      </dl><dl><dt>
+          
+          <code><a href="retrieve_kin.html">retrieve_kin()</a></code> 
+        </dt>
+        <dd>Identify members of a kin network for an individual or individuals of
+interest.</dd>
       </dl><dl><dt>
           
           <code><a href="rsoc-package.html">rsocsim-package</a></code> <code><a href="rsoc-package.html">rsocsim</a></code> 
@@ -98,14 +126,14 @@ convert the time measures.</dd>
           
           <code><a href="socsim.html">socsim()</a></code> 
         </dt>
-        <dd>Run a single socsim-simulation with a given supplement-file and folder.
+        <dd>Run a single socsim-simulation with a given supervisory-file and folder.
 The results will be saved into that folder</dd>
       </dl></div>
   </main></div>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p></p><p>Developed by Tom Theile, Diego Alburez-Gutierrez, Mallika Snyder, Liliana Calderon.</p>
+  <p></p><p>Developed by Tom Theile, Diego Alburez-Gutierrez, Mallika Snyder, Liliana P. Calderón-Bernal.</p>
 </div>
 
 <div class="pkgdown-footer-right">

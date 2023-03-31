@@ -26,13 +26,6 @@ dirname(folder)
 ############################################
 
 
-usethis::use_github_action("pkgdown")
-
-usethis::use_pkgdown_github_pages()
-
-devtools::document()
-
-pkgdown::build_site()
 
 
 #################################

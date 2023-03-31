@@ -2,7 +2,7 @@
 % Please edit documentation in R/startsocsim.R
 \name{socsim}
 \alias{socsim}
-\title{Run a single socsim-simulation with a given supplement-file and folder.
+\title{Run a single socsim-simulation with a given supervisory-file and folder.
 The results will be saved into that folder}
 \usage{
 socsim(
@@ -35,6 +35,6 @@ package
 The results will be written into the specified folder
 }
 \description{
-Run a single socsim-simulation with a given supplement-file and folder.
+Run a single socsim-simulation with a given supervisory-file and folder.
 The results will be saved into that folder
 }
