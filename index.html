@@ -102,9 +102,10 @@
 <span><span class="co"># this will be in your home- or user-directory:</span></span>
 <span><span class="va">folder</span> <span class="op">=</span> <span class="fu">rsocsim</span><span class="fu">::</span><span class="fu"><a href="reference/create_simulation_folder.html">create_simulation_folder</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># create a new supplement-file. Supplement-files tell socsim what</span></span>
-<span><span class="co"># to simulate. create_sup_file will create a very basic supplement filee</span></span>
-<span><span class="co"># and it copies some rate-files that will also be needed into the </span></span>
+<span><span class="co"># create a new supervisory-file.</span></span>
+<span><span class="co"># supervisory-files tell socsim what to simulate. </span></span>
+<span><span class="co"># create_sup_file will create a very basic supervisory file.</span></span>
+<span><span class="co"># It also copies some rate-files that will be needed into the </span></span>
 <span><span class="co"># simulation folder:</span></span>
 <span><span class="va">supfile</span> <span class="op">=</span> <span class="fu">rsocsim</span><span class="fu">::</span><span class="fu"><a href="reference/create_sup_file.html">create_sup_file</a></span><span class="op">(</span><span class="va">folder</span><span class="op">)</span></span>
 <span></span>
@@ -113,7 +114,7 @@
 <span></span>
 <span><span class="co"># Start the simulation:</span></span>
 <span><span class="fu">rsocsim</span><span class="fu">::</span><span class="fu"><a href="reference/socsim.html">socsim</a></span><span class="op">(</span><span class="va">folder</span>,<span class="va">supfile</span>,<span class="va">seed</span><span class="op">)</span></span></code></pre></div>
-<p>The results will be saved into a subfolder of the simulation-`folder´. For more sophisticated simulations you will need to edit the supplement file and provide rate files for fertility, mortality and marriage rates.</p>
+<p>The results will be saved into a subfolder of the simulation-`folder´. For more sophisticated simulations you will need to edit the supervisory file and provide rate files for fertility, mortality and marriage rates.</p>
 <p>If you run more than one simulation, previous simulations may corrupt later simulations. Use the option <code>process_method = "future"</code> to prevent this:</p>
 <pre><code><span><span class="fu">rsocsim</span><span class="fu">::</span><span class="fu"><a href="reference/socsim.html">socsim</a></span><span class="op">(</span><span class="va">folder</span>,<span class="va">supfile</span>,<span class="va">seed</span>,process_method <span class="op">=</span> <span class="st">"future"</span><span class="op">)</span></span></code></pre>
 </div>
