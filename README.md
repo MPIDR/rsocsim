@@ -31,15 +31,6 @@ Then you can use devtools to install rsocsim:
 devtools::install_github("MPIDR/rsocsim")
 ````
 
-### Install precompiled package (Windows only)
-
-If the compilation from source fails, you can also install a pre-compiled binary. This might be easier, but it might be not the most up-to-date version. You can find the most up-to-date binary release on https://github.com/MPIDR/rsocsim/releases
-
-````R
-url = "https://github.com/tomthe/rsoc/releases/download/1.5.5/rsocsim_1.5.5.zip"
-install.packages(url, repos = NULL, type = "win.binary")
-````
-
 ## Use rsocsim
 
 
@@ -77,6 +68,10 @@ later simulations. Use the option `process_method = "future"` to prevent this:
 rsocsim::socsim(folder,supfile,seed,process_method = "future")
 ```
 
+### Tutorial
+
+We created a practical workshop "Demographic microsimulations in R using SOCSIM: Modelling population and kinship dynamics" which you can access here:
+https://github.com/alburezg/rsocsim_workshop_paa
 
 ## Background and applications
 
