@@ -80,14 +80,6 @@
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"MPIDR/rsocsim"</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level3">
-<h3 id="install-precompiled-package-windows-only">Install precompiled package (Windows only)<a class="anchor" aria-label="anchor" href="#install-precompiled-package-windows-only"></a>
-</h3>
-<p>If the compilation from source fails, you can also install a pre-compiled binary. This might be easier, but it might be not the most up-to-date version. You can find the most up-to-date binary release on <a href="https://github.com/MPIDR/rsocsim/releases" class="external-link uri">https://github.com/MPIDR/rsocsim/releases</a></p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">url</span> <span class="op">=</span> <span class="st">"https://github.com/tomthe/rsoc/releases/download/1.5.5/rsocsim_1.5.5.zip"</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="va">url</span>, repos <span class="op">=</span> <span class="cn">NULL</span>, type <span class="op">=</span> <span class="st">"win.binary"</span><span class="op">)</span></span></code></pre></div>
-</div>
 </div>
 <div class="section level2">
 <h2 id="use-rsocsim">Use rsocsim<a class="anchor" aria-label="anchor" href="#use-rsocsim"></a>
@@ -95,7 +87,7 @@
 <div class="section level3">
 <h3 id="getting-started">Getting started<a class="anchor" aria-label="anchor" href="#getting-started"></a>
 </h3>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/MPIDR/rsocsim" class="external-link">"rsocsim"</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># create a new folder for all the files related to a simulation.</span></span>
@@ -117,6 +109,11 @@
 <p>The results will be saved into a subfolder of the simulation-`folder´. For more sophisticated simulations you will need to edit the supervisory file and provide rate files for fertility, mortality and marriage rates.</p>
 <p>If you run more than one simulation, previous simulations may corrupt later simulations. Use the option <code>process_method = "future"</code> to prevent this:</p>
 <pre><code><span><span class="fu">rsocsim</span><span class="fu">::</span><span class="fu"><a href="reference/socsim.html">socsim</a></span><span class="op">(</span><span class="va">folder</span>,<span class="va">supfile</span>,<span class="va">seed</span>,process_method <span class="op">=</span> <span class="st">"future"</span><span class="op">)</span></span></code></pre>
+</div>
+<div class="section level3">
+<h3 id="tutorial">Tutorial<a class="anchor" aria-label="anchor" href="#tutorial"></a>
+</h3>
+<p>We created a practical workshop “Demographic microsimulations in R using SOCSIM: Modelling population and kinship dynamics” which you can access here: <a href="https://github.com/alburezg/rsocsim_workshop_paa" class="external-link uri">https://github.com/alburezg/rsocsim_workshop_paa</a></p>
 </div>
 </div>
 <div class="section level2">
