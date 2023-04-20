@@ -1,41 +1,41 @@
 ---
-title: 'Gala: A Python package for galactic dynamics'
+title: 'rsocsim: An R package for demographic microsimulations'
 tags:
-  - Python
-  - astronomy
-  - dynamics
-  - galactic dynamics
-  - milky way
+  - R
+  - demography
+  - microsimulation
+  - population dynamics
+  - kinship
 authors:
-  - name: Adrian M. Price-Whelan
-    orcid: 0000-0000-0000-0000
-    equal-contrib: true
-    affiliation: "1, 2" # (Multiple affiliations must be quoted)
-  - name: Author Without ORCID
-    equal-contrib: true # (This is how you can denote equal contributions between multiple authors)
-    affiliation: 2
-  - name: Author with no affiliation
+  - name: Tom Theile
+    orcid: 0000-0002-3957-2474
+    affiliation: 1 # (Multiple affiliations must be quoted)
     corresponding: true # (This is how to denote the corresponding author)
-    affiliation: 3
+  - name: Diego Alburez-Gutierrez
+    affiliation: 1
+    orcid: 0000-0003-0573-9093
+  - name: Liliana P. Calderón-Bernal
+    affiliation: 1
+    orcid: 0000-0003-0573-9093
+  - name: Mallika Snyder
+    affiliation: 2
 affiliations:
- - name: Lyman Spitzer, Jr. Fellow, Princeton University, USA
+ - name: Departement of Digital and Computational Demography, Max Planck Institute for Demographic Research, Rostock, Germany 
    index: 1
- - name: Institution Name, Country
+ - name: Department of Demography, University of California Berkeley, Berkeley, CA, USA
    index: 2
- - name: Independent Researcher, Country
-   index: 3
-date: 13 August 2017
+date: 27 April 2023
 bibliography: paper.bib
 
 # Optional fields if submitting to a AAS journal too, see this blog post:
 # https://blog.joss.theoj.org/2018/12/a-new-collaboration-with-aas-publishing
-aas-doi: 10.3847/xxxxx <- update this with the DOI from AAS once you know it.
-aas-journal: Astrophysical Journal <- The name of the AAS journal.
+# aas-doi: 10.3847/xxxxx <- update this with the DOI from AAS once you know it.
+# aas-journal: Astrophysical Journal <- The name of the AAS journal.
 ---
 
 # Summary
 
-The forces on stars, galaxies, and dark matter under external gravitational
+<!-- The forces on stars, galaxies, and dark matter under external gravitational
 fields lead to the dynamical evolution of structures in the universe. The orbits
 of these bodies are therefore key to understanding the formation, history, and
 future state of galaxies. The field of "galactic dynamics," which aims to model
@@ -43,7 +43,9 @@ the gravitating components of galaxies to study their structure and evolution,
 is now well-established, commonly taught, and frequently used in astronomy.
 Aside from toy problems and demonstrations, the majority of problems require
 efficient numerical tools, many of which require the same base code (e.g., for
-performing numerical orbit integration).
+performing numerical orbit integration). -->
+
+
 
 # Statement of need
 
@@ -109,7 +111,10 @@ Figure sizes can be customized by adding an optional second parameter:
 
 # Acknowledgements
 
-We acknowledge contributions from Brigitta Sipocz, Syrtis Major, and Semyeong
-Oh, and support from Kathryn Johnston during the genesis of this project.
+We acknowledge the immense work that went into socsim since its first version in 1973.
+Ken Wachter
+Carl Mason
+Emilio Zagheni
+?
 
 # References
