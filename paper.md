@@ -19,6 +19,9 @@ authors:
     orcid: 0000-0003-0573-9093
   - name: Mallika Snyder
     affiliation: 2
+  - name: Emilio Zagheni
+    affiliation: 1
+    orcid: 0000-0002-7660-8368
 affiliations:
  - name: Departement of Digital and Computational Demography, Max Planck Institute for Demographic Research, Rostock, Germany 
    index: 1
