@@ -45,14 +45,10 @@ Socsim is a microsimulation software developed since 1973 (citation?). Since the
 Although R (citation) was often used to analyze the simulation outputs, socsim was a standalone program that only compiled with older C compilers for particular operation systems.
 -- The software might have lost relevance with the retirement of old maintainers.
 We rewrote the old software and made it usable on other platforms. We put it into an easily installable R-package together with useful utility functions.
-We rewrote the old C/C++ code for compatibility with modern compilers, the Windows operating system and R. We added R functions that make it easy to get started with a simulation and read the created synthetic populations into R data structures.
 
 
+# Statement of need - bullet points
 
-
-# Statement of need
-
-* 
 * simulation mechanisms
   * input initial population, rates and options
   * output population (every person), marriages, population pyramids,?
@@ -72,44 +68,47 @@ We rewrote the old C/C++ code for compatibility with modern compilers, the Windo
   * RCPP is used to compile and run the C/C++ code from R. This eases the distribution of the package, as we do not have to build binaries for every platform, while it is still very easy to install even for inexperienced users of R.
 * Socsim has been used widely, but it was difficult without having an account at berkeley. Now it is easy to install and all the source is now licenced under GPL v3
 
-rsocsim 
+# Statement of Need
 
-`Gala` is an Astropy-affiliated Python package for galactic dynamics. Python
-enables wrapping low-level languages (e.g., C) for speed without losing
-flexibility or ease-of-use in the user-interface. The API for `Gala` was
-designed to provide a class-based and user-friendly interface to fast (C or
-Cython-optimized) implementations of common operations such as gravitational
-potential and force evaluation, orbit integration, dynamical transformations,
-and chaos indicators for nonlinear dynamics. `Gala` also relies heavily on and
-interfaces well with the implementations of physical units and astronomical
-coordinate systems in the `Astropy` package [@astropy] (`astropy.units` and
-`astropy.coordinates`).
+Socsim is an open source simulation framework designed to model population dynamics and study various demographic phenomena. It provides a flexible and customizable environment for simulating the evolution of populations over time. This chapter discusses the key features and implementation details of Socsim, highlighting its significance in population studies.
 
-`Gala` was designed to be used by both astronomical researchers and by
-students in courses on gravitational dynamics or astronomy. It has already been
-used in a number of scientific publications [@Pearson:2017] and has also been
-used in graduate courses on Galactic dynamics to, e.g., provide interactive
-visualizations of textbook material [@Binney:2008]. The combination of speed,
-design, and support for Astropy functionality in `Gala` will enable exciting
-scientific explorations of forthcoming data releases from the *Gaia* mission
-[@gaia] by students and experts alike.
+### Simulation Mechanisms
 
-# Mathematics
+Socsim offers a range of simulation mechanisms to capture population dynamics. Users can input an initial population with specified attributes such as age, sex, group affiliation, fertility multiplier, marital status, and kinship relationships. The simulation allows for the scheduling of events, including births, deaths, group transitions, and marriages, according to user-defined rates. Different implementations of marriage markets are also available, enabling the modeling of diverse marriage systems.
 
-Single dollars ($) are required for inline mathematics e.g. $f(x) = e^{\pi/x}$
+The output of the simulation includes detailed population data, including information on each individual, marriages, and population pyramids. Each person in the simulated population is characterized by essential attributes such as age, sex, group affiliation, fertility multiplier, marital status, parent-child relationships, and sibling relationships. These outputs facilitate the analysis of population dynamics and the exploration of various demographic phenomena.
 
-Double dollars make self-standing equations:
+### Implementation Details
 
-$$\Theta(x) = \left\{\begin{array}{l}
-0\textrm{ if } x < 0\cr
-1\textrm{ else}
-\end{array}\right.$$
+The main simulation engine of Socsim is implemented in C/C++, ensuring efficient and high-performance execution. To enhance its usability and accessibility, several modifications were made to the simulation code. These modifications include:
 
-You can also use plain \LaTeX for equations
-\begin{equation}\label{eq:fourier}
-\hat f(\omega) = \int_{-\infty}^{\infty} f(x) e^{i\omega x} dx
-\end{equation}
-and refer to \autoref{eq:fourier} from text.
+- **Multiplatform Compatibility**: The code was adapted to be compatible with multiple platforms, ensuring that users can run the simulation on different operating systems. This involved the utilization of a new random number generator (RNG) that is available across various platforms, as the previous RNG was limited to Linux.
+
+- **Enhanced Functionality**: Several new strategies and features were implemented to extend the capabilities of Socsim. For instance, the framework now allows users to retrieve kinship networks without explicitly specifying marriage rates. Bug fixes were also incorporated to improve the overall reliability and accuracy of the simulation.
+
+- **Integration with R**: Socsim provides a set of R functions that facilitate the execution, control, and analysis of simulations. Users can easily initiate a simulation from within R, leveraging the framework's capabilities through a user-friendly interface. Additionally, specialized R functions are available to read and analyze the output generated by Socsim simulations.
+
+- **RCPP Integration**: The integration of RCPP (R and C++ Integration) allows for seamless compilation and execution of the C/C++ code within the R environment. This integration simplifies the distribution of the Socsim package, as users can install it effortlessly, regardless of their platform. Moreover, even users with limited experience in R can easily utilize the framework's functionalities.
+
+### Increased Accessibility and Licensing
+
+Socsim has gained popularity among researchers studying population dynamics. However, previously, it required an account at Berkeley to access and use the framework effectively. To address this limitation and improve accessibility, Socsim has undergone significant changes. Firstly, it is now easy to install, allowing researchers to utilize the framework without any account restrictions. Furthermore, all source code of Socsim has been licensed under the GNU General Public License version 3 (GPL v3), ensuring the software's open source nature and promoting collaboration and innovation in population studies.
+
+## Conclusion
+
+Socsim serves as a valuable open source simulation framework for population dynamics, enabling researchers to model and analyze complex demographic phenomena. Its flexible simulation mechanisms, implementation details, integration with R, and increased accessibility through licensing changes make it a powerful tool for studying population dynamics. By providing an open source platform, Socsim promotes transparency, reproducibility, and collaboration in population research, fostering advancements in the field.
+
+
+
+
+
+
+
+
+
+
+
+
 
 # Citations
 
