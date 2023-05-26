@@ -38,19 +38,41 @@ bibliography: paper.bib
 
 # Summary
 
-<!-- The forces on stars, galaxies, and dark matter under external gravitational
-fields lead to the dynamical evolution of structures in the universe. The orbits
-of these bodies are therefore key to understanding the formation, history, and
-future state of galaxies. The field of "galactic dynamics," which aims to model
-the gravitating components of galaxies to study their structure and evolution,
-is now well-established, commonly taught, and frequently used in astronomy.
-Aside from toy problems and demonstrations, the majority of problems require
-efficient numerical tools, many of which require the same base code (e.g., for
-performing numerical orbit integration). -->
+Microsimulations of virtual populations enable a deep look into the effects of different fertility-, mortality and marriage-rates on the structure of kinship networks and individual life events.
+
+Socsim is a microsimulation software developed since 1973 (citation?). Since then, it was used in many publications. It was extended continously to serve the needs of many different demographic studies.
+
+Although R (citation) was often used to analyze the simulation outputs, socsim was a standalone program that only compiled with older C compilers for particular operation systems.
+-- The software might have lost relevance with the retirement of old maintainers.
+We rewrote the old software and made it usable on other platforms. We put it into an easily installable R-package together with useful utility functions.
+We rewrote the old C/C++ code for compatibility with modern compilers, the Windows operating system and R. We added R functions that make it easy to get started with a simulation and read the created synthetic populations into R data structures.
+
 
 
 
 # Statement of need
+
+* 
+* simulation mechanisms
+  * input initial population, rates and options
+  * output population (every person), marriages, population pyramids,?
+  * A person has not many "eigenschaften": Age, Sex, group, fertility_multiplier, single/marriaged/widowed/divorced, mother, father, next sibling
+  * Events, scheduling of births, deaths, group transitions, etc. according to rates
+  * Different implementations of marriage markets.
+* implementation details
+  * the main simulation happens in C/C++
+  * simulation code had to be modified to be multiplatform. 
+    * A new rng had to be used, as the previous was only available on Linux
+    * new strategies were implemented, to be able to retrieve kinship networks withouth marriage rates?
+    * output to R console
+    * raised max age from 100 years to 200 years
+    * bugfixes
+  * R functions to start a simulation
+  * R functions to read and analyze the output of a simulation
+  * RCPP is used to compile and run the C/C++ code from R. This eases the distribution of the package, as we do not have to build binaries for every platform, while it is still very easy to install even for inexperienced users of R.
+* Socsim has been used widely, but it was difficult without having an account at berkeley. Now it is easy to install and all the source is now licenced under GPL v3
+
+rsocsim 
 
 `Gala` is an Astropy-affiliated Python package for galactic dynamics. Python
 enables wrapping low-level languages (e.g., C) for speed without losing
