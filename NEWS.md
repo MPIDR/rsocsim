@@ -1,3 +1,6 @@
+# rsocsim 1.5.9
+ * removed keyword register in load.cpp (See https://github.com/MPIDR/rsocsim/issues/11; it causes errors on Mac)
+
 # rsocsim 1.5.8
  * renamed getKin() to retrieve_kin()
  * bugfixes
