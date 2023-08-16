@@ -114,7 +114,7 @@ enum l_keyword
 };
 
 //enum l_keyword l_lookup_keyword();
-enum l_keyword l_lookup_keyword(register char*);
+enum l_keyword l_lookup_keyword(char*);
 
 void l_error(const struct l_context*, const char*);
 void error(const char*);//,char*,int, char*,char*,char*,char*);
@@ -1278,9 +1278,9 @@ out:
 	   */
 char l_scan_line(char *line,char **words)
 {
-	register char *p, *q = NULL;
-	register char **wp = words;
-	register int state;
+	char *p, *q = NULL;
+	char **wp = words;
+	int state;
 
 	for (p = line, state = 0; state >= 0; p++)
 		switch (state)
@@ -1365,7 +1365,7 @@ char l_scan_line(char *line,char **words)
 	return wp - words;
 }
 
-enum l_keyword l_lookup_keyword(register char *word)
+enum l_keyword l_lookup_keyword(char *word)
 {
 	/**************************************************************
      ** this is used to decode .sup files the first element is the
@@ -1539,7 +1539,7 @@ enum l_keyword l_lookup_keyword(register char *word)
 		0,
 		k_unknown,
 	};
-	register struct tab *p;
+	struct tab *p;
 	/* heads up p is not a person */
 	for (p = tab;
 		 p->name && (*p->name != *word || strcmp(p->name, word) != 0);
@@ -1549,7 +1549,7 @@ enum l_keyword l_lookup_keyword(register char *word)
 	return p->token; /* k_unknown if no match*/
 }
 
-void l_create_rateset(register struct l_context *cx, char *name)
+void l_create_rateset(struct l_context *cx, char *name)
 {
 	cx->file = name;
 	printf("creating rate set\n");
@@ -2575,7 +2575,7 @@ char *command;
 // void error(const char *fmt)//,char *a,int b, char *c,char *d,char *e,char *f)
 // {
 // 	char buf[1024];
-// 	register char *p;
+// 	char *p;
 
 // 	(void)sprintf(buf, fmt); //a, b, c, d, e, f);
 // 	for (p = buf; *p++;)
