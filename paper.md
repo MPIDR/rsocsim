@@ -70,7 +70,7 @@ We rewrote the old software and made it usable on other platforms. We put it int
 
 # Statement of Need
 
-rsocsim is an open source simulation framework designed to model population dynamics and study various demographic phenomena. It provides a flexible and customizable environment for simulating the evolution of populations over time. The underlying C-software 'Socsim' has gained popularity among researchers studying population dynamics.
+rsocsim is an open source simulation framework designed to model population dynamics and study various demographic phenomena. It provides a flexible and customizable environment for simulating the evolution of populations over time. The underlying C-software 'Socsim' has gained popularity among researchers that study population dynamics.
 
 Users must provide an initial population which consists of a number of virtual specified attributes such as age, sex, group affiliation, fertility multiplier, marital status, and kinship relationships.
 The simulation allows for the scheduling of events, including births, deaths, group transitions, and marriages, according to user-defined rates. Different implementations of marriage markets are also available, enabling the modeling of diverse marriage systems.
@@ -89,6 +89,8 @@ The main simulation engine of rsocsim is implemented in C/C++, ensuring efficien
 
 
 Socsim previously required an account at UC Berkeley to access and use the software effectively. To address this limitation and improve accessibility, Socsim has undergone significant changes. Firstly, it is now easy to install, allowing researchers to utilize the framework without any account restrictions. Furthermore, all source code of Socsim has been licensed under the GNU General Public License version 3 (GPL v3), ensuring the software's open source nature and promoting collaboration and innovation in population studies.
+
+
 
 
 
