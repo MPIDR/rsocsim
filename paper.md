@@ -38,60 +38,49 @@ bibliography: paper.bib
 
 # Summary
 
-Microsimulations of virtual populations enable a deep look into the effects of different fertility-, mortality and marriage-rates on the structure of kinship networks and individual life events.
+Microsimulations of virtual populations enable a deep look into the effects of different fertility-, mortality- and marriage-rates on the structure of kinship networks and individual life events.
 
-Socsim is a microsimulation software developed since 1973 (citation?). Since then, it was used in many publications. It was extended continously to serve the needs of many different demographic studies.
+Socsim is a microsimulation software developed since 1973 (citation?). Since then, it has been used in many publications. It was extended continuously to serve the needs of many different demographic studies.
 
-Although R (citation) was often used to analyze the simulation outputs, socsim was a standalone program that only compiled with older C compilers for particular operation systems.
--- The software might have lost relevance with the retirement of old maintainers.
-We rewrote the old software and made it usable on other platforms. We put it into an easily installable R-package together with useful utility functions.
+Although R (citation) was often used to analyze the simulation outputs, Socsim was a standalone program that only compiled with older C compilers for particular operation systems.  
 
+We rewrote the old software and made it usable on modern operating systems. We bundled it into an easy to install R-package together with useful utility functions.
 
-# Statement of need - bullet points
-
-* simulation mechanisms
-  * input initial population, rates and options
-  * output population (every person), marriages, population pyramids,?
-  * A person has not many "eigenschaften": Age, Sex, group, fertility_multiplier, single/marriaged/widowed/divorced, mother, father, next sibling
-  * Events, scheduling of births, deaths, group transitions, etc. according to rates
-  * Different implementations of marriage markets.
-* implementation details
-  * the main simulation happens in C/C++
-  * simulation code had to be modified to be multiplatform. 
-    * A new rng had to be used, as the previous was only available on Linux
-    * new strategies were implemented, to be able to retrieve kinship networks withouth marriage rates?
-    * output to R console
-    * raised max age from 100 years to 200 years
-    * bugfixes
-  * R functions to start a simulation
-  * R functions to read and analyze the output of a simulation
-  * RCPP is used to compile and run the C/C++ code from R. This eases the distribution of the package, as we do not have to build binaries for every platform, while it is still very easy to install even for inexperienced users of R.
-* Socsim has been used widely, but it was difficult without having an account at berkeley. Now it is easy to install and all the source is now licenced under GPL v3
 
 # Statement of Need
 
-rsocsim is an open source simulation framework designed to model population dynamics and study various demographic phenomena. It provides a flexible and customizable environment for simulating the evolution of populations over time. The underlying C-software 'Socsim' has gained popularity among researchers that study population dynamics.
+Microsimulations model the life trajectory/events and interactions of each individual in a simulation. They output the complete kinship structure of every individual in the synthetic population. This allows researchers a deep look into the effects of different scenarios on every demographic aspect of the synthetic population.  
 
-Users must provide an initial population which consists of a number of virtual specified attributes such as age, sex, group affiliation, fertility multiplier, marital status, and kinship relationships.
-The simulation allows for the scheduling of events, including births, deaths, group transitions, and marriages, according to user-defined rates. Different implementations of marriage markets are also available, enabling the modeling of diverse marriage systems.
+## Simulation mechanics
 
-The output of the simulation includes detailed population data, including information on each individual, marriages, and population pyramids. Each person in the simulated population is characterized by essential attributes such as age, sex, group affiliation, fertility multiplier, marital status, parent-child relationships, and sibling relationships. These outputs facilitate the analysis of kinship dynamics and the exploration of various demographic phenomena.
+### Input
 
-The main simulation engine of rsocsim is implemented in C/C++, ensuring efficient and high-performance execution. To enhance its usability and accessibility, several modifications were made to the simulation code. These modifications include:
+Rsocsim needs an initial population as a starting point. Populations consist of a list of individuals with a defined birthdate, gender and optionally other parameters and can be read from and written to text files.
 
-- **Multiplatform Compatibility**: The code was adapted to be compatible with multiple platforms, ensuring that users can run the simulation on different operating systems. This involved the utilization of a new random number generator (RNG) that is available across various platforms, as the previous RNG was limited to Linux.
+Rsocsim works with fixed length time steps. Usually one time step equals 1 month in the time of the synthetic population. At the start of the simulation and after every event, the month of the next event for this person is calculated for every applicable event type. This calculation is based on the input rates. 
 
-- **Enhanced Functionality**: Several new strategies and features were implemented to extend the capabilities of Socsim. For instance, the framework now allows users to retrieve kinship networks without explicitly specifying marriage rates. Bug fixes were also incorporated to improve the overall reliability and accuracy of the simulation.
+Rates can be defined specific to ages, genders, groups, parity 
 
-- **Integration with R**: Socsim provides a set of R functions that facilitate the execution, control, and analysis of simulations. Users can easily initiate a simulation from within R, leveraging the framework's capabilities through a user-friendly API. Additionally, specialized R functions are available to read and analyze the output generated by rsocsim simulations.
+### Groups
 
-- **Integration through RCPP**: The use of RCPP (-citation-) allows for seamless compilation and execution of the C/C++ code within the R environment. This integration simplifies the distribution of the Socsim package, as users can install it effortlessly, regardless of their platform. Moreover, even users with limited experience in R can easily utilize the framework's functionalities.
+Apart from gender and age, individuals can be assigned to one of up to 64 different groups. Groups can have different rates than other groups and also transition rates to all other groups. This allows users to simulate all kinds of mechanics. Not only different ethnic groups or different countries with migration rates, but also....
+
+### Marriage markets
+
+Mating decisions have a big impact on the kinship structure (citation?). Rscocsim has two inbuilt methods to model the mate finding process realistically.
+
+The one-queue method needs female marriage rates as input. According to these rates, females are married immediately with one of the available, unmarried males upon the happening of the marriage event. To choose a fitting male, several options can be specified: according to the preferred mean and standard deviation of the age difference, points are awarded for a list of possible males, if several males have gained enough points, the male with the highest number of points is chosen.
+
+The two-queue method puts both males and females on two distinct marriage queues in the event of a marriage. Then the individuals on the queues are matched according to the points/options. In the two-queue method, the achieved marriage rates are often at least slightly lower than the specified rates, because for the last persons the matchmaking method will be unable to find a partner with a high enough score. This is of course especially the case if there is a gender imbalance. We also implemented a third method that works without marriage rates (which are often not available for many populations). Instead, mothers are married immediately after receiving a childbirth to an unmarried male according to the point system.
+
+### Implementation
+
+Socsim has been continuously developed since 1973. First versions were written in FORTRAN and then rewritten to C in the 1980ies, it was extended throughout the years to cater to the needs of population researchers. 
+
+We updated the code to make it compatible with modern compilers and other operating systems than Unix. Since most users of the classic Socsim used R to create the input files and analyze the output, we chose to create a R package which allows easy installation and use. The package ships the modified C/C++ code along with some utility functions in R. Upon installation, it uses Rcpp [cite Rcpp] and a C++ compiler to compile the C/C++ part of the package. The utility functions can be used to write the input files, read the output files and estimate rates from the synthetic population data. The function socsim starts the actual simulation.
 
 
-Socsim previously required an account at UC Berkeley to access and use the software effectively. To address this limitation and improve accessibility, Socsim has undergone significant changes. Firstly, it is now easy to install, allowing researchers to utilize the framework without any account restrictions. Furthermore, all source code of Socsim has been licensed under the GNU General Public License version 3 (GPL v3), ensuring the software's open source nature and promoting collaboration and innovation in population studies.
-
-
-
+# End of paper
 
 
 # Citations
