@@ -78,6 +78,7 @@ The two-queue method puts both males and females on two distinct marriage queues
 Socsim has been continuously developed since 1973. First versions were written in FORTRAN and then rewritten to C in the 1980ies, it was extended throughout the years to cater to the needs of population researchers. 
 
 We updated the code to make it compatible with modern compilers and other operating systems than Unix. Since most users of the classic Socsim used R to create the input files and analyze the output, we chose to create a R package which allows easy installation and use. The package ships the modified C/C++ code along with some utility functions in R. Upon installation, it uses Rcpp [cite Rcpp] and a C++ compiler to compile the C/C++ part of the package. The utility functions can be used to write the input files, read the output files and estimate rates from the synthetic population data. The function socsim starts the actual simulation.
+![Architecture of the rsocsim R-package.\label{fig:rsoc_structure](https://github.com/MPIDR/rsocsim/assets/5939967/2502d8bc-15c3-432b-894a-74a60b8ddf22)
 
 
 # End of paper
