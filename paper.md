@@ -73,6 +73,8 @@ The one-queue method needs female marriage rates as input. According to these ra
 
 The two-queue method puts both males and females on two distinct marriage queues in the event of a marriage. Then the individuals on the queues are matched according to the points/options. In the two-queue method, the achieved marriage rates are often at least slightly lower than the specified rates, because for the last persons the matchmaking method will be unable to find a partner with a high enough score. This is of course especially the case if there is a gender imbalance. We also implemented a third method that works without marriage rates (which are often not available for many populations). Instead, mothers are married immediately after receiving a childbirth to an unmarried male according to the point system.
 
+![The four event types in rsocsim.\label{fig:rsoc_events](./rsocsim_events_1.png)
+
 ### Implementation
 
 Socsim has been continuously developed since 1973. First versions were written in FORTRAN and then rewritten to C in the 1980ies, it was extended throughout the years to cater to the needs of population researchers. 
