@@ -685,10 +685,10 @@ would otherwise result. Note that the degree to which this fertility
 6.    
 
 -----
-| alpha,beta | *real* | def: 1.0,0 |
+| alpha,betaT | *real* | def: 0.0, 1.0 |
 |----------|:-------------:|------:|
 `alpha 1.0`  
-`beta 0.0`  
+`betaT 0.0`  
 Determine the degree to which the fertility multiplier is inherited
 from each woman’s mother. See Section [\[secfmult\]](#secfmult) for
 a complete description.
