@@ -1,66 +1,24 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://mpidr.github.io/rsocsim/404.html</loc>
-  </url>
-  <url>
-    <loc>https://mpidr.github.io/rsocsim/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>https://mpidr.github.io/rsocsim/authors.html</loc>
-  </url>
-  <url>
-    <loc>https://mpidr.github.io/rsocsim/development.html</loc>
-  </url>
-  <url>
-    <loc>https://mpidr.github.io/rsocsim/future_documentation.html</loc>
-  </url>
-  <url>
-    <loc>https://mpidr.github.io/rsocsim/index.html</loc>
-  </url>
-  <url>
-    <loc>https://mpidr.github.io/rsocsim/news/index.html</loc>
-  </url>
-  <url>
-    <loc>https://mpidr.github.io/rsocsim/reference/create_simulation_folder.html</loc>
-  </url>
-  <url>
-    <loc>https://mpidr.github.io/rsocsim/reference/create_sup_file.html</loc>
-  </url>
-  <url>
-    <loc>https://mpidr.github.io/rsocsim/reference/estimate_fertility_rates.html</loc>
-  </url>
-  <url>
-    <loc>https://mpidr.github.io/rsocsim/reference/estimate_mortality_rates.html</loc>
-  </url>
-  <url>
-    <loc>https://mpidr.github.io/rsocsim/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://mpidr.github.io/rsocsim/reference/read_omar.html</loc>
-  </url>
-  <url>
-    <loc>https://mpidr.github.io/rsocsim/reference/read_opop.html</loc>
-  </url>
-  <url>
-    <loc>https://mpidr.github.io/rsocsim/reference/retrieve_kin.html</loc>
-  </url>
-  <url>
-    <loc>https://mpidr.github.io/rsocsim/reference/rsoc-package.html</loc>
-  </url>
-  <url>
-    <loc>https://mpidr.github.io/rsocsim/reference/run1simulationwithfile_from_binary.html</loc>
-  </url>
-  <url>
-    <loc>https://mpidr.github.io/rsocsim/reference/run1simulationwithfile_inprocess.html</loc>
-  </url>
-  <url>
-    <loc>https://mpidr.github.io/rsocsim/reference/simulation_time_to_years.html</loc>
-  </url>
-  <url>
-    <loc>https://mpidr.github.io/rsocsim/reference/socsim.html</loc>
-  </url>
-  <url>
-    <loc>https://mpidr.github.io/rsocsim/socsim_oversimplified.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://mpidr.github.io/rsocsim/404.html</loc></url>
+<url><loc>https://mpidr.github.io/rsocsim/LICENSE.html</loc></url>
+<url><loc>https://mpidr.github.io/rsocsim/authors.html</loc></url>
+<url><loc>https://mpidr.github.io/rsocsim/development.html</loc></url>
+<url><loc>https://mpidr.github.io/rsocsim/future_documentation.html</loc></url>
+<url><loc>https://mpidr.github.io/rsocsim/index.html</loc></url>
+<url><loc>https://mpidr.github.io/rsocsim/news/index.html</loc></url>
+<url><loc>https://mpidr.github.io/rsocsim/reference/create_simulation_folder.html</loc></url>
+<url><loc>https://mpidr.github.io/rsocsim/reference/create_sup_file.html</loc></url>
+<url><loc>https://mpidr.github.io/rsocsim/reference/estimate_fertility_rates.html</loc></url>
+<url><loc>https://mpidr.github.io/rsocsim/reference/estimate_mortality_rates.html</loc></url>
+<url><loc>https://mpidr.github.io/rsocsim/reference/index.html</loc></url>
+<url><loc>https://mpidr.github.io/rsocsim/reference/read_omar.html</loc></url>
+<url><loc>https://mpidr.github.io/rsocsim/reference/read_opop.html</loc></url>
+<url><loc>https://mpidr.github.io/rsocsim/reference/retrieve_kin.html</loc></url>
+<url><loc>https://mpidr.github.io/rsocsim/reference/rsoc-package.html</loc></url>
+<url><loc>https://mpidr.github.io/rsocsim/reference/run1simulationwithfile_from_binary.html</loc></url>
+<url><loc>https://mpidr.github.io/rsocsim/reference/run1simulationwithfile_inprocess.html</loc></url>
+<url><loc>https://mpidr.github.io/rsocsim/reference/simulation_time_to_years.html</loc></url>
+<url><loc>https://mpidr.github.io/rsocsim/reference/socsim.html</loc></url>
+<url><loc>https://mpidr.github.io/rsocsim/socsim_oversimplified.html</loc></url>
 </urlset>
+
