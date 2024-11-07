@@ -311,8 +311,7 @@ int main1(int argc, char *argv[])
 	/**sprintf(logstring,"\n compiled from SVN revision %s on %s \n\n",
 	   SVN_REV, COMP_DATE);*
 	Rprintf("%s\n", logstring, 1);*/
-	Rprintf("Socsim Version: %s\n",
-		   ENHANCEMENT_NAME, 1);
+	// Rprintf("Enhancement name: %s\n",ENHANCEMENT_NAME;)
 	if (marriage_queues == 1)
 	{
 		logmsg("\n marriage_queues==1 , consequently all availalbe males are always on the marriage queue\n\n"," ",   1);
