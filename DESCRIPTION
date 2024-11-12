@@ -15,7 +15,8 @@ Description: Install and run socsim microsimulations from within R with this R-p
 License: GPL (>= 2)
 Imports: Rcpp (>= 1.0.5),
     future,
-    parallel
+    parallel,
+    magrittr
 LinkingTo: Rcpp
 RoxygenNote: 7.2.3
 Suggests: 

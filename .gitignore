@@ -21,3 +21,4 @@ man/read_omar.Rd
 man/read_opop.Rd
 man/simulation_time_to_years.Rd
 man/socsim.Rd
+.vscode/*
