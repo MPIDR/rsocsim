@@ -185,31 +185,34 @@ run1simulationwithfile_from_binary <- function(folder, supfile,seed="42",compati
   return(1)
 }
 
-#' create a folder in the user-dir of the current user in the socsim-subfolder
-#' @param simulation_name optional name for the simulation
-#' @param basefolder optional base directory where the folder will be created
-#' @return the path to the folder
+#' Create a directory structure for the simulation
+#'
+#' Create a two-level directory structure. If the first-level argument is NULL,
+#' we look for and, if needed, created the directory 'socsim' in the user's
+#' home directory. If the second-level argument is NULL, we create a directory
+#' named 'socsim_sim_{some random component}' in the first-level directory.
+#'
+#' @param basedir A string. Optional. First-level directory where the
+#'   simulation-specific directory will be created. Defaults to '$HOME/socsim'.
+#' @param simdir A string. Optional. Simulation-specific directory which will
+#'   be created within 'basedir'. Defaults to 'socsim_sim_' plus a random
+#'   component created with [tempfile()].
+#' @return A string. The full path to the simulation-specific directory.
 #' @export
-create_simulation_folder <- function(simulation_name=NULL,basefolder=NULL) {
-  if (is.null(simulation_name)) {
-    # create a random name that starts with socsim_sim_
-    simulation_name = paste0("socsim_sim_",as.character(sample(1:10000, 1)))
-  }
-  if (is.null(basefolder)) {
-    # check whether there is a "socsim" folder in the users home-directory:
-    # if not, create it
-    userdir <- dirname(path.expand("~//"))
-    basefolder = paste0(userdir, "/", "socsim")
-  }
-  if (!file.exists(basefolder)) {
-    dir.create(basefolder)
-  }
-  # create the subfolder
-  subfolder <- paste0(basefolder, "/", simulation_name)
-  if (!file.exists(subfolder)) {
-    dir.create(subfolder)
-  }
-  return(subfolder)
+create_simulation_folder <- function(basedir = NULL, simdir = NULL) {
+    # If no 'basedir' is given, we default to '$HOME/socsim'.
+    if (is.null(basedir)) { basedir <- file.path(path.expand("~"), "socsim") }
+    # If 'basedir' does not exist, create it.
+    if (!dir.exists(basedir)) { dir.create(basedir) }
+    if (is.null(simdir)) {
+        # If no 'simdir' is given, create a random name that starts with
+        # 'socsim_sim_'.
+        subdir = tempfile(pattern = "socsim_sim_", tmpdir = basedir)
+    } else {
+        subdir = file.path(basedir, simdir)
+    }
+    if (!dir.exists(subdir)) { dir.create(subdir) }
+    return(subdir)
 }
 
 #' create a basic .sup file for a simulation
@@ -263,8 +266,6 @@ get_supervisory_content <- function(simfolder, sup_fn) {
   sup_content <- readLines(file.path(simfolder, sup_fn))
   return(sup_content)
 }
-
-
 
 #' simulation_time_to_years
 #' convert the time measures.
