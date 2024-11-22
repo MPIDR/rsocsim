@@ -5,36 +5,52 @@
 #' Run a single socsim-simulation with a given supervisory-file and folder.
 #' The results will be saved into that folder
 #'
-#' @param folder base-directory of the simulation. 
-#' Every SUP- and rate-file should be named relative to this folder. 
-#' @param supfile the .sup file to start the simulation, relative to the
-#' folder
-#' @param seed RNG seed as string, Default="42"
-#' @param process_method specify whether and how SOCSIM should be started in its
-#' own process or in the running R process. Use one of
-#'  "inprocess" - SOCSIM runs in the R-process. Beware if you run several different
-#'  simulations - they may affect later simulations
-#'  "future" - the safest option. A new process will be start via the "future"
-#'  package
-#'  "clustercall" - if the future package is not available, try this method instead
-#' @return The results will be written into the specified folder
+#' @param folder A string. This is the base directory of the simulation. Every
+#'   .sup and rate file should be named relative to this directory. 
+#' @param supfile A string. The name of the .sup file to start the simulation,
+#'   relative to the directory.
+#' @param seed A string. The seed for the RNG, so expects an integer. Defaults
+#'   to "42".
+#' @param process_method A string. Whether and how SOCSIM should be started in
+#'   its own process or in the running R process. Defaults to "incprocess". Use
+#'   one of:
+#'    * "future" - the safest option. A new process will be started via the
+#'      "future" package
+#'    * "inprocess" - SOCSIM runs in the R-process. Beware if you run several
+#'      different simulations, they may affect later simulations.
+#'    * "clustercall" - if the future package is not available, try this method
+#'      instead.
+#' @param compatibility_mode A string.
+#' @param suffix A string.
+#' @return Returns the name of the directory to which the results will be
+#'   written.
 #' @export
-socsim <- function(folder, supfile,seed="42",process_method="inprocess",compatibility_mode="1",suffix="") {
-  seed= as.character(seed)
+socsim <- function(folder, supfile, seed = "42", process_method = "inprocess",
+                   compatibility_mode = "1", suffix = "") {
+  seed = as.character(seed)
   compatibility_mode = as.character(compatibility_mode)
-  print("Start run1simulationwithfile")
-  print(folder)
-  print(seed)
+  print("Start running one simulation with a .sup file.")
+  print("Base directory of the simulation:", folder)
+  print("RNG seed:", seed)
   previous_wd = getwd()
   result = NULL
   tryCatch(expr = {
     setwd(folder)
-    if ((process_method=="inprocess") | (process_method =="default")) {
-      result = run1simulationwithfile_inprocess(supfile=supfile,seed=seed,compatibility_mode=compatibility_mode,suffix=suffix)
-    } else if (process_method=="future") {
-      result = run1simulationwithfile_future(supfile=supfile,seed=seed,compatibility_mode=compatibility_mode,suffix=suffix)
-    } else if (process_method=="clustercall") {
-      result = run1simulationwithfile_clustercall(supfile=supfile,seed=seed,compatibility_mode=compatibility_mode,suffix=suffix)
+    if (process_method == "inprocess") {
+      result = run1simulationwithfile_inprocess(supfile = supfile,
+                                                seed = seed,
+                                                compatibility_mode = compatibility_mode,
+                                                suffix = suffix)
+    } else if (process_method == "future") {
+      result = run1simulationwithfile_future(supfile = supfile,
+                                             seed = seed,
+                                             compatibility_mode = compatibility_mode,
+                                             suffix = suffix)
+    } else if (process_method == "clustercall") {
+      result = run1simulationwithfile_clustercall(supfile = supfile, 
+                                                  seed = seed, 
+                                                  compatibility_mode = compatibility_mode,
+                                                  suffix = suffix)
     }
   },
   error = function(w){
@@ -42,7 +58,7 @@ socsim <- function(folder, supfile,seed="42",process_method="inprocess",compatib
     warning(w)
   },
   finally = {
-    print(paste0("restore previous working dir: ", previous_wd))
+    print(paste("Restore previous working dir:", previous_wd))
     setwd(previous_wd)
   }
   )
