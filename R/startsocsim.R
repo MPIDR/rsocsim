@@ -155,13 +155,13 @@ run1simulationwithfile_clustercall <- function(supfile,seed="23",compatibility_m
 #' @return The results will be written into the specified folder
 #' @export
 run1simulationwithfile_from_binary <- function(folder, supfile,seed="42",compatibility_mode="1",socsim_path=NULL) {
-  if (is.null(socsim_path)){
+  if (is.null(socsim_path) || !dir.exists(normalizePath(socsim_path))) {
     print("No socsim_path specified. So I will download the Windows-binary from github to a temporary directory!")
     print("This will probably not work due to antivirus-software.")
     print("please download an executable socsim from https://github.com/tomthe/socsim/releases/download/0.3/socsim.exe")
     print("then save the whole path and specify it as socsim_path for this function!")
     url = "https://github.com/tomthe/socsim/releases/download/0.3/socsim.exe"
-    socsim_path = paste0(tempdir(),"\\","socsim.exe")
+    socsim_path = file.path(tempdir(), "socsim.exe")
     download.file(url,socsim_path,method="auto")
   }
   seed = toString(seed)
@@ -173,7 +173,7 @@ run1simulationwithfile_from_binary <- function(folder, supfile,seed="42",compati
   previous_wd = getwd()
   setwd(paste0(folder))
   
-  print(paste0("command:  ",socsim_path,args=paste0(" ",supfile," ", seed," ", compatibility_mode)))
+  print(paste0("command: ",socsim_path,args=paste0(" ",supfile," ", seed," ", compatibility_mode)))
   
   print(system2(socsim_path,args=c(supfile," ", seed, " ",compatibility_mode)))
   print(system(paste(socsim_path, supfile, seed,compatibility_mode)))
