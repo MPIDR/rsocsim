@@ -1,9 +1,4 @@
-#library("future")
-#library(rsocsim)
-
-
-#' Run a single socsim-simulation with a given supervisory-file and folder.
-#' The results will be saved into that folder
+#' Run a single Socsim simulation with a given supervisory file and directory.
 #'
 #' @param folder A string. This is the base directory of the simulation. Every
 #'   .sup and rate file should be named relative to this directory. 
@@ -120,7 +115,6 @@ run1simulationwithfile_future <- function(supfile,seed="42",compatibility_mode="
   return(1)
 }
 
-
 #' Run a socsim-simulation in the r-process
 #'
 #' @param rootfolder rootfolder  name of the simulation
@@ -132,24 +126,6 @@ run1simulationwithfile_inprocess <- function(folder, supfile,seed,compatibility_
   return(1)
 }
 
-
-
-# Deprecated for now!
-#run1simulationwithfile_apply <- function(folder, supfile,seed="23") {
-#  # use the "future" library to run a rcpp-socsim simulation
-#  # in a seperate process
-#  folder = "D:\\dev\\r\\socsimprojects\\CousinDiversity"
-#  supfile = "CousinDiversity.sup"
-#  seed = "23"
-#  numCores=2
-#  cl <- parallel::makeCluster(numCores, type="PSOCK", outfile="")
-#  parallel::clusterExport(cl, run1simulationwithfile_inprocess)
-#  parallel::parLapply(cl,c(2),run1simulationwithfile_inprocess, folder=folder, supfile=supfile,seed=seed)
-#  # now there is a mysterious error: startSocsimWithFile is not available somehow????? 
-#  parallel::stopCluster(cl)
-#  return(1)
-#}
-
 run1simulationwithfile_clustercall <- function(supfile,seed="23",compatibility_mode="1",suffix="") {
   # use the "future" library to run a rcpp-socsim simulation
   # in a seperate process
@@ -160,16 +136,7 @@ run1simulationwithfile_clustercall <- function(supfile,seed="23",compatibility_m
   parallel::clusterExport(cl, "startSocsimWithFile")
   parallel::clusterCall(cl,startSocsimWithFile, supfile=supfile,seed=seed,compatibility_mode=compatibility_mode,result_suffix=suffix)
   print("started!")
-  #print("------------------------------------l4a")
   print_last_line_of_logfile(outfn)
-  #print("------------------------------------l4b")
-  #Sys.sleep(1) 
-  #print_last_line_of_logfile(outfn)
-  #Sys.sleep(1) 
-  #print_last_line_of_logfile(outfn)
-  #Sys.sleep(1) 
-  #print_last_line_of_logfile(outfn)
-  #print("------------------------------------l4c")
   parallel::stopCluster(cl)
   return(1)
 }
