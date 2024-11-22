@@ -27,7 +27,7 @@ socsim <- function(folder, supfile, seed = "42", process_method = "inprocess",
   seed = as.character(seed)
   compatibility_mode = as.character(compatibility_mode)
   print("Run a single simulation with a given .sup file.")
-  print(paste("Base directory of the simulation:", folder))
+  print(paste("Base directory of the simulation:", normalizePath(folder)))
   print(paste("RNG seed:", seed))
   previous_wd = getwd()
   result = NULL
@@ -44,12 +44,11 @@ socsim <- function(folder, supfile, seed = "42", process_method = "inprocess",
     warning(w)
   },
   finally = {
-    print(paste("Restore previous working dir:", previous_wd))
+    print(paste("Restore previous working dir:", normalizePath(previous_wd)))
     setwd(previous_wd)
   }
   )
   return(result)
-  
 }
 
 #' Run a single Socsim simulation.

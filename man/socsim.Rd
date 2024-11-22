@@ -2,8 +2,7 @@
 % Please edit documentation in R/startsocsim.R
 \name{socsim}
 \alias{socsim}
-\title{Run a single socsim-simulation with a given supervisory-file and folder.
-The results will be saved into that folder}
+\title{Wrapper for \code{\link[=run_sim_w_file]{run_sim_w_file()}}.}
 \usage{
 socsim(
   folder,
@@ -15,26 +14,35 @@ socsim(
 )
 }
 \arguments{
-\item{folder}{base-directory of the simulation.
-Every SUP- and rate-file should be named relative to this folder.}
+\item{folder}{A string. This is the base directory of the simulation. Every
+.sup and rate file should be named relative to this directory.}
 
-\item{supfile}{the .sup file to start the simulation, relative to the
-folder}
+\item{supfile}{A string. The name of the .sup file to start the simulation,
+relative to the directory.}
 
-\item{seed}{RNG seed as string, Default="42"}
+\item{seed}{A string. The seed for the RNG, so expects an integer. Defaults
+to "42".}
 
-\item{process_method}{specify whether and how SOCSIM should be started in its
-own process or in the running R process. Use one of
-"inprocess" - SOCSIM runs in the R-process. Beware if you run several different
-simulations - they may affect later simulations
-"future" - the safest option. A new process will be start via the "future"
-package
-"clustercall" - if the future package is not available, try this method instead}
+\item{process_method}{A string. Whether and how SOCSIM should be started in
+its own process or in the running R process. Defaults to "inprocess". Use
+one of:
+\itemize{
+\item "future" - the safest option. A new process will be started via the
+"future" package
+\item "inprocess" - SOCSIM runs in the R-process. Beware if you run several
+different simulations, they may affect later simulations.
+\item "clustercall" - if the future package is not available, try this method
+instead.
+}}
+
+\item{compatibility_mode}{A string.}
+
+\item{suffix}{A string.}
 }
 \value{
-The results will be written into the specified folder
+Returns the name of the directory to which the results will be
+written.
 }
 \description{
-Run a single socsim-simulation with a given supervisory-file and folder.
-The results will be saved into that folder
+Run a single Socsim simulation with a given supervisory file and directory.
 }
