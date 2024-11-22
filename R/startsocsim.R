@@ -27,8 +27,8 @@ socsim <- function(folder, supfile, seed = "42", process_method = "inprocess",
   seed = as.character(seed)
   compatibility_mode = as.character(compatibility_mode)
   print("Run a single simulation with a given .sup file.")
-  print("Base directory of the simulation:", folder)
-  print("RNG seed:", seed)
+  print(paste("Base directory of the simulation:", folder))
+  print(paste("RNG seed:", seed))
   previous_wd = getwd()
   result = NULL
   tryCatch(expr = {
