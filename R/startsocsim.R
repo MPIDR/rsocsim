@@ -1,3 +1,5 @@
+#' Wrapper for [run_sim_w_file()].
+#'
 #' Run a single Socsim simulation with a given supervisory file and directory.
 #'
 #' @param folder A string. This is the base directory of the simulation. Every
@@ -7,7 +9,7 @@
 #' @param seed A string. The seed for the RNG, so expects an integer. Defaults
 #'   to "42".
 #' @param process_method A string. Whether and how SOCSIM should be started in
-#'   its own process or in the running R process. Defaults to "incprocess". Use
+#'   its own process or in the running R process. Defaults to "inprocess". Use
 #'   one of:
 #'    * "future" - the safest option. A new process will be started via the
 #'      "future" package
@@ -24,29 +26,18 @@ socsim <- function(folder, supfile, seed = "42", process_method = "inprocess",
                    compatibility_mode = "1", suffix = "") {
   seed = as.character(seed)
   compatibility_mode = as.character(compatibility_mode)
-  print("Start running one simulation with a .sup file.")
+  print("Run a single simulation with a given .sup file.")
   print("Base directory of the simulation:", folder)
   print("RNG seed:", seed)
   previous_wd = getwd()
   result = NULL
   tryCatch(expr = {
     setwd(folder)
-    if (process_method == "inprocess") {
-      result = run1simulationwithfile_inprocess(supfile = supfile,
-                                                seed = seed,
-                                                compatibility_mode = compatibility_mode,
-                                                suffix = suffix)
-    } else if (process_method == "future") {
-      result = run1simulationwithfile_future(supfile = supfile,
-                                             seed = seed,
-                                             compatibility_mode = compatibility_mode,
-                                             suffix = suffix)
-    } else if (process_method == "clustercall") {
-      result = run1simulationwithfile_clustercall(supfile = supfile, 
-                                                  seed = seed, 
-                                                  compatibility_mode = compatibility_mode,
-                                                  suffix = suffix)
-    }
+    result = run_sim_w_file(supfile = supfile,
+                            seed = seed,
+                            compatibility_mode = compatibility_mode,
+                            suffix = suffix,
+                            method = process_method)
   },
   error = function(w){
     warning("Error during execution of simulation!")
@@ -84,52 +75,51 @@ print_last_line_of_logfile = function(logfilename, lastline = "") {
   })
 }
 
-run1simulationwithfile_future <- function(supfile,seed="42",compatibility_mode="1",suffix="") {
-  # use the "future" library to run a rcpp-socsim simulation
-  # in a seperate process
-  print("create future cluster")
-  future::plan(future::multisession, workers=2)
-  #print("after future::plan(future::multisession)")
-  print("start socsim simulation now. no output will be shown!")
-  
-  f1 <- future::future({
-    startSocsimWithFile(supfile,seed,compatibility_mode,result_suffix=suffix)
-  },seed=TRUE)
-  print("started!")
-  # start a loop and check whether the simulation in the future is finished.
-  # if it is not yet finished, read the output file and print the last line
-  # to the console
-  outfn = paste0("sim_results_",supfile,"_",seed,"_",suffix,"/logfile.log")
-  print(paste0("wait for simulation to finish, log file: ",outfn))
-  lastline = ""
-  while (!future::resolved(f1)) {
-    Sys.sleep(1)
-    lastline = print_last_line_of_logfile(outfn, lastline)
-    if (lastline=="err0"){
-      break;
-    }
-  }
-  print("simulation finished")
-  
-  v1 <- future::value(f1)
-  return(1)
-}
-
-#' Run a socsim-simulation in the r-process
+#' Run a single Socsim simulation.
 #'
-#' @param rootfolder rootfolder  name of the simulation
-#' @param supfile the .sup file to start the simulation
-#' @param seed RNG seed
-#' @return The results will be written into the specified folder
-run1simulationwithfile_inprocess <- function(folder, supfile,seed,compatibility_mode="1",suffix="") {
-  startSocsimWithFile(supfile,seed,compatibility_mode,result_suffix=suffix)
-  return(1)
-}
+#' @details
+#' See [socsim()] for documentation of the arguments.
+#'
+#' @inheritParams socsim
+run_sim_w_file <- function(supfile, seed = "42", compatibility_mode = "1",
+                           suffix = "", method = "inprocess") {
+    if (method == "inprocess") {
+        startSocsimWithFile(supfile = supfile,
+                            seed = seed,
+                            compatibility_mode = compatibility_mode,
+                            result_suffix = suffix)
+        return(1)
+    } else if (method == "future") {
+        # use the "future" library to run a rcpp-socsim simulation
+        # in a seperate process
+        print("create future cluster")
+        future::plan(future::multisession, workers=2)
+        #print("after future::plan(future::multisession)")
+        print("start socsim simulation now. no output will be shown!")
 
-run1simulationwithfile_clustercall <- function(supfile,seed="23",compatibility_mode="1",suffix="") {
-  # use the "future" library to run a rcpp-socsim simulation
-  # in a seperate process
-  print("parallel::clusterCall")
+        f1 <- future::future({
+            startSocsimWithFile(supfile,seed,compatibility_mode,result_suffix=suffix)
+        },seed=TRUE)
+        print("started!")
+        # start a loop and check whether the simulation in the future is finished.
+        # if it is not yet finished, read the output file and print the last line
+        # to the console
+        outfn = paste0("sim_results_",supfile,"_",seed,"_",suffix,"/logfile.log")
+        print(paste0("wait for simulation to finish, log file: ",outfn))
+        lastline = ""
+        while (!future::resolved(f1)) {
+            Sys.sleep(1)
+            lastline = print_last_line_of_logfile(outfn, lastline)
+            if (lastline=="err0"){
+                break;
+            }
+        }
+        print("simulation finished")
+
+        v1 <- future::value(f1)
+        return(1)
+    } else if (method == "clustercall") {
+  print("Using parallel::clusterCall")
   numCores=1
   outfn = paste0("sim_results_",supfile,"_",seed,"_",suffix,"/logfile.log")
   cl <- parallel::makeCluster(numCores, type="PSOCK", outfile=outfn)
@@ -139,6 +129,14 @@ run1simulationwithfile_clustercall <- function(supfile,seed="23",compatibility_m
   print_last_line_of_logfile(outfn)
   parallel::stopCluster(cl)
   return(1)
+        pass
+    } else {
+        stop("No valid process_method argument given."
+    }
+    return(1)
+}
+
+
 }
 
 
