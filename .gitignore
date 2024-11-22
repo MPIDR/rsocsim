@@ -13,6 +13,7 @@ docs
 man
 *.Rcheck
 *.Rproj.user
+*.Rproj
 *.Rd
 man/estimate_fertility_rates.Rd
 man/estimate_mortality_rates.Rd
