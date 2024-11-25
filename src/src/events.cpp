@@ -314,7 +314,7 @@ int main1(int argc, char *argv[])
 	// Rprintf("Enhancement name: %s\n",ENHANCEMENT_NAME;)
 	if (marriage_queues == 1)
 	{
-		logmsg("\n marriage_queues==1 , consequently all availalbe males are always on the marriage queue\n\n"," ",   1);
+		logmsg("\n marriage_queues==1 , consequently all available males are always on the marriage queue\n\n"," ",   1);
 	}
 	Rprintf("initialize_segment_vars\n");
 	logmsg("initialize_segment_vars\n"," ",1);
@@ -389,25 +389,25 @@ int main1(int argc, char *argv[])
 	if ((fd_pop = fopen(pop_file_name, "r")) == NULL)
 	{
 	  //   Rprintf("------------pop_file error");
-	  Rprintf("can't open file:  %s ", pop_file_name);
+	  Rprintf("Can't open file:  %s ", pop_file_name);
 	  
-	  //logmsg("can't open initial  pop file; can't simuluate..%s \n",pop_file_name,1);//exit
-	  fprintf(fd_log,"can't open initial  pop file; can't simuluate..%s \n",pop_file_name);
-	  stop("can't open initial  pop file; can't simuluate.. %s \n",pop_file_name);//exit
-		perror("can't open initial  pop file; can't simuluate..\n");
+	  //logmsg("can't open initial  pop file; can't simulate..%s \n",pop_file_name,1);//exit
+	  fprintf(fd_log,"Can't open initial pop file; can't simulate..%s \n",pop_file_name);
+	  stop("Can't open initial pop file; can't simulate.. %s \n",pop_file_name);//exit
+      perror("Can't open initial  pop file; can't simulate..\n");
 	}
 	if ((fd_mar = fopen(mar_file_name, "r")) == NULL)
 	{
-	  logmsg("can't openmarriage file Hope that's OK"," ",1);
-	  warning("can't openmarriage file Hope that's OK");//exit
-		//perror("can't open  marriage file Hope that's OK\n");
+	  logmsg("Can't open marriage file. If you expected marriages to take place, this might indicate a problem."," ",1);
+	  warning("Can't openmarriage file. If you expected marriages to take place, this might indicate a problem.");//exit
+      //perror("can't open  marriage file Hope that's OK\n");
 	}
 	
 	//Rprintf("------------aa1");
 
 	if ((fd_otx = fopen(otx_file_name, "r")) == NULL)
 	{
-	  warning("can't open  transition history file. Hope that's OK\n");
+	  warning("Can't open transition history file. If you did not specify rates for transitions between groups, this is fine.\n");
 	  //perror("can't open  transition history file. Hope that's OK\n");
 	}
 	//Rprintf("------------aa2");
@@ -416,9 +416,9 @@ int main1(int argc, char *argv[])
 	{
 		if ((fd_xtra = fopen(xtra_file_name, "r")) == NULL)
 		{
-			printf("xtra file is named %s\n", xtra_file_name);
+			printf("Extra file is named %s\n", xtra_file_name);
 		    //perror("can't open  xtra file despite being asked to\n");
-		    stop("can't open  xtra file despite being asked to\n");
+		    stop("Can't open extra file despite being asked to.\n");
 			//exit;
 		}
 	}
@@ -476,7 +476,7 @@ int main1(int argc, char *argv[])
 				sprintf(logstring, "\n\nEncountered personid=%d with mstatus=%d (NOT SINGLE)\nSince no initial .omar file was found this is madness and can only lead to tears", p->person_id, p->mstatus);
 				logmsg("%s\n", logstring, 1);
 				//perror("No one in initial .opop can be married if you do not supply an initial .omar file. Duhhhhh.\n...Exitting");
-				stop("No one in initial .opop can be married if you do not supply an initial .omar file. Duhhhhh.\n...Exitting");
+				stop("No one in initial .opop can be married if you do not supply an initial .omar file. Duhhhhh.\n...Exiting");
 				//exit(-1);
 			}
 		}
