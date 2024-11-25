@@ -1,6 +1,4 @@
-#' Wrapper for [run_sim_w_file()].
-#'
-#' Run a single Socsim simulation with a given supervisory file and directory.
+#' Run a single Socsim simulation with a given supervisory file and directory
 #'
 #' @param folder A string. This is the base directory of the simulation. Every
 #'   .sup and rate file should be named relative to this directory. 
@@ -134,9 +132,8 @@ print_last_line_of_logfile = function(logfilename, lastline = "") {
   })
 }
 
-#' Run a single socsim-simulation with a socsim binary.
-#' the place
-#' The results will be saved into that folder
+
+#' Run a single socsim-simulation with a socsim binary
 #'
 #' @param rootfolder rootfolder...
 #' @param folder base-directory of the simulation. 
@@ -177,43 +174,48 @@ run1simulationwithfile_from_binary <- function(folder, supfile,seed="42",compati
   return(1)
 }
 
-#' create a folder in the user-dir of the current user in the socsim-subfolder
-#' @param simulation_name optional name for the simulation
-#' @param basefolder optional base directory where the folder will be created
-#' @return the path to the folder
+#' Create a directory structure for the simulation
+#'
+#' Create a two-level directory structure. If the first-level argument is NULL,
+#' we look for and, if needed, created the directory 'socsim' in the user's
+#' home directory. If the second-level argument is NULL, we create a directory
+#' named 'socsim_sim_{some random component}' in the first-level directory.
+#'
+#' @param basedir A string. Optional. First-level directory where the
+#'   simulation-specific directory will be created. Defaults to '$HOME/socsim'.
+#' @param simdir A string. Optional. Simulation-specific directory which will
+#'   be created within 'basedir'. Defaults to 'socsim_sim_' plus a random
+#'   component created with [tempfile()].
+#' @return A string. The full path to the simulation-specific directory.
 #' @export
-create_simulation_folder <- function(simulation_name=NULL,basefolder=NULL) {
-  if (is.null(simulation_name)) {
-    # create a random name that starts with socsim_sim_
-    simulation_name = paste0("socsim_sim_",as.character(sample(1:10000, 1)))
-  }
-  if (is.null(basefolder)) {
-    # check whether there is a "socsim" folder in the users home-directory:
-    # if not, create it
-    userdir <- dirname(path.expand("~//"))
-    basefolder = paste0(userdir, "/", "socsim")
-  }
-  if (!file.exists(basefolder)) {
-    dir.create(basefolder)
-  }
-  # create the subfolder
-  subfolder <- paste0(basefolder, "/", simulation_name)
-  if (!file.exists(subfolder)) {
-    dir.create(subfolder)
-  }
-  return(subfolder)
+create_simulation_folder <- function(basedir = NULL, simdir = NULL) {
+    # If no 'basedir' is given, we default to '$HOME/socsim'.
+    if (is.null(basedir)) { basedir <- file.path(path.expand("~"), "socsim") }
+    # If 'basedir' does not exist, create it.
+    if (!dir.exists(basedir)) { dir.create(basedir) }
+    if (is.null(simdir)) {
+        # If no 'simdir' is given, create a random name that starts with
+        # 'socsim_sim_'.
+        subdir = tempfile(pattern = "socsim_sim_", tmpdir = basedir)
+    } else {
+        subdir = file.path(basedir, simdir)
+    }
+    if (!dir.exists(subdir)) { dir.create(subdir) }
+    return(subdir)
 }
 
-#' create a basic .sup file for a simulation
-#' the simulation is only a simple one
-#' the file will be saved into the sim-folder
-#' @param simfolder the folder where the sup-file will be saved
-#' @param simname the name of the simulation
-#' @return sup.fn the filename of the supervisoryary file
-#' which is needed to start the simulation
+#' Create a basic .sup file for a simulation
+#' 
+#' The simulation is only a simple one. The file will be saved into the
+#' directory 'simdir'.
+#' 
+#' @param simdir A string. The directory where the .sup file will be saved.
+#' @param simname A string. The name of the simulation.
+#' @return A string. The filename of the supervisory file which is needed to
+#'   start the simulation.
 #' @export
-create_sup_file <- function(simfolder, simname) {
-  sup.content <- "
+create_sup_file <- function(simdir, simname) {
+  sup_content <- "
 *Supervisory file for a stable population
 * 20220120
 marriage_queues 1
@@ -228,43 +230,46 @@ include SWEfert2022
 include SWEmort2022
 run
 "
-  sup.fn <- "socsim.sup"
-  cat(sup.content,file=file.path(simfolder, sup.fn))
+  sup_fn <- "socsim.sup"
+  cat(sup_content, file = file.path(simdir, sup_fn))
   fn_SWEfert2022_source <- system.file("extdata", "SWEfert2022", package = "rsocsim", mustWork = TRUE)
-  fn_SWEfert2022_dest <- file.path(simfolder, "SWEfert2022")
+  fn_SWEfert2022_dest <- file.path(simdir, "SWEfert2022")
   fn_SWEmort2022_source <- system.file("extdata", "SWEmort2022", package = "rsocsim", mustWork = TRUE)
-  fn_SWEmort2022_dest <- file.path(simfolder, "SWEmort2022")
+  fn_SWEmort2022_dest <- file.path(simdir, "SWEmort2022")
   fn_init_source <- system.file("extdata", "init_new.opop", package = "rsocsim", mustWork = TRUE)
-  fn_init_dest <- file.path(simfolder, "init_new.opop")
-  file.copy(fn_SWEfert2022_source,fn_SWEfert2022_dest)
-  file.copy(fn_SWEmort2022_source,fn_SWEmort2022_dest)
-  file.copy(fn_init_source,fn_init_dest)
-  return(sup.fn)
+  fn_init_dest <- file.path(simdir, "init_new.opop")
+  file.copy(fn_SWEfert2022_source, fn_SWEfert2022_dest)
+  file.copy(fn_SWEmort2022_source, fn_SWEmort2022_dest)
+  file.copy(fn_init_source, fn_init_dest)
+  return(sup_fn)
 }
 
-#' read the content of the supervisory file 
-#' @param simfolder base folder of the simulation
-#' @param simname name of the .sup-file
-#' @return the content of the supervisory file as a string (TODO: Now it 
-#' returns a list of lines instead of a single string)
+#' Read the content of the supervisory file 
+#'
+#' @param simdir A string. Base directory of the simulation.
+#' @param simname A string. File name of the .sup file.
+#' @return A list of strings. The content of the supervisory file.
 #' @export
-get_supervisory_content <- function(simfolder, sup_fn) {
+get_supervisory_content <- function(simdir, sup_fn) {
   if (is.null(sup_fn)) {
     sup_fn <- "socsim.sup"
   }
-  sup_content <- readLines(file.path(simfolder, sup_fn))
+  sup_content <- readLines(file.path(simdir, sup_fn))
   return(sup_content)
 }
 
-
-
-#' simulation_time_to_years
-#' convert the time measures.
-#' @param simulation time
-#' @param pre-simulation-time - how long the simulation ran to get a stable population
-#' @param start-year - the year the simulation started
-#' @return year, a number like 2022.2
+#' Calculate for how many years the simulation ran
+#'
+#' @param simulation_time An integer. The number of periods (months) the
+#'   simulation ran.
+#' @param pre_simulation_time An integer. The number of periods (months) the
+#'   simulation ran before getting to a stable population. This is subtracted
+#'   from 'simulation_time' in order to arrive at the "real" simulation time
+#' @param start_year An integer. The year the simulation started.
+#' @return An number. The number of years for which the simulation ran. May
+#'   have a fractional part.
 #' @export
 simulation_time_to_years <- function(simulation_time, pre_simulation_time, start_year) {
-  return(start_year + (simulation_time - pre_simulation_time)/12)
+    stopifnot(all(is.integer(simulation_time), is.integer(pre_simulation_time), is.integer(start_year)))
+    return(start_year + (simulation_time - pre_simulation_time)/12)
 }
