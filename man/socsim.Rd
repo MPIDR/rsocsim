@@ -24,7 +24,7 @@ relative to the directory.}
 to "42".}
 
 \item{process_method}{A string. Whether and how SOCSIM should be started in
-its own process or in the running R process. Defaults to "incprocess". Use
+its own process or in the running R process. Defaults to "inprocess". Use
 one of:
 \itemize{
 \item "future" - the safest option. A new process will be started via the
