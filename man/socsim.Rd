@@ -2,7 +2,7 @@
 % Please edit documentation in R/startsocsim.R
 \name{socsim}
 \alias{socsim}
-\title{Wrapper for \code{\link[=run_sim_w_file]{run_sim_w_file()}}.}
+\title{Run a single Socsim simulation with a given supervisory file and directory}
 \usage{
 socsim(
   folder,
@@ -44,5 +44,5 @@ Returns the name of the directory to which the results will be
 written.
 }
 \description{
-Run a single Socsim simulation with a given supervisory file and directory.
+Run a single Socsim simulation with a given supervisory file and directory
 }

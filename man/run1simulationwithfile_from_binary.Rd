@@ -2,9 +2,7 @@
 % Please edit documentation in R/startsocsim.R
 \name{run1simulationwithfile_from_binary}
 \alias{run1simulationwithfile_from_binary}
-\title{Run a single socsim-simulation with a socsim binary.
-the place
-The results will be saved into that folder}
+\title{Run a single socsim-simulation with a socsim binary}
 \usage{
 run1simulationwithfile_from_binary(
   folder,
@@ -30,7 +28,5 @@ folder}
 The results will be written into the specified folder
 }
 \description{
-Run a single socsim-simulation with a socsim binary.
-the place
-The results will be saved into that folder
+Run a single socsim-simulation with a socsim binary
 }

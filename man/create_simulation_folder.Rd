@@ -2,18 +2,24 @@
 % Please edit documentation in R/startsocsim.R
 \name{create_simulation_folder}
 \alias{create_simulation_folder}
-\title{create a folder in the user-dir of the current user in the socsim-subfolder}
+\title{Create a directory structure for the simulation}
 \usage{
-create_simulation_folder(simulation_name = NULL, basefolder = NULL)
+create_simulation_folder(basedir = NULL, simdir = NULL)
 }
 \arguments{
-\item{simulation_name}{optional name for the simulation}
+\item{basedir}{A string. Optional. First-level directory where the
+simulation-specific directory will be created. Defaults to '$HOME/socsim'.}
 
-\item{basefolder}{optional base directory where the folder will be created}
+\item{simdir}{A string. Optional. Simulation-specific directory which will
+be created within 'basedir'. Defaults to 'socsim_sim_' plus a random
+component created with \code{\link[=tempfile]{tempfile()}}.}
 }
 \value{
-the path to the folder
+A string. The full path to the simulation-specific directory.
 }
 \description{
-create a folder in the user-dir of the current user in the socsim-subfolder
+Create a two-level directory structure. If the first-level argument is NULL,
+we look for and, if needed, created the directory 'socsim' in the user's
+home directory. If the second-level argument is NULL, we create a directory
+named 'socsim_sim_{some random component}' in the first-level directory.
 }
