@@ -255,7 +255,7 @@ include SWEfert2022
 include SWEmort2022
 run
 "
-  sup.fn <- ifelse(grepl(".*\\.sup$", simname), simname, paste(simname, ".sup"))
+  sup.fn <- ifelse(grepl(".*\\.sup$", simname), simname, paste0(simname, ".sup"))
   cat(sup.content,file=file.path(simfolder, sup.fn))
   fn_SWEfert2022_source <- system.file("extdata", "SWEfert2022", package = "rsocsim", mustWork = TRUE)
   fn_SWEfert2022_dest <- file.path(simfolder, "SWEfert2022")
