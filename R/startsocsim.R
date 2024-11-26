@@ -233,7 +233,9 @@ create_simulation_folder <- function(simulation_name=NULL,basefolder=NULL) {
 #' the simulation is only a simple one
 #' the file will be saved into the sim-folder
 #' @param simfolder the folder where the sup-file will be saved
-#' @param simname the name of the simulation
+#' @param simname A string. The name of the simulation. If this contains a
+#'   ".sup" suffix, it is used as is as the file name of the .sup file. If not,
+#'   it is used as its stub.
 #' @return sup.fn the filename of the supervisoryary file
 #' which is needed to start the simulation
 #' @export
@@ -253,7 +255,7 @@ include SWEfert2022
 include SWEmort2022
 run
 "
-  sup.fn <- "socsim.sup"
+  sup.fn <- ifelse(grepl(".*\\.sup$", simname), simname, paste(simname, ".sup"))
   cat(sup.content,file=file.path(simfolder, sup.fn))
   fn_SWEfert2022_source <- system.file("extdata", "SWEfert2022", package = "rsocsim", mustWork = TRUE)
   fn_SWEfert2022_dest <- file.path(simfolder, "SWEfert2022")
@@ -264,6 +266,8 @@ run
   file.copy(fn_SWEfert2022_source,fn_SWEfert2022_dest)
   file.copy(fn_SWEmort2022_source,fn_SWEmort2022_dest)
   file.copy(fn_init_source,fn_init_dest)
+  print(paste("Basic .sup file written to file:", sup.fn))
+  print(paste("Full path:", file.path(simfolder, sup.fn)))
   return(sup.fn)
 }
 
