@@ -1,24 +1,23 @@
-.Rproj.user
-.Rhistory
-.RData
-.Ruserdata
+# R/Rstudio user- or machine-specific files
+**/*.Rcheck
+**/*.RData
+**/*.Rhistory
+**/*.Rproj
+**/*.Rproj.user
+**/*.Ruserdata
+
+# Documentation. Users should (re-)generate this locally.
+docs/*
+man/*
+**/*.Rd
+
+# Vscode user- or machine-specific files
+.vscode/*
+.vscode/c_cpp_properties.json
+
 src/*.o
 src/*.so
 src/*.dll
-*.log
 src-x64/*
 src-i386/*
-.vscode/c_cpp_properties.json
-docs
-man
-*.Rcheck
-*.Rproj.user
-*.Rd
-man/estimate_fertility_rates.Rd
-man/estimate_mortality_rates.Rd
-man/get_supervisory_content.Rd
-man/read_omar.Rd
-man/read_opop.Rd
-man/simulation_time_to_years.Rd
-man/socsim.Rd
-.vscode/*
+*.log
