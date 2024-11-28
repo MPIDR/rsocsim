@@ -27,6 +27,18 @@ socsim <- function(folder, supfile,seed="42",process_method="inprocess",compatib
   print(seed)
   previous_wd = getwd()
   result = NULL
+  # If 'supfile' contains more than a basename, startSocsimWithFile() will
+  # crash. This is only a workaround.
+  remove_supfile <- FALSE
+  if (!identical(basename(supfile), supfile)) {
+    if (identical(dirname(supfile), "folder")) {
+      supfile <- basename(supfile)
+    } else {
+      warning("The argument 'supfile' contained more than a basename. We copy the .sup file to the 'folder' directory (to avoid startSocsimWithFile() from crashing) and will remove it after the simulation finishes.")
+      file.copy(from = file.path(folder, supfile), to = folder, overwrite = TRUE)
+      remove_supfile <- TRUE
+    }
+  }
   tryCatch(expr = {
     setwd(folder)
     if ((process_method=="inprocess") | (process_method =="default")) {
@@ -36,6 +48,7 @@ socsim <- function(folder, supfile,seed="42",process_method="inprocess",compatib
     } else if (process_method=="clustercall") {
       result = run1simulationwithfile_clustercall(supfile=supfile,seed=seed,compatibility_mode=compatibility_mode,suffix=suffix)
     }
+    if (remove_supfile) file.remove(file.path(folder, supfile))
   },
   error = function(w){
     warning("Error during execution of simulation!")
@@ -233,13 +246,12 @@ create_simulation_folder <- function(simulation_name=NULL,basefolder=NULL) {
 #' the simulation is only a simple one
 #' the file will be saved into the sim-folder
 #' @param simfolder the folder where the sup-file will be saved
-#' @param simname A string. The name of the simulation. If this contains a
-#'   ".sup" suffix, it is used as is as the file name of the .sup file. If not,
-#'   it is used as its stub.
+#' @param simname A string. The name of the simulation. Default is "socsim.sup".
+#'   If the string does not end in ".sup", ".sup" is added as a suffix.
 #' @return sup.fn the filename of the supervisoryary file
 #' which is needed to start the simulation
 #' @export
-create_sup_file <- function(simfolder, simname) {
+create_sup_file <- function(simname = "socsim.sup", simfolder) {
   sup.content <- "
 *Supervisory file for a stable population
 * 20220120
@@ -255,20 +267,27 @@ include SWEfert2022
 include SWEmort2022
 run
 "
-  sup.fn <- ifelse(grepl(".*\\.sup$", simname), simname, paste0(simname, ".sup"))
-  cat(sup.content,file=file.path(simfolder, sup.fn))
-  fn_SWEfert2022_source <- system.file("extdata", "SWEfert2022", package = "rsocsim", mustWork = TRUE)
+  if (simname != "socsim.sup") {
+    if (!grepl(".*\\.sup$", simname)) { # If 'simname' does not end in '.sup', add it
+      simname <- paste0(simname, ".sup")
+    }
+  }
+  cat(sup.content, file = file.path(simfolder, simname))
+  fn_SWEfert2022_source <- system.file("extdata", "SWEfert2022", 
+                                       package = "rsocsim", mustWork = TRUE)
   fn_SWEfert2022_dest <- file.path(simfolder, "SWEfert2022")
-  fn_SWEmort2022_source <- system.file("extdata", "SWEmort2022", package = "rsocsim", mustWork = TRUE)
+  fn_SWEmort2022_source <- system.file("extdata", "SWEmort2022",
+                                       package = "rsocsim", mustWork = TRUE)
   fn_SWEmort2022_dest <- file.path(simfolder, "SWEmort2022")
-  fn_init_source <- system.file("extdata", "init_new.opop", package = "rsocsim", mustWork = TRUE)
+  fn_init_source <- system.file("extdata", "init_new.opop",
+                                package = "rsocsim", mustWork = TRUE)
   fn_init_dest <- file.path(simfolder, "init_new.opop")
-  file.copy(fn_SWEfert2022_source,fn_SWEfert2022_dest)
-  file.copy(fn_SWEmort2022_source,fn_SWEmort2022_dest)
-  file.copy(fn_init_source,fn_init_dest)
-  print(paste("Basic .sup file written to file:", sup.fn))
-  print(paste("Full path:", file.path(simfolder, sup.fn)))
-  return(sup.fn)
+  file.copy(fn_SWEfert2022_source, fn_SWEfert2022_dest)
+  file.copy(fn_SWEmort2022_source, fn_SWEmort2022_dest)
+  file.copy(fn_init_source, fn_init_dest)
+  print(paste("Basic .sup file written to file:", simname))
+  print(paste("Full path:", file.path(simfolder, simname)))
+  return(simname)
 }
 
 #' read the content of the supervisory file 
