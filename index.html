@@ -58,13 +58,22 @@
 <div class="section level3">
 <h3 id="from-source">From Source<a class="anchor" aria-label="anchor" href="#from-source"></a>
 </h3>
-<p>To get the latest version, you need to have the package devtools and a Rcpp compatible compiler installed (<a href="https://cran.r-project.org/bin/windows/Rtools/index.html" class="external-link">RTools</a> on Windows; Xcode command line tools on Mac: <code>xcode-select --install</code>; <code>sudo apt-get install r-base-dev</code> on Linux, all according to <a href="https://teuder.github.io/rcpp4everyone_en/020_install.html" class="external-link uri">https://teuder.github.io/rcpp4everyone_en/020_install.html</a>)</p>
-<p>Then install the devtools R-package:</p>
+<p>To get the latest version, you need to have a Rcpp compatible compiler installed and a way to install packages from Github.</p>
+<p>Install a Rcpp compatible compiler:</p>
+<ul>
+<li>on Windows: <a href="https://cran.r-project.org/bin/windows/Rtools/index.html" class="external-link">RTools</a>;</li>
+<li>on Mac: <code>xcode-select --install</code>;</li>
+<li>on Linux: <code>sudo apt-get install r-base-dev</code>.</li>
+</ul>
+<p>For more help, see <a href="https://teuder.github.io/rcpp4everyone_en/020_install.html" class="external-link">Rcpp for everyone</a>.</p>
+<p>In order to install packages from Github, you can use the {remotes} or {devtools} packages. {remotes} (<a href="https://cran.r-project.org/web/packages/remotes/index.html" class="external-link">CRAN link</a>) only provides the capability to install packages from different code repositories. {devtools} (<a href="https://cran.r-project.org/web/packages/devtools/index.html" class="external-link">CRAN link</a>) includes many more capabilities needed in package development (e.g. (re-)generating documentation or running tests). {devtools} includes {remotes}.</p>
+<p>Install {remotes} or {devtools}:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></span></code></pre></div>
-<p>Then you can use devtools to install rsocsim:</p>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span></code></pre></div>
+<p>Install rsocsim from Github:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"MPIDR/rsocsim"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># The command is the same in {devtools} and {remotes}.</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"MPIDR/rsocsim"</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
