@@ -272,6 +272,12 @@ int main1(int argc, char *argv[])
 	compatibility_mode = atoi(argv[3]);
 	strcpy(result_suffix, argv[4]);
 	
+
+	// 2024-12-03 Ole
+	// create_output_fn_dir() creates the directory structure for the
+	// simulation and copies some files around. Yes, it uses global state
+	// Yes, ideally it wouldn't. We keep it this way to keep main() simple
+	// and to minimize divergence from the original Socsim.
 	create_output_fn_dir();
 
 	Rcpp::Rcout << "random_number seed: " << ceed << "| command-line argv[1]: " << argv[1] << "| argv[2]: " << argv[2] << std::endl;
