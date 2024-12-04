@@ -335,12 +335,52 @@ int load( char *file)
 	return 0;
 }
 
-int create_output_fn_dir(){
+char* get_basename(const char *input, const char *delimiters, char *buffer, size_t buffer_size){
+	// input: the input string
+	// delimiters: the delimiters on which to split
+	// buffer: a buffer to hold a copy of the input string (strtok_r modifies its input)
+	char *saveptr;		  // for internal use
+	char *token;		  // current token
+	char *last_token = NULL;  // placeholder until we exhaust the input
+	
+	if (strlen(input) >= buffer_size) {
+		return NULL;
+	}
+
+	strncpy(buffer, input, buffer_size);
+	buffer[buffer_size - 1] = '\0';
+
+	token = strtok_r(buffer, delimiters, &saveptr);
+	while (token != NULL) {
+		last_token = token;
+		token = strtok_r(NULL, delimiters, &saveptr);
+	}
+
+	return last_token;
+}
+
+int create_output_fn_dir() {
 	// concatenate "sim_results_" with the name of the supervisory file:
-	//sprintf(output_file_name, "sim_results_%s", words[1]);
 	char buffer_output_dir [1024];
 	char buffer_output_fn [1024];
-	sprintf (buffer_output_dir, "sim_results_%s_%ld_%s/", rate_file_name, original_seed,result_suffix);
+
+	/* 2024-12-03 Ole
+	   If rate_file_name includes more than a basename, buffer_output_dir 
+	   will not be a valid path and all strings built from it will likely
+	   be invalid paths too. */
+	// Get basename of rate_file_name if it includes '/' or '\' (i.e.
+	// directories)
+	char buffer_base_name[1024];
+	const char *delimiters = "/\\";
+	char *rate_file_base_name = get_basename(rate_file_name, delimiters,
+			buffer_base_name, 1024);
+	if (rate_file_base_name) {
+		printf("Basename of sup file: %s\n", rate_file_base_name);
+	} else {
+		printf("Error: no sup file provided or buffer too small.\n");
+	}
+
+	sprintf (buffer_output_dir, "sim_results_%s_%ld_%s/", rate_file_base_name, original_seed,result_suffix);
 	sprintf (buffer_output_fn, "%sresult", buffer_output_dir);
 
 	// create the directory:
@@ -349,6 +389,9 @@ int create_output_fn_dir(){
 #else 
 	mkdir(buffer_output_dir, 0777); // notice that 777 is different than 0777
 #endif
+
+	Rprintf("Trying to copy %s\n", rate_file_name);
+	Rprintf("... to %s\n", buffer_output_fn);
 
 	strcpy(pop_out_name, buffer_output_fn);
 	strcpy(mar_out_name, buffer_output_fn);
@@ -368,6 +411,18 @@ int create_output_fn_dir(){
 	sprintf (buffer_sup_fn_dest, "%s%s", buffer_output_dir, rate_file_name);
 	FILE *source = fopen(rate_file_name, "rb");
 	FILE *destination = fopen(buffer_sup_fn_dest, "wb");
+	// copy the .sup-file (rate_file_name) into the subfolder:
+	char buffer_sup_fn_dest[1024];
+	sprintf (buffer_sup_fn_dest, "%s%s", buffer_output_dir, rate_file_base_name);
+	FILE *source = fopen(rate_file_name, "rb");
+	if (source == NULL) {
+		Rprintf("Could not open source (rate) file: %s\n", strerror(errno));
+	}
+	FILE *destination = fopen(buffer_sup_fn_dest, "wb");
+	if (destination == NULL) {
+		stop("Could not open destination file: %s\n", strerror(errno));
+	}
+>>>>>>> main
 	char buffer[1024];
 	size_t bytes_read;
 	while ((bytes_read = fread(buffer, 1, sizeof(buffer), source)) > 0) {
@@ -376,7 +431,10 @@ int create_output_fn_dir(){
 	fclose(source);
 	fclose(destination);
 
-	return 1;
+	sprintf(log_file_name, "%slogfile.log", buffer_output_dir);
+	//sprintf(logstring, "compatibility_mode: %d \n",compatibility_mode );
+	//logmsg("%s\n", logstring, 1);	
+	return(0);
 }
 
 /*

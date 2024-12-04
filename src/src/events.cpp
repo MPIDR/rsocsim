@@ -258,7 +258,32 @@ int main1(int argc, char *argv[])
 	}
 	child_inherits_group = FROM_MOTHER;
 	parameter0 = parameter1 = parameter2 = parameter3 = parameter4 = parameter5 = 0;
-
+	
+	size_of_extra = 0; /*no extra variables/.opox by default*/
+	if (argc < 2)
+	{
+	  warning("Warning: Unexpected condition occurred - too few arguments");
+	  //return 12;
+	  
+	  Rcpp::Rcout << "useage: ratefile random_number" << useage << argv[0] << std::endl;
+	 	warning("useage: %s ratefile random_number", useage);
+		//error(useage);
+		stop("stop!");
+		//exit(1);
+	}
+	//Rcpp::Rcout << "useage: ratefile random_number" << useage << argv[1] << argv[2] << std::endl;
+	
+	//strcpy(rate_file_name, *++argv);
+	
+	//Rcpp::Rcout << "useage: ratefile random_number" << useage << argv[1] << argv[2] << std::endl;
+	Rcpp::Rcout << "v18a!-command-line argv[0]: " << argv[0] << "| argv[1]: " << argv[1] << "| argv[2]: " << argv[2]  << "| argv[3]: " << argv[3] << std::endl;
+	
+	//ceed = atoi(*++argv);
+	ceed = atoi(argv[2]);
+	original_seed = ceed;
+	compatibility_mode = atoi(argv[3]);
+	strcpy(result_suffix, argv[4]);
+	
 	// 2024-12-03 Ole
 	// create_output_fn_dir() creates the directory structure for the
 	// simulation and copies some files around. Yes, it uses global state
@@ -288,7 +313,7 @@ int main1(int argc, char *argv[])
 	// Rprintf("Enhancement name: %s\n",ENHANCEMENT_NAME;)
 	if (marriage_queues == 1)
 	{
-		logmsg("\n marriage_queues==1 , consequently all availalbe males are always on the marriage queue\n\n"," ",   1);
+		logmsg("\n marriage_queues==1 , consequently all available males are always on the marriage queue\n\n"," ",   1);
 	}
 	Rprintf("initialize_segment_vars\n");
 	logmsg("initialize_segment_vars\n"," ",1);
@@ -377,8 +402,8 @@ int main1(int argc, char *argv[])
 
 	if ((fd_otx = fopen(otx_file_name, "r")) == NULL)
 	{
-		warning("can't open  transition history file. Hope that's OK\n");
-		//perror("can't open  transition history file. Hope that's OK\n");
+	  warning("Can't open transition history file. If you did not specify rates for transitions between groups, this is fine.\n");
+	  //perror("can't open  transition history file. Hope that's OK\n");
 	}
 	//Rprintf("------------aa2");
 	//stop("here we stop!");
@@ -386,9 +411,9 @@ int main1(int argc, char *argv[])
 	{
 		if ((fd_xtra = fopen(xtra_file_name, "r")) == NULL)
 		{
-			printf("xtra file is named %s\n", xtra_file_name);
-			//perror("can't open  xtra file despite being asked to\n");
-			stop("can't open  xtra file despite being asked to\n");
+			printf("Extra file is named %s\n", xtra_file_name);
+		    //perror("can't open  xtra file despite being asked to\n");
+		    stop("Can't open extra file despite being asked to.\n");
 			//exit;
 		}
 	}
@@ -446,7 +471,7 @@ int main1(int argc, char *argv[])
 				sprintf(logstring, "\n\nEncountered personid=%d with mstatus=%d (NOT SINGLE)\nSince no initial .omar file was found this is madness and can only lead to tears", p->person_id, p->mstatus);
 				logmsg("%s\n", logstring, 1);
 				//perror("No one in initial .opop can be married if you do not supply an initial .omar file. Duhhhhh.\n...Exitting");
-				stop("No one in initial .opop can be married if you do not supply an initial .omar file. Duhhhhh.\n...Exitting");
+				stop("No one in initial .opop can be married if you do not supply an initial .omar file. Duhhhhh.\n...Exiting");
 				//exit(-1);
 			}
 		}

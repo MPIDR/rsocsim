@@ -14,21 +14,34 @@ If you encounter an error or bug, we are happy to hear from you in the issues.
 ### From Source
 
 
-To get the latest version, you need to have the package devtools and a 
-Rcpp compatible compiler installed ([RTools](https://cran.r-project.org/bin/windows/Rtools/index.html)
-on Windows; Xcode command line tools on Mac: `xcode-select --install`; 
-`sudo apt-get install r-base-dev` on Linux,
-all according to https://teuder.github.io/rcpp4everyone_en/020_install.html)
+To get the latest version, you need to have a Rcpp compatible compiler installed
+and a way to install packages from Github.
+
+Install a Rcpp compatible compiler:
+
+- on Windows: [RTools](https://cran.r-project.org/bin/windows/Rtools/index.html);
+- on Mac: `xcode-select --install`;
+- on Linux: `sudo apt-get install r-base-dev`.
+ 
+For more help, see [Rcpp for everyone](https://teuder.github.io/rcpp4everyone_en/020_install.html).
+
+In order to install packages from Github, you can use the {remotes} or
+{devtools} packages. {remotes} ([CRAN link](https://cran.r-project.org/web/packages/remotes/index.html))
+only provides the capability to install packages from different code
+repositories. {devtools} ([CRAN link](https://cran.r-project.org/web/packages/devtools/index.html))
+includes many more capabilities needed in package development (e.g.
+(re-)generating documentation or running tests). {devtools} includes {remotes}.
 
 
-Then install the devtools R-package:
+Install {remotes} or {devtools}:
 ````R
-install.packages("devtools")
+install.packages("remotes")
 ````
 
-Then you can use devtools to install rsocsim:
+Install rsocsim from Github:
 ````R
-devtools::install_github("MPIDR/rsocsim")
+# The command is the same in {devtools} and {remotes}.
+remotes::install_github("MPIDR/rsocsim")
 ````
 
 ## Use rsocsim

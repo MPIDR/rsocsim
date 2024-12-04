@@ -29,6 +29,18 @@ socsim <- function(folder, supfile, seed = "42", process_method = "inprocess",
   print(paste("RNG seed:", seed))
   previous_wd = getwd()
   result = NULL
+  # If 'supfile' contains more than a basename, startSocsimWithFile() will
+  # crash. This is only a workaround.
+  remove_supfile <- FALSE
+  if (!identical(basename(supfile), supfile)) {
+    if (identical(dirname(supfile), "folder")) {
+      supfile <- basename(supfile)
+    } else {
+      warning("The argument 'supfile' contained more than a basename. We copy the .sup file to the 'folder' directory (to avoid startSocsimWithFile() from crashing) and will remove it after the simulation finishes.")
+      file.copy(from = file.path(folder, supfile), to = folder, overwrite = TRUE)
+      remove_supfile <- TRUE
+    }
+  }
   tryCatch(expr = {
     setwd(folder)
     result = run_sim_w_file(supfile = supfile,
@@ -233,11 +245,14 @@ run
 "
   sup_fn <- "socsim.sup"
   cat(sup_content, file = file.path(simdir, sup_fn))
-  fn_SWEfert2022_source <- system.file("extdata", "SWEfert2022", package = "rsocsim", mustWork = TRUE)
+  fn_SWEfert2022_source <- system.file("extdata", "SWEfert2022",
+				       package = "rsocsim", mustWork = TRUE)
   fn_SWEfert2022_dest <- file.path(simdir, "SWEfert2022")
-  fn_SWEmort2022_source <- system.file("extdata", "SWEmort2022", package = "rsocsim", mustWork = TRUE)
+  fn_SWEmort2022_source <- system.file("extdata", "SWEmort2022",
+				       package = "rsocsim", mustWork = TRUE)
   fn_SWEmort2022_dest <- file.path(simdir, "SWEmort2022")
-  fn_init_source <- system.file("extdata", "init_new.opop", package = "rsocsim", mustWork = TRUE)
+  fn_init_source <- system.file("extdata", "init_new.opop",
+				package = "rsocsim", mustWork = TRUE)
   fn_init_dest <- file.path(simdir, "init_new.opop")
   file.copy(fn_SWEfert2022_source, fn_SWEfert2022_dest)
   file.copy(fn_SWEmort2022_source, fn_SWEmort2022_dest)
