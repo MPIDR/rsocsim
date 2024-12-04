@@ -1,12 +1,21 @@
 /* %W% %G% */
 #include "defs.h"
-#include <strings.h>
+#include <string.h>  // not the same as <strings.h>; part of standard C
+#include <strings.h> // not the same as <string.h>; POSIX/Unix-specific
 #include <stdio.h>
 #include <sys/file.h>
 #include <math.h>
 #include <stdlib.h>
-#include <string.h>
-//#include <Rcpp.h>
+
+// getcwd may work on Windows if appropriate POSIX compatibility layers are
+// available. Rtools44 provides MinGW.
+#ifdef WINDOWS
+#include <direct.h>
+#define GetCurrentDir _getcwd
+#else
+#include <unistd.h>
+#define GetCurrentDir getcwd
+#endif
 
 #include <Rcpp.h>
 using namespace Rcpp;
@@ -17,8 +26,6 @@ using namespace Rcpp;
 #include "random.c"
 #include "utils.c"
 #include "xevents.c"
-
-//using namespace Rcpp;
 
 int load(char*);
 void adjust_birth_for_bint();
@@ -105,72 +112,83 @@ const char *c_tally_to_string[] = {
 	"BMOMBMOMBPARBKID",
 	"NUMCAT",
 };
- 
- 
- 
+
+
+
 // [[Rcpp::export]]
 int main1(int argc, char *argv[])
-
 {
-  Rcpp::Rcout << "start socsim main. MAXUYEARS: " << MAXUYEARS << "; MAXUMONTHS: " << MAXUMONTHS << std::endl;
-  //Rprintf("-0at-----------%s  \n", argv[0]);
-  //Rprintf("-1at-----------%s  \n", argv[1]);
-  //Rprintf("-2at-----------%s  \n", argv[2]);
-  //Rprintf("-3a-----------%s  \n", argv[3]);
-  //Rprintf("-0a-----------%d  \n", argv[0]);
-  //Rprintf("-1a-----------%d  \n", argv[1]);
-  //Rprintf("-2a-----------%d  \n", argv[2]);
-  //Rprintf("-3a-----------%d  \n", argv[3]);
-  //Rcpp::Rcout << "useage: ratefile random_number" << argv[0] << "!!" << std::endl;
-  //Rcpp::Rcout << "useage: ratefile random_number" << argv[1] << "!!" << std::endl;
-  //Rcpp::Rcout << "start socsim main \n" << std::endl;
-  
-  //Rcpp::Rcout << "start socsim main2 \n" << std::endl;
-  strcpy(rate_file_name, argv[1]);
-  //Rcpp::Rcout << "start socsim main 3\n" << std::endl;
-  //strcpy(rate_file_name, *++argv);
-  //Rcpp::Rcout << "start socsim main 4\n" << std::endl;
-  
-  Rcpp::Rcout << "ratefile: "<< rate_file_name << "\n" << std::endl;
-  //Rcpp::Rcout << "useage: ratefile random_number" << "!!"<< argv[2] << std::endl;
-  
+	Rcpp::Rcout << "start socsim main. MAXUYEARS: " << MAXUYEARS << "; MAXUMONTHS: " << MAXUMONTHS << std::endl;
+
+	// 2024-12-03 Ole
+	// Let's pull all argv[] calls to the top and print them to stdout, so
+	// users have something to look at.
+	if (argc < 2)
+	{
+		warning("Warning: Unexpected condition occurred - too few arguments");
+		//Rcpp::Rcout << "useage: ratefile random_number" << useage << argv[0] << std::endl; //useage is never defined (but it is declared)
+		//warning("useage: %s ratefile random_number", useage);
+		stop("stop!");
+	}
+
+	strcpy(rate_file_name, argv[1]);
+	ceed = atoi(argv[2]);
+	compatibility_mode = atoi(argv[3]);
+	strcpy(result_suffix, argv[4]);
+	char swd[strlen(argv[5]) + 1];
+	strcpy(swd, argv[5]);
+
+	Rcpp::Rcout << "Ratefile: "<< rate_file_name << "\n" << std::endl;
+	Rcpp::Rcout << "Seed: "<< ceed << "\n" << std::endl;
+	Rcpp::Rcout << "Compatibility mode: "<< compatibility_mode << "\n" << std::endl;
+	Rcpp::Rcout << "Results suffix: "<< result_suffix << "\n" << std::endl;
+
+	/* 2024-12-03 Ole was unsure whether R correctly passes a changed
+	 * working directory to Rcpp/C. It does.
+	 char wd[1024];
+	 if (GetCurrentDir(wd, sizeof(wd)) != NULL) {
+	 Rprintf("(C) We are here: %s\n", wd);
+	 } else {
+	 Rprintf("Failed to retrieve current working directory\n");
+	 }
+	 */
+
+	original_seed = ceed;
+	// initstate(ceed, randstate, 256); //suggested by jim: replace with:
+	srand(ceed);
+	/**srandom(ceed);  setting seed for random() NOT rrandom() **/ // todo:check if random is initialized correctly!
+	size_of_extra = 0; /*no extra variables/.opox by default*/
+
 	clock_t timestart1,timestart2,timeend;
 	double timedif1,timedif2;
 
-	perror("test the print-error function of stdl");
-	// stop("test the stop-function..."); stops socsim and goes back to R
+	timestart1 = clock();
 
-	//stop("after perror jooo.");
-
-  timestart1 = clock();
-  	
 	//char command_string[1024];
 	struct queue_element *e, *q;
 	int i, j, fy;
 	char useage[1024];
 	char logstring[1024];
-	
-	/* some initialization */
-	/*****************************************************************
-     *It all starts here .sup file has not been read yet and the sim 
-     *has not begun. This is where many things should be initialized to 
-     * their default values 
-     ************************************************************/
 
-  //printf("\nrand_max: %ld",RAND_MAX);
+	/* some initialization */
+	/*********************************************************************
+	 * It all starts here .sup file has not been read yet and the sim has
+	 * not begun. This is where many things should be initialized to their
+	 * default values.
+	 *********************************************************************/
+
+	//printf("\nrand_max: %ld",RAND_MAX);
 
 	current_segment = 1;
 	current_offset = 0;
 	current_fstatus = CLOSED;
 
-	//return 12;
-	
 	for (e = event_queue, i = 0; i < MAXUMONTHS; e++, i++)
 	{
 		e->first = NULL;
 		e->num = 0;
 	}
-	
+
 	for (q = marriage_queue, i = MALE; i <= FEMALE; q++, i++)
 	{
 		q->first = NULL;
@@ -208,10 +226,10 @@ int main1(int argc, char *argv[])
 	random_father = FALSE;
 	random_father_min_age = 15;
 	prop_males = 0.5112;
-	endogamy = 0;				/* default to random-ogamy */
+	endogamy = 0; /* default to random-ogamy */
 	marriage_eval = PREFERENCE; /* or PROB*/
 	marriage_queues = 2;
-	
+
 	/** marriage_eval ==  PREFERENCE**/
 	marriage_peak_age = 36;
 	marriage_slope_ratio = 2;
@@ -219,16 +237,10 @@ int main1(int argc, char *argv[])
 	marriage_agedif_min = -120;
 	/**marriage_eval == DISTRIBUTION**/
 	/* mean and sd are specified by group in order to default
-       higher groups to lower group values we cannot initialize 
-       until we know how many groups there are in the sim 
-    */
-	
-	//Rcpp::Rcout << "start socsim main 5\n" << std::endl;
-	//Rprintf(log_file_name, "%s%d.log", rate_file_name, ceed);
-	
-	//Rcpp::Rcout << "\nstart socsim main 6\n" << std::endl;
-	
-	
+	   higher groups to lower group values we cannot initialize 
+	   until we know how many groups there are in the sim 
+	   */
+
 	int g = 0;
 	for (g = 0; g < MAXGROUPS; g++)
 	{
@@ -246,71 +258,33 @@ int main1(int argc, char *argv[])
 	}
 	child_inherits_group = FROM_MOTHER;
 	parameter0 = parameter1 = parameter2 = parameter3 = parameter4 = parameter5 = 0;
-	
-	size_of_extra = 0; /*no extra variables/.opox by default*/
-	if (argc < 2)
-	{
-	  warning("Warning: Unexpected condition occurred - too few arguments");
-	  //return 12;
-	  
-	  Rcpp::Rcout << "useage: ratefile random_number" << useage << argv[0] << std::endl;
-	 	warning("useage: %s ratefile random_number", useage);
-		//error(useage);
-		stop("stop!");
-		//exit(1);
-	}
-	//Rcpp::Rcout << "useage: ratefile random_number" << useage << argv[1] << argv[2] << std::endl;
-	
-	//strcpy(rate_file_name, *++argv);
-	
-	//Rcpp::Rcout << "useage: ratefile random_number" << useage << argv[1] << argv[2] << std::endl;
-	Rcpp::Rcout << "v18a!-command-line argv[0]: " << argv[0] << "| argv[1]: " << argv[1] << "| argv[2]: " << argv[2]  << "| argv[3]: " << argv[3] << std::endl;
-	
-	//ceed = atoi(*++argv);
-	ceed = atoi(argv[2]);
-	original_seed = ceed;
-	compatibility_mode = atoi(argv[3]);
-	strcpy(result_suffix, argv[4]);
-	
+
+	// 2024-12-03 Ole
+	// create_output_fn_dir() creates the directory structure for the
+	// simulation and copies some files around. Yes, it uses global state
+	// Yes, ideally it wouldn't. We keep it this way to keep main() simple
+	// and to minimize divergence from the original Socsim.
 	create_output_fn_dir();
 
-	Rcpp::Rcout << "random_number seed: " << ceed << "| command-line argv[1]: " << argv[1] << "| argv[2]: " << argv[2] << std::endl;
-	
-	Rcpp::Rcout << "compatibility_mode: " << compatibility_mode << "| command-line argv[3]: " << argv[3] << std::endl;
-	
-	//logmsg("compatibility_mode: %d \n", compatibility_mode, 1);
-	
-	//sprintf(logstring, "compatibility_mode: %d \n",compatibility_mode );
-	//logmsg("%s\n", logstring, 1);	
-		
-		
-	// initstate(ceed, randstate, 256); //suggested by jim: replace with:
-	srand(ceed);
-	
-	//Rcpp::Rcout << "useage: ratefile random_number" << useage << argv[1] << argv[2] << std::endl;
-	
-	/**srandom(ceed);  setting seed for random() NOT rrandom() **/ // todo:check if random is initialized correctly!
-	
-	
+
 	//return 12;
 	/**debugging random numbercrap 
-    fd_random = fopen("randomsex", "w");
-    fd_allrandom = fopen("allrandom", "w");
-    *****************************/
+	  fd_random = fopen("randomsex", "w");
+	  fd_allrandom = fopen("allrandom", "w");
+	 *****************************/
 	if ((fd_log = fopen(log_file_name, "w")) == NULL)
 	{
-	  
-	    Rprintf("can't open file:  %s ", log_file_name);
+		Rprintf("can't open file:  %s ", log_file_name);
 		perror("can't open log file\n");
 	}
-	
+
 	//Rprintf("|%s|-\n",pop_out_name);
 	//Rprintf("-----\n");
 	logmsg("--t start with logmessages \n"," ",1);
-	
+
 	/**sprintf(logstring,"\n compiled from SVN revision %s on %s \n\n",
-	   SVN_REV, COMP_DATE);*
-	Rprintf("%s\n", logstring, 1);*/
+	  SVN_REV, COMP_DATE);*
+	  Rprintf("%s\n", logstring, 1);*/
 	// Rprintf("Enhancement name: %s\n",ENHANCEMENT_NAME;)
 	if (marriage_queues == 1)
 	{
@@ -327,27 +301,26 @@ int main1(int argc, char *argv[])
 	if (marriage_eval == DISTRIBUTION)
 	{
 		/* sup file has been read; so if value is not -99 (or (MAXUYEARS-1)) then it was
-	 user specified  agedif_marriage_{mean,sd}[0] holds the default
-      value*/
-	  
+		   user specified  agedif_marriage_{mean,sd}[0] holds the default
+		   value*/
+
 		Rcpp::Rcout << "marriage_eval == DISTRIBUTION . " << rate_file_name << std::endl;
 		int g = 1;
 		for (g = 1; g < MAXGROUPS; g++)
 		{
-			
+
 			// Rcpp::Rcout << "| " << g << "  .  " << MAXUYEARS << "  .  " << MAXGROUPS << std::endl;
 			agedif_marriage_mean[g] = (agedif_marriage_mean[g] == -(MAXUYEARS-1)) ? agedif_marriage_mean[g - 1] : agedif_marriage_mean[g];
 			agedif_marriage_sd[g] = (agedif_marriage_sd[g] == -(MAXUYEARS-1)) ? agedif_marriage_sd[g - 1] : agedif_marriage_sd[g];
 		}
 		initialize_marriage_targets();
 	} else {
-		
+
 		Rcpp::Rcout << "marriage_eval != DISTRIBUTION . " << rate_file_name << std::endl;
 	}
-	//Rprintf("------------5");
 
 	/*modify birth rates to account for bint MUST be called 
-     BEFORE fill_rate_gaps*/
+	  BEFORE fill_rate_gaps*/
 	/*    if(bint != 0){*/
 	adjust_birth_for_bint();
 	Rprintf("------------6");
@@ -357,14 +330,11 @@ int main1(int argc, char *argv[])
 	enhance_defaults();
 #endif
 
-	/*******/
-
 	/**
+	  printf("current value of birth interval %f\n", bint);
+	  printf("current value of hetfert flag %d\n", hetfert);
+	 **/
 
-    printf("current value of birth interval %f\n", bint);
-    printf("current value of hetfert flag %d\n", hetfert);
-    **/
-  
 	fprintf(fd_log,"I am here at events.cpp-pop_file_name. |%s\n",pop_file_name);
 	//pop_file_name[0] = 0;
 	strcat(pop_file_name, ".opop");
@@ -375,63 +345,63 @@ int main1(int argc, char *argv[])
 	strcat(pyr_file_name, ".pyr");
 	strcat(stat_file_name, ".stat");
 	strcat(otx_file_name, ".otx");
-	
+
 	Rprintf("------------7");
 	/*** Tue Oct 22 12:50:50 PDT 2002
 
-    strcat(pop_out_name, ".opop");
-    strcat(mar_out_name, ".omar");
-    strcat(xtra_out_name, ".opox");
+	  strcat(pop_out_name, ".opop");
+	  strcat(mar_out_name, ".omar");
+	  strcat(xtra_out_name, ".opox");
 
-    strcat(stat_file_name, ".stat");
-    **/
+	  strcat(stat_file_name, ".stat");
+	 **/
 
 	if ((fd_pop = fopen(pop_file_name, "r")) == NULL)
 	{
-	  //   Rprintf("------------pop_file error");
-	  Rprintf("can't open file:  %s ", pop_file_name);
-	  
-	  //logmsg("can't open initial  pop file; can't simuluate..%s \n",pop_file_name,1);//exit
-	  fprintf(fd_log,"can't open initial  pop file; can't simuluate..%s \n",pop_file_name);
-	  stop("can't open initial  pop file; can't simuluate.. %s \n",pop_file_name);//exit
+		//   Rprintf("------------pop_file error");
+		Rprintf("can't open file:  %s ", pop_file_name);
+
+		//logmsg("can't open initial  pop file; can't simuluate..%s \n",pop_file_name,1);//exit
+		fprintf(fd_log,"can't open initial  pop file; can't simuluate..%s \n",pop_file_name);
+		stop("can't open initial  pop file; can't simuluate.. %s \n",pop_file_name);//exit
 		perror("can't open initial  pop file; can't simuluate..\n");
 	}
 	if ((fd_mar = fopen(mar_file_name, "r")) == NULL)
 	{
-	  logmsg("can't openmarriage file Hope that's OK"," ",1);
-	  warning("can't openmarriage file Hope that's OK");//exit
-		//perror("can't open  marriage file Hope that's OK\n");
+		logmsg("can't openmarriage file Hope that's OK"," ",1);
+		warning("can't openmarriage file Hope that's OK");//exit
+								  //perror("can't open  marriage file Hope that's OK\n");
 	}
-	
+
 	//Rprintf("------------aa1");
 
 	if ((fd_otx = fopen(otx_file_name, "r")) == NULL)
 	{
-	  warning("can't open  transition history file. Hope that's OK\n");
-	  //perror("can't open  transition history file. Hope that's OK\n");
+		warning("can't open  transition history file. Hope that's OK\n");
+		//perror("can't open  transition history file. Hope that's OK\n");
 	}
 	//Rprintf("------------aa2");
-  	//stop("here we stop!");
+	//stop("here we stop!");
 	if (read_xtra_file)
 	{
 		if ((fd_xtra = fopen(xtra_file_name, "r")) == NULL)
 		{
 			printf("xtra file is named %s\n", xtra_file_name);
-		    //perror("can't open  xtra file despite being asked to\n");
-		    stop("can't open  xtra file despite being asked to\n");
+			//perror("can't open  xtra file despite being asked to\n");
+			stop("can't open  xtra file despite being asked to\n");
 			//exit;
 		}
 	}
 	/** open output files for writing**/
-	
+
 	Rprintf("\n output file names:\n %s|%s|%s|%s|%s|%s|\n",pop_file_name,mar_file_name,xtra_file_name,pyr_file_name,stat_file_name,otx_file_name);
 	fprintf(fd_log,"\n output file names:\n %s|%s|%s|%s|%s|%s|\n",pop_file_name,mar_file_name,xtra_file_name,pyr_file_name,stat_file_name,otx_file_name);
-		
+
 	logmsg("----------------------- prepare_output_files_1 \n"," ",1);
-	
+
 	//Rprintf("------------aa3");
 	prepare_output_files(0);
-	
+
 	//Rprintf("------------aa3a");
 	// fd_rn = open_write("random_number");
 	// fprintf(fd_rn, "%d\n", ceed);
@@ -439,22 +409,22 @@ int main1(int argc, char *argv[])
 	// fprintf(fd_rn, "%d\n", irandom());
 	//Rprintf("------------aa3b");
 	//logmsg("opening pop pyramid file %s\n", pyr_file_name,1);
-	
+
 	//Rprintf("------------aa3c");
 	fd_pyr = open_write(pyr_file_name);
-	
+
 	//Rprintf("------------aa4d");
 	//logmsg("Reading initial population file %s\n", pop_file_name,1);
 	/*    printf("Reading initial population file %s\n",pop_file_name);*/
 	int pop_rows = 0;
 	pop_rows = read_initial_pop(fd_pop);
 	fclose(fd_pop);
-	
+
 	logmsg("-----aa31aa.\n", "", 1);
 	//Rprintf("------------aa5");
 	if (fd_mar != NULL)
 	{
-	  	Rprintf("Reading initial marriage file %s\n", mar_file_name);
+		Rprintf("Reading initial marriage file %s\n", mar_file_name);
 		fprintf(fd_log,"Reading initial marriage file %s\n", mar_file_name);
 		read_marlist(fd_mar);
 		fclose(fd_mar);
@@ -463,9 +433,9 @@ int main1(int argc, char *argv[])
 	{
 		logmsg("No initial marriage file to read\n"," ", 1);
 		/* Make sure that no one in init pop is married or else
-	 problems will ensue. eg attempt to generate future divorce date
-	 EVEN if divorce rates are zero.  Not sure what else, but its a 
-	 bad idea to let this happen.*/
+		   problems will ensue. eg attempt to generate future divorce date
+		   EVEN if divorce rates are zero.  Not sure what else, but its a 
+		   bad idea to let this happen.*/
 		struct person *p;
 		char logstring[256];
 
@@ -481,7 +451,7 @@ int main1(int argc, char *argv[])
 			}
 		}
 	}
-	
+
 	//Rprintf("------------aa7");
 	if (fd_otx != NULL)
 	{
@@ -495,10 +465,10 @@ int main1(int argc, char *argv[])
 		logmsg("No initial transition history file to read\n"," ", 1);
 	}
 	Rprintf("fix pop pointers..\n");
-	
+
 	logmsg("-----aa31a.\n", "", 1);
 	fix_pop_pointers();
-	
+
 	//Rprintf("------------aa8");
 	if (read_xtra_file)
 	{
@@ -522,12 +492,12 @@ int main1(int argc, char *argv[])
 	}
 
 	/* numgroups willbe reset to reflect groups in initial pop if nec 
-       in fill_rate_gaps
-    */
-	
+	   in fill_rate_gaps
+	   */
+
 	//Rprintf("------------aa9");
 	delete_hash_table();
-	
+
 	//Rprintf("------------aa3");
 	current_month = last_event_date + 1;
 	Rprintf("Starting month is %d\n", current_month);
@@ -540,9 +510,9 @@ int main1(int argc, char *argv[])
 		sprintf(logstring, "ERROR......abr3");
 		logmsg("%s\n", logstring, 1);
 		// perror("bad rate set\n");
-	    warning("bad rate set\n");
+		warning("bad rate set\n");
 	}
-	
+
 	Rprintf("------------aa3s");
 	logmsg("-----aa3s.\n", "", 1);
 	/* dump_rates(); */
@@ -565,13 +535,13 @@ int main1(int argc, char *argv[])
 	if (random_epsilon || fixed_epsilon)
 	{
 		printf("value of epsilon: %d table index %d \n",
-			   epsilon, (int)epsilon / 12);
+				epsilon, (int)epsilon / 12);
 	}
 
 	//logmsg(" grogro1111 \n", "", 1);
 	while (current_segment <= num_segments)
 	{
-		
+
 		//logmsg(" grogroaa \n", "", 1);
 		/** open output files for pos seg writing **/
 
@@ -581,7 +551,7 @@ int main1(int argc, char *argv[])
 		if (take_census)
 		{
 			/* stat_file needs to be open if take_census specified
-	   other output files are independent of this */
+			   other output files are independent of this */
 			//char stat_file_seg[1024];
 			char segnum[6];
 			strcpy(stat_file_name_seg, stat_file_name);
@@ -601,31 +571,31 @@ int main1(int argc, char *argv[])
 
 		logmsg("Simulating...\n", "", 1);
 		//Rcpp::Rcout << "Simulating...." << std::endl;
-		
+
 		//Rprintf("------------aa3h");
 		//logmsg("--ab36\n", "", 1);
 		/***
-	  dump_rates();
-      ***/
+		  dump_rates();
+		 ***/
 
 		new_events_for_all();
-		
+
 		//Rprintf("------------b");
 		Rprintf("New events generated for all living persons\n");
 		/*
-	  dump_queue();
-	*/
+		   dump_queue();
+		   */
 
 		if (duration_of_segment == 0)
 			perror("length of segment not specified\n");
 		stop_month = current_month + duration_of_segment - 1;
 		printf("current month %d stop month %d duration %d\n",
-			   current_month, stop_month, duration_of_segment);
+				current_month, stop_month, duration_of_segment);
 
 		/*
-	  printf("processing event queue\n");
-	*/
-		
+		   printf("processing event queue\n");
+		   */
+
 		Rprintf("------------b1");
 		logmsg("|m0|", "", 1);
 		timestart2 = clock();
@@ -633,12 +603,12 @@ int main1(int argc, char *argv[])
 		//stop("just before month-loop");
 		for (; current_month <= stop_month; current_month++)
 		{
-			
-	    	//printf ("current month %d\n", current_month);
-	    	
-	    	//Rprintf("-m-");
-		  
-		  //logmsg("|m|", "", 1);
+
+			//printf ("current month %d\n", current_month);
+
+			//Rprintf("-m-");
+
+			//logmsg("|m|", "", 1);
 			if (take_census)
 			{
 				if (((current_month - 1 - last_event_date) % 12) == 0)
@@ -663,12 +633,12 @@ int main1(int argc, char *argv[])
 					fprintf(fd_stat, "\n");
 
 					/*
-		sprintf(command_string,
-		"nawk '{print $2, $4}' < output.%d | sort | uniq -c > awk.out.%d\n",
-		fy, fy);
-		printf("executing %s", command_string);
-		system(command_string);
-	      */
+					   sprintf(command_string,
+					   "nawk '{print $2, $4}' < output.%d | sort | uniq -c > awk.out.%d\n",
+					   fy, fy);
+					   printf("executing %s", command_string);
+					   system(command_string);
+					   */
 
 					child_census();
 					fprintf(fd_stat, "CHILD:MALE %d %s %d",
@@ -689,30 +659,30 @@ int main1(int argc, char *argv[])
 					fprintf(fd_stat, "\n");
 
 					/*
-		sprintf(command_string,
-		"nawk '{print $2, $4}' < childoutput.%d | sort | uniq -c > awk.childout.%d\n",
-		fy, fy);
-		printf("executing %s", command_string);
-		system(command_string);
-	      */
+					   sprintf(command_string,
+					   "nawk '{print $2, $4}' < childoutput.%d | sort | uniq -c > awk.childout.%d\n",
+					   fy, fy);
+					   printf("executing %s", command_string);
+					   system(command_string);
+					   */
 				}
 			}
 			/* clear current month event counter*/
-			
-	    	int ecount;
+
+			int ecount;
 			for (ecount = E_BIRTH; ecount < NUMEVENTS; ecount++)
 			{
 				crnt_month_events[ecount] = 0;
 			}
-			
-	    	//Rprintf("-mp1");
-		  	//logmsg("|m2|", "", 1);
-	    	process_month();
-	    	//logmsg("|m2s|", "", 1);
-	    	
-	    	//logmsg("|m3|", "", 1);
-	    //	Rprintf("-mpend");
-	    	if (1)
+
+			//Rprintf("-mp1");
+			//logmsg("|m2|", "", 1);
+			process_month();
+			//logmsg("|m2s|", "", 1);
+
+			//logmsg("|m3|", "", 1);
+			//	Rprintf("-mpend");
+			if (1)
 			{
 				struct queue_element *mqmales, *mqfems;
 				mqmales = marriage_queue + (1 - FEMALE);
@@ -720,7 +690,7 @@ int main1(int argc, char *argv[])
 				/*increment marriage queue time counters*/
 				time_waiting[MALE] += mqmales->num;
 				time_waiting[FEMALE] += mqfems->num;
-				
+
 				//logmsg("|m4|", "", 1);
 				Rcpp::checkUserInterrupt();
 				if (current_month % 5==0){			
@@ -729,34 +699,34 @@ int main1(int argc, char *argv[])
 					timedif2 =(double)(timeend - timestart2) / CLOCKS_PER_SEC;
 					timestart2 = clock();
 					printf("month:%5d PopLive:%6d Brths:%4d Dths:%4d Mrgs:%3d Dvs:%3d Mq:%5d Fq:%d ti1: %.1f ti2: %.6f %.4f\r",
-						current_month, size_of_pop[0],
-						crnt_month_events[E_BIRTH],
-						crnt_month_events[E_DEATH],
-						crnt_month_events[E_MARRIAGE],
-						crnt_month_events[E_DIVORCE],
-						mqmales->num, mqfems->num,
-						timedif1,timedif2,1000000000*timedif2/(mqmales->num * mqmales->num +1));
+							current_month, size_of_pop[0],
+							crnt_month_events[E_BIRTH],
+							crnt_month_events[E_DEATH],
+							crnt_month_events[E_MARRIAGE],
+							crnt_month_events[E_DIVORCE],
+							mqmales->num, mqfems->num,
+							timedif1,timedif2,1000000000*timedif2/(mqmales->num * mqmales->num +1));
 					if (current_month % 100==0){
 						printf("\n");
 						fprintf(fd_log,"month:%5d PopLive:%6d Brths:%4d Dths:%4d Mrgs:%3d Dvs:%3d Mq:%5d Fq:%d ti1: %.1f ti2: %.6f %.4f\n",
-						current_month, size_of_pop[0],
-						crnt_month_events[E_BIRTH],
-						crnt_month_events[E_DEATH],
-						crnt_month_events[E_MARRIAGE],
-						crnt_month_events[E_DIVORCE],
-						mqmales->num, mqfems->num,
-						timedif1,timedif2,1000000000*timedif2/(mqmales->num * mqmales->num +1));
+								current_month, size_of_pop[0],
+								crnt_month_events[E_BIRTH],
+								crnt_month_events[E_DEATH],
+								crnt_month_events[E_MARRIAGE],
+								crnt_month_events[E_DIVORCE],
+								mqmales->num, mqfems->num,
+								timedif1,timedif2,1000000000*timedif2/(mqmales->num * mqmales->num +1));
 
 						Rprintf("month:%5d PopLive:%6d Brths:%4d Dths:%4d Mrgs:%3d Dvs:%3d Mq:%5d Fq:%d ti1: %.1f ti2: %.6f %.4f\n",
-						current_month, size_of_pop[0],
-						crnt_month_events[E_BIRTH],
-						crnt_month_events[E_DEATH],
-						crnt_month_events[E_MARRIAGE],
-						crnt_month_events[E_DIVORCE],
-						mqmales->num, mqfems->num,
-						timedif1,timedif2,1000000000*timedif2/(mqmales->num * mqmales->num +1));
+								current_month, size_of_pop[0],
+								crnt_month_events[E_BIRTH],
+								crnt_month_events[E_DEATH],
+								crnt_month_events[E_MARRIAGE],
+								crnt_month_events[E_DIVORCE],
+								mqmales->num, mqfems->num,
+								timedif1,timedif2,1000000000*timedif2/(mqmales->num * mqmales->num +1));
 						fflush(fd_log);
-						
+
 					}
 				}
 				if (size_of_pop[0] == 0 && !done)
@@ -767,9 +737,9 @@ int main1(int argc, char *argv[])
 				fflush(stdout);
 			}
 		}
-		
+
 		//logmsg("|m5|", "", 1);
-	    //Rprintf("-m|pa");
+		//Rprintf("-m|pa");
 		fprintf(fd_log,"\nsegment %d complete current month: %d\n",	current_segment, current_month);
 		printf("\nsegment %d complete current month: %d\n",	current_segment, current_month);
 		//logmsg("%s\n", logstring, 1);
@@ -784,23 +754,23 @@ int main1(int argc, char *argv[])
 		current_segment++;
 
 		/*
-	if (current_segment >  num_segments) {
-	  marriage_tally();
-	}
-	*/
+		   if (current_segment >  num_segments) {
+		   marriage_tally();
+		   }
+		   */
 
 		/*marriage_tally(fd_log);  kill for now to prevent segfault 
-	  Thu Jan 28 17:29:41 PST 2010 */
+		  Thu Jan 28 17:29:41 PST 2010 */
 
 		/**
-	 ** write out intermediate population files
-	 ** 
-	 **/
-	
+		 ** write out intermediate population files
+		 ** 
+		 **/
+
 		logmsg(" grogro \n", "", 1);
-		
-	fprintf(fd_log, "agga lolo num_segments %i \n",num_segments);
-	fprintf(fd_log, "agga lolo curr_segment %i \n",current_segment);
+
+		fprintf(fd_log, "agga lolo num_segments %i \n",num_segments);
+		fprintf(fd_log, "agga lolo curr_segment %i \n",current_segment);
 		if (current_segment < num_segments)
 		{
 			if (write_output)
@@ -812,11 +782,11 @@ int main1(int argc, char *argv[])
 		if (current_segment <= num_segments)
 		{
 			/** 
-	   ** current_segment has been incremented so this stuff
-	   ** is going to happen before segment number current_segment
-	   ** runs. won't this happen every segment ? do we need this
-	   ** if() here?
-	   **/
+			 ** current_segment has been incremented so this stuff
+			 ** is going to happen before segment number current_segment
+			 ** runs. won't this happen every segment ? do we need this
+			 ** if() here?
+			 **/
 
 			sprintf(logstring, "Population Total / living : %d / %d",
 					last_person->person_id, size_of_pop[0]);
@@ -825,7 +795,7 @@ int main1(int argc, char *argv[])
 
 			printf("==================================================\n");
 			printf("\n\nSetting up rates and queues for segment %d..\n\n",
-				   current_segment);
+					current_segment);
 			printf("--------------------------------------------------\n");
 
 			logmsg("about to (re)initialize segment vars -----\n", "", 0);
@@ -840,9 +810,9 @@ int main1(int argc, char *argv[])
 			fprintf(fd_log,"about to read rate file %s\n", rate_file_name);
 			fflush(fd_log);
 			if (load(rate_file_name) < 0){
-			  stop("could not read rate_file_name %s",rate_file_name);
+				stop("could not read rate_file_name %s",rate_file_name);
 			}
-				
+
 			adjust_birth_for_bint();
 
 			if (fill_rate_gaps() < 0){
@@ -861,7 +831,7 @@ int main1(int argc, char *argv[])
 	fprintf(fd_log, "agga number of groups  %i \n",NUMBER_OF_GROUPS);
 	fprintf(fd_log, "agga num_segments %i \n",num_segments);
 	fprintf(fd_log, "agga curr_segment %i \n",current_segment);
-	
+
 	fprintf(fd_log, "agga read_xtra_file! %i \n",read_xtra_file);
 	fprintf(fd_log, "agga read_xtra_file! %d \n",read_xtra_file);
 
@@ -882,7 +852,7 @@ int main1(int argc, char *argv[])
 	if (marriage_eval == DISTRIBUTION)
 	{
 		/**End of segment warning if marriage_eval==DISTRIBUTION and
-	 the female marriage queue is NOT empty**/
+		  the female marriage queue is NOT empty**/
 		if (marriage_queues == 1)
 		{
 			// struct queue_element *femq;
@@ -904,7 +874,7 @@ int main1(int argc, char *argv[])
 	write_popfiles(0);
 
 	/*
-    */
+	*/
 	sprintf(logstring, "total size of pop %d\n", last_person->person_id);
 	logmsg("%s\n", logstring, 1);
 	sprintf(logstring, "living size of pop %d\n", size_of_pop[0]);
@@ -917,18 +887,18 @@ int main1(int argc, char *argv[])
 	fprintf(fd_log, "now printing populationpyramid");
 	population_pyramid(stdout);
 	population_pyramid(fd_pyr);
-	
+
 	fclose(fd_pyr);
 	fclose(fd_log);
 	// fclose(fd_rn);
 	Rcpp::Rcout << "\n\nSocsim Main Done" << std::endl;
 	return 1;
 	/*
-    printf("done with population pyramid\n");
-    */
+	   printf("done with population pyramid\n");
+	   */
 	/*
-    dump_queue();
-    */
+	   dump_queue();
+	   */
 }
 
 /********************************************************************/
@@ -946,7 +916,7 @@ void initialize_marriage_targets()
 	double norm_tots[MAXGROUPS];
 
 	/*  sig2=pow(agedif_marriage_sd,2);
-      pisig2=sqrt((2*PI*sig2));*/
+	    pisig2=sqrt((2*PI*sig2));*/
 
 	for (g = 0; g < MAXGROUPS; g++)
 	{
@@ -963,14 +933,14 @@ void initialize_marriage_targets()
 			fem_factor = (agediff < 0) ? female_older : 1;
 
 			prob = fem_factor *
-				   1 / pisig2 *
-				   exp(-1 * pow((double)(agediff - agedif_marriage_mean[g]), 2) / (2 * sig2));
+				1 / pisig2 *
+				exp(-1 * pow((double)(agediff - agedif_marriage_mean[g]), 2) / (2 * sig2));
 
 			/* playing
-      prob= (agediff > -8 && agediff < 8)? 0.2:0;
-      prob= (agediff >  -5 && agediff < -3 )? 0 : prob;
-      prob= (agediff >  3  && agediff < 5 )? 0 : prob;
-      */
+			   prob= (agediff > -8 && agediff < 8)? 0.2:0;
+			   prob= (agediff >  -5 && agediff < -3 )? 0 : prob;
+			   prob= (agediff >  3  && agediff < 5 )? 0 : prob;
+			   */
 			prob = (ABS(prob) < .0001) ? -1 : prob; /*thin the tails*/
 			marriage_agetarget[g][i] = prob;
 			norm_tots[g] += (prob > 0) ? prob : 0; /*prob can be negative fem_factor */
@@ -986,18 +956,18 @@ void initialize_marriage_targets()
 	}
 
 	/*
-    for(i=0;i<(2*MAXUYEARS);i++){
-  printf("%d  %f\n",i,marriage_agetarget[1][i]);
-      }
-  */
+	   for(i=0;i<(2*MAXUYEARS);i++){
+	   printf("%d  %f\n",i,marriage_agetarget[1][i]);
+	   }
+	   */
 
 } /*end initialize_marriagetargets*/
 
 /********************************************************************/
 int process_month()
 {
-  
-  //logmsg("|pm|", "", 1);
+
+	//logmsg("|pm|", "", 1);
 	int i, g, s;
 	struct queue_element *e;
 	struct person *p;
@@ -1006,37 +976,37 @@ int process_month()
 	e = event_queue + i;
 
 	/*
-    printf("processing month %d on queue %d\n", current_month, e->num);
-    */
+	   printf("processing month %d on queue %d\n", current_month, e->num);
+	   */
 
 	/*
-    printf("value of i %d and number on queue %d\n", i, e->num);
-    */
-   
+	   printf("value of i %d and number on queue %d\n", i, e->num);
+	   */
+
 	//printf ("3.1 process month %d\n", "");
 	while (e->num > 0)
 	{
 		int nth;
 
 		/*
-	inspect_entry(e, EVENT_QUEUE);
-	*/
+		   inspect_entry(e, EVENT_QUEUE);
+		   */
 		p = e->first;
 		nth = 1;
 		if (e->num > 1)
 		{
 			/* nth can be viewed as the number of times
-			       to advance the pointer, with a max of 
-			       nth - 1 
-			    */
+			   to advance the pointer, with a max of 
+			   nth - 1 
+			   */
 
 			/*
-	    printf("queue\n");
-	    printf ("got this nth from the draw %d\n", nth);
-	    */
-	   		//here was the error (possibly related to the different random number generation on windows and linux)
-	   		double rr = rrandom(); // without this: segfault on windows,
-			   				// because sometimes nth ==e->num and the loop will go one person too far
+			   printf("queue\n");
+			   printf ("got this nth from the draw %d\n", nth);
+			   */
+			//here was the error (possibly related to the different random number generation on windows and linux)
+			double rr = rrandom(); // without this: segfault on windows,
+					       // because sometimes nth ==e->num and the loop will go one person too far
 			nth = (int)(rr * e->num);
 			if(nth==e->num){
 				nth--;
@@ -1050,21 +1020,21 @@ int process_month()
 		}
 		//logmsg("|pm1|", "", 1);
 
-	//printf ("3.2process month %d\n", "");
+		//printf ("3.2process month %d\n", "");
 		/*
-	printf("event queue trying to delete person id %d \n",
-	    p->person_id);
-	*/
+		   printf("event queue trying to delete person id %d \n",
+		   p->person_id);
+		   */
 
 		queue_delete(p, EVENT_QUEUE);
 
-	//printf ("3.3 process month %d\n", "");
+		//printf ("3.3 process month %d\n", "");
 		/*
-	printf("deleted person id %d mstatus %s next event %s\n",
-	    p->person_id, index_to_mstatus[p->mstatus],
-	    index_to_event[p->next_event]);
-	fflush(stdout);
-	*/
+		   printf("deleted person id %d mstatus %s next event %s\n",
+		   p->person_id, index_to_mstatus[p->mstatus],
+		   index_to_event[p->next_event]);
+		   fflush(stdout);
+		   */
 
 		// logmsg("next event all -", "", 1);
 		if (p->next_event == E_DEATH)
@@ -1078,20 +1048,20 @@ int process_month()
 #ifdef ENHANCED
 			enhance_birth_pre(p);
 #else
-		if (option_marriage_after_childbirth==1){		
-			/* For global sandwich land we want mother to find a husband quickly
-			    before birthing the little twirp--obviously only if not 
-			    currenty married*/
-			    if(p->sex == MALE){
-			      logmsg("Male id attempting to give birth \n","",1);
-			    }
-			    if(p->mstatus != MARRIED){
-			      marriage(p);
-			      /*new_marriage generates event for  p and puts back in queue*/
-			      queue_delete(p, EVENT_QUEUE); 
-			    }
-		}
-		birth(p);
+			if (option_marriage_after_childbirth==1){		
+				/* For global sandwich land we want mother to find a husband quickly
+				   before birthing the little twirp--obviously only if not 
+				   currenty married*/
+				if(p->sex == MALE){
+					logmsg("Male id attempting to give birth \n","",1);
+				}
+				if(p->mstatus != MARRIED){
+					marriage(p);
+					/*new_marriage generates event for  p and puts back in queue*/
+					queue_delete(p, EVENT_QUEUE); 
+				}
+			}
+			birth(p);
 #endif
 		}
 		else if (p->next_event == E_DIVORCE)
@@ -1105,34 +1075,34 @@ int process_month()
 			marriage(p);
 		}
 		else if ((p->next_event >= TRANSIT1) &&
-				 (p->next_event < TRANSIT1 + numgroups))
+				(p->next_event < TRANSIT1 + numgroups))
 		{
 			//logmsg("next event... transit   \n", "", 1);
 			transit(p);
 		}
 
 		/*
-	printf("done with person id %d\n", p->person_id);
-	*/
+		   printf("done with person id %d\n", p->person_id);
+		   */
 
 		/*
-	inspect_entry(e, EVENT_QUEUE);
-	*/
+		   inspect_entry(e, EVENT_QUEUE);
+		   */
 	}
 
 	/*
-    printf("done with queue \n");
-    */
+	   printf("done with queue \n");
+	   */
 
 	/* prepare current month slot for MAXUMONTHSth kt_val*/
-	
+
 	//Rprintf("|");
 	//logmsg("|pm8|", "", 1);
 	for (g = 1; g <= numgroups; g++)
 	{
 		//Rprintf("g#");
-	  
-	  //logmsg("|g#|", "", 1);
+
+		//logmsg("|g#|", "", 1);
 		for (s = 0; s < NUMSEXES; s++)
 		{
 			if (lc_rate_set[g][s] != NULL)
@@ -1145,10 +1115,10 @@ int process_month()
 					continue;
 
 				/*
-		printf("current month %d group %d sex %d 1801 %lf 1812 %lf \n",
-		    current_month, g, s, *(kt_vals[g][s] + 601),
-		    *(kt_vals[g][s] + 612));
-		*/
+				   printf("current month %d group %d sex %d 1801 %lf 1812 %lf \n",
+				   current_month, g, s, *(kt_vals[g][s] + 601),
+				 *(kt_vals[g][s] + 612));
+				 */
 				prev = *(kt_vals[g][s] + ((current_month - 1) % MAXUMONTHS));
 				if ((int)current_month / 12 == (int)(current_month - 1) / 12)
 				{
@@ -1160,11 +1130,11 @@ int process_month()
 					*(kt_vals[g][s] + (current_month % MAXUMONTHS)) =
 						prev + lc->mean + lc->std_dev * normal();
 					/*
-			prev + lc->mean ;
-			*/
+					   prev + lc->mean ;
+					   */
 					/*
 
-		    */
+*/
 				}
 				else
 				{
@@ -1172,32 +1142,32 @@ int process_month()
 						read_kt_vals[g][s][current_kt_index[g][s]];
 					current_kt_index[g][s]++;
 					/*
-		    printf("read--current intdex %d\n", current_kt_index[g][s]);
-		    */
+					   printf("read--current intdex %d\n", current_kt_index[g][s]);
+					   */
 				}
 
 				/*
-		printf("prev %lf lc->mean %lf\n", prev,  lc->mean);
-		printf("next value %lf\n",
-		    *(kt_vals[g][s] + (current_month % MAXUMONTHS)));
-		*/
+				   printf("prev %lf lc->mean %lf\n", prev,  lc->mean);
+				   printf("next value %lf\n",
+				 *(kt_vals[g][s] + (current_month % MAXUMONTHS)));
+				 */
 			}
 		}
 	}
 	//Rprintf(":");
-	
+
 	//logmsg(":", "", 1);
 	if (random_epsilon || fixed_epsilon)
 	{
-	  //logmsg(":3\n", "", 1);
+		//logmsg(":3\n", "", 1);
 		epsilon = (epsilon + 1) % (max_e_index + 1);
 	}
 	//logmsg("(2)\n", " ", 1);
-  
-  return 1;
+
+	return 1;
 	/*
-    printf("done with new kt processing\n");
-    */
+	   printf("done with new kt processing\n");
+	   */
 }
 
 void new_events_for_all()
@@ -1216,84 +1186,83 @@ void new_events_for_all()
 		if (p->deathdate != 0)
 		{
 			/*
-	  printf("person %d is dead\n", p->person_id);
-	*/
+			   printf("person %d is dead\n", p->person_id);
+			   */
 			p->next_event = E_NULL;
 			p = p->down;
 			continue;
 		}
 
 		/**
-	 printf("id / marital status %d / %d\n",p->person_id, p->mstatus);
-      **/
+		  printf("id / marital status %d / %d\n",p->person_id, p->mstatus);
+		 **/
 
 		if ((marriage_queues == 1) && (p->mstatus <= WIDOWED) && (p->sex == MALE))
 		{
 
 			/* this will put all men on the marriage queue and will generate
-	   a new event for them */
+			   a new event for them */
 			install_in_order(p, marriage_queue + p->sex, MARRIAGE_QUEUE);
 			p->mqueue_month = current_month;
 		}
 		/** Normal situation **/
 		int m = date_and_event(p);
 		/** print event before scheduling**
-	  if(p->next_event == E_BIRTH){
-	  char logstring[256];
-	  sprintf(logstring,
-	  "pid: %d age: %d event: %d age at e date: %d",
-	  p->person_id, (current_month - p->birthdate),
-	  p->next_event,(m - p->birthdate));
-	  logmsg("%s\n",logstring,1);
-	  }
-	  ///end print shtick */
+		  if(p->next_event == E_BIRTH){
+		  char logstring[256];
+		  sprintf(logstring,
+		  "pid: %d age: %d event: %d age at e date: %d",
+		  p->person_id, (current_month - p->birthdate),
+		  p->next_event,(m - p->birthdate));
+		  logmsg("%s\n",logstring,1);
+		  }
+		///end print shtick */
 		m %= MAXUMONTHS;
 		install_in_order(p, event_queue + m, EVENT_QUEUE);
 		/**
-	 inspect_entry(event_queue + m, EVENT_QUEUE);
-	 printf("person_id %d\n", p->person_id);
-	 person_id 42895
-      **/
+		  inspect_entry(event_queue + m, EVENT_QUEUE);
+		  printf("person_id %d\n", p->person_id);
+		  person_id 42895
+		 **/
 
 		p = p->down;
 	}
 }
 
 /*
-mqueue_install(p, q)
-    struct person *p;
-    struct queue_element *q;
-{
+   mqueue_install(p, q)
+   struct person *p;
+   struct queue_element *q;
+   {
 
-    if (q->first == NULL) {
-	q->first = p;
-	q->num++;
-	p->pointer_type[MARRIAGE_QUEUE] = PTR_Q;
-	p->MQUEUE = q;
-    } else {
-	q->num++;
-	p->pointer_type[MARRIAGE_QUEUE] = PTR_N;
-	p->NEXT_ON_MQUEUE = q->first;
-	q->first = p;
-    }
+   if (q->first == NULL) {
+   q->first = p;
+   q->num++;
+   p->pointer_type[MARRIAGE_QUEUE] = PTR_Q;
+   p->MQUEUE = q;
+   } else {
+   q->num++;
+   p->pointer_type[MARRIAGE_QUEUE] = PTR_N;
+   p->NEXT_ON_MQUEUE = q->first;
+   q->first = p;
+   }
 
-}
-*/
+   }
+   */
 
 void install_in_orderNOTWRONGBUTSLOW(struct person *p, struct queue_element *e, int q_type)
 	/** 1/13/14 This is Marcia's routine that puts individiduals on queues
-in personid/birth order.  There does not appear to be any reason other
-than esthetics for people to be installed in order since all events
-are executed in random order and marriage requires a working queue to
-be constructed. Perhaps I am wrong and this will blow up, but the sample
-simulation works without sorting and generally things run much faster so
-this is going into purgatory  **/
+	  in personid/birth order.  There does not appear to be any reason other
+	  than esthetics for people to be installed in order since all events
+	  are executed in random order and marriage requires a working queue to
+	  be constructed. Perhaps I am wrong and this will blow up, but the sample
+	  simulation works without sorting and generally things run much faster so
+	  this is going into purgatory  **/
 
 	/** installs people onto the queue in person_id order **/
-
-//	struct person *p;
-//struct queue_element *e;
-//int q_type;
+	//struct person *p;
+	//struct queue_element *e;
+	//int q_type;
 {
 	struct person *after, *before;
 	int j;
@@ -1350,8 +1319,8 @@ this is going into purgatory  **/
 		}
 		else
 		{
-		  printf("unknown queue circumstances\n");
-		  stop("unknown queue circumstances\n");//exit(1);
+			printf("unknown queue circumstances\n");
+			stop("unknown queue circumstances\n");//exit(1);
 		}
 	}
 }
@@ -1359,8 +1328,8 @@ this is going into purgatory  **/
 void install_in_order(struct person *p, struct queue_element *e, int q_type)
 	/** installs people onto the queue in person_id order **/
 	/** 1/13/14 EXCEPT THAT IT DOESN't this replaces Marcia's old
-routine. It simply puts everyone at the front of the queue. It works
-and is much faster  **/
+	  routine. It simply puts everyone at the front of the queue. It works
+	  and is much faster  **/
 
 {
 	// struct person *after, *before;
@@ -1379,7 +1348,7 @@ and is much faster  **/
 		return;
 	}
 	/**  let's not bother with pid ordering; the queue exists and p
-	 joins as first member**/
+	  joins as first member**/
 	e->num++;
 	p->pointer_type[q_type] = PTR_N;
 	SET_NEXT_ELEMENT(p, e->first);
@@ -1402,10 +1371,10 @@ void dump_queue()
 			for (p = e->first, j = 1; j < e->num; p = p->NEXT_PERSON, j++)
 			{
 				printf("      id %d age %d mult %f\n",
-					   p->person_id, (current_month - p->birthdate), p->fmult);
+						p->person_id, (current_month - p->birthdate), p->fmult);
 			}
 			printf("      id %d age %d mult %f\n",
-				   p->person_id, (current_month - p->birthdate), p->fmult);
+					p->person_id, (current_month - p->birthdate), p->fmult);
 		}
 	}
 }
@@ -1414,18 +1383,18 @@ void inspect_entry(struct queue_element *e, int q_type, FILE *fd)
 
 {
 	printf( "inspect_entry 0 number on queue %d--in id: group format\n", e->num);
-			
+
 	struct person *p;
 	int i;
 
-/*
-	if(q_type==0){
-	    printf("qtype0 - person");
-	} else {
-		printf("q_type123 - marriage");
-	}
-  fflush(stdout);
-*/
+	/*
+	   if(q_type==0){
+	   printf("qtype0 - person");
+	   } else {
+	   printf("q_type123 - marriage");
+	   }
+	   fflush(stdout);
+	   */
 	if (e->num < 1)
 	{
 		fprintf(fd, "empty queue\n");
@@ -1434,7 +1403,7 @@ void inspect_entry(struct queue_element *e, int q_type, FILE *fd)
 	else
 	{
 		fprintf(fd, "number on queue %d--in id: group format\n", e->num);
-		
+
 		for (p = e->first, i = 1; i < e->num; i++)
 		{
 			// p = ((q_type) == 0)? (p)->u_event_queue.next_person: (p)->u_marriage_queue.next_on_mqueue;
@@ -1450,8 +1419,8 @@ void inspect_entry(struct queue_element *e, int q_type, FILE *fd)
 		fprintf(fd, "%d : %d\n", p->person_id, p->group);
 
 		fprintf(fd, "current i %d\n", i);
-		
-    	//fflush(stdout);
+
+		//fflush(stdout);
 	}
 	fprintf(fd, "\n");
 }
@@ -1466,7 +1435,7 @@ void queue_delete( struct person *p, int q_type)
 	if (q_d_verbose)
 	{
 		printf("deleting person %d from q type %d on %d\n",
-			   p->person_id, q_type, current_month);
+				p->person_id, q_type, current_month);
 	}
 
 	// detect undefined person by testing wether the sex is valid:
@@ -1482,9 +1451,9 @@ void queue_delete( struct person *p, int q_type)
 	}
 
 	/*
-    if (NEXT_ELEMENT(p) == NULL) 
-	perror("trying to delete something with a null next ptr\n");
-    */
+	   if (NEXT_ELEMENT(p) == NULL) 
+	   perror("trying to delete something with a null next ptr\n");
+	   */
 
 	p1 = p;
 	while (p1->pointer_type[q_type] != PTR_Q)
@@ -1523,7 +1492,7 @@ void queue_delete( struct person *p, int q_type)
 			printf("in queue_delete: deleting non-first element\n");
 		before = e->first;
 		while (p1 = NEXT_ELEMENT(before),
-			   p1->person_id != p->person_id)
+				p1->person_id != p->person_id)
 		{
 			//printf("in queue_delete: looooping!t\n");
 			// fflush(stdout);
@@ -1565,12 +1534,12 @@ void queue_delete( struct person *p, int q_type)
 }
 
 /** modify_rates loops through the entire rate block and 
-    modifies rates per dmult/fmult/tmult
-**/
+  modifies rates per dmult/fmult/tmult
+ **/
 void modify_rates(int event,struct age_block *first_block,struct person *p)
-  /*int event;
-    struct age_block *first_block;
-    struct person *p;*/
+	/*int event;
+	  struct age_block *first_block;
+	  struct person *p;*/
 {
 
 	struct age_block *crnt_block;
@@ -1581,9 +1550,9 @@ void modify_rates(int event,struct age_block *first_block,struct person *p)
 	{
 		int event_sw = NUMEVENTS + 1;
 		/*
-	printf("modify_rates: current event %s\n", index_to_event[event]);
-	printf("original lambda %f\n", crnt_block->lambda);
-	*/
+		   printf("modify_rates: current event %s\n", index_to_event[event]);
+		   printf("original lambda %f\n", crnt_block->lambda);
+		   */
 		if (event == E_BIRTH)
 		{
 			event_sw = 1;
@@ -1595,27 +1564,27 @@ void modify_rates(int event,struct age_block *first_block,struct person *p)
 		switch (event_sw)
 		{
 
-		case 0:
-			crnt_block->modified_lambda =
-				crnt_block->mult(p, crnt_block) *
-				rate_factors[p->group][event][p->sex][p->mstatus];
-			break;
+			case 0:
+				crnt_block->modified_lambda =
+					crnt_block->mult(p, crnt_block) *
+					rate_factors[p->group][event][p->sex][p->mstatus];
+				break;
 
-			/*      case E_BIRTH: */
-		case 1:
-			crnt_block->modified_lambda =
-				crnt_block->mult(p, crnt_block) * birth_adjust[p->group] *
-				birth_rate_factors[p->group][p->mstatus];
-			/* Obsolete Renewal-Reward Therom based adjustment? *
-	if (1.0 /-crnt_block->modified_lambda > bint) {
-	  crnt_block->modified_lambda =
-	    -1.0/((1.0/-crnt_block->modified_lambda) - bint);
-	    } */
-			if (crnt_block->modified_lambda > -0.000000000000001)
-				crnt_block->modified_lambda = -0.000000000000001;
-			break;
-		default:
-			perror("unknown rate in rate block");
+				/*      case E_BIRTH: */
+			case 1:
+				crnt_block->modified_lambda =
+					crnt_block->mult(p, crnt_block) * birth_adjust[p->group] *
+					birth_rate_factors[p->group][p->mstatus];
+				/* Obsolete Renewal-Reward Therom based adjustment? *
+				   if (1.0 /-crnt_block->modified_lambda > bint) {
+				   crnt_block->modified_lambda =
+				   -1.0/((1.0/-crnt_block->modified_lambda) - bint);
+				   } */
+				if (crnt_block->modified_lambda > -0.000000000000001)
+					crnt_block->modified_lambda = -0.000000000000001;
+				break;
+			default:
+				perror("unknown rate in rate block");
 		}
 		if (global_verbose>4)
 		{
@@ -1625,7 +1594,7 @@ void modify_rates(int event,struct age_block *first_block,struct person *p)
 	}
 }
 
-int	datev(struct age_block *first_block,int age, int time_shift)
+int datev(struct age_block *first_block,int age, int time_shift)
 {
 	int waiting_time, duration;
 	long long int itemp;
@@ -1635,9 +1604,9 @@ int	datev(struct age_block *first_block,int age, int time_shift)
 	double temp;
 
 	/*
-    printf("entering datev\n");
-    fflush(stdout);
-    */
+	   printf("entering datev\n");
+	   fflush(stdout);
+	   */
 
 	if (first_block == NULL)
 		perror("datev: got here with a null rate set\n");
@@ -1652,23 +1621,23 @@ int	datev(struct age_block *first_block,int age, int time_shift)
 	crnt_block = first_block;
 
 	/*
-    printf("current age %d\n", age);
-    */
+	   printf("current age %d\n", age);
+	   */
 	while (age >= crnt_block->upper_age)
 	{
 		crnt_block = crnt_block->next;
 	}
 
 	/*
-    printf("event\n");
-    */
+	   printf("event\n");
+	   */
 	u = rrandom();
 
 	while (u <= 0)
 	{
 		/*
-	printf("event\n");
-	*/
+		   printf("event\n");
+		   */
 		u = rrandom();
 	}
 
@@ -1689,8 +1658,8 @@ int	datev(struct age_block *first_block,int age, int time_shift)
 		temp = crnt_block->modified_lambda;
 
 		/*
-	printf("temp %g\n", temp);
-	*/
+		   printf("temp %g\n", temp);
+		   */
 		temp = logu / temp;
 		itemp = (long long int)temp;
 		if (itemp > duration)
@@ -1704,7 +1673,7 @@ int	datev(struct age_block *first_block,int age, int time_shift)
 			printf("waiting time: %d\n", waiting_time);
 		}
 		/*
-	*/
+		*/
 
 		logu = logu - (duration * crnt_block->modified_lambda);
 		if (global_verbose)
@@ -1721,13 +1690,13 @@ int	datev(struct age_block *first_block,int age, int time_shift)
 	}
 
 	/*
-      printf("first_possible_month %d waiting_time %d\n",
-          first_possible_month, waiting_time);
-    */
+	   printf("first_possible_month %d waiting_time %d\n",
+	   first_possible_month, waiting_time);
+	   */
 
 	/*
-    printf("exiting datev\n");
-    */
+	   printf("exiting datev\n");
+	   */
 
 	return first_possible_month + waiting_time;
 }
@@ -1748,8 +1717,8 @@ int lc_datev(int g, int s, int age,struct person *p)
 	kt_index = current_month % MAXUMONTHS;
 
 	/*
-    epsilon = irandom() % (max_e_index + 1);
-    */
+	   epsilon = irandom() % (max_e_index + 1);
+	   */
 
 	if (random_epsilon || fixed_epsilon)
 	{
@@ -1762,14 +1731,14 @@ int lc_datev(int g, int s, int age,struct person *p)
 	}
 
 	/*
-    printf("index %d, age %d, ext %lf\n", ep, ax_bx_index, ext);
-    */
+	   printf("index %d, age %d, ext %lf\n", ep, ax_bx_index, ext);
+	   */
 
 	first_possible_month = current_month;
 
 	/*
-    printf("current age %d\n", age);
-    */
+	   printf("current age %d\n", age);
+	   */
 
 	u = rrandom();
 
@@ -1786,7 +1755,7 @@ int lc_datev(int g, int s, int age,struct person *p)
 	waiting_time = -1;
 
 	/* note that calculation stops automatically
-		 * when age at death reaches MAXUMONTHS, via the index */
+	 * when age at death reaches MAXUMONTHS, via the index */
 
 	while ((logu < 0) && (ax_bx_index < MAXUMONTHS))
 	{
@@ -1795,14 +1764,14 @@ int lc_datev(int g, int s, int age,struct person *p)
 		kt = *(kt_vals[g][s] + kt_index);
 
 		/*
-	kt = *(kt_vals[g][s] + kt_index) +
-	    lc_rate_set[g][s]->mean * (double) p->egos_extra->factor;
-	*/
+		   kt = *(kt_vals[g][s] + kt_index) +
+		   lc_rate_set[g][s]->mean * (double) p->egos_extra->factor;
+		   */
 
 		/*
-	temp_rate = exp(ax + bx * kt);
-	ext = 0;
-	*/
+		   temp_rate = exp(ax + bx * kt);
+		   ext = 0;
+		   */
 
 		temp_rate = exp(ax + bx * kt + ext);
 
@@ -1812,10 +1781,10 @@ int lc_datev(int g, int s, int age,struct person *p)
 			temp_rate = log(1 - temp_rate) / 12;
 
 		/*
-	if (global_verbose)
-	    printf("temp_rate %g logu %g ax %g bx %g kt %g\n", temp_rate, logu,
-		    ax, bx, kt);
-	*/
+		   if (global_verbose)
+		   printf("temp_rate %g logu %g ax %g bx %g kt %g\n", temp_rate, logu,
+		   ax, bx, kt);
+		   */
 
 		logu = logu - temp_rate;
 
@@ -1834,14 +1803,14 @@ int lc_datev(int g, int s, int age,struct person *p)
 		}
 
 		/*
-	printf("index %d, age %d, ext %lf\n", ep, ax_bx_index, ext);
-	*/
+		   printf("index %d, age %d, ext %lf\n", ep, ax_bx_index, ext);
+		   */
 	}
 
 	/*
-      printf("first_possible_month %d waiting_time %d\n",
-          first_possible_month, waiting_time);
-      */
+	   printf("first_possible_month %d waiting_time %d\n",
+	   first_possible_month, waiting_time);
+	   */
 
 	return first_possible_month + waiting_time;
 }
@@ -1855,26 +1824,26 @@ int date_and_event(struct person *p)
 	struct age_block *first_block;
 
 	/*
-    printf("entering d_event\n");
-    printf("relevant rate set: sex %s mstatus  %s \n",
-	index_to_sex[p->sex], index_to_mstatus[p->mstatus]);
-    */
+	   printf("entering d_event\n");
+	   printf("relevant rate set: sex %s mstatus  %s \n",
+	   index_to_sex[p->sex], index_to_mstatus[p->mstatus]);
+	   */
 
 	/* generate a death date */
 	/*
-    printf("death rate set: group %d sex %s mstatus  %s \n",
-	p->group, index_to_sex[p->sex], index_to_mstatus[p->mstatus]);
-    */
+	   printf("death rate set: group %d sex %s mstatus  %s \n",
+	   p->group, index_to_sex[p->sex], index_to_mstatus[p->mstatus]);
+	   */
 
 	/*
-    write_person(p, stdout);
-    printf("death rate set\n");
-    */
+	   write_person(p, stdout);
+	   printf("death rate set\n");
+	   */
 
 	/* anyone whose current age = MAXUMONTHS-1 must die in the current
-       month We need to police this b/c geriatric married people can
-       have new events generated during their 1199th month if their
-       spouse dies before their own scheduled death is executed. */
+	   month We need to police this b/c geriatric married people can
+	   have new events generated during their 1199th month if their
+	   spouse dies before their own scheduled death is executed. */
 	if(compatibility_mode==1){
 		if ((current_month - p->birthdate) == (1200-1)){
 			p->next_event = E_DEATH;
@@ -1899,29 +1868,29 @@ int date_and_event(struct person *p)
 	}
 
 	/*
-	printf("death rate set: sex %s mstatus  %s \n",
-	index_to_sex[p->sex], index_to_mstatus[p->mstatus]);
-	printf("death of %d scheduled for %d\n", p->person_id, m);
-    */
+	   printf("death rate set: sex %s mstatus  %s \n",
+	   index_to_sex[p->sex], index_to_mstatus[p->mstatus]);
+	   printf("death of %d scheduled for %d\n", p->person_id, m);
+	   */
 
 	p->next_event = E_DEATH;
 
 	/*
-    printf("birth rate set\n");
-    */
+	   printf("birth rate set\n");
+	   */
 	/* if female, generate a birth date */
 	if (p->sex == FEMALE)
 	{
 		int par;
 		int next_pos_birth;
 		/*
-	par = p->egos_extra->parity;
-	*/
+		   par = p->egos_extra->parity;
+		   */
 		par = get_parity(p);
 		/*
-	printf("rate set: %d %s %d\n",
-		p->group, index_to_mstatus[p->mstatus], par);
-	*/
+		   printf("rate set: %d %s %d\n",
+		   p->group, index_to_mstatus[p->mstatus], par);
+		   */
 		/* use bint for next poss birth */
 		if (p->lborn == NULL)
 		{
@@ -1933,12 +1902,12 @@ int date_and_event(struct person *p)
 				MAX(p->lborn->birthdate + (int)bint, current_month);
 
 			/* if death is scheduled at current month, don't
-			     * even calculate next birth */
+			 * even calculate next birth */
 			/*
-		printf("%d birth for %d aged %d on %d death on %d\n",
-		    current_month, p->person_id,
-		    current_month - p->birthdate, next_pos_birth);
-	    */
+			   printf("%d birth for %d aged %d on %d death on %d\n",
+			   current_month, p->person_id,
+			   current_month - p->birthdate, next_pos_birth);
+			   */
 		}
 
 		first_block =
@@ -1946,7 +1915,7 @@ int date_and_event(struct person *p)
 		modify_rates(E_BIRTH, first_block, p);
 
 		/**printing fert rate blocks to verify that all are the smae
-	   if hetfert==0**/
+		  if hetfert==0**/
 		if (0)
 		{
 			struct age_block *block_ptr;
@@ -1963,14 +1932,14 @@ int date_and_event(struct person *p)
 		} /**end of stupid printing temp**/
 
 		m1 = datev(first_block, current_month - p->birthdate,
-				   next_pos_birth - current_month);
+				next_pos_birth - current_month);
 		/*
-	    printf("remaining bint %d \n", next_pos_birth - current_month);
-	   printf("birth for %d scheduled for %d\n", p->person_id, m1);
-	    printf("%d birth for %d aged %d on %d death on %d\n",
-		current_month, p->person_id,
-		current_month - p->birthdate, m1, m);
-	*/
+		   printf("remaining bint %d \n", next_pos_birth - current_month);
+		   printf("birth for %d scheduled for %d\n", p->person_id, m1);
+		   printf("%d birth for %d aged %d on %d death on %d\n",
+		   current_month, p->person_id,
+		   current_month - p->birthdate, m1, m);
+		   */
 		if (m1 < m)
 		{
 			p->next_event = E_BIRTH;
@@ -1979,37 +1948,37 @@ int date_and_event(struct person *p)
 	}
 	/* generate a marriage date */
 	/*
-	printf("marriage of %d scheduled for %d\n", p->person_id, m1);
-	printf("marriage rate set\n");
-    */
+	   printf("marriage of %d scheduled for %d\n", p->person_id, m1);
+	   printf("marriage rate set\n");
+	   */
 
 	/*
-    if (p->mstatus == COHABITING) {
-	first_block  = rate_set[p->group][E_MARRIAGE][p->sex][p->mstatus];
-	modify_rates(E_MARRIAGE, first_block,  p);
-	m1 = datev(first_block,
-		current_month - p->last_marriage->date_start, 0);
-	if (m1 < m) {
-	    p->next_event = E_MARRIAGE;
-	    m = m1;
-	}
-    } else {
-    }
-    */
+	   if (p->mstatus == COHABITING) {
+	   first_block  = rate_set[p->group][E_MARRIAGE][p->sex][p->mstatus];
+	   modify_rates(E_MARRIAGE, first_block,  p);
+	   m1 = datev(first_block,
+	   current_month - p->last_marriage->date_start, 0);
+	   if (m1 < m) {
+	   p->next_event = E_MARRIAGE;
+	   m = m1;
+	   }
+	   } else {
+	   }
+	   */
 	/* Wed Apr 17 17:00:43 PDT 2013
-       is there a reason that a person on the marrque should NOT
-       have a marriage event? -- s/he could get put on the queue again 
-       and that could be bad -- but s/couldn't s/he have another search
-       Going to change this for the one queue marriage plan
-    */
+	   is there a reason that a person on the marrque should NOT
+	   have a marriage event? -- s/he could get put on the queue again 
+	   and that could be bad -- but s/couldn't s/he have another search
+	   Going to change this for the one queue marriage plan
+	   */
 	/*  if ((p->NEXT_ON_MQUEUE == NULL) &&*/
 	if ((p->NEXT_ON_MQUEUE == NULL || marriage_queues == 1) &&
-		(rate_set[p->group][E_MARRIAGE][p->sex][p->mstatus] != NULL))
+			(rate_set[p->group][E_MARRIAGE][p->sex][p->mstatus] != NULL))
 	{
 		/*
-	printf("marriage rate set: group %d sex %s mstatus  %s \n",
-	    p->group, index_to_sex[p->sex], index_to_mstatus[p->mstatus]);
-	*/
+		   printf("marriage rate set: group %d sex %s mstatus  %s \n",
+		   p->group, index_to_sex[p->sex], index_to_mstatus[p->mstatus]);
+		   */
 		first_block = rate_set[p->group][E_MARRIAGE][p->sex][p->mstatus];
 		if (duration_specific[p->group][E_MARRIAGE][p->sex][p->mstatus])
 		{
@@ -2030,9 +1999,9 @@ int date_and_event(struct person *p)
 			m = m1;
 			if (marriage_queues == 1 && p->sex == MALE)
 			{
-			  //logmsg("\nmarriage_queues==1 yet marriage event gen'ed for %d\n"," ", p->person_id);
-			  fprintf(fd_log,"\nmarriage_queues==1 yet marriage event gen'ed for %d\n",p->person_id);
-			  stop("\nmarriage_queues==1 yet marriage event gen'ed for %d\n",p->person_id);//exit(-1);
+				//logmsg("\nmarriage_queues==1 yet marriage event gen'ed for %d\n"," ", p->person_id);
+				fprintf(fd_log,"\nmarriage_queues==1 yet marriage event gen'ed for %d\n",p->person_id);
+				stop("\nmarriage_queues==1 yet marriage event gen'ed for %d\n",p->person_id);//exit(-1);
 			}
 		}
 	}
@@ -2040,13 +2009,13 @@ int date_and_event(struct person *p)
 	if ((p->mstatus == MARRIED) || (p->mstatus == COHABITING))
 	{
 		/*
-	printf("divorce rate set: group %d sex %s mstatus  %s \n",
-	    p->group, index_to_sex[p->sex], index_to_mstatus[p->mstatus]);
-	*/
+		   printf("divorce rate set: group %d sex %s mstatus  %s \n",
+		   p->group, index_to_sex[p->sex], index_to_mstatus[p->mstatus]);
+		   */
 		first_block = rate_set[p->group][E_DIVORCE][p->sex][p->mstatus];
 		modify_rates(E_DIVORCE, first_block, p);
 		m1 = datev(first_block,
-				   current_month - p->last_marriage->date_start, 0);
+				current_month - p->last_marriage->date_start, 0);
 		if (m1 < m)
 		{
 			p->next_event = E_DIVORCE;
@@ -2055,23 +2024,23 @@ int date_and_event(struct person *p)
 	}
 
 	/*
-    printf("migration rate set(s), if any\n");
-    */
+	   printf("migration rate set(s), if any\n");
+	   */
 	/* all relevant transition events are possible */
 	for (i = 1; i <= numgroups; i++)
 	{
 		if ((first_block =
-				 rate_set[p->group][NONTRANSIT + i][p->sex][p->mstatus]) != NULL)
+					rate_set[p->group][NONTRANSIT + i][p->sex][p->mstatus]) != NULL)
 		{
 
 			/**Wed Jun 23 06:19:16 PDT 2010 adding option for duration spec. 
-	     transit rates **/
+			  transit rates **/
 
 			if (
-				(duration_specific[p->group][NONTRANSIT + i][p->sex][p->mstatus]) && (p->ltrans != NULL))
+					(duration_specific[p->group][NONTRANSIT + i][p->sex][p->mstatus]) && (p->ltrans != NULL))
 			{
 				/* if the rate is durations specific AND a transition has 
-		 occurred since birth...*/
+				   occurred since birth...*/
 				delta = current_month - p->ltrans->date;
 			}
 			else
@@ -2082,9 +2051,9 @@ int date_and_event(struct person *p)
 			modify_rates(NONTRANSIT + i, first_block, p);
 
 			/*	
-		printf("using %d %s %s %s\n", p->group, index_to_sex[p->sex],
-		index_to_mstatus[p->mstatus], index_to_event[NONTRANSIT + i]);
-		*/
+				printf("using %d %s %s %s\n", p->group, index_to_sex[p->sex],
+				index_to_mstatus[p->mstatus], index_to_event[NONTRANSIT + i]);
+				*/
 			/* m1 = datev(first_block, current_month - p->birthdate, 0);*/
 			m1 = datev(first_block, delta, 0);
 			if (m1 < m)
@@ -2096,18 +2065,18 @@ int date_and_event(struct person *p)
 	}
 
 	/*
-    if (p->person_id == 11047)
-    printf("next event for %d is %s\n",
-    p->person_id, index_to_event[p->next_event]);
-    
-    printf("exiting date_and_event\n");
-    */
+	   if (p->person_id == 11047)
+	   printf("next event for %d is %s\n",
+	   p->person_id, index_to_event[p->next_event]);
+
+	   printf("exiting date_and_event\n");
+	   */
 
 	/*
-      if (m == current_month) 
-      printf("event scheduled for current month %s\n",
-      index_to_event[p->next_event]);
-    */
+	   if (m == current_month) 
+	   printf("event scheduled for current month %s\n",
+	   index_to_event[p->next_event]);
+	   */
 	return m;
 }
 
@@ -2123,13 +2092,13 @@ void initialize_segment_vars()
 	double **ax_ptr, **bx_ptr, **kt_ptr, **aax_ptr, **abx_ptr, **akt_ptr;
 
 	/**
-   ** This code replaces something more  complex fromthe Feitel
-   ** era. Instead of unpacking the rate pointers according to
-   ** inheritance rules, this just starts at zero and looks for things
-   ** that point to each cell. such things are set to NULl then the
-   ** original cell is cfreed. This prevents cfree of already
-   ** dereferenced stuff. bald spot dedicated to this problem
-   **/
+	 ** This code replaces something more  complex fromthe Feitel
+	 ** era. Instead of unpacking the rate pointers according to
+	 ** inheritance rules, this just starts at zero and looks for things
+	 ** that point to each cell. such things are set to NULl then the
+	 ** original cell is cfreed. This prevents cfree of already
+	 ** dereferenced stuff. bald spot dedicated to this problem
+	 **/
 	//warning("beginning");fprintf(fd_log,"begi1");
 	for (g = 0; g < MAXGROUPS * NUMEVENTS * NUMMARSTATUS * NUMSEXES; g++)
 	{
@@ -2158,13 +2127,13 @@ void initialize_segment_vars()
 	//warning("beginning2");fprintf(fd_log,"begi2");
 
 	/******************************
-   ** Mon Jul 29 14:56:02 PDT 2002 this replaces code formerly above
-   **and below this  point which (1) unwound the birth_rate_set
-   **according to inheritance rules and then cfreed. That proved
-   **problematic as elements of birth_rate_set[] would get freed more
-   **than once -- solaris gcc is suprisingly robust to this, linux gcc
-   **compiles fine of course but seg faults 
-   *********************************/
+	 ** Mon Jul 29 14:56:02 PDT 2002 this replaces code formerly above
+	 **and below this  point which (1) unwound the birth_rate_set
+	 **according to inheritance rules and then cfreed. That proved
+	 **problematic as elements of birth_rate_set[] would get freed more
+	 **than once -- solaris gcc is suprisingly robust to this, linux gcc
+	 **compiles fine of course but seg faults 
+	 *********************************/
 
 	for (g = 0; g < MAXGROUPS * NUMMARSTATUS * MAXPARITY; g++)
 	{
@@ -2198,7 +2167,7 @@ void initialize_segment_vars()
 			birth_rate_factors[g][m] = 1;
 		}
 	}
-	
+
 	//warning("begi4");
 	/* zero the duration_specific rates and rate factors */
 	for (g = 0; g < MAXGROUPS; g++)
@@ -2211,17 +2180,17 @@ void initialize_segment_vars()
 				}
 
 	/**************************
-   ** Tue Sep 17 13:11:02 PDT 2002
-   ** Just as for the simpler rate sets, It is necessary to
-   ** rewrite the reinititialization routines in order to avoid
-   ** releasing memory twice.  Same algorithm as described above: 
-   ** march down the array and looking for higher indexed pointers to the 
-   ** same memory location -- lc_rate_set needs to be cfree'ed but not
-   ** unwound as carefuly as other rate sets
-   **  ax_vals,bx_vals,kt_vals are 
-   ** just arrays of ptrs to doubles. 
-   ****************************/
-	
+	 ** Tue Sep 17 13:11:02 PDT 2002
+	 ** Just as for the simpler rate sets, It is necessary to
+	 ** rewrite the reinititialization routines in order to avoid
+	 ** releasing memory twice.  Same algorithm as described above: 
+	 ** march down the array and looking for higher indexed pointers to the 
+	 ** same memory location -- lc_rate_set needs to be cfree'ed but not
+	 ** unwound as carefuly as other rate sets
+	 **  ax_vals,bx_vals,kt_vals are 
+	 ** just arrays of ptrs to doubles. 
+	 ****************************/
+
 	//warning("begi4.2");
 	for (g = 0; g < MAXGROUPS * NUMSEXES; g++)
 	{
@@ -2279,7 +2248,7 @@ void initialize_segment_vars()
 			*kt_ptr = NULL;
 		}
 	}
-	
+
 	//warning("begi5");
 	for (g = 1; g < MAXGROUPS; g++)
 	{
@@ -2298,7 +2267,7 @@ void initialize_segment_vars()
 			}
 		}
 	}
-	
+
 	//warning("begi6");
 
 	for (g = 1; g < MAXGROUPS; g++)
@@ -2321,7 +2290,7 @@ void initialize_segment_vars()
 			}
 		}
 	}
-	
+
 	//warning("begi7");fprintf(fd_log,"begi7");
 	for (g = 1; g < MAXGROUPS; g++)
 	{
@@ -2345,13 +2314,13 @@ void initialize_segment_vars()
 		for (e = event_queue, i = 0; i < MAXUMONTHS; e++, i++)
 		{
 			/*
-	printf("i %d num %d\n", i, e->num);
-      */
+			   printf("i %d num %d\n", i, e->num);
+			   */
 			while (e->num)
 			{
 				/*
-	  printf("deleting %d\n", e->first->person_id);
-	*/
+				   printf("deleting %d\n", e->first->person_id);
+				   */
 				queue_delete(e->first, EVENT_QUEUE);
 			}
 			e->first = NULL;
@@ -2359,8 +2328,8 @@ void initialize_segment_vars()
 		}
 
 		/*
-      printf("working on marriage queue\n");
-    */
+		   printf("working on marriage queue\n");
+		   */
 
 		for (q = marriage_queue, i = MALE; i <= FEMALE; q++, i++)
 		{
@@ -2376,7 +2345,7 @@ void initialize_segment_vars()
 	//fprintf(fd_log,"begi9");
 	/* initialize variables to defaults or error-trigger values */
 	write_output = 0; /* only write intermediate pop files 
-		     if instructed to in each segment*/
+			     if instructed to in each segment*/
 
 	take_census = 0; /*only take census is instructed for current seg */
 	duration_of_segment = 0;
@@ -2387,7 +2356,7 @@ void initialize_segment_vars()
 	random_epsilon = 0;
 	fixed_epsilon = 0;
 	numgroups = 0; /* this will be learned from reading rate sets and init pop*/
-	
+
 	//stop("begi 10!");
 }
 
@@ -2405,10 +2374,10 @@ void population_pyramid(FILE *fd_pyr)
 	//char logstring[256];
 
 	/**disable for now until we can figure out why it crashs on small
-    pop  --carlm10/99**/
+	  pop  --carlm10/99**/
 	/* Fri Jul 19 15:27:52 PDT 2002 tun population_pyramid back on
-       printf("Population Pyramid Compilation disabled\n");
-       return;*/
+	   printf("Population Pyramid Compilation disabled\n");
+	   return;*/
 
 	if (MAXUYEARS == 100)
 		limit = 23;
@@ -2416,9 +2385,9 @@ void population_pyramid(FILE *fd_pyr)
 		limit = 27;
 
 	/*** Fri Jul 19 15:18:52 PDT 2002
-	 changed to g= 1 from g=0 hopefuly this will cure the pop pyramid
-	 crash problem
-    ****/
+	  changed to g= 1 from g=0 hopefuly this will cure the pop pyramid
+	  crash problem
+	 ****/
 
 	/*    for (g = 0; g <= numgroups; g++) { */
 	for (g = 0; g <= NUMBER_OF_GROUPS; g++)
@@ -2435,24 +2404,24 @@ void population_pyramid(FILE *fd_pyr)
 	p = person0;
 
 	/* tally the population by age, sex, and group 
-    * index 0 can ge used for summing over all the non-zero
-    * values of the index. Here, the sum array takes the role.
-    */
+	 * index 0 can ge used for summing over all the non-zero
+	 * values of the index. Here, the sum array takes the role.
+	 */
 
 	logmsg("--write population pyramid\n", "", 1);
 	fflush(stdout);
 	while (p != NULL)
 	{
 		/*
-	printf("id = %d\n",p->person_id);fflush(stdout);	
-      */
+		   printf("id = %d\n",p->person_id);fflush(stdout);	
+		   */
 		if (p->deathdate == 0)
 		{
 			/* write each living peson..
-	   printf("pid=%d age=%d sex=%d group=%d\n",p->person_id,
-	       (current_month - p->birthdate),
-	       p->sex, p->group);
-	*/
+			   printf("pid=%d age=%d sex=%d group=%d\n",p->person_id,
+			   (current_month - p->birthdate),
+			   p->sex, p->group);
+			   */
 			pyr_age = current_month - p->birthdate;
 			if (pyr_age <= 1)
 			{
@@ -2486,25 +2455,25 @@ void population_pyramid(FILE *fd_pyr)
 		}
 
 		/*	printf("                   tallying %d  of %d \r", p->person_id, last_person->person_id );
-		fflush(stdout);
-      */
+			fflush(stdout);
+			*/
 		p = p->down;
 	}
 	printf("\n");
 
 	/* write the header */
 	/* Fri Jul 19 15:21:02 PDT 2002
-       changed g=0 t g=1
-    */
+	   changed g=0 t g=1
+	   */
 
 	/** barf out sum and tally **/
 
 	for (g = 0; g <= NUMBER_OF_GROUPS; g++)
 	{
 		/*
-      printf("group %d males: %d  females: %d\n",
-	     g,sum[MALE][g], sum[FEMALE][g]);
-      */
+		   printf("group %d males: %d  females: %d\n",
+		   g,sum[MALE][g], sum[FEMALE][g]);
+		   */
 		/* fprintf(fd_pyr, "\f") */
 		if (sum[MALE][g] + sum[FEMALE][g] == 0)
 			continue;
@@ -2551,7 +2520,7 @@ void population_pyramid(FILE *fd_pyr)
 			num = (int)percent * 2;
 
 			/** will over write memory boundary without this if more than
-		40 pct of age pop in one age  group**/
+			  40 pct of age pop in one age  group**/
 			num = num > 80 ? 80 : num;
 
 			for (j = 1; j <= 39 - num; j++)
@@ -2565,7 +2534,7 @@ void population_pyramid(FILE *fd_pyr)
 				percent = 100 * tally_matrix[i][FEMALE][g] / sum[FEMALE][g];
 			num = (int)percent * 2;
 			/** will over write memory boundary without this if more than
-	     40 pct of age pop in one age  group**/
+			  40 pct of age pop in one age  group**/
 			num = num > 80 ? 80 : num;
 			for (j = 1; j <= num; j++)
 				strcat(rightline, "F");
@@ -2592,28 +2561,28 @@ void population_pyramid(FILE *fd_pyr)
 		}
 
 		/*
-	fprintf(fd_pyr, 
-	"g %d tm 1 2 3  male %d %d %d %d %d %d %d %d sum male g %d\n",
-	       g,
-		tally_matrix[1][MALE][g], 
-		tally_matrix[2][MALE][g], 
-		tally_matrix[3][MALE][g], 
-		tally_matrix[4][MALE][g], 
-		tally_matrix[5][MALE][g], 
-		tally_matrix[6][MALE][g], 
-		tally_matrix[7][MALE][g], 
-		tally_matrix[8][MALE][g], 
-		sum[MALE][g]);
-	fflush(fd_pyr);
-	*/
+		   fprintf(fd_pyr, 
+		   "g %d tm 1 2 3  male %d %d %d %d %d %d %d %d sum male g %d\n",
+		   g,
+		   tally_matrix[1][MALE][g], 
+		   tally_matrix[2][MALE][g], 
+		   tally_matrix[3][MALE][g], 
+		   tally_matrix[4][MALE][g], 
+		   tally_matrix[5][MALE][g], 
+		   tally_matrix[6][MALE][g], 
+		   tally_matrix[7][MALE][g], 
+		   tally_matrix[8][MALE][g], 
+		   sum[MALE][g]);
+		   fflush(fd_pyr);
+		   */
 
 		num1 = (int)percent1 * 2;
 		num2 = (int)percent2 * 2;
 		num3 = (int)percent3 * 2;
 
 		/*fprintf(fd_pyr,"nums  %d %d %d\n",num1,num2,num3);
-	fflush(fd_pyr);
-	*/
+		  fflush(fd_pyr);
+		  */
 		/** nums over 80 write beyond bounds of leftline screw everything */
 		num1 = num1 > 80 ? 80 : num1;
 		num2 = num2 > 80 ? 80 : num2;
@@ -2633,7 +2602,7 @@ void population_pyramid(FILE *fd_pyr)
 		else
 		{
 			/** only room for 40% in  any bar -- if the population (init for 
-	    example) is all babies we need to avoid the fancy bars**/
+			  example) is all babies we need to avoid the fancy bars**/
 			for (j = 1; j <= 39; j++)
 				strcat(leftline, "M");
 		}
@@ -2655,18 +2624,18 @@ void population_pyramid(FILE *fd_pyr)
 		}
 
 		/*	fprintf(fd_pyr, "g %d tm 1 female %d sum female g %d\n",
-	       g,tally_matrix[1][FEMALE][g], sum[FEMALE][g]);
-	fflush(fd_pyr);
-	*/
+			g,tally_matrix[1][FEMALE][g], sum[FEMALE][g]);
+			fflush(fd_pyr);
+			*/
 
 		num1 = (int)percent1 * 2;
 		num2 = (int)percent2 * 2;
 		num3 = (int)percent3 * 2;
 
 		/*
-	  fprintf(fd_pyr,"nums  %d %d %d\n",num1,num2,num3);
-	  fflush(fd_pyr);
-	*/
+		   fprintf(fd_pyr,"nums  %d %d %d\n",num1,num2,num3);
+		   fflush(fd_pyr);
+		   */
 		/** nums over 80 write beyond bounds of leftline screw everything */
 		num1 = num1 > 80 ? 80 : num1;
 		num2 = num2 > 80 ? 80 : num2;
@@ -2686,7 +2655,7 @@ void population_pyramid(FILE *fd_pyr)
 		else
 		{
 			/** only room for 40% in  any bar -- if the population (init for 
-	      example) is all babies we need to avoid the fancy bars**/
+			  example) is all babies we need to avoid the fancy bars**/
 			for (j = 1; j <= 39; j++)
 				strcat(rightline, "F");
 		}
@@ -2744,8 +2713,8 @@ void print_segment_info(FILE *fd)
 	}
 
 	/* fprintf(fd,"write census file:");
-  if(take_census){ fprintf(fd,"yes\n"); } else {fprintf(fd,"no\n"); };
-  */
+	   if(take_census){ fprintf(fd,"yes\n"); } else {fprintf(fd,"no\n"); };
+	   */
 	fprintf(fd, "\n-- Fertility options --\n");
 	fprintf(fd, "Sex Ratio(prop male births):\t %lf\n", prop_males);
 	fprintf(fd, "Minimum Birth Interval:\t%f months\n", bint);
@@ -2873,20 +2842,20 @@ void print_segment_info(FILE *fd)
 	fprintf(fd, "child group identity : ");
 	switch (child_inherits_group)
 	{
-	case FROM_MOTHER:
-		fprintf(fd, " inherited from MOTHER\n");
-		break;
-	case FROM_FATHER:
-		fprintf(fd, " inherited from FATHER\n");
-		break;
-	case FROM_SAME_SEX_PARENT:
-		fprintf(fd, " inherited from SAME SEX PARENT\n");
-		break;
-	case FROM_OPPOSITE_SEX_PARENT:
-		fprintf(fd, " inherited from OPPOSITE SEX PARENT\n");
-		break;
-	default:
-		fprintf(fd, " always %d\n", child_inherits_group);
+		case FROM_MOTHER:
+			fprintf(fd, " inherited from MOTHER\n");
+			break;
+		case FROM_FATHER:
+			fprintf(fd, " inherited from FATHER\n");
+			break;
+		case FROM_SAME_SEX_PARENT:
+			fprintf(fd, " inherited from SAME SEX PARENT\n");
+			break;
+		case FROM_OPPOSITE_SEX_PARENT:
+			fprintf(fd, " inherited from OPPOSITE SEX PARENT\n");
+			break;
+		default:
+			fprintf(fd, " always %d\n", child_inherits_group);
 	}
 
 	fprintf(fd, "\n  ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  ||\n\n");
