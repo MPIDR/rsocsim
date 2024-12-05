@@ -267,8 +267,9 @@ int load( char *file)
             // getcwd(path, 255);
             // getcwd(temp, sizeof(temp)) ? std::string( temp ) : std::string("")
 
-            GetCurrentDir( path, 255 );
-            warning("Current working directory: %s\n", path);
+            if (GetCurrentDir(path, 255) != NULL) {
+                warning("Current working directory: %s\n", path);
+            }
             // warning("Current working directory: %s\n", std::filesystem::current_path());
             /*    error("Can't open \"%s\"", "rate_file");*/
             warning("Can not open ratefile: %s", file);
@@ -410,11 +411,6 @@ int create_output_fn_dir() {
     char buffer_sup_fn_dest [1024];
     sprintf (buffer_sup_fn_dest, "%s%s", buffer_output_dir, rate_file_name);
     FILE *source = fopen(rate_file_name, "rb");
-    FILE *destination = fopen(buffer_sup_fn_dest, "wb");
-    // copy the .sup-file (rate_file_name) into the subfolder:
-    char buffer_sup_fn_dest[1024];
-    sprintf (buffer_sup_fn_dest, "%s%s", buffer_output_dir, rate_file_base_name);
-    FILE *source = fopen(rate_file_name, "rb");
     if (source == NULL) {
         Rprintf("Could not open source (rate) file: %s\n", strerror(errno));
     }
@@ -422,8 +418,7 @@ int create_output_fn_dir() {
     if (destination == NULL) {
         stop("Could not open destination file: %s\n", strerror(errno));
     }
-    >>>>>>> main
-        char buffer[1024];
+    char buffer[1024];
     size_t bytes_read;
     while ((bytes_read = fread(buffer, 1, sizeof(buffer), source)) > 0) {
         fwrite(buffer, 1, bytes_read, destination);

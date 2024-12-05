@@ -134,6 +134,10 @@ The goal of this section is to improve the readability of the code and reduce co
 - braces after a function declaration or a control flow statement go on a new line;
 - first-level braces at the beginning of a line appear in the first column;
 - closing braces appear in the same column as their counterpart.
+- spaces...:
+    - ... around binary operators;
+    - ... after commas;
+    - ... before opening parentheses and after closing parentheses.
 
 If you use vim, the default C formatting should be fine (':h C-indenting').
 
