@@ -127,6 +127,27 @@
 <pre><code><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">build</span><span class="op">(</span>binary<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">build</span><span class="op">(</span>binary<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre>
 <div class="section level3">
+<h3 id="style-guide">Style guide<a class="anchor" aria-label="anchor" href="#style-guide"></a>
+</h3>
+<p>The goal of this section is to improve the readability of the code and reduce complaints from modern compilers (parts of the code are 40ish years old). We (try to) follow Allman style, but as a guideline not a hard requirement. Basically, this means:</p>
+<ul>
+<li>one level of indentation = 4 spaces;</li>
+<li>spaces not tabs;</li>
+<li>braces after a function declaration or a control flow statement go on a new line;</li>
+<li>first-level braces at the beginning of a line appear in the first column;</li>
+<li>closing braces appear in the same column as their counterpart.</li>
+<li>spaces…:
+<ul>
+<li>… around binary operators;</li>
+<li>… after commas;</li>
+<li>… before opening parentheses and after closing parentheses.</li>
+</ul>
+</li>
+</ul>
+<p>If you use vim, the default C formatting should be fine (‘:h C-indenting’).</p>
+<p>We reformatted the .cpp files because indentation was all over the place, but we left the .c files largely alone such as not to anger the compiler gods.</p>
+</div>
+<div class="section level3">
 <h3 id="future-plans">Future plans<a class="anchor" aria-label="anchor" href="#future-plans"></a>
 </h3>
 <ul>
