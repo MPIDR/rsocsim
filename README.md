@@ -125,6 +125,23 @@ build source and binary package:
 devtools::build(binary=FALSE)
 devtools::build(binary=TRUE)
 ```
+### Style guide
+
+The goal of this section is to improve the readability of the code and reduce complaints from modern compilers (parts of the code are 40ish years old). We (try to) follow Allman style, but as a guideline not a hard requirement. Basically, this means:
+
+- one level of indentation = 4 spaces;
+- spaces not tabs;
+- braces after a function declaration or a control flow statement go on a new line;
+- first-level braces at the beginning of a line appear in the first column;
+- closing braces appear in the same column as their counterpart.
+- spaces...:
+    - ... around binary operators;
+    - ... after commas;
+    - ... before opening parentheses and after closing parentheses.
+
+If you use vim, the default C formatting should be fine (':h C-indenting').
+
+We reformatted the .cpp files because indentation was all over the place, but we left the .c files largely alone such as not to anger the compiler gods.
 
 ### Future plans
 
