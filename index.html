@@ -56,7 +56,14 @@
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
 <div class="section level3">
-<h3 id="from-source">From Source<a class="anchor" aria-label="anchor" href="#from-source"></a>
+<h3 id="from-a-binary-package">From a binary package<a class="anchor" aria-label="anchor" href="#from-a-binary-package"></a>
+</h3>
+<p>Download the correct binary package from the <a href="https://github.com/MPIDR/rsocsim/releases" class="external-link">release section on Github</a>: Currently, you can use <a href="https://github.com/MPIDR/rsocsim/releases/download/v1.5.9/rsocsim_1.5.9.tgz" class="external-link">rsocsim_1.5.9.tgz</a> for Mac and <a href="https://github.com/MPIDR/rsocsim/releases/download/v1.5.9/rsocsim_1.5.9.tar.gz" class="external-link">rsocsim_1.5.9.tar.gz</a> for Windows.</p>
+<p>Then execute the following line in R and choose the downloaded file:</p>
+<pre><code><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.choose.html" class="external-link">file.choose</a></span><span class="op">(</span><span class="op">)</span>,repos<span class="op">=</span><span class="cn">NULL</span>,type<span class="op">=</span><span class="st">"binary"</span><span class="op">)</span></span></code></pre>
+</div>
+<div class="section level3">
+<h3 id="from-source-requires-a-compiler">From Source (requires a compiler)<a class="anchor" aria-label="anchor" href="#from-source-requires-a-compiler"></a>
 </h3>
 <p>To get the latest version, you need to have a Rcpp compatible compiler installed and a way to install packages from Github.</p>
 <p>Install a Rcpp compatible compiler:</p>
@@ -68,10 +75,10 @@
 <p>For more help, see <a href="https://teuder.github.io/rcpp4everyone_en/020_install.html" class="external-link">Rcpp for everyone</a>.</p>
 <p>In order to install packages from Github, you can use the {remotes} or {devtools} packages. {remotes} (<a href="https://cran.r-project.org/web/packages/remotes/index.html" class="external-link">CRAN link</a>) only provides the capability to install packages from different code repositories. {devtools} (<a href="https://cran.r-project.org/web/packages/devtools/index.html" class="external-link">CRAN link</a>) includes many more capabilities needed in package development (e.g. (re-)generating documentation or running tests). {devtools} includes {remotes}.</p>
 <p>Install {remotes} or {devtools}:</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span></code></pre></div>
 <p>Install rsocsim from Github:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># The command is the same in {devtools} and {remotes}.</span></span>
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"MPIDR/rsocsim"</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -82,7 +89,7 @@
 <div class="section level3">
 <h3 id="getting-started">Getting started<a class="anchor" aria-label="anchor" href="#getting-started"></a>
 </h3>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/MPIDR/rsocsim" class="external-link">"rsocsim"</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># create a new folder for all the files related to a simulation.</span></span>
