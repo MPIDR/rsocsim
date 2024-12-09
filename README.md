@@ -50,7 +50,7 @@ install.packages("remotes")
 Install rsocsim from Github:
 ````R
 # The command is the same in {devtools} and {remotes}.
-remotes::install_github("MPIDR/rsocsim")
+remotes::install_github("MPIDR/rsocsim@1.5.9")
 ````
 
 ## Use rsocsim
