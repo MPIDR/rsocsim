@@ -381,7 +381,7 @@ int create_output_fn_dir() {
         printf("Error: no sup file provided or buffer too small.\n");
     }
 
-    sprintf (buffer_output_dir, "sim_results_%s_%ld_%s/", rate_file_base_name, original_seed,result_suffix);
+    sprintf (buffer_output_dir, "sim_results_%ld_%s/", original_seed,result_suffix);
     sprintf (buffer_output_fn, "%sresult", buffer_output_dir);
 
     // create the directory:
@@ -405,15 +405,14 @@ int create_output_fn_dir() {
     sprintf(log_file_name, "%slogfile.log", buffer_output_dir);
     //Rprintf(log_file_name, "%s%d.log", rate_file_name, ceed);
 
-
-
     // copy the .sup-file (rate_file_name) into the subfolder:
-    char buffer_sup_fn_dest [1024];
-    sprintf (buffer_sup_fn_dest, "%s%s", buffer_output_dir, rate_file_name);
     FILE *source = fopen(rate_file_name, "rb");
     if (source == NULL) {
         Rprintf("Could not open source (rate) file: %s\n", strerror(errno));
     }
+    char buffer_sup_fn_dest [1024];
+    sprintf (buffer_sup_fn_dest, "%s%s", buffer_output_dir, rate_file_base_name);
+    Rcpp::Rcout << "Destination file path: " << buffer_sup_fn_dest << std::endl;
     FILE *destination = fopen(buffer_sup_fn_dest, "wb");
     if (destination == NULL) {
         stop("Could not open destination file: %s\n", strerror(errno));
