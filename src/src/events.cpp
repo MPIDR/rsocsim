@@ -312,7 +312,7 @@ int main1(int argc, char *argv[])
 		   ENHANCEMENT_NAME, 1);
 	if (marriage_queues == 1)
 	{
-		logmsg("\n marriage_queues==1 , consequently all availalbe males are always on the marriage queue\n\n"," ",   1);
+		logmsg("\n marriage_queues==1 , consequently all available males are always on the marriage queue\n\n"," ",   1);
 	}
 	Rprintf("initialize_segment_vars\n");
 	logmsg("initialize_segment_vars\n"," ",1);
