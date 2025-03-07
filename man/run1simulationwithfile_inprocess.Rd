@@ -8,7 +8,8 @@ run1simulationwithfile_inprocess(
   folder,
   supfile,
   seed,
-  compatibility_mode = "1"
+  compatibility_mode = "1",
+  suffix = ""
 )
 }
 \arguments{

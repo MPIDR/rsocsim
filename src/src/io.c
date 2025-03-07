@@ -337,7 +337,7 @@ int read_xtra(FILE *fd, int pop_rows)
   that will be added onto the end of the egos_extra link list. 
 ***********************************************************************/
 {
-  char line[10]; /*might need to increase this*/
+  // char line[10]; /*might need to increase this*/
   struct nlist *np;
   int id, indx, row;
   float rval;
@@ -388,14 +388,12 @@ int read_xtra(FILE *fd, int pop_rows)
 #ifdef ENHANCED
     enhance_read_extra(fd, p);
 #endif
-
     row++;
-    if (!feof(fd))
-    {
-      fgets(line, 1, fd); /* stupid way to toss 
-       the rest of the line*/
-      /* char *junk = fgets(line, 1, fd); stupid way to toss 
-       the rest of the line*/
+    
+    // Discard the rest of the line
+    int c;
+    while ((c = fgetc(fd)) != EOF && c != '\n') {
+      // Keep reading until end of line or end of file
     }
   }
   if (row != pop_rows)
@@ -993,7 +991,7 @@ void prepare_output_files(int seg)
  ***********************************************/
   
   logmsg("--t prepare_output_files_1 \n"," ",1);
-  char segnum[6];
+  char segnum[10];
 
   if (seg == 0)
   {

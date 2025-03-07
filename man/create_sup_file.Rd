@@ -14,7 +14,7 @@ create_sup_file(simfolder, simname)
 \item{simname}{the name of the simulation}
 }
 \value{
-sup.fn the filename of the supplementary file
+sup.fn the filename of the supervisoryary file
 which is needed to start the simulation
 }
 \description{

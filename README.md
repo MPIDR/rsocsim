@@ -10,34 +10,47 @@ If you encounter an error or bug, we are happy to hear from you in the issues.
 
 ## Installation
 
-### From Source
+### From a binary package
+
+Download the correct binary package from the [release section on Github](https://github.com/MPIDR/rsocsim/releases):
+Currently, you can use [rsocsim_1.5.9.tgz](https://github.com/MPIDR/rsocsim/releases/download/v1.5.9/rsocsim_1.5.9.tgz) for Mac and [rsocsim_1.5.9.tar.gz](https://github.com/MPIDR/rsocsim/releases/download/v1.5.9/rsocsim_1.5.9.tar.gz)
+for Windows.
+
+Then execute the following line in R and choose the downloaded file:
+```
+install.packages(file.choose(),repos=NULL,type="binary")
+```
+
+### From Source (requires a compiler)
+
+To get the latest version, you need to have a Rcpp compatible compiler installed
+and a way to install packages from Github.
+
+Install a Rcpp compatible compiler:
+
+- on Windows: [RTools](https://cran.r-project.org/bin/windows/Rtools/index.html);
+- on Mac: `xcode-select --install`;
+- on Linux: `sudo apt-get install r-base-dev`.
+ 
+For more help, see [Rcpp for everyone](https://teuder.github.io/rcpp4everyone_en/020_install.html).
+
+In order to install packages from Github, you can use the {remotes} or
+{devtools} packages. {remotes} ([CRAN link](https://cran.r-project.org/web/packages/remotes/index.html))
+only provides the capability to install packages from different code
+repositories. {devtools} ([CRAN link](https://cran.r-project.org/web/packages/devtools/index.html))
+includes many more capabilities needed in package development (e.g.
+(re-)generating documentation or running tests). {devtools} includes {remotes}.
 
 
-
-To get the latest version, you need to have the package devtools and a 
-Rcpp compatible compiler installed ([RTools](https://cran.r-project.org/bin/windows/Rtools/index.html)
-on Windows, Xcode command line tools on Mac: `xcode-select --install`, 
-`sudo apt-get install r-base-dev` on Linux,
-all according to https://teuder.github.io/rcpp4everyone_en/020_install.html)
-
-
-* install devtools
+Install {remotes} or {devtools}:
 ````R
-install.packages("devtools")
+install.packages("remotes")
 ````
 
-Then you can use devtools to install rsocsim from Github:
+Install rsocsim from Github:
 ````R
-devtools::install_github("MPIDR/rsocsim")
-````
-
-### Install precompiled package (Windows only)
-
-If the compilation from source fails, you can also install a pre-compiled binary. This might be easier, but it might be not the most up-to-date version. You can find the most up-to-date binary release on https://github.com/tomthe/rsoc/releases
-
-````R
-url = "https://github.com/tomthe/rsoc/releases/download/1.3/rsocsim_1.3.zip"
-install.packages(url, repos = NULL, type = "win.binary")
+# The command is the same in {devtools} and {remotes}.
+remotes::install_github("MPIDR/rsocsim@v1.5.9")
 ````
 
 ## Use rsocsim
@@ -52,9 +65,10 @@ library("rsocsim")
 # this will be in your home- or user-directory:
 folder = rsocsim::create_simulation_folder()
 
-# create a new supplement-file. Supplement-files tell socsim what
-# to simulate. create_sup_file will create a very basic supplement filee
-# and it copies some rate-files that will also be needed into the 
+# create a new supervisory-file.
+# supervisory-files tell socsim what to simulate. 
+# create_sup_file will create a very basic supervisory file.
+# It also copies some rate-files that will be needed into the 
 # simulation folder:
 supfile = rsocsim::create_sup_file(folder)
 
@@ -67,35 +81,19 @@ rsocsim::socsim(folder,supfile,seed)
 ````
 
 The results will be saved into a subfolder of the  simulation-`folder´.
-For more sophisticated simulations you will need to edit the supplement
+For more sophisticated simulations you will need to edit the supervisory
 file and provide rate files for fertility, mortality and marriage rates.
 
-
-````R
-library("rsocsim")
-
-# specify the working directory, where your supfile and ratefiles are:
-folder = "D:\\dev\\r\\socsimprojects\\CousinDiversity" 
-
-# name of the supplement-file, relative to the above folder:
-supfile = "CousinDiversity.sup" 
-
-# Random number generator seed:
-seed="33" 
-
-# socsim starts a simulation with the specified sup-file
-rsocsim::socsim(folder,supfile,seed)
-
-# if you run several simulations, previous simulations may influence/corrupt
-# later simulations. Use one of the options "future" or "clustercall" for
-# process_method to prevent this. "future" has problems on computers with more
-# than 64 cores. Note that these options prevent SOCSIM from writing to the
-# R-terminal.
-
+If you run more than one simulation, previous simulations may corrupt
+later simulations. Use the option `process_method = "future"` to prevent this:
+```
 rsocsim::socsim(folder,supfile,seed,process_method = "future")
+```
 
+### Tutorial
 
-````
+We created a practical workshop "Demographic microsimulations in R using SOCSIM: Modelling population and kinship dynamics" which you can access here:
+https://github.com/alburezg/rsocsim_workshop_paa
 
 ## Background and applications
 
@@ -136,6 +134,23 @@ build source and binary package:
 devtools::build(binary=FALSE)
 devtools::build(binary=TRUE)
 ```
+### Style guide
+
+The goal of this section is to improve the readability of the code and reduce complaints from modern compilers (parts of the code are 40ish years old). We (try to) follow Allman style, but as a guideline not a hard requirement. Basically, this means:
+
+- one level of indentation = 4 spaces;
+- spaces not tabs;
+- braces after a function declaration or a control flow statement go on a new line;
+- first-level braces at the beginning of a line appear in the first column;
+- closing braces appear in the same column as their counterpart.
+- spaces...:
+    - ... around binary operators;
+    - ... after commas;
+    - ... before opening parentheses and after closing parentheses.
+
+If you use vim, the default C formatting should be fine (':h C-indenting').
+
+We reformatted the .cpp files because indentation was all over the place, but we left the .c files largely alone such as not to anger the compiler gods.
 
 ### Future plans
 

@@ -440,6 +440,7 @@ int take_census;
 int fixed_epsilon, random_epsilon;
 int read_xtra_file;
 long int ceed;
+long int original_seed = -4;
 //static char randstate[2048]; /* for gcc's random number generator *///not needed here?!?!
 int current_month;
 int stop_month;
@@ -473,6 +474,7 @@ char pyr_file_name[1024], stat_file_name[1024], prefix_out_name[1024];
 char log_file_name[1024], otx_file_name[1024], otx_out_name[1024];
 
 char rate_file_name[1024];
+char result_suffix[128];
 
 char pop_out_name_seg[1024], mar_out_name_seg[1024], xtra_out_name_seg[1024];
 char pyr_file_name_seg[1024], stat_file_name_seg[1024], otx_out_name_seg[1024];
@@ -488,6 +490,8 @@ double marriage_peak_age; /*used in score3 read from .sup */
 double marriage_slope_ratio;
 int marriage_agedif_max;
 int marriage_agedif_min;
+
+int option_marriage_after_childbirth = 0;
 
 /* some ad hoc stuff */
 

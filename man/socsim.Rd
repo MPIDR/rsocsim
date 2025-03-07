@@ -2,7 +2,7 @@
 % Please edit documentation in R/startsocsim.R
 \name{socsim}
 \alias{socsim}
-\title{Run a single socsim-simulation with a given supplement-file and folder.
+\title{Run a single socsim-simulation with a given supervisory-file and folder.
 The results will be saved into that folder}
 \usage{
 socsim(
@@ -10,11 +10,12 @@ socsim(
   supfile,
   seed = "42",
   process_method = "inprocess",
-  compatibility_mode = "1"
+  compatibility_mode = "1",
+  suffix = ""
 )
 }
 \arguments{
-\item{folder}{base-directory of the simulation. 
+\item{folder}{base-directory of the simulation.
 Every SUP- and rate-file should be named relative to this folder.}
 
 \item{supfile}{the .sup file to start the simulation, relative to the
@@ -24,16 +25,16 @@ folder}
 
 \item{process_method}{specify whether and how SOCSIM should be started in its
 own process or in the running R process. Use one of
- "inprocess" - SOCSIM runs in the R-process. Beware if you run several different
- simulations - they may affect later simulations
- "future" - the safest option. A new process will be start via the "future"
- package
- "clustercall" - if the future package is not available, try this method instead}
+"inprocess" - SOCSIM runs in the R-process. Beware if you run several different
+simulations - they may affect later simulations
+"future" - the safest option. A new process will be start via the "future"
+package
+"clustercall" - if the future package is not available, try this method instead}
 }
 \value{
 The results will be written into the specified folder
 }
 \description{
-Run a single socsim-simulation with a given supplement-file and folder.
+Run a single socsim-simulation with a given supervisory-file and folder.
 The results will be saved into that folder
 }

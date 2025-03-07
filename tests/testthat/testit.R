@@ -15,15 +15,17 @@ rsocsim::run1simulationwithfile_from_binary(folder,supfile,seed)
 rsocsim::run1simulationwithfile_from_binary(folder,supfile,seed,socsim_path)
 
 
+rsocsim::get_asfr_socsim()
+
+rsocsim::getKin()
+
 basename(socsim_path)
 dirname(socsim_path)
 dirname(folder)
 
+############################################
 
-usethis::use_github_action("pkgdown")
 
-usethis::use_pkgdown_github_pages()
 
-devtools::document()
 
-pkgdown::build_site()
+#################################

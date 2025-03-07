@@ -4,26 +4,33 @@ folder
 #folder= "C:\Users\tom\socsim\socsim_sim_2541"
 
 supfile = rsocsim::create_sup_file(folder)
-supfile = "socsim.sup"
+# supfile = "socsim.sup"
 supfile
 
-seed = 300
+seed = 777
+suffix="sufffi33f"
 
-rsocsim::run1simulationwithfile(folder,supfile,seed,process_method = "inprocess")
+rsocsim::socsim(folder,supfile,seed,suffix=suffix)#,process_method = "inprocess")
 
+opop <- rsocsim::read_opop(folder,supfile,seed,suffix)
+opop
+omar <- rsocsim::read_omar(folder,supfile,seed,suffix)
+omar
+#Obtain partial kinship network, with omar and opop already in R environment
+pid <- c(1000,1001) #opop$pid[-3:-1]
+pid
 
-supfile = "CousinDiversity.sup"
-seed="33"
+kin_network <- rsocsim::getKin(opop = opop, omar = omar, pid = pid, extra_kintypes = c("unclesaunts", "niblings"), kin_by_sex = TRUE)
 
+kin_network
 
-rsocsim::simulation_time_to_years(4500, 1200, 1960)
+kin_network$ggparents
+kin_network$gdaughters
 
-rsocsim::get_supplement_content(folder, supfile)
+rsocsim::socsim(folder,supfile,seed,process_method = "inprocess",suffix=suffix)
+rsocsim::socsim(folder,supfile,seed,process_method = "future",suffix=suffix)
 
-
-rsocsim::run1simulationwithfile(folder,supfile,seed,process_method = "inprocess")
-rsocsim::run1simulationwithfile(folder,supfile,seed,process_method = "future")
-rsocsim::run1simulationwithfile(folder,supfile,seed,process_method = "clustercall")
+rsocsim::socsim(folder,supfile,seed,process_method = "clustercall",suffix=suffix)
 
 #rsocsim::run1simulationwithfile_clustercall(folder,supfile,seed)
 
@@ -52,3 +59,15 @@ devtools::build(binary = TRUE, args = c('--preclean'))
 install.packages('rsocsim')
 
 devtools::install(dependencies = TRUE, build = TRUE, args = c('--preclean'))
+
+
+
+# retrieve Kin:
+# Try it out -----
+
+opop <- read_opop("output_pop.opop")
+omar <- read_omar("output_pop.omar")
+
+
+
+# ISSUES -----
