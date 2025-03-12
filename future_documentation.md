@@ -2,6 +2,7 @@
 
 ## Stuff to add to Socsim Oversimplified
 
+### New functionality of c socsim
 
 #### Write intermediate output files:
 
