@@ -129,9 +129,7 @@ To run Socsim you must provide the following:
     short as a single month, while others are many years or decades
     wide.
     
-    The rate, given in per month terms, is the third number. ~~Socsim
-    insists that there be a line specifying an age category with an
-    upper bound of 100 years. Obviously this last rate can be 1 or zero.~~
+    The rate, given in per month terms, is the third number. 
     
     rates can now end earlier or later than at 100 years. But no later than 200 years.
     For more details on specifying rates See
