@@ -1,13 +1,27 @@
-.Rproj.user
-.Rhistory
-.RData
-.Ruserdata
+# R/Rstudio user- or machine-specific files
+**/*.Rcheck
+**/*.RData
+**/*.Rhistory
+**/*.Rproj
+**/*.Rproj.user
+**/*.Ruserdata
+
+# Documentation. Users should (re-)generate this locally.
+docs/*
+man/*
+**/*.Rd
+
+# Vscode user- or machine-specific files
+.vscode/*
+.vscode/c_cpp_properties.json
+
 src/*.o
 src/*.so
 src/*.dll
-*.log
 src-x64/*
 src-i386/*
+*.log
+.vscode/settings.json
 .vscode/c_cpp_properties.json
 docs
 man

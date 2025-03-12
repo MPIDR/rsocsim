@@ -10,25 +10,47 @@ If you encounter an error or bug, we are happy to hear from you in the issues.
 
 ## Installation
 
+### From a binary package
 
-### From Source
+Download the correct binary package from the [release section on Github](https://github.com/MPIDR/rsocsim/releases):
+Currently, you can use [rsocsim_1.5.9.tgz](https://github.com/MPIDR/rsocsim/releases/download/v1.5.9/rsocsim_1.5.9.tgz) for Mac and [rsocsim_1.5.9.tar.gz](https://github.com/MPIDR/rsocsim/releases/download/v1.5.9/rsocsim_1.5.9.tar.gz)
+for Windows.
+
+Then execute the following line in R and choose the downloaded file:
+```
+install.packages(file.choose(),repos=NULL,type="binary")
+```
+
+### From Source (requires a compiler)
+
+To get the latest version, you need to have a Rcpp compatible compiler installed
+and a way to install packages from Github.
+
+Install a Rcpp compatible compiler:
+
+- on Windows: [RTools](https://cran.r-project.org/bin/windows/Rtools/index.html);
+- on Mac: `xcode-select --install`;
+- on Linux: `sudo apt-get install r-base-dev`.
+ 
+For more help, see [Rcpp for everyone](https://teuder.github.io/rcpp4everyone_en/020_install.html).
+
+In order to install packages from Github, you can use the {remotes} or
+{devtools} packages. {remotes} ([CRAN link](https://cran.r-project.org/web/packages/remotes/index.html))
+only provides the capability to install packages from different code
+repositories. {devtools} ([CRAN link](https://cran.r-project.org/web/packages/devtools/index.html))
+includes many more capabilities needed in package development (e.g.
+(re-)generating documentation or running tests). {devtools} includes {remotes}.
 
 
-To get the latest version, you need to have the package devtools and a 
-Rcpp compatible compiler installed ([RTools](https://cran.r-project.org/bin/windows/Rtools/index.html)
-on Windows; Xcode command line tools on Mac: `xcode-select --install`; 
-`sudo apt-get install r-base-dev` on Linux,
-all according to https://teuder.github.io/rcpp4everyone_en/020_install.html)
-
-
-Then install the devtools R-package:
+Install {remotes} or {devtools}:
 ````R
-install.packages("devtools")
+install.packages("remotes")
 ````
 
-Then you can use devtools to install rsocsim:
+Install rsocsim from Github:
 ````R
-devtools::install_github("MPIDR/rsocsim")
+# The command is the same in {devtools} and {remotes}.
+remotes::install_github("MPIDR/rsocsim@v1.5.9")
 ````
 
 ## Use rsocsim
@@ -112,6 +134,23 @@ build source and binary package:
 devtools::build(binary=FALSE)
 devtools::build(binary=TRUE)
 ```
+### Style guide
+
+The goal of this section is to improve the readability of the code and reduce complaints from modern compilers (parts of the code are 40ish years old). We (try to) follow Allman style, but as a guideline not a hard requirement. Basically, this means:
+
+- one level of indentation = 4 spaces;
+- spaces not tabs;
+- braces after a function declaration or a control flow statement go on a new line;
+- first-level braces at the beginning of a line appear in the first column;
+- closing braces appear in the same column as their counterpart.
+- spaces...:
+    - ... around binary operators;
+    - ... after commas;
+    - ... before opening parentheses and after closing parentheses.
+
+If you use vim, the default C formatting should be fine (':h C-indenting').
+
+We reformatted the .cpp files because indentation was all over the place, but we left the .c files largely alone such as not to anger the compiler gods.
 
 ### Future plans
 
