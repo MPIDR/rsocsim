@@ -1,3 +1,6 @@
+# rsocsim 1.6.0
+ * added function download_rates, which downloads UN rates and saves them into rsocsim format
+
 # rsocsim 1.5.9
  * removed keyword register in load.cpp (See https://github.com/MPIDR/rsocsim/issues/11; it causes errors on Mac)
 
