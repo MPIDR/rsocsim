@@ -10,6 +10,21 @@ If you encounter an error or bug, we are happy to hear from you in the issues.
 
 ## Installation
 
+### From a binary package 
+
+Download the correct binary package from the [release section on Github](https://github.com/MPIDR/rsocsim/releases):
+ 
+
+Currently, you can use [rsocsim_1.5.9.tgz](https://github.com/MPIDR/rsocsim/releases/download/v1.5.9/rsocsim_1.5.9.tgz) for Mac and [rsocsim_1.5.9.tar.gz](https://github.com/MPIDR/rsocsim/releases/download/v1.5.9/rsocsim_1.5.9.tar.gz)
+ 
+
+for Windows.
+
+Then execute the following line in R and choose the downloaded file:
+
+```R
+install.packages(file.choose(),repos=NULL,type="binary")
+```
 
 ### From Source
 
