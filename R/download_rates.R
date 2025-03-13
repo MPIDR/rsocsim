@@ -36,15 +36,15 @@ download_rates <- function(folder, countrycode, yearStart = 1950, yearEnd = 2100
   }
   
   # Construct API URLs for fertility and mortality data
-  fertUrl <- paste0(apiUrl, "fert/", source, "/", countrycode)
-  mortUrl <- paste0(apiUrl, "mort/", source, "/", countrycode)
+  fertUrl <- paste0(apiUrl, source, "/", countrycode, "/socsim_fert_", countrycode, "_rates.zip")
+  mortUrl <- paste0(apiUrl, source, "/", countrycode, "/socsim_mort_", countrycode, "_rates.zip")
   
   # Create a temporary directory for downloading zip files
   tempDir <- tempdir()
   
   # Download fertility and mortality zip files
-  fertZipPath <- file.path(tempDir, "fertility.zip")
-  mortZipPath <- file.path(tempDir, "mortality.zip")
+  fertZipPath <- file.path(tempDir, paste0("socsim_fert_", countrycode, "_rates.zip"))
+  mortZipPath <- file.path(tempDir, paste0("socsim_mort_", countrycode, "_rates.zip"))
   
   tryCatch({
     message("Downloading fertility data...")
@@ -68,9 +68,11 @@ download_rates <- function(folder, countrycode, yearStart = 1950, yearEnd = 2100
       extractedFiles <- character(0)
       
       for (file in files) {
-        # Extract year numbers from filename - looking for 4-digit numbers
-        yearMatches <- regmatches(file, gregexpr("\\d{4}", file))[[1]]
-        
+        # Extract year from filename assuming the format "socsim_<type>_<countrycode>_<year>.txt"
+        parts <- strsplit(file, "_")[[1]]
+        year <- as.numeric(sub(".txt", "", parts[4]))
+        yearMatches <- if (!is.na(year)) year else numeric(0)
+
         # Skip if no year found in filename
         if (length(yearMatches) == 0) {
           next
