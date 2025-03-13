@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="index.html">rsocsim</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.6.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.5.9</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -126,7 +126,7 @@ As noted previously, the vital demographic rates can be included within the supe
 <p><strong>birth 1 F married 0</strong></p>
 <p>which indicates that the following several lines will contain a complete set of age specific fertility rates for group 1 married females of parity 0.</p>
 <p>Following the rate identifier will be one or more lines each of which contains three space-separated numbers. The first two indicate year and months of the <strong>upper age bound</strong> over which the rate is in effect. The two quantities are added together so “1 1” is equivalent in effect to “0 13”. Note that the first age category specified should NOT have “0 0” as its upper bound; an upper age bound of “0 1” would include the first month of life only. Age categories are otherwise flexible; one can specify some age categories that are as short as a single month, while others are many years or decades wide.</p>
-<p>The rate, given in per month terms, is the third number.</p>
+<p>The rate, given in per month terms, is the third number. <del>Socsim insists that there be a line specifying an age category with an upper bound of 100 years. Obviously this last rate can be 1 or zero.</del></p>
 <p>rates can now end earlier or later than at 100 years. But no later than 200 years. For more details on specifying rates See Section <a href="#sec:rateFiles">8</a>.</p>
 </li>
 </ul><p>When all of the above bits are in place, Socsim can be <del>executed from the Unix shell:<br><code>/path/to/socsim supervisoryfile.sup 12345</code></del> The result will be a considerable amount of screen output indicating which options are set and how the simulation is proceeding. Or just a short complaint about an inconsistency in the various input files.</p>

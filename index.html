@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">rsocsim</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.6.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.5.9</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -56,31 +56,15 @@
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
 <div class="section level3">
-<h3 id="from-a-binary-package">From a binary package<a class="anchor" aria-label="anchor" href="#from-a-binary-package"></a>
+<h3 id="from-source">From Source<a class="anchor" aria-label="anchor" href="#from-source"></a>
 </h3>
-<p>Download the correct binary package from the <a href="https://github.com/MPIDR/rsocsim/releases" class="external-link">release section on Github</a>: Currently, you can use <a href="https://github.com/MPIDR/rsocsim/releases/download/v1.5.9/rsocsim_1.5.9.tgz" class="external-link">rsocsim_1.5.9.tgz</a> for Mac and <a href="https://github.com/MPIDR/rsocsim/releases/download/v1.5.9/rsocsim_1.5.9.tar.gz" class="external-link">rsocsim_1.5.9.tar.gz</a> for Windows.</p>
-<p>Then execute the following line in R and choose the downloaded file:</p>
-<pre><code><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.choose.html" class="external-link">file.choose</a></span><span class="op">(</span><span class="op">)</span>,repos<span class="op">=</span><span class="cn">NULL</span>,type<span class="op">=</span><span class="st">"binary"</span><span class="op">)</span></span></code></pre>
-</div>
-<div class="section level3">
-<h3 id="from-source-requires-a-compiler">From Source (requires a compiler)<a class="anchor" aria-label="anchor" href="#from-source-requires-a-compiler"></a>
-</h3>
-<p>To get the latest version, you need to have a Rcpp compatible compiler installed and a way to install packages from Github.</p>
-<p>Install a Rcpp compatible compiler:</p>
-<ul>
-<li>on Windows: <a href="https://cran.r-project.org/bin/windows/Rtools/index.html" class="external-link">RTools</a>;</li>
-<li>on Mac: <code>xcode-select --install</code>;</li>
-<li>on Linux: <code>sudo apt-get install r-base-dev</code>.</li>
-</ul>
-<p>For more help, see <a href="https://teuder.github.io/rcpp4everyone_en/020_install.html" class="external-link">Rcpp for everyone</a>.</p>
-<p>In order to install packages from Github, you can use the {remotes} or {devtools} packages. {remotes} (<a href="https://cran.r-project.org/web/packages/remotes/index.html" class="external-link">CRAN link</a>) only provides the capability to install packages from different code repositories. {devtools} (<a href="https://cran.r-project.org/web/packages/devtools/index.html" class="external-link">CRAN link</a>) includes many more capabilities needed in package development (e.g. (re-)generating documentation or running tests). {devtools} includes {remotes}.</p>
-<p>Install {remotes} or {devtools}:</p>
+<p>To get the latest version, you need to have the package devtools and a Rcpp compatible compiler installed (<a href="https://cran.r-project.org/bin/windows/Rtools/index.html" class="external-link">RTools</a> on Windows; Xcode command line tools on Mac: <code>xcode-select --install</code>; <code>sudo apt-get install r-base-dev</code> on Linux, all according to <a href="https://teuder.github.io/rcpp4everyone_en/020_install.html" class="external-link uri">https://teuder.github.io/rcpp4everyone_en/020_install.html</a>)</p>
+<p>Then install the devtools R-package:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></span></code></pre></div>
+<p>Then you can use devtools to install rsocsim:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span></code></pre></div>
-<p>Install rsocsim from Github:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># The command is the same in {devtools} and {remotes}.</span></span>
-<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"MPIDR/rsocsim@v1.5.9"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"MPIDR/rsocsim"</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -89,7 +73,7 @@
 <div class="section level3">
 <h3 id="getting-started">Getting started<a class="anchor" aria-label="anchor" href="#getting-started"></a>
 </h3>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/MPIDR/rsocsim" class="external-link">"rsocsim"</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># create a new folder for all the files related to a simulation.</span></span>
@@ -133,27 +117,6 @@
 <p>build source and binary package:</p>
 <pre><code><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">build</span><span class="op">(</span>binary<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">build</span><span class="op">(</span>binary<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre>
-<div class="section level3">
-<h3 id="style-guide">Style guide<a class="anchor" aria-label="anchor" href="#style-guide"></a>
-</h3>
-<p>The goal of this section is to improve the readability of the code and reduce complaints from modern compilers (parts of the code are 40ish years old). We (try to) follow Allman style, but as a guideline not a hard requirement. Basically, this means:</p>
-<ul>
-<li>one level of indentation = 4 spaces;</li>
-<li>spaces not tabs;</li>
-<li>braces after a function declaration or a control flow statement go on a new line;</li>
-<li>first-level braces at the beginning of a line appear in the first column;</li>
-<li>closing braces appear in the same column as their counterpart.</li>
-<li>spaces…:
-<ul>
-<li>… around binary operators;</li>
-<li>… after commas;</li>
-<li>… before opening parentheses and after closing parentheses.</li>
-</ul>
-</li>
-</ul>
-<p>If you use vim, the default C formatting should be fine (‘:h C-indenting’).</p>
-<p>We reformatted the .cpp files because indentation was all over the place, but we left the .c files largely alone such as not to anger the compiler gods.</p>
-</div>
 <div class="section level3">
 <h3 id="future-plans">Future plans<a class="anchor" aria-label="anchor" href="#future-plans"></a>
 </h3>
