@@ -152,9 +152,10 @@ int main1(int argc, char *argv[])
      */
 
     original_seed = ceed;
-    // initstate(ceed, randstate, 256); //suggested by jim: replace with:
-    srand(ceed);
-    /**srandom(ceed);  setting seed for random() NOT rrandom() **/ // todo:check if random is initialized correctly!
+    // we do not need to initialize the seed or a RNG here,
+    // we do not use system or standard-lib RNG but our own to be
+    // both portable and consistent. This was necessary for the Windows port.
+
     size_of_extra = 0; /*no extra variables/.opox by default*/
 
     clock_t timestart1,timestart2,timeend;
