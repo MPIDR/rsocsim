@@ -37,3 +37,4 @@ man/simulation_time_to_years.Rd
 man/socsim.Rd
 .vscode/*
 tmp/tmp/*
+.Rproj.user
