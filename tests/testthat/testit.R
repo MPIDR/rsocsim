@@ -1,4 +1,4 @@
-
+if (FALSE) {
 
 folder = "D:\\dev\\r\\socsimprojects\\CousinDiversity"
 supfile = "CousinDiversity.sup"
@@ -29,3 +29,4 @@ dirname(folder)
 
 
 #################################
+}

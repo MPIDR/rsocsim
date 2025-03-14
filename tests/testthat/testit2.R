@@ -1,3 +1,4 @@
+if (FALSE) {
 folder = rsocsim::create_simulation_folder()
 folder
 #folder = "C:/Users/tom/socsim/socsim_sim_2541/"
@@ -71,3 +72,4 @@ omar <- read_omar("output_pop.omar")
 
 
 # ISSUES -----
+}

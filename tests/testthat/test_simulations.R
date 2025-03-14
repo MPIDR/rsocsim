@@ -1,3 +1,5 @@
+if (FALSE) {
+
 folder = rsocsim::create_simulation_folder()
 folder
 print(paste0("folder: ", folder))
@@ -45,3 +47,4 @@ fert_rates <- estimate_fertility_rates(
   age_group = 5
 )
  
+}

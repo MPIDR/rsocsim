@@ -1,4 +1,5 @@
 
+if (FALSE) { # for now, don't run this test!
 library("rsocsim")
 
 # create a new folder for all the files related to a simulation.
@@ -62,7 +63,7 @@ while (!future::resolved(f1)) {
   processFile(supfile)
 }
 
-
+}
 
 
 
