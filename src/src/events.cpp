@@ -135,8 +135,6 @@ int main1(int argc, char *argv[])
     ceed = atoi(argv[2]);
     compatibility_mode = atoi(argv[3]);
     strcpy(result_suffix, argv[4]);
-    char swd[strlen(argv[5]) + 1];
-    strcpy(swd, argv[5]);
 
     Rcpp::Rcout << "Ratefile: "<< rate_file_name << "\n" << std::endl;
     Rcpp::Rcout << "Seed: "<< ceed << "\n" << std::endl;
