@@ -47,9 +47,9 @@ download_rates <- function(folder, countrycode, yearStart = 1950, yearEnd = 2100
   mortZipPath <- file.path(tempDir, paste0("socsim_mort_", countrycode, "_rates.zip"))
   
   tryCatch({
-    message("Downloading fertility data...")
+    message(paste0("Downloading fertility data from ", fertUrl, "  to ", fertZipPath))
     download.file(fertUrl, destfile = fertZipPath, mode = "wb", quiet = TRUE)
-    message("Downloading mortality data...")
+    message(paste0("Downloading mortality data from ", mortUrl, "  to ", mortZipPath))
     download.file(mortUrl, destfile = mortZipPath, mode = "wb", quiet = TRUE)
   }, error = function(e) {
     stop(paste("Error downloading data from API:", e$message))
@@ -129,7 +129,10 @@ download_rates <- function(folder, countrycode, yearStart = 1950, yearEnd = 2100
     "\n***********************************************************************\n",
     "* Pre-simulation (100 years) to get stable population at ", yearStart - 1, "\n",
     "* Using rates for ", yearStart, "\n",
-    "\nduration 1200\ninclude rates/", countrycode, "fert", yearStart, "\ninclude rates/", countrycode, "mort", yearStart, "\nrun\n"
+    "\nduration 1200",
+    "\ninclude rates/socsim_fert_", countrycode, "_", yearStart, ".txt",
+    "\ninclude rates/socsim_mort_", countrycode, "_", yearStart, ".txt",
+    "\nrun\n"
   )
   
   # Add simulation segments for each year
