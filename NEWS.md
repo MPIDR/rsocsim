@@ -1,5 +1,11 @@
+# rsocsim 1.7.0
+ * added function create_initial_simulation
+   * the code is based on https://github.com/MPIDR/rsocsim_workshop_paa?tab=readme-ov-file#23-create-initial-population-and-marriage-files
+ * merged bugfixes that caused crashes in socsim since December 2024
+
 # rsocsim 1.6.0
  * added function download_rates, which downloads UN rates and saves them into rsocsim format
+    * See https://github.com/MPIDR/rsocsim/issues/28
 
 # rsocsim 1.5.9
  * removed keyword register in load.cpp (See https://github.com/MPIDR/rsocsim/issues/11; it causes errors on Mac)

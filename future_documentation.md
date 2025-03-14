@@ -8,3 +8,9 @@
 
 Add this line to your sup-file:
 `write_output 1`
+
+
+### New functionality of R code
+
+* download_rates
+* create_initial_population
