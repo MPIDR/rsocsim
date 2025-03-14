@@ -57,6 +57,12 @@ download_rates <- function(folder, countrycode, yearStart = 1950, yearEnd = 2100
   
   message("Processing files...")
   
+  # Create rates subfolder if it doesn't exist
+  ratesFolder <- file.path(folder, "rates")
+  if (!dir.exists(ratesFolder)) {
+    dir.create(ratesFolder)
+  }
+  
   # Process zip file and extract relevant files based on year range
   processZip <- function(zipPath, type) {
     tryCatch({
@@ -87,8 +93,8 @@ download_rates <- function(folder, countrycode, yearStart = 1950, yearEnd = 2100
         
         # Check if file's year range overlaps with requested range
         if (fileYearEnd >= yearStart && fileYearStart <= yearEnd) {
-          # Extract the file
-          unzip(zipPath, files = file, exdir = folder, overwrite = TRUE)
+          # Extract the file into the rates folder
+          unzip(zipPath, files = file, exdir = ratesFolder, overwrite = TRUE)
           extractedFiles <- c(extractedFiles, file)
         }
       }
@@ -131,7 +137,9 @@ download_rates <- function(folder, countrycode, yearStart = 1950, yearEnd = 2100
     supContent <- paste0(
       supContent,
       "\n* Simulation for year ", year, "\n",
-      "duration 12\ninclude rates/", countrycode, "fert", year, "\ninclude rates/", countrycode, "mort", year, "\nrun\n"
+      "duration 12",
+      "\ninclude rates/socsim_fert_", countrycode, "_", year, ".txt",
+      "\ninclude rates/socsim_mort_", countrycode, "_", year, ".txt"
     )
   }
   
