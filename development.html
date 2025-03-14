@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="index.html">rsocsim</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.6.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.7.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,15 +34,22 @@
 
 <div class="section level2">
 <h2 id="development">Development<a class="anchor" aria-label="anchor" href="#development"></a></h2>
+<p>Github Actions is configured so that it automatically builds the documentation and website when the version number in the DESCRIPTION file is increased.</p>
+<p>But you can also use devtools to build the documentation and website. And to build the package (The package will not be build by Github Actions).</p>
 <p><code>devtools::document()</code> - generate documentation from source-code comments <code>devtools::build()</code> - compile and build package <code>devtools::build(binary = TRUE)</code> - compile binary</p>
 <p><code>devtools::check()</code> - run tests –&gt; can it be published on CRAN? Runs several tests.</p>
 <p><code>usethis::use_github_action("pkgdown")</code></p>
 <p><code>usethis::use_pkgdown_github_pages()</code></p>
 <p><code>devtools::document()</code></p>
 <p><code><a href="https://pkgdown.r-lib.org/reference/build_site.html" class="external-link">pkgdown::build_site()</a></code></p>
+<div class="section level4">
+<h4 id="testing-without-devtools">Testing without devtools<a class="anchor" aria-label="anchor" href="#testing-without-devtools"></a></h4>
+<p>Rscript -e “testthat::test_dir(‘tests/testthat’)”</p>
+</div>
 </div>
 
-  </main></div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">
