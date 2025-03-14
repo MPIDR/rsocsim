@@ -142,7 +142,8 @@ download_rates <- function(folder, countrycode, yearStart = 1950, yearEnd = 2100
       "\n* Simulation for year ", year, "\n",
       "duration 12",
       "\ninclude rates/socsim_fert_", countrycode, "_", year, ".txt",
-      "\ninclude rates/socsim_mort_", countrycode, "_", year, ".txt"
+      "\ninclude rates/socsim_mort_", countrycode, "_", year, ".txt",
+      "\nrun\n"
     )
   }
   
@@ -160,3 +161,5 @@ download_rates <- function(folder, countrycode, yearStart = 1950, yearEnd = 2100
     infoFile = infoFilePath
   ))
 }
+
+
