@@ -6,8 +6,8 @@
 #' @param countrycode 2-character country code https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
 #' @param yearStart
 #' @param yearEnd
-#' @param source "UN", at the moment only UN is supported
-#' @param apiUrl url of the API
+#' @param source "UN", at the moment only UN Population Prospects is supported
+#' @param apiUrl url of the API. "https://user.demogr.mpg.de/theile/socsimratesAPI/v1/" by default
 #' @details 
 #' See https://github.com/tomthe/retrieveVitalRates_for_rsocsim_API for the 
 #' code that converts the source data into socsim format.
