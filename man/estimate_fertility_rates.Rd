@@ -29,7 +29,9 @@ used to convert 'SOCSIM time' to 'real world' time.)}
 \item{year_group}{numeric. Size of year groups to estimate rate (year_group=1
 will produce single-year estimates)}
 
-\item{age_min_fert}{numeric. Upper-bound age of female reproductive period}
+\item{age_min_fert}{numeric. Lower-bound age of female reproductive period}
+
+\item{age_max_fert}{numeric. Upper-bound age of female reproductive period}
 
 \item{age_group}{numeric. Size of age groups to estimate rate (age_group=1
 will produce single-age estimates)}

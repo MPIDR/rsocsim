@@ -2,23 +2,20 @@
 % Please edit documentation in R/startsocsim.R
 \name{create_sup_file}
 \alias{create_sup_file}
-\title{create a basic .sup file for a simulation
-the simulation is only a simple one
-the file will be saved into the sim-folder}
+\title{Create a basic .sup file for a simulation}
 \usage{
-create_sup_file(simfolder, simname)
+create_sup_file(simdir, simname)
 }
 \arguments{
-\item{simfolder}{the folder where the sup-file will be saved}
+\item{simdir}{A string. The directory where the .sup file will be saved.}
 
-\item{simname}{the name of the simulation}
+\item{simname}{A string. The name of the simulation.}
 }
 \value{
-sup.fn the filename of the supervisoryary file
-which is needed to start the simulation
+A string. The filename of the supervisory file which is needed to
+start the simulation.
 }
 \description{
-create a basic .sup file for a simulation
-the simulation is only a simple one
-the file will be saved into the sim-folder
+The simulation is only a simple one. The file will be saved into the
+directory 'simdir'.
 }

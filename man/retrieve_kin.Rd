@@ -19,6 +19,9 @@ retrieve_kin(
 
 \item{omar}{An R object from SOCSIM microsimulation output (marriage file). Create this object with the function read_omar().}
 
+\item{KidsOf}{A list object containing the children of each person in the
+population. This object is created by the function getKidsOf().}
+
 \item{pid}{A character vector of person IDs, indicating persons of interest
 for whom these kin networks should be identified.}
 

@@ -38,3 +38,4 @@ man/socsim.Rd
 .vscode/*
 tmp/tmp/*
 .Rproj.user
+rsocsim.Rproj

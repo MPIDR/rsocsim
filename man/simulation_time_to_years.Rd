@@ -2,26 +2,24 @@
 % Please edit documentation in R/startsocsim.R
 \name{simulation_time_to_years}
 \alias{simulation_time_to_years}
-\title{simulation_time_to_years
-convert the time measures.}
+\title{Calculate for how many years the simulation ran}
 \usage{
 simulation_time_to_years(simulation_time, pre_simulation_time, start_year)
 }
 \arguments{
-\item{simulation}{time}
+\item{simulation_time}{An integer. The number of periods (months) the
+simulation ran.}
 
-\item{pre-simulation-time}{\itemize{
-\item how long the simulation ran to get a stable population
-}}
+\item{pre_simulation_time}{An integer. The number of periods (months) the
+simulation ran before getting to a stable population. This is subtracted
+from 'simulation_time' in order to arrive at the "real" simulation time}
 
-\item{start-year}{\itemize{
-\item the year the simulation started
-}}
+\item{start_year}{An integer. The year the simulation started.}
 }
 \value{
-year, a number like 2022.2
+An number. The number of years for which the simulation ran. May
+have a fractional part.
 }
 \description{
-simulation_time_to_years
-convert the time measures.
+Calculate for how many years the simulation ran
 }

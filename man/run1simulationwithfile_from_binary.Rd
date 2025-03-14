@@ -2,9 +2,7 @@
 % Please edit documentation in R/startsocsim.R
 \name{run1simulationwithfile_from_binary}
 \alias{run1simulationwithfile_from_binary}
-\title{Run a single socsim-simulation with a socsim binary.
-the place
-The results will be saved into that folder}
+\title{Run a single socsim-simulation with a socsim binary}
 \usage{
 run1simulationwithfile_from_binary(
   folder,
@@ -22,15 +20,13 @@ folder}
 
 \item{seed}{RNG seed as string, Default="42"}
 
-\item{socsim_path}{path+filename of a socsim-executable. Download one from https://github.com/tomthe/socsim/releases/download/0.3/socsim.exe}
+\item{compatibility_mode}{compatibility mode as string, Default="1"}
 
-\item{rootfolder}{rootfolder...}
+\item{socsim_path}{path+filename of a socsim-executable. Download one from https://github.com/tomthe/socsim/releases/download/0.3/socsim.exe}
 }
 \value{
 The results will be written into the specified folder
 }
 \description{
-Run a single socsim-simulation with a socsim binary.
-the place
-The results will be saved into that folder
+Run a single socsim-simulation with a socsim binary
 }
