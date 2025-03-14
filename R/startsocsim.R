@@ -148,12 +148,13 @@ print_last_line_of_logfile = function(logfilename, lastline = "") {
 
 #' Run a single socsim-simulation with a socsim binary
 #'
-#' @param rootfolder rootfolder...
 #' @param folder base-directory of the simulation. 
 #' @param supfile the .sup file to start the simulation, relative to the
 #' folder
 #' @param seed RNG seed as string, Default="42"
 #' @param socsim_path path+filename of a socsim-executable. Download one from https://github.com/tomthe/socsim/releases/download/0.3/socsim.exe
+#' @param compatibility_mode compatibility mode as string, Default="1"
+#' 
 #' @return The results will be written into the specified folder
 #' @export
 run1simulationwithfile_from_binary <- function(folder, supfile,seed="42",compatibility_mode="1",socsim_path=NULL) {

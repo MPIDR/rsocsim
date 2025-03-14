@@ -4,8 +4,8 @@
 #'      saves them in a
 #' @param folder folder where the rates will be saved
 #' @param countrycode 2-character country code https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
-#' @param yearStart
-#' @param yearEnd
+#' @param yearStart Start year. For "UN" the first possible year is 1950
+#' @param yearEnd End year. For "UN" the first possible year is 2100
 #' @param source "UN", at the moment only UN Population Prospects is supported
 #' @param apiUrl url of the API. "https://user.demogr.mpg.de/theile/socsimratesAPI/v1/" by default
 #' @details 
@@ -48,9 +48,9 @@ download_rates <- function(folder, countrycode, yearStart = 1950, yearEnd = 2100
   
   tryCatch({
     message(paste0("Downloading fertility data from ", fertUrl, "  to ", fertZipPath))
-    download.file(fertUrl, destfile = fertZipPath, mode = "wb", quiet = TRUE)
+    utils::download.file(fertUrl, destfile = fertZipPath, mode = "wb", quiet = TRUE)
     message(paste0("Downloading mortality data from ", mortUrl, "  to ", mortZipPath))
-    download.file(mortUrl, destfile = mortZipPath, mode = "wb", quiet = TRUE)
+    utils::download.file(mortUrl, destfile = mortZipPath, mode = "wb", quiet = TRUE)
   }, error = function(e) {
     stop(paste("Error downloading data from API:", e$message))
   })
@@ -67,7 +67,7 @@ download_rates <- function(folder, countrycode, yearStart = 1950, yearEnd = 2100
   processZip <- function(zipPath, type) {
     tryCatch({
       # Extract file list from zip
-      zipContent <- unzip(zipPath, list = TRUE)
+      zipContent <- utils::unzip(zipPath, list = TRUE)
       files <- zipContent$Name
       
       # Initialize vector for extracted files
@@ -94,7 +94,7 @@ download_rates <- function(folder, countrycode, yearStart = 1950, yearEnd = 2100
         # Check if file's year range overlaps with requested range
         if (fileYearEnd >= yearStart && fileYearStart <= yearEnd) {
           # Extract the file into the rates folder
-          unzip(zipPath, files = file, exdir = ratesFolder, overwrite = TRUE)
+          utils::unzip(zipPath, files = file, exdir = ratesFolder, overwrite = TRUE)
           extractedFiles <- c(extractedFiles, file)
         }
       }

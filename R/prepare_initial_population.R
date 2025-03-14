@@ -42,11 +42,11 @@ create_initial_population <- function(folder, size_opop = 20000, output_base = "
   presim_opop$dob <- sample(600:1200, nrow(presim_opop), replace = TRUE)
   
   # Write initial population for pre-simulation (without fertility multiplier)
-  write.table(presim_opop, output_file_opop, row.names = FALSE, col.names = FALSE)
+  utils::write.table(presim_opop, output_file_opop, row.names = FALSE, col.names = FALSE)
   
-  # Create an empty data frame for marriage data (presim.omar)
+  # Create an empty data frame for marriage data
   presim_omar <- data.frame()
   
   # Write empty marriage data for pre-simulation
-  write.table(presim_omar, output_file_omar, row.names = FALSE, col.names = FALSE)
+  utils::write.table(presim_omar, output_file_omar, row.names = FALSE, col.names = FALSE)
 }

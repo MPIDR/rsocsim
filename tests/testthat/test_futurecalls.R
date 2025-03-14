@@ -3,7 +3,7 @@ library("rsocsim")
 
 # create a new folder for all the files related to a simulation.
 # this will be in your home- or user-directory:
-folder = socsim::create_simulation_folder()
+folder = rsocsim::create_simulation_folder()
 
 # create a new supervisory-file. supervisory-files tell socsim what
 # to simulate. create_sup_file will create a very basic supervisory file

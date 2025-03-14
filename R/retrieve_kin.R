@@ -24,6 +24,9 @@
 #' kin relations additionally disaggregated by the sex of the relative. Setting
 #' this value to TRUE will result in additional objects being generated
 #' to identify individuals' relatives by sex. 
+#' @param KidsOf A list object containing the children of each person in the
+#' population. This object is created by the function getKidsOf().
+#' 
 #' @return An R object containing a list of lists with person IDs
 #' of kin, organized by relationship. These person ID values will be named 
 #' based on the person of interest with whom they are associated.

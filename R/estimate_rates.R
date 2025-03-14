@@ -112,7 +112,7 @@ estimate_mortality_rates <- function(opop, final_sim_year, year_min, year_max, y
 #' @param year_group numeric. Size of year groups to estimate rate (year_group=1
 #'  will produce single-year estimates)  
 #' @param age_min_fert numeric. Lower-bound age of female reproductive period
-#' @param age_min_fert numeric. Upper-bound age of female reproductive period
+#' @param age_max_fert numeric. Upper-bound age of female reproductive period
 #' @param age_group numeric. Size of age groups to estimate rate (age_group=1
 #'  will produce single-age estimates)
 #' @details The `final_sim_year` can be obtained from the .sup file and must 
@@ -175,17 +175,35 @@ estimate_fertility_rates <- function(opop, final_sim_year, year_min, year_max, y
 # Utility functions for estimate_fertility_rates and estimate_mortality_rates:
 ###################################################################################
 
-# Convert SOCSIM months to calendar years. 
+#' Convert SOCSIM months to calendar years.
+#'
+#' @param month Simulation month.
+#' @param last_month The maximum simulation month recorded in the data.
+#' @param final_sim_year Final simulated real world year.
+#' @return Calendar year corresponding to the provided simulation month.
+#' @export
 asYr <- function(month, last_month, final_sim_year) {
   return(final_sim_year - trunc((last_month - month)/12))
 }
 
-## Returns simulation month corresponding to July of a given real calendar year
+#' Get simulation month corresponding to July of a given year.
+#'
+#' @param year Real calendar year.
+#' @param last_month The maximum simulation month present in the data.
+#' @param final_sim_year Final simulated real world year.
+#' @return Simulation month representing July of the specified year.
+#' @export
 jul <- function(year, last_month, final_sim_year){
   return((last_month-5) - (final_sim_year - year)*12)
 }
 
-## Estimate yearly number of births any given year
+#' Estimate yearly number of births by mother’s age group in SOCSIM data.
+#'
+#' @param df Data frame containing SOCSIM population data.
+#' @param year_range Vector of years for which births are to be estimated.
+#' @param age_breaks_fert Numeric vector of age breakpoints for fertility rate estimation.
+#' @return A data frame with columns \code{year}, \code{agegr}, and \code{n} (birth counts).
+#' @export
 yearly_birth_by_age_socsim <- function(df, year_range, age_breaks_fert) {
   
   last_month <- max(df$dob)
@@ -209,9 +227,17 @@ yearly_birth_by_age_socsim <- function(df, year_range, age_breaks_fert) {
   
 }
 
-#### Get Women Reproductive Age SOCSIM (Female mid-year population)
-# Return women by age alive on the 1st of July of a given year, including right-censored
-
+#' Get women of reproductive age from SOCSIM population data.
+#'
+#' @description Returns a data frame of women alive on 1st July of the specified year
+#' (including right-censored individuals), grouped by age.
+#'
+#' @param df Data frame containing SOCSIM population data.
+#' @param final_sim_year Final simulated real world year.
+#' @param year The year for which the census is taken.
+#' @param age_breaks_fert Numeric vector of age breakpoints defining the reproductive age groups.
+#' @return A data frame with columns \code{year}, \code{agegr}, and \code{n} (population count).
+#' @export
 get_women_reproductive_age_socsim <- function(df, final_sim_year, year, age_breaks_fert) {
   
   last_month <- max(df$dob)
@@ -232,8 +258,18 @@ get_women_reproductive_age_socsim <- function(df, final_sim_year, year, age_brea
   return(out)
 }
 
-## Census SOCSIM (Mid-year population, 1st July)
-# Returns population by sex and age alive on the 1st of July of a given year, including right-censored
+#' Census SOCSIM: Population counts by sex and age.
+#'
+#' @description Returns the population counts by sex and age for individuals alive on 1st July 
+#' of the specified year (including right-censored individuals).
+#'
+#' @param df Data frame containing SOCSIM population data.
+#' @param year The census year.
+#' @param final_sim_year Final simulated real world year.
+#' @param age_levels_census Numeric vector defining age levels for census aggregation.
+#' @import dplyr
+#' @return A data frame with columns \code{sex}, \code{age_at_census}, \code{census}, and \code{n} (counts).
+#' @export
 census_socsim <- function(df, year, final_sim_year, age_levels_census) {
   
   last_month <- max(df$dob)
