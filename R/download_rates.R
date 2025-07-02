@@ -127,9 +127,11 @@ download_rates <- function(folder, countrycode, yearStart = 1950, yearEnd = 2100
     "execute \"touch presim.omar\"\n",
     "\nbint 12\nhetfert 1\nmarriage_queues 1\nmarriage_eval distribution\nmarriage_after_childbirth 1\nrandom_father 1\n",
     "\n***********************************************************************\n",
-    "* Pre-simulation (100 years) to get stable population at ", yearStart - 1, "\n",
+    "* Pre-simulation to get a stable population at ", yearStart - 1, "\n",
     "* Using rates for ", yearStart, "\n",
-    "\nduration 1200",
+    "* Change duration to 1200 for a stable population\n",
+    "***********************************************************************\n",
+    "\nduration 96",
     "\ninclude rates/socsim_fert_", countrycode, "_", yearStart, ".txt",
     "\ninclude rates/socsim_mort_", countrycode, "_", yearStart, ".txt",
     "\nrun\n"
