@@ -2389,8 +2389,8 @@ int fill_rate_gaps()
                             logmsg("%s\n",logstring,0); 
                             while (crnt != NULL)
                             {
-                                //if (crnt->width != 12)
-                                if (1)
+                                if (crnt->width != 12)
+                                // if (1)
                                 {
                                     sprintf(logstring,
                                             "* \n\n"
