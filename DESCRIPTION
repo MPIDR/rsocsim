@@ -1,7 +1,7 @@
 Package: rsocsim
 Type: Package
 Title: SOCSIM with R
-Version: 1.7.2
+Version: 1.7.3
 Date: 2023-03-17
 Author: Tom Theile and Diego Alburez-Gutierrez
 Maintainer: Tom Theile <theile@demogr.mpg.de>
@@ -20,7 +20,7 @@ Imports: Rcpp (>= 1.0.5),
     dplyr,
     utils
 LinkingTo: Rcpp
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
