@@ -15,7 +15,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/MPIDR/rsocsim/blob/main/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/MPIDR/rsocsim/blob/1.7.4/DESCRIPTION)
 
 Theile T, Alburez-Gutierrez D, Snyder M, Calderón-Bernal L (2025).
 *rsocsim: SOCSIM with R*. R package version 1.7.4,
