@@ -1,4 +1,4 @@
-# rsocsim 1.7.1 (Dec 5 2025)
+# rsocsim 1.7.4 (Dec 5 2025)
  * added parameter presim_duration_months to download_rates
 
 # rsocsim 1.7.0

@@ -1,7 +1,7 @@
 Package: rsocsim
 Type: Package
 Title: SOCSIM with R
-Version: 1.7.3
+Version: 1.7.4
 Date: 2023-03-17
 Author: Tom Theile and Diego Alburez-Gutierrez
 Maintainer: Tom Theile <theile@demogr.mpg.de>
