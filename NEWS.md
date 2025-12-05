@@ -1,3 +1,6 @@
+# rsocsim 1.7.1 (Dec 5 2025)
+ * added parameter presim_duration_months to download_rates
+
 # rsocsim 1.7.0
  * added function create_initial_simulation
    * the code is based on https://github.com/MPIDR/rsocsim_workshop_paa?tab=readme-ov-file#23-create-initial-population-and-marriage-files

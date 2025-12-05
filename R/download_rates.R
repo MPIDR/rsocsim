@@ -8,6 +8,7 @@
 #' @param yearEnd End year. For "UN" the first possible year is 2100
 #' @param source "UN", at the moment only UN Population Prospects is supported
 #' @param apiUrl url of the API. "https://user.demogr.mpg.de/theile/socsimratesAPI/v1/" by default
+#' @param presim_duration_months Duration of the pre-simulation in months. Default is 96 months (8 years). Change this to 1200 for a stable population.
 #' @details 
 #' See https://github.com/tomthe/retrieveVitalRates_for_rsocsim_API for the 
 #' code that converts the source data into socsim format.
@@ -20,7 +21,9 @@
 #' @export
 download_rates <- function(folder, countrycode, yearStart = 1950, yearEnd = 2100, 
                          source = "UN", 
-                         apiUrl = "https://user.demogr.mpg.de/theile/socsimratesAPI/v1/") {
+                         apiUrl = "https://user.demogr.mpg.de/theile/socsimratesAPI/v1/",
+                         presim_duration_months = 96
+                         ) {
   
   # Validate input parameters
   if (!dir.exists(folder)) {
@@ -125,13 +128,13 @@ download_rates <- function(folder, countrycode, yearStart = 1950, yearEnd = 2100
     "segments ", yearEnd - yearStart + 1, "\n",
     "input_file presim\n",
     "execute \"touch presim.omar\"\n",
-    "\nbint 12\nhetfert 1\nmarriage_queues 1\nmarriage_eval distribution\nmarriage_after_childbirth 1\nrandom_father 1\n",
+    "\nbint 12\nhetfert 1\nmarriage_queues 1\nmarriage_eval distribution\nmarriage_after_childbirth 1\n",
     "\n***********************************************************************\n",
     "* Pre-simulation to get a stable population at ", yearStart - 1, "\n",
     "* Using rates for ", yearStart, "\n",
     "* Change duration to 1200 for a stable population\n",
     "***********************************************************************\n",
-    "\nduration 96",
+    "\nduration ", presim_duration_months, 
     "\ninclude rates/socsim_fert_", countrycode, "_", yearStart, ".txt",
     "\ninclude rates/socsim_mort_", countrycode, "_", yearStart, ".txt",
     "\nrun\n"
