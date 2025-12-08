@@ -320,7 +320,7 @@ int load( char *file)
         {
             /* just quit on any error for now */
             (void)fclose(fp);
-            printf("FILE: %s LINE: %s\n", cx.file, line);
+            Rprintf("FILE: %s LINE: %s\n", cx.file, line);
             fprintf(fd_log,"Error in load..l_process_line;FILE: %s LINE: %s \n", cx.file, line);
             fflush(fd_log);
             return -1;
@@ -376,9 +376,9 @@ int create_output_fn_dir() {
     char *rate_file_base_name = get_basename(rate_file_name, delimiters,
             buffer_base_name, 1024);
     if (rate_file_base_name) {
-        printf("Basename of sup file: %s\n", rate_file_base_name);
+        Rprintf("Basename of sup file: %s\n", rate_file_base_name);
     } else {
-        printf("Error: no sup file provided or buffer too small.\n");
+        Rprintf("Error: no sup file provided or buffer too small.\n");
     }
 
     sprintf (buffer_output_dir, "sim_results_%ld_%s/", original_seed,result_suffix);

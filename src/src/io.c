@@ -39,7 +39,7 @@ void logmsg(const char * frmt, const char * msg, int where)
   fflush(fd_log); /*flush the buffer */
   if (where)
   {
-    printf(frmt, msg);
+    Rprintf(frmt, msg);
   }
   return;
 }

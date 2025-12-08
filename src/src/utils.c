@@ -37,10 +37,7 @@ int get_expected_number_of_births(int group)
 
 	pp = person0;
 
-	for (a = 1; a < MAXUMONTHS; a++)
-		for (p = 1; p < MAXPARITY; p++)
-			for (m = SINGLE; m < NUMMARSTATUS; m++)
-				count[a][p][m] = 0;
+    memset(count, 0, sizeof(count));
 
 	while (pp != NULL)
 	{
@@ -51,14 +48,16 @@ int get_expected_number_of_births(int group)
 				if (pp->group == group)
 				{
 					age = current_month - pp->birthdate;
-					count[age][get_parity(pp)][pp->mstatus]++;
+                    if (age >= 0 && age < MAXUMONTHS) { // Bounds check
+					    count[age][get_parity(pp)][pp->mstatus]++;
+                    }
 				}
 			}
 		}
 		pp = pp->down;
 	}
 
-	printf("expected number of births for group %d\n", group);
+	Rprintf("expected number of births for group %d\n", group);
 	for (p = 1; p < MAXPARITY; p++)
 	{
 		for (m = SINGLE; m < NUMMARSTATUS; m++)
@@ -68,7 +67,7 @@ int get_expected_number_of_births(int group)
 			{
 				num_births += rate_table[a] * count[a][p][m];
 				/*
-		printf("rate tale %lf count %d\n",
+		Rprintf("rate tale %lf count %d\n",
 			rate_table[a], count[a][p][m]);
 		*/
 			}
@@ -76,7 +75,7 @@ int get_expected_number_of_births(int group)
 	}
 
 	num_births = num_births * duration_of_segment;
-	printf("expected number of births %d \n", (int)num_births);
+	Rprintf("expected number of births %d \n", (int)num_births);
 	return (int)num_births;
 }
 
@@ -92,10 +91,7 @@ int	get_expected_number_of_transits(int from, int dest)
 
 	pp = person0;
 
-	for (a = 1; a < MAXUMONTHS; a++)
-		for (s = 1; s < NUMSEXES; s++)
-			for (m = SINGLE; m < NUMMARSTATUS; m++)
-				count[a][s][m] = 0;
+    memset(count, 0, sizeof(count));
 
 	while (pp != NULL)
 	{
@@ -107,14 +103,16 @@ int	get_expected_number_of_transits(int from, int dest)
 				for (i = 0;
 					 (i < duration_of_segment) && (age + i < MAXUMONTHS ); i++)//todo: i<duration_of_segment, is never used. replaced , with &&
 				{
-					count[age + i][pp->sex][pp->mstatus]++;
+                    if (age + i >= 0) { // Bounds check
+					    count[age + i][pp->sex][pp->mstatus]++;
+                    }
 				}
 			}
 		}
 		pp = pp->down;
 	}
 
-	printf("computing expected number of migrations from group %d dest %d\n",
+	Rprintf("computing expected number of migrations from group %d dest %d\n",
 		   from, dest);
 	for (s = MALE; s < NUMSEXES; s++)
 	{
@@ -128,7 +126,7 @@ int	get_expected_number_of_transits(int from, int dest)
 		}
 	}
 
-	printf("expected number of transits %d \n", (int)num_transits);
+	Rprintf("expected number of transits %d \n", (int)num_transits);
 	return (int)num_transits;
 }
 

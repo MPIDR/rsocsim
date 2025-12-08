@@ -118,7 +118,7 @@ const char *c_tally_to_string[] = {
 // [[Rcpp::export]]
 int main1(int argc, char *argv[])
 {
-    Rcpp::Rcout << "start socsim main. MAXUYEARS: " << MAXUYEARS << "; MAXUMONTHS: " << MAXUMONTHS << std::endl;
+    Rprintf("start socsim main. MAXUYEARS: %d; MAXUMONTHS: %d\n", MAXUYEARS, MAXUMONTHS);
 
     // 2024-12-03 Ole
     // Let's pull all argv[] calls to the top and print them to stdout, so
@@ -133,13 +133,14 @@ int main1(int argc, char *argv[])
 
     strcpy(rate_file_name, argv[1]);
     ceed = atoi(argv[2]);
+    socsim_seed(ceed); // Initialize PCG32
     compatibility_mode = atoi(argv[3]);
     strcpy(result_suffix, argv[4]);
 
-    Rcpp::Rcout << "Ratefile: "<< rate_file_name << "\n" << std::endl;
-    Rcpp::Rcout << "Seed: "<< ceed << "\n" << std::endl;
-    Rcpp::Rcout << "Compatibility mode: "<< compatibility_mode << "\n" << std::endl;
-    Rcpp::Rcout << "Results suffix: "<< result_suffix << "\n" << std::endl;
+    Rprintf("Ratefile: %s\n", rate_file_name);
+    Rprintf("Seed: %d\n", ceed);
+    Rprintf("Compatibility mode: %d\n", compatibility_mode);
+    Rprintf("Results suffix: %s\n", result_suffix);
 
     /* 2024-12-03 Ole was unsure whether R correctly passes a changed
      * working directory to Rcpp/C. It does.
@@ -275,7 +276,7 @@ int main1(int argc, char *argv[])
     //strcpy(rate_file_name, *++argv);
 
     //Rcpp::Rcout << "useage: ratefile random_number" << useage << argv[1] << argv[2] << std::endl;
-    Rcpp::Rcout << "v18a!-command-line argv[0]: " << argv[0] << "| argv[1]: " << argv[1] << "| argv[2]: " << argv[2]  << "| argv[3]: " << argv[3] << std::endl;
+    Rprintf("v18a!-command-line argv[0]: %s| argv[1]: %s| argv[2]: %s| argv[3]: %s\n", argv[0], argv[1], argv[2], argv[3]);
 
     //ceed = atoi(*++argv);
     ceed = atoi(argv[2]);
@@ -318,7 +319,7 @@ int main1(int argc, char *argv[])
     logmsg("initialize_segment_vars\n"," ",1);
     initialize_segment_vars();
     Rprintf("initialize_segment_vars done\n");
-    Rcpp::Rcout << "18b - loading -.sup-file: " << rate_file_name << std::endl;
+    Rprintf("18b - loading -.sup-file: %s\n", rate_file_name);
     if (load(rate_file_name) < 0)
         stop("can't load rate file! Stopping Simulation.");//exit(-1);
     Rprintf("------------4");

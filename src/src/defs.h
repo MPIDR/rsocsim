@@ -49,6 +49,21 @@ double enhance_couple_score();
 
 #define NEW(type) ((type *)malloc(sizeof(type)))
 
+/* Logging Macros */
+#ifdef __cplusplus
+extern "C" {
+#endif
+#include <R.h>
+#include <R_ext/Print.h>
+#ifdef __cplusplus
+}
+#endif
+
+#define RSOC_LOG(fmt, ...) Rprintf(fmt, ##__VA_ARGS__)
+
+/* Random Number Generator */
+void socsim_seed(long long seed);
+
 /* #define MOD1200(x) (x) % 1200 + 1200 * ((int)((x) - (x) % 1200) / (x))*/
 
 /* bounds for static structures */
@@ -439,9 +454,9 @@ double endogamy;
 int take_census;
 int fixed_epsilon, random_epsilon;
 int read_xtra_file;
-long int ceed;
+extern long long ceed;
 long int original_seed = -4;
-//static char randstate[2048]; /* for gcc's random number generator *///not needed here?!?!
+//static char randstate[2048]; /* for gcc's random number generator *///not needed here?!
 int current_month;
 int stop_month;
 int current_segment;
