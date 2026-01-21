@@ -1,0 +1,19 @@
+citHeader("To cite rsocsim in publications use:")
+
+citEntry(
+  entry    = "Article",
+  title    = "rsocsim: SOCSIM with R",
+  author   = c(
+    person("Tom", "Theile", email = "theile@demogr.mpg.de"),
+    person("Diego", "Alburez-Gutierrez"),
+    person("Mallika", "Snyder"),
+    person("Liliana P.", "Calderón-Bernal")
+  ),
+  year     = "2026",
+  url      = "https://github.com/MPIDR/rsocsim",
+  textVersion = paste(
+    "Theile, T., Alburez-Gutierrez, D., Snyder, M., & Calderón-Bernal, L. P. (2023).",
+    "rsocsim: SOCSIM with R.",
+    "https://github.com/MPIDR/rsocsim"
+  )
+)
