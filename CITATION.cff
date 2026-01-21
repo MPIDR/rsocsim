@@ -1,0 +1,30 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+type: software
+authors:
+  - family-names: Theile
+    given-names: Tom
+    email: theile@demogr.mpg.de
+    orcid: "https://orcid.org/0000-0003-0573-9093"
+    affiliation: "Max Planck Institute for Demographic Research"
+  - family-names: Alburez-Gutierrez
+    given-names: Diego
+    orcid: "https://orcid.org/0000-0003-0573-9093"
+    affiliation: "Max Planck Institute for Demographic Research"
+  - family-names: Snyder
+    given-names: Mallika
+    affiliation: "Max Planck Institute for Demographic Research"
+  - family-names: Calderón-Bernal
+    given-names: "Liliana P."
+    affiliation: "Max Planck Institute for Demographic Research"
+title: "rsocsim: SOCSIM with R"
+abstract: "Install and run socsim microsimulations from within R with this R-package."
+version: 1.7.4
+date-released: 2026-01-17
+repository-code: "https://github.com/MPIDR/rsocsim"
+repository: "https://mpidr.github.io/rsocsim/"
+license: GPL-2.0-or-later
+keywords:
+  - socsim
+  - microsimulation
+  - demographic-simulation
