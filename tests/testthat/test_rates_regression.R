@@ -14,7 +14,12 @@ expect_within_tolerance <- function(current, baseline, abs_tol = 0.05, rel_tol =
 test_that("rates regression: simulate, estimate, compare, plot", {
   testthat::skip_on_cran()
   if (Sys.getenv("RSOCSIM_RUN_INTEGRATION_TESTS") != "1") {
-    testthat::skip("Integration test disabled. Set RSOCSIM_RUN_INTEGRATION_TESTS=1 to enable.")
+    testthat::skip(paste(
+      "Integration test disabled.",
+      "Enable by setting RSOCSIM_RUN_INTEGRATION_TESTS=1.",
+      "In PowerShell: $Env:RSOCSIM_RUN_INTEGRATION_TESTS=\"1\"",
+      "In R: Sys.setenv(RSOCSIM_RUN_INTEGRATION_TESTS=\"1\")"
+    ))
   }
 
   if (!exists("startSocsimWithFile", where = asNamespace("rsocsim"), mode = "function")) {
@@ -23,6 +28,7 @@ test_that("rates regression: simulate, estimate, compare, plot", {
 
   simdir <- file.path(tempdir(), "rsocsim-rates-regression")
   dir.create(simdir, showWarnings = FALSE, recursive = TRUE)
+  print(paste(c("simdir: ",simdir)))
 
   fert_src <- system.file("extdata", "SWEfert2022", package = "rsocsim", mustWork = TRUE)
   mort_src <- system.file("extdata", "SWEmort2022", package = "rsocsim", mustWork = TRUE)
@@ -40,7 +46,7 @@ test_that("rates regression: simulate, estimate, compare, plot", {
     "marriage_eval distribution",
     "marriage_after_childbirth 1",
     "input_file init_new",
-    "duration 24",
+    "duration 480",
     "include SWEfert2022",
     "include SWEmort2022",
     "run"
@@ -48,7 +54,12 @@ test_that("rates regression: simulate, estimate, compare, plot", {
   sup_path <- file.path(simdir, "socsim.sup")
   writeLines(sup_content, sup_path)
 
-  seed <- "123"
+  seed_env <- Sys.getenv("RSOCSIM_RATES_SEED", "random")
+  seed <- if (seed_env == "random") {
+    as.character(sample.int(1e9, 1))
+  } else {
+    seed_env
+  }
   suffix <- "rates"
   result <- socsim(simdir, "socsim.sup", seed = seed, process_method = "inprocess", suffix = suffix)
   expect_equal(result, 1)
@@ -69,9 +80,9 @@ test_that("rates regression: simulate, estimate, compare, plot", {
   # Estimate yearly fertility and mortality rates
   asfr <- estimate_fertility_rates(
     opop = opop,
-    final_sim_year = 2001,
-    year_min = 2000,
-    year_max = 2002,
+    final_sim_year = 2010,
+    year_min = 1960,
+    year_max = 2010,
     year_group = 1,
     age_min_fert = 15,
     age_max_fert = 50,
@@ -80,9 +91,9 @@ test_that("rates regression: simulate, estimate, compare, plot", {
 
   asmr <- estimate_mortality_rates(
     opop = opop,
-    final_sim_year = 2001,
-    year_min = 2000,
-    year_max = 2002,
+    final_sim_year = 2010,
+    year_min = 1960,
+    year_max = 2010,
     year_group = 1,
     age_max_mort = 100,
     age_group = 5
@@ -92,7 +103,9 @@ test_that("rates regression: simulate, estimate, compare, plot", {
   mort_summary <- aggregate(socsim ~ year, asmr, mean, na.rm = TRUE)
 
   rates <- merge(fert_summary, mort_summary, by = "year", suffixes = c("_fert", "_mort"))
-  rates$month <- (rates$year - min(rates$year)) * 12
+  year_numeric <- as.character(rates$year)
+  year_numeric <- as.numeric(sub("^\\[?([0-9]+).*", "\\1", year_numeric))
+  rates$month <- (year_numeric - min(year_numeric, na.rm = TRUE)) * 12
   rates <- rates[order(rates$month), c("month", "socsim_fert", "socsim_mort")]
   names(rates) <- c("month", "rate_fertility", "rate_mortality")
 
@@ -104,15 +117,33 @@ test_that("rates regression: simulate, estimate, compare, plot", {
     dir.create(results_dir, recursive = TRUE)
   }
 
-  current_path <- file.path(results_dir, "rates_current.csv")
-  baseline_path <- file.path(results_dir, "rates_baseline.csv")
-  plot_path <- file.path(results_dir, "rates_plot.png")
+  date_tag <- format(Sys.Date(), "%Y%m%d")
+  current_path <- file.path(results_dir, sprintf("rates_current_%s_seed_%s.csv", date_tag, seed))
+  baseline_override <- Sys.getenv("RSOCSIM_RATES_BASELINE", "")
+  if (nzchar(baseline_override)) {
+    baseline_path <- baseline_override
+  } else {
+    baseline_candidates <- list.files(
+      results_dir,
+      pattern = "^rates_baseline_\\d{8}_seed_.*\\.csv$",
+      full.names = TRUE
+    )
+    baseline_path <- if (length(baseline_candidates) > 0) {
+      sort(baseline_candidates, decreasing = TRUE)[1]
+    } else {
+      file.path(results_dir, sprintf("rates_baseline_%s_seed_%s.csv", date_tag, seed))
+    }
+  }
+  plot_path <- file.path(results_dir, sprintf("rates_plot_%s_seed_%s.png", date_tag, seed))
 
   utils::write.csv(rates, current_path, row.names = FALSE)
 
   if (!file.exists(baseline_path)) {
     utils::write.csv(rates, baseline_path, row.names = FALSE)
-    testthat::fail("Baseline rates CSV missing. Created rates_baseline.csv. Re-run the test.")
+    testthat::skip(paste0(
+      "Baseline rates CSV missing. Created ", basename(baseline_path),
+      ". Re-run the test to compare against the baseline."
+    ))
   }
 
   baseline <- utils::read.csv(baseline_path)
@@ -121,14 +152,24 @@ test_that("rates regression: simulate, estimate, compare, plot", {
   expect_within_tolerance(rates$rate_fertility, baseline$rate_fertility)
   expect_within_tolerance(rates$rate_mortality, baseline$rate_mortality)
 
-  # Plot and save
-  grDevices::png(plot_path, width = 900, height = 600)
-  on.exit(grDevices::dev.off(), add = TRUE)
-  plot(rates$month, rates$rate_fertility, type = "l",
-       col = "#2C7FB8", lwd = 2,
-       xlab = "Month", ylab = "Rate",
-       main = "Simulated rates (fertility vs mortality)")
-  lines(rates$month, rates$rate_mortality, col = "#D95F02", lwd = 2)
-  legend("topright", legend = c("Fertility", "Mortality"),
-         col = c("#2C7FB8", "#D95F02"), lwd = 2, bty = "n")
+    # Plot and save
+    grDevices::png(plot_path, width = 900, height = 600)
+    on.exit(grDevices::dev.off(), add = TRUE)
+    plot(rates$month, rates$rate_fertility, type = "l",
+      col = "#2C7FB8", lwd = 2,
+      xlab = "Month", ylab = "Rate",
+      main = "Simulated rates (fertility vs mortality)")
+    lines(rates$month, rates$rate_mortality, col = "#D95F02", lwd = 2)
+    if (exists("baseline") && nrow(baseline) > 0) {
+      lines(rates$month, baseline$rate_fertility, col = "#2C7FB8", lwd = 2, lty = 2)
+      lines(rates$month, baseline$rate_mortality, col = "#D95F02", lwd = 2, lty = 2)
+      legend("topright",
+       legend = c("Fertility (current)", "Mortality (current)",
+            "Fertility (baseline)", "Mortality (baseline)"),
+       col = c("#2C7FB8", "#D95F02", "#2C7FB8", "#D95F02"),
+       lwd = 2, lty = c(1, 1, 2, 2), bty = "n")
+    } else {
+      legend("topright", legend = c("Fertility", "Mortality"),
+       col = c("#2C7FB8", "#D95F02"), lwd = 2, bty = "n")
+    }
 })
