@@ -18,6 +18,7 @@ Imports: Rcpp (>= 1.0.5),
     parallel,
     magrittr,
     dplyr,
+    tidyr,
     utils
 LinkingTo: Rcpp
 RoxygenNote: 7.3.2

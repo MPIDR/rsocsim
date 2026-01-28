@@ -65,7 +65,7 @@ estimate_mortality_rates <- function(opop, final_sim_year, year_min, year_max, y
     arrange(year, sex, age) %>% 
     mutate(year = factor(year, levels = year_range),
            sex = factor(sex, levels = c("0","1"))) %>% 
-    complete(year, sex, age, fill = list(n = 0))  %>%
+    tidyr::complete(year, sex, age, fill = list(n = 0))  %>%
     mutate(year = as.numeric(as.character(year)))
   # 2. Denominator - population by sex and age (1st July)
   opop2_subset <- opop2 %>% 
@@ -219,7 +219,7 @@ yearly_birth_by_age_socsim <- function(df, year_range, age_breaks_fert) {
                                      include.lowest = F, right = F, ordered_results = T)) %>%
     filter(!is.na(mother_agegr_factor)) %>% 
     count(birth_year = birth_year_factor, mother_agegr = mother_agegr_factor) %>% 
-    complete(birth_year, mother_agegr, fill = list(n = 0)) %>% 
+    tidyr::complete(birth_year, mother_agegr, fill = list(n = 0)) %>% 
     select(year = birth_year, agegr = mother_agegr, n) %>% 
     arrange(year, agegr)
   
@@ -251,7 +251,7 @@ get_women_reproductive_age_socsim <- function(df, final_sim_year, year, age_brea
                                  include.lowest = F, right = F, ordered_results = T)) %>% 
     filter(!is.na(agegr_at_census)) %>% 
     count(agegr_at_census, census) %>% 
-    complete(agegr_at_census, census, fill = list(n = 0)) %>% 
+    tidyr::complete(agegr_at_census, census, fill = list(n = 0)) %>% 
     select(year = census, agegr = agegr_at_census, n) %>% 
     arrange(year, agegr)
   
