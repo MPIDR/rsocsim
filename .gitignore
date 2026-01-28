@@ -41,3 +41,6 @@ tmp/tmp/*
 rsocsim.Rproj
 tests/testthat/_results/*.csv
 tests/testthat/_results/*.png
+
+*.csv
+*.png
