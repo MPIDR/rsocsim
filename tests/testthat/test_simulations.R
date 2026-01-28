@@ -1,50 +1,31 @@
-if (FALSE) {
+library(testthat)
+library(rsocsim)
 
-folder = rsocsim::create_simulation_folder()
-folder
-print(paste0("folder: ", folder))
+test_that("create_simulation_folder creates directories", {
+  base <- file.path(tempdir(), "rsocsim-tests")
+  dir.create(base, showWarnings = FALSE, recursive = TRUE)
 
-supfile = rsocsim::create_sup_file(folder)
-print(supfile)
+  simdir <- create_simulation_folder(basedir = base, simdir = "sim1")
+  expect_true(dir.exists(simdir))
+  expect_true(grepl("sim1", simdir, fixed = TRUE))
+})
 
-seed = 123345
-suffix="test7"
+test_that("create_sup_file writes a valid .sup file", {
+  simdir <- file.path(tempdir(), "rsocsim-sup")
+  dir.create(simdir, showWarnings = FALSE, recursive = TRUE)
 
-rsocsim::socsim(
-  folder,
-  supfile,
-  seed = seed,
-  process_method = "inprocess",
-  compatibility_mode = "1",
-  suffix = suffix
-  )
+  supfile <- create_sup_file(simdir = simdir, simname = "demo")
+  sup_path <- file.path(simdir, supfile)
 
-omar = rsocsim::read_omar(folder,supfile,seed,suffix=suffix)
-omar
+  expect_true(file.exists(sup_path))
 
-opop = rsocsim::read_opop(folder,supfile,seed,suffix)
-opop
+  content <- readLines(sup_path)
+  expect_true(any(grepl("^segments\\s+1", content)))
+  expect_true(any(grepl("^input_file", content)))
+  expect_true(any(grepl("^run", content)))
+})
 
-pid <- c("111", "10211", "10311")
-kin_network <- getKin(opop = opop, omar = omar, pid = pid, 
-                      extra_kintypes = c("unclesaunts", "niblings"), kin_by_sex = TRUE)
-
-kin_network$nieces[[3]][1]
-
-opop$pid[kin_network$nieces[[3]]]
-
-
-####
-
-fert_rates <- estimate_fertility_rates(
-  opop=opop,
-  final_sim_year=1966,
-  year_min=1963,
-  year_max=1965,
-  year_group = 5,
-  age_min_fert = 15,
-  age_max_fert = 50,
-  age_group = 5
-)
- 
-}
+test_that("simulation_time_to_years converts months to years", {
+  expect_equal(simulation_time_to_years(120L, 0L, 2000L), 2010)
+  expect_equal(simulation_time_to_years(132L, 12L, 2000L), 2010)
+})

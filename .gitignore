@@ -39,3 +39,5 @@ man/socsim.Rd
 tmp/tmp/*
 .Rproj.user
 rsocsim.Rproj
+tests/testthat/_results/*.csv
+tests/testthat/_results/*.png

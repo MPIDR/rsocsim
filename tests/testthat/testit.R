@@ -1,32 +1,30 @@
-if (FALSE) {
+library(testthat)
+library(rsocsim)
 
-folder = "D:\\dev\\r\\socsimprojects\\CousinDiversity"
-supfile = "CousinDiversity.sup"
-seed="33"
+test_that("create_initial_population writes opop and omar", {
+	simdir <- file.path(tempdir(), "rsocsim-pop")
+	dir.create(simdir, showWarnings = FALSE, recursive = TRUE)
 
-rsocsim::run1simulationwithfile(folder,supfile,seed,process_method = "inprocess")
-rsocsim::run1simulationwithfile(folder,supfile,seed,process_method = "future")
-rsocsim::run1simulationwithfile(folder,supfile,seed,process_method = "clustercall")
+	create_initial_population(folder = simdir, size_opop = 20, output_base = "init")
 
-#rsocsim::run1simulationwithfile_clustercall(folder,supfile,seed)
+	opop_path <- file.path(simdir, "init.opop")
+	omar_path <- file.path(simdir, "init.omar")
 
-socsim_path = "D:\\downloads\\socsim1.exe"
-rsocsim::run1simulationwithfile_from_binary(folder,supfile,seed)
-rsocsim::run1simulationwithfile_from_binary(folder,supfile,seed,socsim_path)
+	expect_true(file.exists(opop_path))
+	expect_true(file.exists(omar_path))
 
+	opop <- read_opop(fn = opop_path)
+	expect_equal(ncol(opop), 14)
+	expect_equal(nrow(opop), 20)
+	expect_true(all(c("pid", "fem", "group", "dob") %in% names(opop)))
 
-rsocsim::get_asfr_socsim()
-
-rsocsim::getKin()
-
-basename(socsim_path)
-dirname(socsim_path)
-dirname(folder)
-
-############################################
-
-
-
-
-#################################
-}
+	write.table(
+		data.frame(1, 1, 2, 0, 0, 0, 0, 0),
+		omar_path,
+		row.names = FALSE,
+		col.names = FALSE
+	)
+	omar <- read_omar(fn = omar_path)
+	expect_equal(ncol(omar), 8)
+	expect_equal(nrow(omar), 1)
+})

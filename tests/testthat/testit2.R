@@ -1,75 +1,111 @@
-if (FALSE) {
-folder = rsocsim::create_simulation_folder()
-folder
-#folder = "C:/Users/tom/socsim/socsim_sim_2541/"
-#folder= "C:\Users\tom\socsim\socsim_sim_2541"
+library(testthat)
+library(rsocsim)
 
-supfile = rsocsim::create_sup_file(folder)
-# supfile = "socsim.sup"
-supfile
+test_that("estimate_fertility_rates returns expected structure", {
+	opop <- data.frame(
+		pid = 1:6,
+		fem = c(1, 0, 1, 0, 1, 1),
+		group = 1,
+		nev = 0,
+		dob = c(120, 120, 336, 348, 180, 360),
+		mom = c(0, 0, 1, 1, 0, 5),
+		pop = c(0, 0, 2, 2, 0, 2),
+		nesibm = 0,
+		nesibp = 0,
+		lborn = 0,
+		marid = 0,
+		mstat = 0,
+		dod = c(0, 300, 0, 0, 0, 0),
+		fmult = 0
+	)
 
-seed = 777
-suffix="sufffi33f"
+	asfr <- estimate_fertility_rates(
+		opop = opop,
+		final_sim_year = 2000,
+		year_min = 1998,
+		year_max = 2000,
+		year_group = 1,
+		age_min_fert = 15,
+		age_max_fert = 50,
+		age_group = 5
+	)
 
-rsocsim::socsim(folder,supfile,seed,suffix=suffix)#,process_method = "inprocess")
+	expect_true(all(c("year", "age", "socsim") %in% names(asfr)))
+	expect_true(all(asfr$socsim >= 0, na.rm = TRUE))
+})
 
-opop <- rsocsim::read_opop(folder,supfile,seed,suffix)
-opop
-omar <- rsocsim::read_omar(folder,supfile,seed,suffix)
-omar
-#Obtain partial kinship network, with omar and opop already in R environment
-pid <- c(1000,1001) #opop$pid[-3:-1]
-pid
+test_that("estimate_mortality_rates returns expected structure", {
+	opop <- data.frame(
+		pid = 1:6,
+		fem = c(1, 0, 1, 0, 1, 1),
+		group = 1,
+		nev = 0,
+		dob = c(120, 120, 336, 348, 180, 360),
+		mom = c(0, 0, 1, 1, 0, 5),
+		pop = c(0, 0, 2, 2, 0, 2),
+		nesibm = 0,
+		nesibp = 0,
+		lborn = 0,
+		marid = 0,
+		mstat = 0,
+		dod = c(0, 300, 0, 0, 0, 0),
+		fmult = 0
+	)
 
-kin_network <- rsocsim::getKin(opop = opop, omar = omar, pid = pid, extra_kintypes = c("unclesaunts", "niblings"), kin_by_sex = TRUE)
+	asmr <- estimate_mortality_rates(
+		opop = opop,
+		final_sim_year = 2000,
+		year_min = 1995,
+		year_max = 2000,
+		year_group = 5,
+		age_max_mort = 100,
+		age_group = 5
+	)
 
-kin_network
+	expect_true(all(c("year", "sex", "age", "socsim") %in% names(asmr)))
+	expect_true(all(is.finite(na.omit(asmr$socsim))))
+})
 
-kin_network$ggparents
-kin_network$gdaughters
+test_that("retrieve_kin returns expected immediate kin", {
+	opop <- data.frame(
+		pid = 1:4,
+		fem = c(1, 0, 1, 0),
+		group = 1,
+		nev = 0,
+		dob = c(120, 120, 300, 300),
+		mom = c(0, 0, 1, 1),
+		pop = c(0, 0, 2, 2),
+		nesibm = 0,
+		nesibp = 0,
+		lborn = 0,
+		marid = c(1, 1, 0, 0),
+		mstat = c(4, 4, 1, 1),
+		dod = 0,
+		fmult = 0
+	)
 
-rsocsim::socsim(folder,supfile,seed,process_method = "inprocess",suffix=suffix)
-rsocsim::socsim(folder,supfile,seed,process_method = "future",suffix=suffix)
+	omar <- data.frame(
+		mid = 1,
+		wpid = 1,
+		hpid = 2,
+		dstart = 0,
+		dend = 0,
+		rend = 0,
+		wprior = 0,
+		hprior = 0
+	)
 
-rsocsim::socsim(folder,supfile,seed,process_method = "clustercall",suffix=suffix)
+	res <- retrieve_kin(
+		opop = opop,
+		omar = omar,
+		KidsOf = list(),
+		pid = c(3),
+		extra_kintypes = c("niblings", "inlaws"),
+		kin_by_sex = TRUE
+	)
 
-#rsocsim::run1simulationwithfile_clustercall(folder,supfile,seed)
-
-socsim_path = "D:\\downloads\\socsim1.exe"
-rsocsim::run1simulationwithfile_from_binary(folder,supfile,seed)
-rsocsim::run1simulationwithfile_from_binary(folder,supfile,seed,socsim_path)
-
-
-basename(socsim_path)
-dirname(socsim_path)
-dirname(folder)
-
-system.file("extdata", "SWEfert2022", package = "rsocsim", mustWork = TRUE)
-
-
-
-
-Rcpp::compileAttributes()
-
- 
-devtools::build(binary = TRUE, args = c('--preclean'))
-
-
-# Rcmd.exe INSTALL --preclean --no-multiarch --with-keep.source rsocsim
-
-install.packages('rsocsim')
-
-devtools::install(dependencies = TRUE, build = TRUE, args = c('--preclean'))
-
-
-
-# retrieve Kin:
-# Try it out -----
-
-opop <- read_opop("output_pop.opop")
-omar <- read_omar("output_pop.omar")
-
-
-
-# ISSUES -----
-}
+	expect_equal(res$mother[[1]], 1)
+	expect_equal(res$father[[1]], 2)
+	expect_true(4 %in% res$siblings[[1]])
+	expect_true(is.na(res$spouse[[1]]))
+})
