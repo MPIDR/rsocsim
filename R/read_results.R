@@ -35,6 +35,19 @@ read_omar <- function(folder=NULL, supfile="socsim.sup",seed=42,suffix="",fn=NUL
     fn <- fn
   }
   print(paste0("read marriage file: ",fn))
+  if (!file.exists(fn) || is.na(file.info(fn)$size) || file.info(fn)$size == 0) {
+    omar <- data.frame(
+      mid = integer(),
+      wpid = integer(),
+      hpid = integer(),
+      dstart = integer(),
+      dend = integer(),
+      rend = integer(),
+      wprior = integer(),
+      hprior = integer()
+    )
+    return(omar)
+  }
   omar<-read.table(file = fn, header = F, as.is = T)
   names(omar)<-c("mid","wpid","hpid","dstart","dend", "rend","wprior","hprior")
   return(omar)
