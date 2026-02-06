@@ -167,7 +167,7 @@ We reformatted the .cpp files because indentation was all over the place, but we
 
 2. Wachter, K.W. (1997). Kinship resources for the elderly. Philosophical Transactions of the Royal Society of London. Series B: Biological Sciences 352(1363):1811–1817. doi:10.1098/rstb.1997.0166.
 
-3. Mason, Carl. (2016). Socsim Oversimplified. Accesed on 24 Feb 2023 from: https://lab.demog.berkeley.edu/socsim/CurrentDocs/socsimOversimplified.pdf
+3. Mason, Carl. (2016). Socsim Oversimplified. Accesed on 24 Feb 2023 from: https://doi.org/10.7910/DVN/JOCRUR
 
 4. Alburez‐Gutierrez, D., Mason, C., and Zagheni, E. (2021). The “Sandwich Generation” Revisited: Global Demographic Drivers of Care Time Demands. Population and Development Review 47(4):997–1023. doi:10.1111/padr.12436.
 
