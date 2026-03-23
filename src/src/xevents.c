@@ -845,6 +845,19 @@ int marriage_allowable(struct person *p1,struct person *p2)
       particularly loathsome matings.
   **/
 
+  /* Absolute minimum age check: reject if the male partner is younger
+     than random_father_min_age (default 15 years). This prevents
+     implausibly young males from becoming husbands/fathers through
+     any pathway (marriage, cohabitation, marriage_after_childbirth). */
+  {
+    struct person *male = (p1->sex == MALE) ? p1 : p2;
+    int male_age_years = (current_month - male->birthdate) / 12;
+    if (male_age_years < random_father_min_age)
+    {
+      return (0);
+    }
+  }
+
   /*insert possible overall enhancement hook this can pre-empt all other checks*/
 #ifdef ENHANCED
   if (enhance_check_spouse(p1, p2) == 0)
