@@ -1,7 +1,7 @@
 citHeader("To cite rsocsim in publications use:")
 
 citEntry(
-  entry    = "Article",
+  entry    = "Manual",
   title    = "rsocsim: SOCSIM with R",
   author   = c(
     person("Tom", "Theile", email = "theile@demogr.mpg.de"),
