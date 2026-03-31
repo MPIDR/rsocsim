@@ -94,6 +94,7 @@ enum l_keyword
     k_agedif_marriage_sd,
     k_marriage_eval,
     k_marriage_queues,
+    k_marriage_sample_size,
     k_marriage_after_childbirth,
     k_firstyear,
     k_hettrans,
@@ -763,6 +764,18 @@ int l_process_line(char *line,struct l_context *cx,FILE *fp)
             }
             sprintf(logstring, "marriage_queues : %d\n",
                     marriage_queues);
+            logmsg("%s\n", logstring, 0);
+            return 1;
+            break;
+
+        case k_marriage_sample_size:
+            marriage_sample_size = read_integer(cx, words[1]);
+            if (marriage_sample_size < 0)
+            {
+                stop("marriage_sample_size out of range\n");
+            }
+            sprintf(logstring, "marriage_sample_size : %d\n",
+                    marriage_sample_size);
             logmsg("%s\n", logstring, 0);
             return 1;
             break;
@@ -1491,6 +1504,7 @@ enum l_keyword l_lookup_keyword(char *word) {
         {"agedif_marriage_sd", k_agedif_marriage_sd},
         {"marriage_eval", k_marriage_eval},
         {"marriage_queues", k_marriage_queues},
+        {"marriage_sample_size", k_marriage_sample_size},
         {"marriage_after_childbirth", k_marriage_after_childbirth},
         {"marriage_peak_age", k_marriage_peak_age},
         {"marriage_slope_ratio", k_marriage_slope_ratio},

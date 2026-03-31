@@ -6,6 +6,8 @@
 struct person **mq_w = NULL;
 int mq_count = 0;
 int mq_capacity = 0;
+static int *mq_sample_indices = NULL;
+static int mq_sample_capacity = 0;
 
 struct transit_list
 {
@@ -22,6 +24,8 @@ int check_agedif(struct person *, struct person *);
 void create_working_mqueue(struct person*);
 void destroy_working_mqueue();
 static void ensure_working_mqueue_capacity(int);
+static void ensure_working_sample_capacity(int);
+static int choose_unique_sample_index(int, int);
 
 void add_minor_children(struct person *);
 int check_endogamy(struct person *, struct person *);
@@ -639,6 +643,59 @@ static void ensure_working_mqueue_capacity(int needed)
   mq_capacity = new_capacity;
 }
 
+static void ensure_working_sample_capacity(int needed)
+{
+  if (mq_sample_capacity >= needed)
+  {
+    return;
+  }
+
+  int new_capacity = (mq_sample_capacity == 0) ? 16 : mq_sample_capacity;
+  while (new_capacity < needed)
+  {
+    new_capacity *= 2;
+  }
+
+  int *new_items = (int *)realloc(mq_sample_indices,
+      new_capacity * sizeof(int));
+  if (new_items == NULL)
+  {
+    stop("out of memory growing marriage sample buffer");
+  }
+
+  mq_sample_indices = new_items;
+  mq_sample_capacity = new_capacity;
+}
+
+static int choose_unique_sample_index(int pool_size, int already_selected)
+{
+  int candidate;
+  int duplicate;
+  int index;
+
+  do
+  {
+    candidate = (int)(rrandom() * pool_size);
+    if (candidate >= pool_size)
+    {
+      candidate = pool_size - 1;
+    }
+
+    duplicate = FALSE;
+    for (index = 0; index < already_selected; index++)
+    {
+      if (mq_sample_indices[index] == candidate)
+      {
+        duplicate = TRUE;
+        break;
+      }
+    }
+  }
+  while (duplicate);
+
+  return candidate;
+}
+
 void create_working_mqueue(struct person *p)
 /* called from marriage() just before p->pref() is invoked to find a
    spouse from the current marriage_queue of opposite sex potential
@@ -656,6 +713,7 @@ void create_working_mqueue(struct person *p)
   struct person *current_person;
   double best_score = 0.0;
   double s;
+  int sample_count;
   int i;
   int found_match = FALSE;
 
@@ -669,9 +727,21 @@ void create_working_mqueue(struct person *p)
 
   op = marriage_queue + (1 - p->sex);
   mq_count = op->num;
-  for (i = 0; i < op->num; i++)
+  sample_count = op->num;
+  if (marriage_sample_size > 0 && marriage_sample_size < sample_count)
   {
-    current_person = op->items[i];
+    sample_count = marriage_sample_size;
+    ensure_working_sample_capacity(sample_count);
+    for (i = 0; i < sample_count; i++)
+    {
+      mq_sample_indices[i] = choose_unique_sample_index(op->num, i);
+    }
+  }
+
+  for (i = 0; i < sample_count; i++)
+  {
+    int pool_index = (sample_count == op->num) ? i : mq_sample_indices[i];
+    current_person = op->items[pool_index];
     if (marriage_allowable(p, current_person) != 1)
     {
       continue;

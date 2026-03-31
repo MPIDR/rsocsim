@@ -234,6 +234,7 @@ int main1(int argc, char *argv[])
     endogamy = 0; /* default to random-ogamy */
     marriage_eval = PREFERENCE; /* or PROB*/
     marriage_queues = 2;
+    marriage_sample_size = 1000;
 
     /** marriage_eval ==  PREFERENCE**/
     marriage_peak_age = 36;
@@ -1556,7 +1557,7 @@ void queue_delete( struct person *p, int q_type)
         printf("\n\nError, invalid person, sex = %d\n",p->sex);
         fflush(stdout);
     }
-    if (p->pointer_type[q_type] == PTR_NULL)
+    if (p->pointer_type[EVENT_QUEUE] == PTR_NULL)
     {
         printf("person %d current month %d\n", p->person_id, current_month);
         fflush(stdout);
@@ -1569,20 +1570,20 @@ void queue_delete( struct person *p, int q_type)
        */
 
     p1 = p;
-    while (p1->pointer_type[q_type] != PTR_Q)
+    while (p1->pointer_type[EVENT_QUEUE] != PTR_Q)
     {
         if (q_d_verbose >4)
             printf("in queue_delete: finding node %d\n", p1->person_id);
-        p1 = NEXT_ELEMENT(p1);
+        p1 = p1->NEXT_PERSON;
     }
 
-    e = NEXT_NODE(p1);
+    e = p1->MONTH;
 
     if (q_d_verbose)
     {
         printf("in queue_delete, before deletion: num on queue %d\n", e->num);
         fprintf(fd_log, "before inspect-entry, %d-\n",p1->person_id);
-        inspect_entry(e, q_type, fd_log);
+        inspect_entry(e, EVENT_QUEUE, fd_log);
         printf("gagain queue_delete, before deletion: after inspecting entry\n");
     }
 
@@ -1596,7 +1597,7 @@ void queue_delete( struct person *p, int q_type)
         }
         else
         {
-            e->first = NEXT_ELEMENT(p);
+            e->first = p->NEXT_PERSON;
         }
     }
     else
@@ -1604,29 +1605,29 @@ void queue_delete( struct person *p, int q_type)
         if (q_d_verbose)
             printf("in queue_delete: deleting non-first element\n");
         before = e->first;
-        while (p1 = NEXT_ELEMENT(before),
+        while (p1 = before->NEXT_PERSON,
                 p1->person_id != p->person_id)
         {
             //printf("in queue_delete: looooping!t\n");
             // fflush(stdout);
-            before = NEXT_ELEMENT(before);
+            before = before->NEXT_PERSON;
             if (q_d_verbose>4)
                 printf("in queue_delete: looping is at %d\n", p1->person_id);
         }
         if (q_d_verbose)
             printf("in queue_delete: found before element\n");
-        if (p1->pointer_type[q_type] == PTR_Q)
+        if (p1->pointer_type[EVENT_QUEUE] == PTR_Q)
         {
             if (q_d_verbose)
                 printf("in queue_delete: before element is penult\n");
-            before->pointer_type[q_type] = PTR_Q;
-            SET_NEXT_NODE(before, e);
+            before->pointer_type[EVENT_QUEUE] = PTR_Q;
+            before->MONTH = e;
         }
         else
         {
             if (q_d_verbose)
                 printf("in queue_delete: before element is ordinary\n");
-            SET_NEXT_ELEMENT(before, NEXT_ELEMENT(p));
+            before->NEXT_PERSON = p->NEXT_PERSON;
         }
     }
 
@@ -1634,15 +1635,15 @@ void queue_delete( struct person *p, int q_type)
         perror("bad pointer returned from queue delete");
         printf("peroor - p == Null! ");
     }
-    p->pointer_type[q_type] = PTR_NULL;
-    SET_NEXT_ELEMENT(p, NULL);
+    p->pointer_type[EVENT_QUEUE] = PTR_NULL;
+    p->NEXT_PERSON = NULL;
     e->num--;
 
     if (q_d_verbose)
     {
         printf("in queue_delete, after deletion: num on queue %d\n", e->num);
         printf("in queue_delete, after deletion: inspecting entry\n");
-        inspect_entry(e, q_type, fd_log);
+        inspect_entry(e, EVENT_QUEUE, fd_log);
     }
 }
 
@@ -2796,6 +2797,7 @@ void print_segment_info(FILE *fd)
     fprintf(fd, "\n\n - - - - - - - - - - - - - - - - - - - - - -  - - - - - \n\n");
     fprintf(fd, "Segment NO:\t%d of %d set to run with following macro options\n", current_segment, num_segments);
     fprintf(fd, "Duration: %d\n", duration_of_segment);
+    fprintf(fd, "Marriage sample size: %d\n", marriage_sample_size);
 
     fprintf(fd, "\n-- I/O options --\n");
     fprintf(fd, "Input pop file name\t%s\n", pop_file_name);

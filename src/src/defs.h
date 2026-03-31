@@ -464,6 +464,7 @@ float agedif_marriage_mean[MAXGROUPS];
 float agedif_marriage_sd[MAXGROUPS];
 int marriage_eval;
 int marriage_queues;
+int marriage_sample_size;
 
 int last_kt_index[MAXGROUPS][NUMSEXES];
 int current_kt_index[MAXGROUPS][NUMSEXES];
