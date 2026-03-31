@@ -4,6 +4,10 @@
 
 - improved marriage queue:
   - array based index
+  - 1.9.2: for performance, one can now sample n males instead of all
+    males from the marriage queue
+    - default marriage_sample_size = 1000 \*change in sup-file with the
+      keyword “marriage_sample_size 2000”
 
 ## rsocsim 1.8.5 (March 2026)
 
