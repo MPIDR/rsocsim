@@ -674,7 +674,8 @@ void create_working_mqueue(struct person *p)
     first to check whether it improves performance: the 500 first
   */
 
-  while ((mq_count-- > 0) && (mq_w == NULL) && (i < 5000))
+  while ((mq_count-- > 0) && (mq_w == NULL) && (i < 5000) &&
+         (current_person != NULL))
   {
     i++;
     if (marriage_allowable(p, current_person) == 1)
@@ -686,6 +687,25 @@ void create_working_mqueue(struct person *p)
     }
     /* current_person gets incremented even if the lucky winner
 	 has been found  reflected in i=2 in next loop*/
+    current_person = current_person->NEXT_ON_MQUEUE;
+  }
+
+  /* If the first 5000 candidates yield no allowable spouse, keep
+     scanning the rest of the queue in order until we either seed the
+     working queue or exhaust the queue. This preserves the original
+     traversal order and avoids dereferencing mq_max when no allowable
+     candidate was found early. */
+  while ((mq_count-- > 0) && (mq_w == NULL) && (i < 3000000) &&
+         (current_person != NULL))
+  {
+    i++;
+    if (marriage_allowable(p, current_person) == 1)
+    {
+      mq_w = NEW(struct mqueue_w);
+      mq_w->mq_person = current_person;
+      mq_w->score = (*(p->score))(p, current_person);
+      mq_w->next = NULL;
+    }
     current_person = current_person->NEXT_ON_MQUEUE;
   }
 
@@ -713,7 +733,8 @@ void create_working_mqueue(struct person *p)
 	   mq_count);
 	   }*/
   /*for (i = 2; i <= mq_count; i++) {*/
-  while ((mq_count-- > 0) && (i<3000000))
+  while ((mq_count-- > 0) && (i<3000000) && (mq_max != NULL) &&
+         (current_person != NULL))
   {
     i++;
     if ((s = (*(p->score))(p, current_person)) >= mq_max->score)
@@ -844,6 +865,23 @@ int marriage_allowable(struct person *p1,struct person *p2)
       this gets called also from random_father to disallow
       particularly loathsome matings.
   **/
+
+  /* Absolute minimum age check: reject if a male partner is younger
+     than random_father_min_age (default 15 years). This prevents
+     implausibly young males from becoming husbands/fathers through
+     any pathway (marriage, cohabitation, marriage_after_childbirth).
+     Only applied when at least one partner is male. */
+  if (p1->sex == MALE || p2->sex == MALE)
+  {
+    struct person *male = (p1->sex == MALE) ? p1 : p2;
+    int male_age_months = current_month - male->birthdate;
+    if (male_age_months < 0 || male_age_months / 12 < random_father_min_age)
+    {
+      return (0);
+    }
+  }
+
+
 
   /*insert possible overall enhancement hook this can pre-empt all other checks*/
 #ifdef ENHANCED
