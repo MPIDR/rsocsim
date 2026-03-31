@@ -185,13 +185,19 @@ int main1(int argc, char *argv[])
     for (e = event_queue, i = 0; i < MAXUMONTHS; e++, i++)
     {
         e->first = NULL;
+        e->last = NULL;
         e->num = 0;
+        e->items = NULL;
+        e->capacity = 0;
     }
 
     for (q = marriage_queue, i = MALE; i <= FEMALE; q++, i++)
     {
         q->first = NULL;
+        q->last = NULL;
         q->num = 0;
+        q->items = NULL;
+        q->capacity = 0;
     }
 
     for (i = 0; i < MAXGROUPS; i++)
@@ -1350,6 +1356,30 @@ void install_in_orderNOTWRONGBUTSLOW(struct person *p, struct queue_element *e, 
     }
 }
 /******************************************/
+static void ensure_marriage_queue_capacity(struct queue_element *e, int needed)
+{
+    if (e->capacity >= needed)
+    {
+        return;
+    }
+
+    int new_capacity = (e->capacity == 0) ? 16 : e->capacity;
+    while (new_capacity < needed)
+    {
+        new_capacity *= 2;
+    }
+
+    struct person **new_items = (struct person **)realloc(e->items,
+            new_capacity * sizeof(struct person *));
+    if (new_items == NULL)
+    {
+        stop("out of memory growing marriage queue");
+    }
+
+    e->items = new_items;
+    e->capacity = new_capacity;
+}
+
 void install_in_order(struct person *p, struct queue_element *e, int q_type)
     /** installs people onto the queue in person_id order **/
     /** 1/13/14 EXCEPT THAT IT DOESN't this replaces Marcia's old
@@ -1357,6 +1387,22 @@ void install_in_order(struct person *p, struct queue_element *e, int q_type)
       and is much faster  **/
 
 {
+    if (q_type == MARRIAGE_QUEUE)
+    {
+        if (ON_MARRIAGE_QUEUE(p))
+        {
+            return;
+        }
+
+        ensure_marriage_queue_capacity(e, e->num + 1);
+        e->items[e->num] = p;
+        p->marriage_queue_index = e->num;
+        p->pointer_type[MARRIAGE_QUEUE] = PTR_Q;
+        p->NEXT_ON_MQUEUE = NULL;
+        e->num++;
+        return;
+    }
+
     // struct person *after, *before;
 
     /* printf("trying to install %d\n", p->person_id); */
@@ -1429,6 +1475,17 @@ void inspect_entry(struct queue_element *e, int q_type, FILE *fd)
     {
         fprintf(fd, "number on queue %d--in id: group format\n", e->num);
 
+        if (q_type == MARRIAGE_QUEUE)
+        {
+            for (i = 0; i < e->num; i++)
+            {
+                p = e->items[i];
+                fprintf(fd, " z%d-%d : %d\t", i + 1, p->person_id, p->group);
+            }
+            fprintf(fd, "\ncurrent i %d\n\n", e->num);
+            return;
+        }
+
         for (p = e->first, i = 1; i < e->num; i++)
         {
             // p = ((q_type) == 0)? (p)->u_event_queue.next_person: (p)->u_marriage_queue.next_on_mqueue;
@@ -1461,6 +1518,37 @@ void queue_delete( struct person *p, int q_type)
     {
         printf("deleting person %d from q type %d on %d\n",
                 p->person_id, q_type, current_month);
+    }
+
+    if (q_type == MARRIAGE_QUEUE)
+    {
+        if (!ON_MARRIAGE_QUEUE(p))
+        {
+            return;
+        }
+
+        e = marriage_queue + p->sex;
+        int index = p->marriage_queue_index;
+        int last_index = e->num - 1;
+
+        if (index < 0 || index > last_index)
+        {
+            stop("invalid marriage queue index");
+        }
+
+        if (index != last_index)
+        {
+            struct person *moved = e->items[last_index];
+            e->items[index] = moved;
+            moved->marriage_queue_index = index;
+        }
+
+        e->items[last_index] = NULL;
+        e->num--;
+        p->marriage_queue_index = -1;
+        p->pointer_type[MARRIAGE_QUEUE] = PTR_NULL;
+        p->NEXT_ON_MQUEUE = NULL;
+        return;
     }
 
     // detect undefined person by testing wether the sex is valid:
@@ -1997,7 +2085,7 @@ int date_and_event(struct person *p)
        Going to change this for the one queue marriage plan
        */
     /*  if ((p->NEXT_ON_MQUEUE == NULL) &&*/
-    if ((p->NEXT_ON_MQUEUE == NULL || marriage_queues == 1) &&
+    if ((!ON_MARRIAGE_QUEUE(p) || marriage_queues == 1) &&
             (rate_set[p->group][E_MARRIAGE][p->sex][p->mstatus] != NULL))
     {
         /*
@@ -2358,11 +2446,12 @@ void initialize_segment_vars()
 
         for (q = marriage_queue, i = MALE; i <= FEMALE; q++, i++)
         {
-            while (q->first != NULL)
+            while (q->num > 0)
             {
-                queue_delete(q->first, MARRIAGE_QUEUE);
+                queue_delete(q->items[q->num - 1], MARRIAGE_QUEUE);
             }
             q->first = NULL;
+            q->last = NULL;
             q->num = 0;
         }
     }

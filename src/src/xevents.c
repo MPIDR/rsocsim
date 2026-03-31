@@ -3,15 +3,9 @@
 #include <math.h>
 #include <stdlib.h>
 
-struct mqueue_w
-{
-  struct person *mq_person;
-  double score;
-  struct mqueue_w *next;
-};
-
-struct mqueue_w *mq_w = NULL;
+struct person **mq_w = NULL;
 int mq_count = 0;
+int mq_capacity = 0;
 
 struct transit_list
 {
@@ -27,6 +21,7 @@ int marriage_allowable(struct person *,struct person *);
 int check_agedif(struct person *, struct person *);
 void create_working_mqueue(struct person*);
 void destroy_working_mqueue();
+static void ensure_working_mqueue_capacity(int);
 
 void add_minor_children(struct person *);
 int check_endogamy(struct person *, struct person *);
@@ -125,6 +120,7 @@ void birth(struct person *p)
     child->fmult = 0;
   }
   child->pointer_type[MARRIAGE_QUEUE] = PTR_NULL;
+  child->marriage_queue_index = -1;
   child->NEXT_ON_MQUEUE = NULL;
   child->pref = random_spouse2;
 
@@ -192,7 +188,7 @@ void death(struct person *p)
   size_of_pop[0]--;
   size_of_pop[p->group]--;
   p->deathdate = current_month;
-  if (p->NEXT_ON_MQUEUE != NULL)
+  if (ON_MARRIAGE_QUEUE(p))
   {
     /* delete dead person from marriage queue */
     queue_delete(p, MARRIAGE_QUEUE);
@@ -414,7 +410,7 @@ void marriage(struct person *p)
     {
       /* spouse not found Add person to marriage queue */
 
-      if (p->NEXT_ON_MQUEUE == NULL)
+      if (!ON_MARRIAGE_QUEUE(p))
       {
         /* a person having a failed marriage attempt *might* already
 	       be on the queue in which case we don't do it again*/
@@ -585,7 +581,6 @@ struct person * random_spouse2( struct person *p)
      marriage_allowable() spouses SO this only needs to choose a random 
      spouse from among the optimal*/
 
-  struct mqueue_w *mq;
   struct person *spouse;
   int nth;
 
@@ -605,23 +600,14 @@ struct person * random_spouse2( struct person *p)
     /* only one person in marriage queue if not rejectable accept*/
     /*if (marriage_allowable(p, mq_w->mq_person)==1)  
 	all on the mq_w are vetted and optimal*/
-    return mq_w->mq_person;
+    return mq_w[0];
   }
 
   if (mq_count > 0)
   {
-
-    mq = mq_w;
-
     /* choose a random nth on the queue */
     nth = (int)((rrandom()-0.0000001) * mq_count);
-
-    /* count to random n*/
-    while (--nth >= 0)
-    {
-      mq = mq->next;
-    }
-    spouse = mq->mq_person;
+    spouse = mq_w[nth];
   }
 
   return spouse;
@@ -629,26 +615,51 @@ struct person * random_spouse2( struct person *p)
 
 /**********************************/
 
+static void ensure_working_mqueue_capacity(int needed)
+{
+  if (mq_capacity >= needed)
+  {
+    return;
+  }
+
+  int new_capacity = (mq_capacity == 0) ? 16 : mq_capacity;
+  while (new_capacity < needed)
+  {
+    new_capacity *= 2;
+  }
+
+  struct person **new_items = (struct person **)realloc(mq_w,
+      new_capacity * sizeof(struct person *));
+  if (new_items == NULL)
+  {
+    stop("out of memory growing working marriage queue");
+  }
+
+  mq_w = new_items;
+  mq_capacity = new_capacity;
+}
+
 void create_working_mqueue(struct person *p)
 /* called from marriage() just before p->pref() is invoked to find a
    spouse from the current marriage_queue of opposite sex potential
-   spouses. This creates a linked list, called mq_w which is a GLOBAL
-   variable containing a link list of potential marriage partners who
-   HAVE BEEN SCREENED by marriage_allowable() AND who have the maximum
-   scores from p->score() (typically score3)
+   spouses. This creates a GLOBAL array of potential marriage partners
+   who HAVE BEEN SCREENED by marriage_allowable() AND who have the
+   maximum scores from p->score() (typically score3)
    
    So p is indifferent between ALL who are on the working_queue.
    
-   destroy_working_queue must be called to break down
-   mq_w after it has served its purpose */
+  destroy_working_queue must be called to reset mq_w after it has
+  served its purpose */
 
 {
-
   struct queue_element *op;
-  struct mqueue_w *mq, *mq0, *mq_max;
   struct person *current_person;
+  double best_score = 0.0;
   double s;
   int i;
+  int found_match = FALSE;
+
+  mq_count = 0;
   i=0;
   /* create "working" mqueue */
 
@@ -658,139 +669,31 @@ void create_working_mqueue(struct person *p)
 
   op = marriage_queue + (1 - p->sex);
   mq_count = op->num;
-  current_person = op->first;
-
-  /* inspect the marriage_queue until a potential spouse who passes
-    the incest tests in marriage_allowable() function is found. Then
-    malloc a queue element and make that the head of the working
-    marriage queue mq_w This used to disallow negative scoring spouses
-    but not any more 
-    Thu May 13 11:59:27 PDT 2010 if ((s =(*(p->score))(p, current_person)) >= 0) {
-    */
-
-   /* 
-    tomt: this degrades the performance by a lot. In bigg populations, most of the time is spent here.
-    change: do not check all males on the marriage-queue, but only a random block of maybe 1000 males.
-    first to check whether it improves performance: the 500 first
-  */
-
-  while ((mq_count-- > 0) && (mq_w == NULL) && (i < 5000) &&
-         (current_person != NULL))
+  for (i = 0; i < op->num; i++)
   {
-    i++;
-    if (marriage_allowable(p, current_person) == 1)
+    current_person = op->items[i];
+    if (marriage_allowable(p, current_person) != 1)
     {
-      mq_w = NEW(struct mqueue_w);
-      mq_w->mq_person = current_person;
-      mq_w->score = (*(p->score))(p, current_person);
-      mq_w->next = NULL;
+      continue;
     }
-    /* current_person gets incremented even if the lucky winner
-	 has been found  reflected in i=2 in next loop*/
-    current_person = current_person->NEXT_ON_MQUEUE;
-  }
 
-  /* If the first 5000 candidates yield no allowable spouse, keep
-     scanning the rest of the queue in order until we either seed the
-     working queue or exhaust the queue. This preserves the original
-     traversal order and avoids dereferencing mq_max when no allowable
-     candidate was found early. */
-  while ((mq_count-- > 0) && (mq_w == NULL) && (i < 3000000) &&
-         (current_person != NULL))
-  {
-    i++;
-    if (marriage_allowable(p, current_person) == 1)
+    s = (*(p->score))(p, current_person);
+    if (!found_match || s > best_score)
     {
-      mq_w = NEW(struct mqueue_w);
-      mq_w->mq_person = current_person;
-      mq_w->score = (*(p->score))(p, current_person);
-      mq_w->next = NULL;
+      ensure_working_mqueue_capacity(1);
+      mq_w[0] = current_person;
+      mq_count = 1;
+      best_score = s;
+      found_match = TRUE;
+      continue;
     }
-    current_person = current_person->NEXT_ON_MQUEUE;
-  }
 
-  mq0 = mq_w;
-  mq_max = mq_w;
-
-  /** march through the rest of the marriage queue of potential
-	spouses getting a score for each from the p->score() function;
-
-	If a score is >= max  verify  compatibility and skip
-	it if the new potential spouse is not marriage_allowable(). HOWEVER
-	if the the new potential mate has a score equal to or > the
-	current max, it goes on working queue. If the new pot-mate
-	has a lower score than current max, then skip it.  Also make
-	mq_max point to the new element if it's score justifies
-	it **/
-
-  /*
-    printf("Ego age:%d\n",(current_month-p->birthdate)/12);
-    if(mq_max != NULL){
-    printf("First queuester id:%d age: %d score:%lf mq_count:%d\n",
-	   mq_max->mq_person->person_id,
-	   mq_max->score,
-	   (current_month-mq_max->mq_person->birthdate)/12,
-	   mq_count);
-	   }*/
-  /*for (i = 2; i <= mq_count; i++) {*/
-  while ((mq_count-- > 0) && (i<3000000) && (mq_max != NULL) &&
-         (current_person != NULL))
-  {
-    i++;
-    if ((s = (*(p->score))(p, current_person)) >= mq_max->score)
+    if (s == best_score)
     {
-      /*printf("good s:%lf\n",s);*/
-      /* current score is at least as good as  mq_max */
-      if (marriage_allowable(p, current_person) == 1)
-      {
-        /** and marriage is allowable **/
-        mq = NEW(struct mqueue_w);
-        mq->mq_person = current_person;
-        mq->score = s;
-        /*printf("adding qster w score:%lf\n",s);*/
-        if (s > mq_max->score)
-        {
-          mq_max = mq;
-        }
-        mq->next = NULL;
-        mq0->next = mq;
-        mq0 = mq;
-      }
+      ensure_working_mqueue_capacity(mq_count + 1);
+      mq_w[mq_count] = current_person;
+      mq_count++;
     }
-    /*else{
-	printf("not adding qster w/ s: %lf \n", s);
-	}	*/
-    current_person = current_person->NEXT_ON_MQUEUE;
-  }
-
-  /** rejigger the working queue so that it hold ONLY people with
-	score=max are on it.  This means deleting all links above
-	mq_max since mq_max and all links below it in the list have
-	max score**/
-
-  if (mq_max != NULL)
-  {
-
-    /* this depends on mq_w being sorted in ascending score order -which
-	 should be the case b/c only better suitors are added to the queue*/
-    mq0 = mq_w;
-    while ((mq0 = mq_w) != mq_max)
-    {
-      mq_w = mq0->next;
-      /* */ free(mq0);
-    }
-  }
-  /* fix up count */
-  mq_count = 0;
-  mq0 = mq_w;
-  while (mq0 != NULL)
-  {
-    /*printf("%d) age:%d  scr:%lf\n",
-	     mq_count,
-	     (current_month-mq0->mq_person->birthdate)/12,
-	     mq0->score);*/
-    mq0 = mq0->next;
-    mq_count++;
   }
 
   /*    
@@ -807,22 +710,7 @@ void create_working_mqueue(struct person *p)
 
 void destroy_working_mqueue()
 {
-
-  struct mqueue_w *mq, *mq2;
-
-  /* get rid of "working" mqueue */
-  mq = mq_w;
-
-  while (mq != NULL)
-  {
-    mq2 = mq;
-    mq = mq->next;
-    free(mq2);
-  }
-  /*
-    */
-
-  mq_w = NULL;
+  /* keep allocated storage for reuse across searches */
   mq_count = 0;
 }
 
@@ -836,16 +724,12 @@ struct person * random_spouse(struct person *p)
   if (op->num != 0)
   {
     int nth;
-    spouse = op->first;
-    nth = 1;
+    nth = 0;
     if (op->num > 1)
     {
       nth = (int)(rrandom() * op->num);
-      while (--nth >= 0)
-      {
-        spouse = spouse->NEXT_ON_MQUEUE;
-      }
     }
+    spouse = op->items[nth];
   }
   else
   {
@@ -1373,7 +1257,7 @@ void transit(struct person *q)
 	    */
 
       /* if on mqueue, take off; get new event */
-      if (p->NEXT_ON_MQUEUE != NULL)
+      if (ON_MARRIAGE_QUEUE(p))
       {
         /*
 		printf("transit:deleting %d marriage queue\n", p->person_id);

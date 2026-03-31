@@ -557,6 +557,8 @@ struct queue_element
 {
   int num;
   struct person *first, *last; /*last is experimental 1/2014*/
+  struct person **items;
+  int capacity;
 };
 
 struct queue_element event_queue[MAXUMONTHS];
@@ -586,6 +588,7 @@ struct person
   struct person *(*pref)(person*);
   double (*score)(struct person*, struct person*);
   int pointer_type[2];
+  int marriage_queue_index;
   union {
     struct person *next_on_mqueue;
     struct queue_element *mqueue;
@@ -683,6 +686,8 @@ struct extra_data
 #define PTR_NULL 0
 #define PTR_N 1
 #define PTR_Q 2
+
+#define ON_MARRIAGE_QUEUE(p) ((p)->pointer_type[MARRIAGE_QUEUE] != PTR_NULL)
 
 /* debugging hooks for some experiments */
 

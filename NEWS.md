@@ -1,5 +1,13 @@
+# rsocsim 1.9 (March/April 2026)
+ * improved marriage queue:
+   * array based index
+
+# rsocsim 1.8.5 (March 2026)
+ * added a working minimum age check for husbands, defaults to 15 years. Didn't always work before
+
 # rsocsim 1.8 (Jan 2026)
  * added end2end tests as a preparation for some improvements to the C code
+
 
 # rsocsim 1.7.4 (Dec 5 2025)
  * added parameter presim_duration_months to download_rates
