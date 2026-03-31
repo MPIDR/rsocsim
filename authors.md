@@ -15,16 +15,14 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/MPIDR/rsocsim/blob/1.7.4/DESCRIPTION)
+[`inst/CITATION`](https://github.com/MPIDR/rsocsim/blob/main/inst/CITATION)
 
-Theile T, Alburez-Gutierrez D, Snyder M, Calderón-Bernal L (2025).
-*rsocsim: SOCSIM with R*. R package version 1.7.4,
-<https://github.com/MPIDR/rsocsim>.
+Theile, T., Alburez-Gutierrez, D., Snyder, M., & Calderón-Bernal, L. P.
+(2023). rsocsim: SOCSIM with R. https://github.com/MPIDR/rsocsim
 
     @Manual{,
       title = {rsocsim: SOCSIM with R},
       author = {Tom Theile and Diego Alburez-Gutierrez and Mallika Snyder and Liliana P. Calderón-Bernal},
-      year = {2025},
-      note = {R package version 1.7.4},
+      year = {2026},
       url = {https://github.com/MPIDR/rsocsim},
     }

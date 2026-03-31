@@ -25,7 +25,7 @@ Github](https://github.com/MPIDR/rsocsim/releases): Currently, you can
 use
 [rsocsim_1.5.9.tgz](https://github.com/MPIDR/rsocsim/releases/download/v1.5.9/rsocsim_1.5.9.tgz)
 for Mac and
-[rsocsim_1.7.3.zip](https://github.com/MPIDR/rsocsim/releases/download/1.7.3/rsocsim_1.7.3.zip)
+[rsocsim_1.8.5.zip](https://github.com/MPIDR/rsocsim/releases/download/1.8.5/rsocsim_win_1.8.5.zip)
 for Windows.
 
 Then execute the following line in R and choose the downloaded file:
@@ -209,8 +209,7 @@ compiler gods.
     <doi:10.1098/rstb.1997.0166>.
 
 3.  Mason, Carl. (2016). Socsim Oversimplified. Accesed on 24 Feb 2023
-    from:
-    <https://lab.demog.berkeley.edu/socsim/CurrentDocs/socsimOversimplified.pdf>
+    from: <https://doi.org/10.7910/DVN/JOCRUR>
 
 4.  Alburez‐Gutierrez, D., Mason, C., and Zagheni, E. (2021). The
     “Sandwich Generation” Revisited: Global Demographic Drivers of Care
