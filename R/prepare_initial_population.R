@@ -23,7 +23,7 @@ create_initial_population <- function(folder, size_opop = 20000, output_base = "
   output_file_omar <- file.path(folder, paste0(output_base, ".omar"))
   
   # Create data.frame with 14 columns and nrows = size_opop
-  presim_opop <- setNames(
+  presim_opop <- stats::setNames(
     data.frame(matrix(data = 0, ncol = 14, nrow = size_opop)),
     c("pid", "fem", "group", "nev", "dob", "mom", "pop",
       "nesibm", "nesibp", "lborn", "marid", "mstat", "dod", "fmult")

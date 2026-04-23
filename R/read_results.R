@@ -48,7 +48,7 @@ read_omar <- function(folder=NULL, supfile="socsim.sup",seed=42,suffix="",fn=NUL
     )
     return(omar)
   }
-  omar<-read.table(file = fn, header = F, as.is = T)
+  omar <- utils::read.table(file = fn, header = FALSE, as.is = TRUE)
   names(omar)<-c("mid","wpid","hpid","dstart","dend", "rend","wprior","hprior")
   return(omar)
 }
@@ -101,7 +101,7 @@ read_opop <- function(folder=NULL, supfile="socsim.sup",seed=42,suffix="",fn=NUL
   }
   
   print(paste0("read population file: ",fn))
-  opop <- read.table(file=fn,header=F,as.is=T)  
+  opop <- utils::read.table(file = fn, header = FALSE, as.is = TRUE)
   ## assign names to columns
   names(opop)<-c("pid","fem","group",
                  "nev","dob","mom","pop","nesibm","nesibp",

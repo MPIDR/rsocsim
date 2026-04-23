@@ -21,5 +21,5 @@ A string. The full path to the simulation-specific directory.
 Create a two-level directory structure. If the first-level argument is NULL,
 we look for and, if needed, created the directory 'socsim' in the user's
 home directory. If the second-level argument is NULL, we create a directory
-named 'socsim_sim_{some random component}' in the first-level directory.
+named like 'socsim_sim_\if{html}{\out{<random component>}}' in the first-level directory.
 }

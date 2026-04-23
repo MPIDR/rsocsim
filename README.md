@@ -5,8 +5,7 @@
 Socsim ('Social Simulator') is an open source stochastic microsimulation platform used to produce synthetic populations with plausible kinship structures using demographic rates as input.
 We stand on the shoulders of giants: Socsim was originally developed for Unix at UC Berkeley [1-2], where it has been mantained for decades. The current release of `rsocsim` aims to be OS-agnostic and, for the most part, back-compatible with the original Socsim distribution (https://lab.demog.berkeley.edu/socsim/).
 
-`rsocsim` is still under development. You might find some bugs or unexpected behavior, the API might change without warnings in the next weeks.
-If you encounter an error or bug, we are happy to hear from you in the issues.
+`rsocsim` is under active development. Please report bugs or unexpected behavior in the issue tracker.
 
 ## Installation
 

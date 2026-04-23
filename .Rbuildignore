@@ -4,3 +4,13 @@
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
+^CITATION\.cff$
+^LICENSE\.md$
+^architecture\.md$
+^development\.md$
+^future_documentation\.md$
+^random_number$
+^socsimOversimplified\.pdf$
+^socsim_oversimplified\.md$
+^socsim_simplified2\.md$
+^tests/testthat/tests($|/)
