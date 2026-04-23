@@ -282,7 +282,7 @@ census_socsim <- function(df, year, final_sim_year, age_levels_census) {
     count(sex, age_at_census, census) %>% 
     mutate(sex = factor(sex, levels = c("0","1")),
            age_at_census = factor(age_at_census, levels = age_levels_census)) %>%
-    complete(sex, age_at_census, census, fill = list(n = 0))
+    tidyr::complete(sex, age_at_census, census, fill = list(n = 0))
   
   return(out)
 }
