@@ -83,6 +83,7 @@ void initialize_person(struct person *pnew) {
   pnew->tmult = 1.0;
   pnew->down = NULL;
   pnew->marriage_queue_index = -1;
+  pnew->event_queue_index = -1;
   pnew->extra = NULL;
   pnew->ltrans = NULL;
 }
@@ -557,6 +558,7 @@ void fix_pop_pointers()
 
     p->pointer_type[MARRIAGE_QUEUE] = PTR_NULL;
     p->marriage_queue_index = -1;
+    p->event_queue_index = -1;
     p->pref = random_spouse2;
     p->score = score3;
 #ifdef ENHANCED

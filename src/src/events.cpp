@@ -1023,19 +1023,9 @@ int process_month()
         /*
            inspect_entry(e, EVENT_QUEUE);
            */
-        p = e->first;
-        nth = 1;
+        nth = 0;
         if (e->num > 1)
         {
-            /* nth can be viewed as the number of times
-               to advance the pointer, with a max of 
-               nth - 1 
-               */
-
-            /*
-               printf("queue\n");
-               printf ("got this nth from the draw %d\n", nth);
-               */
             //here was the error (possibly related to the different random number generation on windows and linux)
             double rr = rrandom(); // without this: segfault on windows,
                                    // because sometimes nth ==e->num and the loop will go one person too far
@@ -1045,11 +1035,8 @@ int process_month()
                 printf("\nError!? nth==e->num, %d; person p will be undefined.\n",nth);
                 fflush(stdout);
             }
-            while (--nth >= 0)
-            {
-                p = p->NEXT_PERSON;
-            }
         }
+        p = e->items[nth];
         //logmsg("|pm1|", "", 1);
 
         //printf ("3.2process month %d\n", "");
@@ -1381,6 +1368,30 @@ static void ensure_marriage_queue_capacity(struct queue_element *e, int needed)
     e->capacity = new_capacity;
 }
 
+static void ensure_event_queue_capacity(struct queue_element *e, int needed)
+{
+    if (e->capacity >= needed)
+    {
+        return;
+    }
+
+    int new_capacity = (e->capacity == 0) ? 16 : e->capacity;
+    while (new_capacity < needed)
+    {
+        new_capacity *= 2;
+    }
+
+    struct person **new_items = (struct person **)realloc(e->items,
+            new_capacity * sizeof(struct person *));
+    if (new_items == NULL)
+    {
+        stop("out of memory growing event queue");
+    }
+
+    e->items = new_items;
+    e->capacity = new_capacity;
+}
+
 void install_in_order(struct person *p, struct queue_element *e, int q_type)
     /** installs people onto the queue in person_id order **/
     /** 1/13/14 EXCEPT THAT IT DOESN't this replaces Marcia's old
@@ -1408,24 +1419,13 @@ void install_in_order(struct person *p, struct queue_element *e, int q_type)
 
     /* printf("trying to install %d\n", p->person_id); */
 
-    if (e->first == NULL)
-    {
-        /*No one in queue yet*/
-        e->num++;
-        e->first = p;
-        e->last = p;
-        p->pointer_type[q_type] = PTR_Q;
-        SET_NEXT_NODE(p, e);
-        /* printf("at head\n"); */
-        return;
-    }
-    /**  let's not bother with pid ordering; the queue exists and p
-      joins as first member**/
+    ensure_event_queue_capacity(e, e->num + 1);
+    e->items[e->num] = p;
+    p->event_queue_index = e->num;
+    p->MONTH = e;
+    p->pointer_type[EVENT_QUEUE] = PTR_Q;
+    p->NEXT_PERSON = NULL;
     e->num++;
-    p->pointer_type[q_type] = PTR_N;
-    SET_NEXT_ELEMENT(p, e->first);
-    e->first = p;
-    /* printf("at head, non-null\n"); */
     return;
 }
 /****************************/
@@ -1440,13 +1440,12 @@ void dump_queue()
         if (e->num)
         {
             printf("month entry %d\n", i);
-            for (p = e->first, j = 1; j < e->num; p = p->NEXT_PERSON, j++)
+            for (j = 0; j < e->num; j++)
             {
+                p = e->items[j];
                 printf("      id %d age %d mult %f\n",
                         p->person_id, (current_month - p->birthdate), p->fmult);
             }
-            printf("      id %d age %d mult %f\n",
-                    p->person_id, (current_month - p->birthdate), p->fmult);
         }
     }
 }
@@ -1487,21 +1486,13 @@ void inspect_entry(struct queue_element *e, int q_type, FILE *fd)
             return;
         }
 
-        for (p = e->first, i = 1; i < e->num; i++)
+        for (i = 0; i < e->num; i++)
         {
-            // p = ((q_type) == 0)? (p)->u_event_queue.next_person: (p)->u_marriage_queue.next_on_mqueue;
-            if(q_type==0){
-                p = p->u_event_queue.next_person;
-            } else {
-                p = p->u_marriage_queue.next_on_mqueue;
-            }
-
-            fprintf(fd, " z%d-%d : %d\t", i,p->person_id, p->group);
+            p = e->items[i];
+            fprintf(fd, " z%d-%d : %d\t", i + 1, p->person_id, p->group);
         }
 
-        fprintf(fd, "%d : %d\n", p->person_id, p->group);
-
-        fprintf(fd, "current i %d\n", i);
+        fprintf(fd, "\ncurrent i %d\n", e->num);
 
         //fflush(stdout);
     }
@@ -1510,7 +1501,6 @@ void inspect_entry(struct queue_element *e, int q_type, FILE *fd)
 
 void queue_delete( struct person *p, int q_type)
 {
-    struct person *before, *p1;
     struct queue_element *e;
     int q_d_verbose = 0;
     /*    if(current_segment >=2) q_d_verbose=1; */
@@ -1557,87 +1547,43 @@ void queue_delete( struct person *p, int q_type)
         printf("\n\nError, invalid person, sex = %d\n",p->sex);
         fflush(stdout);
     }
-    if (p->pointer_type[EVENT_QUEUE] == PTR_NULL)
+    if (!ON_EVENT_QUEUE(p))
     {
         printf("person %d current month %d\n", p->person_id, current_month);
         fflush(stdout);
-        perror("trying to delete something with a null queue ptr\n");
+        perror("trying to delete something not on event queue\n");
+        return;
     }
 
-    /*
-       if (NEXT_ELEMENT(p) == NULL) 
-       perror("trying to delete something with a null next ptr\n");
-       */
-
-    p1 = p;
-    while (p1->pointer_type[EVENT_QUEUE] != PTR_Q)
-    {
-        if (q_d_verbose >4)
-            printf("in queue_delete: finding node %d\n", p1->person_id);
-        p1 = p1->NEXT_PERSON;
-    }
-
-    e = p1->MONTH;
+    e = p->MONTH;
+    int index = p->event_queue_index;
+    int last_index = e->num - 1;
 
     if (q_d_verbose)
     {
         printf("in queue_delete, before deletion: num on queue %d\n", e->num);
-        fprintf(fd_log, "before inspect-entry, %d-\n",p1->person_id);
+        fprintf(fd_log, "before inspect-entry, %d-\n", p->person_id);
         inspect_entry(e, EVENT_QUEUE, fd_log);
         printf("gagain queue_delete, before deletion: after inspecting entry\n");
     }
 
-    if (e->first == p)
+    if (index < 0 || index > last_index)
     {
-        if (q_d_verbose)
-            printf("in queue_delete: deleting first element\n");
-        if (e->num == 1)
-        {
-            e->first = NULL;
-        }
-        else
-        {
-            e->first = p->NEXT_PERSON;
-        }
-    }
-    else
-    {
-        if (q_d_verbose)
-            printf("in queue_delete: deleting non-first element\n");
-        before = e->first;
-        while (p1 = before->NEXT_PERSON,
-                p1->person_id != p->person_id)
-        {
-            //printf("in queue_delete: looooping!t\n");
-            // fflush(stdout);
-            before = before->NEXT_PERSON;
-            if (q_d_verbose>4)
-                printf("in queue_delete: looping is at %d\n", p1->person_id);
-        }
-        if (q_d_verbose)
-            printf("in queue_delete: found before element\n");
-        if (p1->pointer_type[EVENT_QUEUE] == PTR_Q)
-        {
-            if (q_d_verbose)
-                printf("in queue_delete: before element is penult\n");
-            before->pointer_type[EVENT_QUEUE] = PTR_Q;
-            before->MONTH = e;
-        }
-        else
-        {
-            if (q_d_verbose)
-                printf("in queue_delete: before element is ordinary\n");
-            before->NEXT_PERSON = p->NEXT_PERSON;
-        }
+        stop("invalid event queue index");
     }
 
-    if (p == NULL){
-        perror("bad pointer returned from queue delete");
-        printf("peroor - p == Null! ");
+    if (index != last_index)
+    {
+        struct person *moved = e->items[last_index];
+        e->items[index] = moved;
+        moved->event_queue_index = index;
     }
+
+    e->items[last_index] = NULL;
+    e->num--;
+    p->event_queue_index = -1;
     p->pointer_type[EVENT_QUEUE] = PTR_NULL;
     p->NEXT_PERSON = NULL;
-    e->num--;
 
     if (q_d_verbose)
     {
@@ -2433,11 +2379,10 @@ void initialize_segment_vars()
             while (e->num)
             {
                 /*
-                   printf("deleting %d\n", e->first->person_id);
+                   printf("deleting %d\\n\", e->items[0]->person_id);
                    */
-                queue_delete(e->first, EVENT_QUEUE);
+                queue_delete(e->items[0], EVENT_QUEUE);
             }
-            e->first = NULL;
             e->num = 0;
         }
 

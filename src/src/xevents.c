@@ -1557,7 +1557,6 @@ struct person * find_random_father(struct person *child)
     /* e = event_queue + month;*/
     e = event_queue + (tries % MAXUMONTHS);
     nth = e->num;
-    p = e->first;
     //char logstring[256];
     int marallowed = 0;
     /*It turns out that the event queue is stored in person_id order so it is
@@ -1565,8 +1564,9 @@ struct person * find_random_father(struct person *child)
       to need to collect all of the qualifying fathers and then choose one at 
       random*/
 
-    while (p != NULL && nth > 0)
+    for (int qi = 0; qi < nth; qi++)
     {
+      p = e->items[qi];
 
       /*      logmsg("person %d in quest for random dad\n",p->person_id,1);
        p is the person selected, should be alive */
@@ -1626,8 +1626,6 @@ struct person * find_random_father(struct person *child)
       */
 
       (p->sex == MALE) && (rejects++);
-      p = p->NEXT_PERSON;
-      nth--;
 
     } /*loop over persons within month*/
 

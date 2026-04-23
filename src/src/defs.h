@@ -590,6 +590,7 @@ struct person
   double (*score)(struct person*, struct person*);
   int pointer_type[2];
   int marriage_queue_index;
+  int event_queue_index;
   union {
     struct person *next_on_mqueue;
     struct queue_element *mqueue;
@@ -689,6 +690,7 @@ struct extra_data
 #define PTR_Q 2
 
 #define ON_MARRIAGE_QUEUE(p) ((p)->pointer_type[MARRIAGE_QUEUE] != PTR_NULL)
+#define ON_EVENT_QUEUE(p) ((p)->event_queue_index >= 0)
 
 /* debugging hooks for some experiments */
 
