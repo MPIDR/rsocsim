@@ -25,9 +25,9 @@
 #'@examples
 #' \dontrun{
 #' # Read opop file into global environment
-#' opop <- read_opop(path = "my_path")
+#' opop <- read_opop(fn = "my_path")
 #' # Retrieve age-specific mortality rates
-#' asmr <- get_asmr_socsim(opop = opop,
+#' asmr <- estimate_mortality_rates(opop = opop,
 #'                      final_sim_year = 2021,
 #'                      year_min = 1750,
 #'                      year_max = 2020,
@@ -55,7 +55,7 @@ estimate_mortality_rates <- function(opop, final_sim_year, year_min, year_max, y
     mutate(age_death_months = ifelse(dod == 0,NA,dod-dob), 
            age_death = trunc(age_death_months/12), 
            age_death_g = cut(age_death, breaks = age_breaks_mort, 
-                             include.lowest = F, right = F, ordered_results = T),
+                             include.lowest = FALSE, right = FALSE, ordered_results = TRUE),
            death_year = ifelse(dod == 0, NA, asYr(dod, last_month, final_sim_year)))
   # 1. Numerator - death counts by sex and age
   numerator <- opop2 %>% 
@@ -78,7 +78,7 @@ estimate_mortality_rates <- function(opop, final_sim_year, year_min, year_max, y
     rename(year = census) %>% 
     mutate(age_at_census = as.numeric(as.character(age_at_census)),
            age = cut(age_at_census, breaks = age_breaks_mort, 
-                     include.lowest = F, right = F, ordered_results = T)) %>%
+                     include.lowest = FALSE, right = FALSE, ordered_results = TRUE)) %>%
     filter(!is.na(age)) %>% 
     group_by(year, sex, age) %>% 
     summarise(n = sum(n)) %>% 
@@ -90,7 +90,7 @@ estimate_mortality_rates <- function(opop, final_sim_year, year_min, year_max, y
               suffix = c("_num", "_den")) %>% 
     mutate(socsim = n_num / n_den,
            year_gr = cut(year, breaks = year_breaks, 
-                         include.lowest = F, right = F, ordered_results = T),
+                         include.lowest = FALSE, right = FALSE, ordered_results = TRUE),
            sex = ifelse(sex == 0, "male", "female")) %>%
     group_by(year = year_gr, sex, age) %>%
     summarise(socsim = mean(socsim)) %>%
@@ -127,9 +127,9 @@ estimate_mortality_rates <- function(opop, final_sim_year, year_min, year_max, y
 #'@examples
 #' \dontrun{
 #' # Read opop file into global environment
-#' opop <- read_opop(path = "my_path")
+#' opop <- read_opop(fn = "my_path")
 #' # Retrieve age-specific fertility rates
-#' asfr <- get_asfr_socsim(opop = opop,
+#' asfr <- estimate_fertility_rates(opop = opop,
 #'                      final_sim_year = 2021, 
 #'                      year_min = 1750,
 #'                      year_max = 2020,
@@ -164,7 +164,7 @@ estimate_fertility_rates <- function(opop, final_sim_year, year_min, year_max, y
                     numerator %>% select(nume = n)) %>%
     mutate(socsim = nume/deno,
            year_gr = cut(year, breaks = year_breaks, 
-                         include.lowest = F, right = F, ordered_results = T)) %>%
+                         include.lowest = FALSE, right = FALSE, ordered_results = TRUE)) %>%
     group_by(year = year_gr, age = agegr) %>%
     summarise(socsim = mean(socsim)) %>%
     ungroup()
@@ -216,7 +216,7 @@ yearly_birth_by_age_socsim <- function(df, year_range, age_breaks_fert) {
     mutate(birth_year_factor = factor(birth_year, levels = year_range),
            mother_age = birth_year - mother_birth,
            mother_agegr_factor = cut(mother_age, breaks = age_breaks_fert, 
-                                     include.lowest = F, right = F, ordered_results = T)) %>%
+                                     include.lowest = FALSE, right = FALSE, ordered_results = TRUE)) %>%
     filter(!is.na(mother_agegr_factor)) %>% 
     count(birth_year = birth_year_factor, mother_agegr = mother_agegr_factor) %>% 
     tidyr::complete(birth_year, mother_agegr, fill = list(n = 0)) %>% 
@@ -248,7 +248,7 @@ get_women_reproductive_age_socsim <- function(df, final_sim_year, year, age_brea
     filter(fem == 1 & dob < jul(year, last_month, final_sim_year) & dod2 >= jul(year, last_month, final_sim_year)) %>%
     mutate(age_at_census = trunc((jul(census, last_month, final_sim_year)-dob)/12),
            agegr_at_census = cut(age_at_census, breaks = age_breaks_fert, 
-                                 include.lowest = F, right = F, ordered_results = T)) %>% 
+                                 include.lowest = FALSE, right = FALSE, ordered_results = TRUE)) %>% 
     filter(!is.na(agegr_at_census)) %>% 
     count(agegr_at_census, census) %>% 
     tidyr::complete(agegr_at_census, census, fill = list(n = 0)) %>% 

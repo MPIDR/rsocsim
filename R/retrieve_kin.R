@@ -83,7 +83,7 @@
 #' #Individuals of interest
 #' pid <- c("10111", "10211", "10311")
 #' #Obtain partial kinship network, with omar and opop already in R environment
-#' kin_network <- getKin(opop = opop, omar = omar, pid = pid, 
+#' kin_network <- retrieve_kin(opop = opop, omar = omar, pid = pid, 
 #' extra_kintypes = c("unclesaunts", "niblings"), kin_by_sex = TRUE)
 #' }
 #' 
@@ -284,7 +284,7 @@ retrieve_kin <- function(opop = opop, omar = omar, KidsOf = KidsOf, pid,
     siblingsofspouse <- lapply(seq_along(siblingsofspouse), #Remove spouse from children of parents-in-law
                                function(i) siblingsofspouse[[i]][siblingsofspouse[[i]] %ni% res$spouse[[i]]])
     spouseofsiblingsofspouse <- so(opop = opop, p = siblingsofspouse)
-    res$siblingsinlaw <- mapply(c, spouseofsiblings, siblingsofspouse, spouseofsiblingsofspouse, SIMPLIFY=F)
+    res$siblingsinlaw <- mapply(c, spouseofsiblings, siblingsofspouse, spouseofsiblingsofspouse, SIMPLIFY = FALSE)
     if(kin_by_sex){
       res$sistersinlaw <- lapply(seq_along(res$siblingsinlaw), function(i) res$siblingsinlaw[[i]][which(opop$fem[match(res$siblingsinlaw[[i]], opop$pid)] == 1)])
       res$brothersinlaw <- lapply(seq_along(res$siblingsinlaw), function(i) res$siblingsinlaw[[i]][which(opop$fem[match(res$siblingsinlaw[[i]], opop$pid)] == 0)])

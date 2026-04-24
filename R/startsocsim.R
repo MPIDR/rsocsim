@@ -54,6 +54,9 @@ socsim <- function(folder, supfile, seed = "42", process_method = "inprocess",
     warning(w)
   },
   finally = {
+    if (remove_supfile) {
+      unlink(file.path(folder, basename(supfile)))
+    }
     print(paste("Restore previous working dir:", previous_wd))
     setwd(previous_wd)
   }
@@ -80,6 +83,9 @@ run_sim_w_file <- function(supfile, seed = "42", compatibility_mode = "1",
                             result_suffix = suffix)
         return(1)
     } else if (method == "future") {
+    if (!requireNamespace("future", quietly = TRUE)) {
+      stop("The 'future' package is required for process_method = 'future'.")
+    }
         print("Using future::future to run simulation in a separate process.")
         future::plan(future::multisession, workers=2)
         print("Starting socsim simulation now. No output will be shown!")
@@ -104,6 +110,9 @@ run_sim_w_file <- function(supfile, seed = "42", compatibility_mode = "1",
         v1 <- future::value(f1) # TODO: v1 isn't used anywhere?
         return(1)
     } else if (method == "clustercall") {
+        if (!requireNamespace("parallel", quietly = TRUE)) {
+          stop("The 'parallel' package is required for process_method = 'clustercall'.")
+        }
         print("Using parallel::clusterCall to run simulation in a separate process.")
         outfn <- paste0("sim_results_", supfile, "_", seed, "_", suffix, "/logfile.log")
         cl <- parallel::makeCluster(spec = 1, type = "PSOCK", outfile = outfn)
@@ -127,17 +136,18 @@ run_sim_w_file <- function(supfile, seed = "42", compatibility_mode = "1",
 print_last_line_of_logfile = function(logfilename, lastline = "") {
   tryCatch({
     con = file(logfilename, "r")
+    on.exit(close(con), add = TRUE)
+    line2 <- lastline
     while ( TRUE ) {
       line = readLines(con, n = 1)
       if ( length(line) == 0 ) {
-        if(lastline != line2){
+        if (!identical(lastline, line2) && nzchar(line2)) {
           print(line2);
         }
         break
       }
       line2 <- line
     }
-    close(con)
     return(line2)
   }, error = function(e) {
     warning("Error while reading file")
@@ -148,26 +158,15 @@ print_last_line_of_logfile = function(logfilename, lastline = "") {
 }
 
 
-#' Run a single socsim-simulation with a socsim binary
-#'
-#' @param folder base-directory of the simulation. 
-#' @param supfile the .sup file to start the simulation, relative to the
-#' folder
-#' @param seed RNG seed as string, Default="42"
-#' @param socsim_path path+filename of a socsim-executable. Download one from https://github.com/tomthe/socsim/releases/download/0.3/socsim.exe
-#' @param compatibility_mode compatibility mode as string, Default="1"
-#' 
-#' @return The results will be written into the specified folder
-#' @export
+# Internal helper for development workflows that rely on an external SOCSIM
+# executable.
 run1simulationwithfile_from_binary <- function(folder, supfile,seed="42",compatibility_mode="1",socsim_path=NULL) {
-  if (is.null(socsim_path) || !dir.exists(normalizePath(socsim_path))) {
-    print("No socsim_path specified. So I will download the Windows-binary from github to a temporary directory!")
-    print("This will probably not work due to antivirus-software.")
-    print("please download an executable socsim from https://github.com/tomthe/socsim/releases/download/0.3/socsim.exe")
-    print("then save the whole path and specify it as socsim_path for this function!")
-    url = "https://github.com/tomthe/socsim/releases/download/0.3/socsim.exe"
-    socsim_path = file.path(tempdir(), "socsim.exe")
-    utils::download.file(url, socsim_path, method = "auto")
+  if (is.null(socsim_path)) {
+    stop("Please supply 'socsim_path' explicitly. Downloading executables is not supported by this package build.")
+  }
+  socsim_path <- normalizePath(socsim_path, mustWork = TRUE)
+  if (dir.exists(socsim_path)) {
+    stop("'socsim_path' must point to an executable file, not a directory.")
   }
   seed = toString(seed)
   print("Start run1simulationwithfile")
@@ -180,11 +179,7 @@ run1simulationwithfile_from_binary <- function(folder, supfile,seed="42",compati
   
   print(paste0("command: ",socsim_path,args=paste0(" ",supfile," ", seed," ", compatibility_mode)))
   
-  print(system2(socsim_path,args=c(supfile," ", seed, " ",compatibility_mode)))
-  print(system(paste(socsim_path, supfile, seed,compatibility_mode)))
-  a = (system(paste(socsim_path, paste0(dirname(folder), "\\", supfile), seed, compatibility_mode)))
-  print(paste(socsim_path, paste0(dirname(folder), "\\", supfile), seed,compatibility_mode))
-  print(a)
+  print(system2(socsim_path, args = c(supfile, seed, compatibility_mode)))
   print(previous_wd)
   setwd(previous_wd)
   return(1)
@@ -193,22 +188,24 @@ run1simulationwithfile_from_binary <- function(folder, supfile,seed="42",compati
 #' Create a directory structure for the simulation
 #'
 #' Create a two-level directory structure. If the first-level argument is NULL,
-#' we look for and, if needed, created the directory 'socsim' in the user's
-#' home directory. If the second-level argument is NULL, we create a directory
-#' named like 'socsim_sim_<random component>' in the first-level directory.
+#' we look for and, if needed, create the directory 'socsim' in the current
+#' temporary directory. If the second-level argument is NULL, we create a directory
+#' named like 'socsim_sim_' followed by a random component in the first-level
+#' directory.
 #'
 #' @param basedir A string. Optional. First-level directory where the
-#'   simulation-specific directory will be created. Defaults to '$HOME/socsim'.
+#'   simulation-specific directory will be created. Defaults to
+#'   `file.path(tempdir(), "socsim")`.
 #' @param simdir A string. Optional. Simulation-specific directory which will
 #'   be created within 'basedir'. Defaults to 'socsim_sim_' plus a random
 #'   component created with [tempfile()].
 #' @return A string. The full path to the simulation-specific directory.
 #' @export
 create_simulation_folder <- function(basedir = NULL, simdir = NULL) {
-    # If no 'basedir' is given, we default to '$HOME/socsim'.
-    if (is.null(basedir)) { basedir <- file.path(path.expand("~"), "socsim") }
+  # If no 'basedir' is given, we default to a subdirectory of tempdir().
+  if (is.null(basedir)) { basedir <- file.path(tempdir(), "socsim") }
     # If 'basedir' does not exist, create it.
-    if (!dir.exists(basedir)) { dir.create(basedir) }
+  if (!dir.exists(basedir)) { dir.create(basedir, recursive = TRUE) }
     if (is.null(simdir)) {
         # If no 'simdir' is given, create a random name that starts with
         # 'socsim_sim_'.
@@ -226,11 +223,12 @@ create_simulation_folder <- function(basedir = NULL, simdir = NULL) {
 #' directory 'simdir'.
 #' 
 #' @param simdir A string. The directory where the .sup file will be saved.
-#' @param simname A string. The name of the simulation.
+#' @param simname A string. The base name of the simulation. Defaults to
+#'   `"socsim"`.
 #' @return A string. The filename of the supervisory file which is needed to
 #'   start the simulation.
 #' @export
-create_sup_file <- function(simdir, simname) {
+create_sup_file <- function(simdir, simname = "socsim") {
   sup_content <- "
 *Supervisory file for a stable population
 * 20220120
@@ -246,7 +244,7 @@ include SWEfert2022
 include SWEmort2022
 run
 "
-  sup_fn <- "socsim.sup"
+  sup_fn <- paste0(simname, ".sup")
   cat(sup_content, file = file.path(simdir, sup_fn))
   fn_SWEfert2022_source <- system.file("extdata", "SWEfert2022",
 				       package = "rsocsim", mustWork = TRUE)

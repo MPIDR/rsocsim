@@ -1,7 +1,7 @@
 #' download and convert rate files from HMD, HFD, UN
 #' @description Given a iso2code countrycode and a range of years (between 1950 
 #'      and 2100) this function will download mortality and fertility rates and
-#'      saves them in a
+#'      save them in SOCSIM-compatible files.
 #' @param folder folder where the rates will be saved
 #' @param countrycode 2-character country code https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
 #' @param yearStart Start year. For "UN" the first possible year is 1950
@@ -13,10 +13,13 @@
 #' See https://github.com/tomthe/retrieveVitalRates_for_rsocsim_API for the 
 #' code that converts the source data into socsim format.
 #' 
-#' @return todo
+#' @return A list with components `fertility`, `mortality`, and `infoFile`
+#'   giving the extracted filenames and the generated supervisory file path.
 #'@examples
 #' \dontrun{
-#' # todo
+#' simdir <- tempdir()
+#' out <- download_rates(simdir, countrycode = "SE", yearStart = 1970, yearEnd = 1971)
+#' names(out)
 #' }
 #' @export
 download_rates <- function(folder, countrycode, yearStart = 1950, yearEnd = 2100, 
