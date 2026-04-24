@@ -68,6 +68,8 @@ socsim <- function(folder, supfile, seed = "42", process_method = "inprocess",
 #' See [socsim()] for documentation of the arguments.
 #'
 #' @inheritParams socsim
+#' @param method Internal alias for `process_method`.
+#' @noRd
 run_sim_w_file <- function(supfile, seed = "42", compatibility_mode = "1",
                            suffix = "", method = "inprocess") {
     if (method == "inprocess") {
@@ -165,7 +167,7 @@ run1simulationwithfile_from_binary <- function(folder, supfile,seed="42",compati
     print("then save the whole path and specify it as socsim_path for this function!")
     url = "https://github.com/tomthe/socsim/releases/download/0.3/socsim.exe"
     socsim_path = file.path(tempdir(), "socsim.exe")
-    download.file(url,socsim_path,method="auto")
+    utils::download.file(url, socsim_path, method = "auto")
   }
   seed = toString(seed)
   print("Start run1simulationwithfile")
@@ -193,7 +195,7 @@ run1simulationwithfile_from_binary <- function(folder, supfile,seed="42",compati
 #' Create a two-level directory structure. If the first-level argument is NULL,
 #' we look for and, if needed, created the directory 'socsim' in the user's
 #' home directory. If the second-level argument is NULL, we create a directory
-#' named 'socsim_sim_{some random component}' in the first-level directory.
+#' named like 'socsim_sim_<random component>' in the first-level directory.
 #'
 #' @param basedir A string. Optional. First-level directory where the
 #'   simulation-specific directory will be created. Defaults to '$HOME/socsim'.
@@ -264,7 +266,7 @@ run
 #' Read the content of the supervisory file 
 #'
 #' @param simdir A string. Base directory of the simulation.
-#' @param simname A string. File name of the .sup file.
+#' @param sup_fn A string. File name of the .sup file.
 #' @return A list of strings. The content of the supervisory file.
 #' @export
 get_supervisory_content <- function(simdir, sup_fn) {
