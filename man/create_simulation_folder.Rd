@@ -8,7 +8,8 @@ create_simulation_folder(basedir = NULL, simdir = NULL)
 }
 \arguments{
 \item{basedir}{A string. Optional. First-level directory where the
-simulation-specific directory will be created. Defaults to '$HOME/socsim'.}
+simulation-specific directory will be created. Defaults to
+\code{file.path(tempdir(), "socsim")}.}
 
 \item{simdir}{A string. Optional. Simulation-specific directory which will
 be created within 'basedir'. Defaults to 'socsim_sim_' plus a random
@@ -19,7 +20,8 @@ A string. The full path to the simulation-specific directory.
 }
 \description{
 Create a two-level directory structure. If the first-level argument is NULL,
-we look for and, if needed, created the directory 'socsim' in the user's
-home directory. If the second-level argument is NULL, we create a directory
-named like 'socsim_sim_\if{html}{\out{<random component>}}' in the first-level directory.
+we look for and, if needed, create the directory 'socsim' in the current
+temporary directory. If the second-level argument is NULL, we create a directory
+named like 'socsim_sim_' followed by a random component in the first-level
+directory.
 }

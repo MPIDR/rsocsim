@@ -6,7 +6,7 @@ Date: 2026-04-23
 Maintainer: Tom Theile <theile@demogr.mpg.de>
 Authors@R: c(
     person("Tom", "Theile", role = c("aut", "cre"), email = "theile@demogr.mpg.de", comment = c(ORCID = "0000-0003-0573-9093")),
-    person("Diego", "Alburez-Gutierrez", role = "aut", comment = c(ORCID = "0000-0003-0573-9093")),
+    person("Diego", "Alburez-Gutierrez", role = "aut", comment = c(ORCID = "0000-0002-9823-5179")),
     person("Mallika", "Snyder", role = "aut"),
     person("Liliana P.", "Calderón-Bernal", role = "aut")
     )
@@ -14,10 +14,8 @@ Description: Tools for preparing inputs, running SOCSIM demographic kinship micr
     and reading simulation outputs from R. The package includes helpers for
     creating simulation folders, downloading demographic rate schedules,
     starting simulations, and loading population and marriage result files.
-License: GPL (>= 2)
+License: GPL-3
 Imports: Rcpp (>= 1.0.5),
-    future,
-    parallel,
     magrittr,
     dplyr,
     tidyr,
@@ -25,6 +23,8 @@ Imports: Rcpp (>= 1.0.5),
 LinkingTo: Rcpp
 RoxygenNote: 7.3.2
 Suggests: 
+    future,
+    parallel,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 URL: https://github.com/MPIDR/rsocsim,

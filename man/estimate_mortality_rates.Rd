@@ -51,9 +51,9 @@ are created as [year;year+year_group). Mortality rates always start from 0
 \examples{
 \dontrun{
 # Read opop file into global environment
-opop <- read_opop(path = "my_path")
+opop <- read_opop(fn = "my_path")
 # Retrieve age-specific mortality rates
-asmr <- get_asmr_socsim(opop = opop,
+asmr <- estimate_mortality_rates(opop = opop,
                      final_sim_year = 2021,
                      year_min = 1750,
                      year_max = 2020,

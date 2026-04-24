@@ -61,7 +61,7 @@ remotes::install_github("MPIDR/rsocsim@v1.5.9")
 library("rsocsim")
 
 # create a new folder for all the files related to a simulation.
-# this will be in your home- or user-directory:
+# this will be inside a temporary directory by default:
 folder = rsocsim::create_simulation_folder()
 
 # create a new supervisory-file.
@@ -69,7 +69,7 @@ folder = rsocsim::create_simulation_folder()
 # create_sup_file will create a very basic supervisory file.
 # It also copies some rate-files that will be needed into the 
 # simulation folder:
-supfile = rsocsim::create_sup_file(folder)
+supfile = rsocsim::create_sup_file(folder, simname = "socsim")
 
 # Choose a random-number seed:
 seed = 300

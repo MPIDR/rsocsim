@@ -4,12 +4,13 @@
 \alias{create_sup_file}
 \title{Create a basic .sup file for a simulation}
 \usage{
-create_sup_file(simdir, simname)
+create_sup_file(simdir, simname = "socsim")
 }
 \arguments{
 \item{simdir}{A string. The directory where the .sup file will be saved.}
 
-\item{simname}{A string. The name of the simulation.}
+\item{simname}{A string. The base name of the simulation. Defaults to
+\code{"socsim"}.}
 }
 \value{
 A string. The filename of the supervisory file which is needed to

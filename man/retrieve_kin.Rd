@@ -108,7 +108,7 @@ interest.
 #Individuals of interest
 pid <- c("10111", "10211", "10311")
 #Obtain partial kinship network, with omar and opop already in R environment
-kin_network <- getKin(opop = opop, omar = omar, pid = pid, 
+kin_network <- retrieve_kin(opop = opop, omar = omar, pid = pid, 
 extra_kintypes = c("unclesaunts", "niblings"), kin_by_sex = TRUE)
 }
 
