@@ -138,32 +138,35 @@ test_that("download_rates regression: simulate, estimate, compare, plot", {
   expect_true(all(rates$rate_fertility >= 0, na.rm = TRUE))
   expect_true(all(rates$rate_mortality >= 0, na.rm = TRUE))
 
-  results_dir <- file.path("tests", "testthat", "_results")
-  if (!dir.exists(results_dir)) {
-    dir.create(results_dir, recursive = TRUE)
+  artifacts_dir <- file.path(tempdir(), "rsocsim-test-artifacts", "download-rates")
+  if (!dir.exists(artifacts_dir)) {
+    dir.create(artifacts_dir, recursive = TRUE)
   }
+  baseline_dir <- file.path("tests", "testthat", "_results")
 
   date_tag <- format(Sys.Date(), "%Y%m%d")
   current_path <- file.path(
-    results_dir,
+    artifacts_dir,
     sprintf("download_rates_current_%s_%s_%d_%d_seed_%s.csv", date_tag, country, year_start, year_end, seed)
   )
   baseline_path <- file.path(
-    results_dir,
+    baseline_dir,
     sprintf("download_rates_baseline_%s_%d_%d.csv", country, year_start, year_end)
   )
   plot_path <- file.path(
-    results_dir,
+    artifacts_dir,
     sprintf("download_rates_plot_%s_%s_%d_%d_seed_%s.png", date_tag, country, year_start, year_end, seed)
   )
 
   utils::write.csv(rates, current_path, row.names = FALSE)
 
   if (!file.exists(baseline_path)) {
-    utils::write.csv(rates, baseline_path, row.names = FALSE)
+    proposed_baseline_path <- file.path(artifacts_dir, basename(baseline_path))
+    utils::write.csv(rates, proposed_baseline_path, row.names = FALSE)
     testthat::skip(paste0(
-      "Baseline rates CSV missing. Created ", basename(baseline_path),
-      ". Re-run the test to compare against the baseline."
+      "Baseline rates CSV missing. Wrote a proposed baseline to ",
+      proposed_baseline_path,
+      ". Re-run the test after adding a checked-in baseline if needed."
     ))
   }
 
