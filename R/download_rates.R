@@ -130,7 +130,6 @@ download_rates <- function(folder, countrycode, yearStart = 1950, yearEnd = 2100
     "***************************************************************************\n",
     "segments ", yearEnd - yearStart + 1, "\n",
     "input_file presim\n",
-    "execute \"touch presim.omar\"\n",
     "\nbint 12\nhetfert 1\nmarriage_queues 1\nmarriage_eval distribution\nmarriage_after_childbirth 1\n",
     "\n***********************************************************************\n",
     "* Pre-simulation to get a stable population at ", yearStart - 1, "\n",
