@@ -2567,7 +2567,7 @@ void error(const char* fmt, ...) {
         buf[len + 1] = '\0';
     }
 
-    std::cerr << buf;
+        Rcpp::Rcerr << buf;
 }
 
 double get_lambda(int g, int m, int p, int age)
