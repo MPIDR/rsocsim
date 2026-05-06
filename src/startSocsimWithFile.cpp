@@ -6,7 +6,6 @@ using namespace Rcpp;
 
 // [[Rcpp::export]]
 int startSocsimWithFile(String supfile, String seed, String compatibility_mode, String result_suffix){
-  Rcpp::Rcout << "Start socsim" << std::endl;
   char *args[] = {
     (char*)"zerothArgument",
     (char*) supfile.get_cstring(),
@@ -15,10 +14,7 @@ int startSocsimWithFile(String supfile, String seed, String compatibility_mode, 
     (char*) result_suffix.get_cstring(),
     NULL
   };
-  main1(2, args);
-  Rcpp::Rcout << "Socsim Done."  << std::endl;
-  
-  return 0;
+  return main1(5, args);
   
 }
 

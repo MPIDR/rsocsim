@@ -113,13 +113,13 @@ const char *c_tally_to_string[] = {
     "NUMCAT",
 };
 
+static int debug_process_month_events_logged = 0;
+
 
 
 // [[Rcpp::export]]
 int main1(int argc, char *argv[])
 {
-    Rcpp::Rcout << "start socsim main. MAXUYEARS: " << MAXUYEARS << "; MAXUMONTHS: " << MAXUMONTHS << std::endl;
-
     // 2024-12-03 Ole
     // Let's pull all argv[] calls to the top and print them to stdout, so
     // users have something to look at.
@@ -136,10 +136,9 @@ int main1(int argc, char *argv[])
     compatibility_mode = atoi(argv[3]);
     strcpy(result_suffix, argv[4]);
 
-    Rcpp::Rcout << "Ratefile: "<< rate_file_name << "\n" << std::endl;
-    Rcpp::Rcout << "Seed: "<< ceed << "\n" << std::endl;
-    Rcpp::Rcout << "Compatibility mode: "<< compatibility_mode << "\n" << std::endl;
-    Rcpp::Rcout << "Results suffix: "<< result_suffix << "\n" << std::endl;
+        SOCSIM_INFOF("Starting SOCSIM run\n");
+        SOCSIM_DEBUGF("Configuration: MAXUYEARS=%d MAXUMONTHS=%d ratefile=%s seed=%d compatibility_mode=%d result_suffix=%s\n",
+            MAXUYEARS, MAXUMONTHS, rate_file_name, ceed, compatibility_mode, result_suffix);
 
     /* 2024-12-03 Ole was unsure whether R correctly passes a changed
      * working directory to Rcpp/C. It does.
@@ -271,7 +270,6 @@ int main1(int argc, char *argv[])
         warning("Warning: Unexpected condition occurred - too few arguments");
         //return 12;
 
-        Rcpp::Rcout << "useage: ratefile random_number" << useage << argv[0] << std::endl;
         warning("useage: %s ratefile random_number", useage);
         //error(useage);
         stop("stop!");
@@ -282,7 +280,7 @@ int main1(int argc, char *argv[])
     //strcpy(rate_file_name, *++argv);
 
     //Rcpp::Rcout << "useage: ratefile random_number" << useage << argv[1] << argv[2] << std::endl;
-    Rcpp::Rcout << "v18a!-command-line argv[0]: " << argv[0] << "| argv[1]: " << argv[1] << "| argv[2]: " << argv[2]  << "| argv[3]: " << argv[3] << std::endl;
+    SOCSIM_DEBUGF("argv: %s | %s | %s | %s\n", argv[0], argv[1], argv[2], argv[3]);
 
     //ceed = atoi(*++argv);
     ceed = atoi(argv[2]);
@@ -305,8 +303,7 @@ int main1(int argc, char *argv[])
      *****************************/
     if ((fd_log = fopen(log_file_name, "w")) == NULL)
     {
-        Rprintf("can't open file:  %s ", log_file_name);
-        perror("can't open log file\n");
+        stop("can't open log file: %s", strerror(errno));
     }
 
     //Rprintf("|%s|-\n",pop_out_name);
@@ -321,21 +318,16 @@ int main1(int argc, char *argv[])
     {
         logmsg("\n marriage_queues==1 , consequently all available males are always on the marriage queue\n\n"," ",   1);
     }
-    Rprintf("initialize_segment_vars\n");
     logmsg("initialize_segment_vars\n"," ",1);
     initialize_segment_vars();
-    Rprintf("initialize_segment_vars done\n");
-    Rcpp::Rcout << "18b - loading -.sup-file: " << rate_file_name << std::endl;
     if (load(rate_file_name) < 0)
         stop("can't load rate file! Stopping Simulation.");//exit(-1);
-    Rprintf("------------4");
     if (marriage_eval == DISTRIBUTION)
     {
         /* sup file has been read; so if value is not -99 (or (MAXUYEARS-1)) then it was
            user specified  agedif_marriage_{mean,sd}[0] holds the default
            value*/
 
-        Rcpp::Rcout << "marriage_eval == DISTRIBUTION . " << rate_file_name << std::endl;
         int g = 1;
         for (g = 1; g < MAXGROUPS; g++)
         {
@@ -345,16 +337,12 @@ int main1(int argc, char *argv[])
             agedif_marriage_sd[g] = (agedif_marriage_sd[g] == -(MAXUYEARS-1)) ? agedif_marriage_sd[g - 1] : agedif_marriage_sd[g];
         }
         initialize_marriage_targets();
-    } else {
-
-        Rcpp::Rcout << "marriage_eval != DISTRIBUTION . " << rate_file_name << std::endl;
     }
 
     /*modify birth rates to account for bint MUST be called 
       BEFORE fill_rate_gaps*/
     /*    if(bint != 0){*/
     adjust_birth_for_bint();
-    Rprintf("------------6");
     /*    }*/
     //stop("stop15");
 #ifdef ENHANCED
@@ -377,7 +365,6 @@ int main1(int argc, char *argv[])
     strcat(stat_file_name, ".stat");
     strcat(otx_file_name, ".otx");
 
-    Rprintf("------------7");
     /*** Tue Oct 22 12:50:50 PDT 2002
 
       strcat(pop_out_name, ".opop");
@@ -390,12 +377,9 @@ int main1(int argc, char *argv[])
     if ((fd_pop = fopen(pop_file_name, "r")) == NULL)
     {
         //   Rprintf("------------pop_file error");
-        Rprintf("can't open file:  %s ", pop_file_name);
-
         //logmsg("can't open initial  pop file; can't simuluate..%s \n",pop_file_name,1);//exit
         fprintf(fd_log,"can't open initial  pop file; can't simuluate..%s \n",pop_file_name);
-        stop("can't open initial  pop file; can't simuluate.. %s \n",pop_file_name);//exit
-        perror("can't open initial  pop file; can't simuluate..\n");
+        stop("can't open initial pop file; can't simulate: %s", pop_file_name);//exit
     }
     if ((fd_mar = fopen(mar_file_name, "r")) == NULL)
     {
@@ -409,7 +393,6 @@ int main1(int argc, char *argv[])
     if ((fd_otx = fopen(otx_file_name, "r")) == NULL)
     {
         logmsg("Can't open transition history file. If you did not specify rates for transitions between groups, this is fine.\n", " ", 1);
-        Rprintf("Can't open transition history file. If you did not specify rates for transitions between groups, this is fine.\n");
         //perror("can't open  transition history file. Hope that's OK\n");
     }
     //Rprintf("------------aa2");
@@ -418,7 +401,7 @@ int main1(int argc, char *argv[])
     {
         if ((fd_xtra = fopen(xtra_file_name, "r")) == NULL)
         {
-            printf("Extra file is named %s\n", xtra_file_name);
+            SOCSIM_ERRORF("Extra file is named %s\n", xtra_file_name);
             //perror("can't open  xtra file despite being asked to\n");
             stop("Can't open extra file despite being asked to.\n");
             //exit;
@@ -426,7 +409,8 @@ int main1(int argc, char *argv[])
     }
     /** open output files for writing**/
 
-    Rprintf("\n output file names:\n %s|%s|%s|%s|%s|%s|\n",pop_file_name,mar_file_name,xtra_file_name,pyr_file_name,stat_file_name,otx_file_name);
+    SOCSIM_INFOF("Output files: %s|%s|%s|%s|%s|%s|\n",
+            pop_file_name, mar_file_name, xtra_file_name, pyr_file_name, stat_file_name, otx_file_name);
     fprintf(fd_log,"\n output file names:\n %s|%s|%s|%s|%s|%s|\n",pop_file_name,mar_file_name,xtra_file_name,pyr_file_name,stat_file_name,otx_file_name);
 
     logmsg("----------------------- prepare_output_files_1 \n"," ",1);
@@ -456,7 +440,7 @@ int main1(int argc, char *argv[])
     //Rprintf("------------aa5");
     if (fd_mar != NULL)
     {
-        Rprintf("Reading initial marriage file %s\n", mar_file_name);
+        SOCSIM_INFOF("Reading initial marriage file %s\n", mar_file_name);
         fprintf(fd_log,"Reading initial marriage file %s\n", mar_file_name);
         read_marlist(fd_mar);
         fclose(fd_mar);
@@ -496,7 +480,7 @@ int main1(int argc, char *argv[])
     {
         logmsg("No initial transition history file to read\n"," ", 1);
     }
-    Rprintf("fix pop pointers..\n");
+    SOCSIM_DEBUGF("Fixing population pointers\n");
 
     logmsg("-----aa31a.\n", "", 1);
     fix_pop_pointers();
@@ -532,41 +516,38 @@ int main1(int argc, char *argv[])
 
     //Rprintf("------------aa3");
     current_month = last_event_date + 1;
-    Rprintf("Starting month is %d\n", current_month);
-    Rprintf("Initial size of pop %d  ", last_person->person_id);
-    Rprintf("(living: %d)\n", size_of_pop[0]);
+    SOCSIM_INFOF("Starting month is %d\n", current_month);
+    SOCSIM_INFOF("Initial size of pop %d (living: %d)\n", last_person->person_id, size_of_pop[0]);
 
     logmsg("-----aa31.\n", "", 1);
     if (fill_rate_gaps() < 0){
-        Rprintf("fill_rate_gaps < 0 - error");
+        SOCSIM_ERRORF("fill_rate_gaps returned an error\n");
         sprintf(logstring, "ERROR......abr3");
         logmsg("%s\n", logstring, 1);
         // perror("bad rate set\n");
         warning("bad rate set\n");
     }
 
-    Rprintf("------------aa3s");
     logmsg("-----aa3s.\n", "", 1);
     /* dump_rates(); */
 
     if (random_epsilon)
     {
         epsilon = irandom() % (max_e_index + 1);
-        printf("random epsilon ");
+        SOCSIM_DEBUGF("random epsilon\n");
     }
     else if (fixed_epsilon)
     {
-        printf("fixed epsilon ");
+        SOCSIM_DEBUGF("fixed epsilon\n");
         epsilon = epsilon % (max_e_index + 1);
     }
-    Rprintf("------------aa32");
     logmsg("-----aa32.\n", "", 1);
 
 
     //logmsg(" grogro001 \n", "", 1);
     if (random_epsilon || fixed_epsilon)
     {
-        printf("value of epsilon: %d table index %d \n",
+        SOCSIM_DEBUGF("value of epsilon: %d table index %d \n",
                 epsilon, (int)epsilon / 12);
     }
 
@@ -612,8 +593,7 @@ int main1(int argc, char *argv[])
 
         new_events_for_all();
 
-        //Rprintf("------------b");
-        Rprintf("New events generated for all living persons\n");
+        SOCSIM_DEBUGF("New events generated for all living persons\n");
         /*
            dump_queue();
            */
@@ -621,14 +601,12 @@ int main1(int argc, char *argv[])
         if (duration_of_segment == 0)
             perror("length of segment not specified\n");
         stop_month = current_month + duration_of_segment - 1;
-        printf("current month %d stop month %d duration %d\n",
+        SOCSIM_INFOF("current month %d stop month %d duration %d\n",
                 current_month, stop_month, duration_of_segment);
 
         /*
            printf("processing event queue\n");
            */
-
-        Rprintf("------------b1");
         logmsg("|m0|", "", 1);
         timestart2 = clock();
         int done = 0;
@@ -730,17 +708,8 @@ int main1(int argc, char *argv[])
                     timedif1 = (double)(timeend - timestart1) / CLOCKS_PER_SEC;
                     timedif2 =(double)(timeend - timestart2) / CLOCKS_PER_SEC;
                     timestart2 = clock();
-                    printf("month:%5d PopLive:%6d Brths:%4d Dths:%4d Mrgs:%3d Dvs:%3d Mq:%5d Fq:%d ti1: %.1f ti2: %.6f %.4f\r",
-                            current_month, size_of_pop[0],
-                            crnt_month_events[E_BIRTH],
-                            crnt_month_events[E_DEATH],
-                            crnt_month_events[E_MARRIAGE],
-                            crnt_month_events[E_DIVORCE],
-                            mqmales->num, mqfems->num,
-                            timedif1,timedif2,1000000000*timedif2/(mqmales->num * mqmales->num +1));
                     if (current_month % 100==0){
-                        printf("\n");
-                        fprintf(fd_log,"month:%5d PopLive:%6d Brths:%4d Dths:%4d Mrgs:%3d Dvs:%3d Mq:%5d Fq:%d ti1: %.1f ti2: %.6f %.4f\n",
+                        SOCSIM_INFOF("month:%5d PopLive:%6d Brths:%4d Dths:%4d Mrgs:%3d Dvs:%3d Mq:%5d Fq:%d ti1: %.1f ti2: %.6f %.4f\n",
                                 current_month, size_of_pop[0],
                                 crnt_month_events[E_BIRTH],
                                 crnt_month_events[E_DEATH],
@@ -748,32 +717,21 @@ int main1(int argc, char *argv[])
                                 crnt_month_events[E_DIVORCE],
                                 mqmales->num, mqfems->num,
                                 timedif1,timedif2,1000000000*timedif2/(mqmales->num * mqmales->num +1));
-
-                        Rprintf("month:%5d PopLive:%6d Brths:%4d Dths:%4d Mrgs:%3d Dvs:%3d Mq:%5d Fq:%d ti1: %.1f ti2: %.6f %.4f\n",
-                                current_month, size_of_pop[0],
-                                crnt_month_events[E_BIRTH],
-                                crnt_month_events[E_DEATH],
-                                crnt_month_events[E_MARRIAGE],
-                                crnt_month_events[E_DIVORCE],
-                                mqmales->num, mqfems->num,
-                                timedif1,timedif2,1000000000*timedif2/(mqmales->num * mqmales->num +1));
-                        fflush(fd_log);
 
                     }
                 }
                 if (size_of_pop[0] == 0 && !done)
                 {
-                    printf("\n");
+                    SOCSIM_INFOF("Population exhausted during current segment\n");
                     done = 1;
                 }
-                fflush(stdout);
             }
         }
 
         //logmsg("|m5|", "", 1);
         //Rprintf("-m|pa");
         fprintf(fd_log,"\nsegment %d complete current month: %d\n",	current_segment, current_month);
-        printf("\nsegment %d complete current month: %d\n",	current_segment, current_month);
+        SOCSIM_INFOF("segment %d complete current month: %d\n",	current_segment, current_month);
         //logmsg("%s\n", logstring, 1);
 
         if (take_census)
@@ -825,10 +783,7 @@ int main1(int argc, char *argv[])
             logmsg("%s\n", logstring, 1);
             logmsg("about to empty event queue\n", "", 0);
 
-            printf("==================================================\n");
-            printf("\n\nSetting up rates and queues for segment %d..\n\n",
-                    current_segment);
-            printf("--------------------------------------------------\n");
+                SOCSIM_INFOF("Setting up rates and queues for segment %d\n", current_segment);
 
             logmsg("about to (re)initialize segment vars -----\n", "", 0);
             fprintf(fd_log,"about to (re)initialize segment vars fprintf");
@@ -923,7 +878,6 @@ int main1(int argc, char *argv[])
     fclose(fd_pyr);
     fclose(fd_log);
     // fclose(fd_rn);
-    Rcpp::Rcout << "\n\nSocsim Main Done" << std::endl;
     return 1;
     /*
        printf("done with population pyramid\n");
@@ -1007,6 +961,10 @@ int process_month()
     i = current_month % MAXUMONTHS;
     e = event_queue + i;
 
+        fprintf(fd_log, "DBG process_month start month=%d slot=%d queue_num=%d\n",
+            current_month, i, e->num);
+        fflush(fd_log);
+
     /*
        printf("processing month %d on queue %d\n", current_month, e->num);
        */
@@ -1037,6 +995,18 @@ int process_month()
             }
         }
         p = e->items[nth];
+
+        if (debug_process_month_events_logged < 25)
+        {
+            fprintf(fd_log,
+                "DBG process_month pick month=%d slot=%d nth=%d queue_num=%d person_ptr=%p\n",
+                current_month, i, nth, e->num, (void *)p);
+            fflush(fd_log);
+            fprintf(fd_log,
+                "DBG process_month person id=%d sex=%d group=%d mstatus=%d next_event=%d\n",
+                p->person_id, p->sex, p->group, p->mstatus, p->next_event);
+            fflush(fd_log);
+        }
         //logmsg("|pm1|", "", 1);
 
         //printf ("3.2process month %d\n", "");
@@ -1045,7 +1015,23 @@ int process_month()
            p->person_id);
            */
 
+        if (debug_process_month_events_logged < 25)
+        {
+            fprintf(fd_log,
+                "DBG before queue_delete person=%d event_queue_index=%d pointer_type=%d\n",
+                p->person_id, p->event_queue_index, p->pointer_type[EVENT_QUEUE]);
+            fflush(fd_log);
+        }
+
         queue_delete(p, EVENT_QUEUE);
+
+        if (debug_process_month_events_logged < 25)
+        {
+            fprintf(fd_log,
+                "DBG after queue_delete person=%d next_event=%d event_queue_index=%d pointer_type=%d\n",
+                p->person_id, p->next_event, p->event_queue_index, p->pointer_type[EVENT_QUEUE]);
+            fflush(fd_log);
+        }
 
         //printf ("3.3 process month %d\n", "");
         /*
@@ -1058,11 +1044,26 @@ int process_month()
         // logmsg("next event all -", "", 1);
         if (p->next_event == E_DEATH)
         {
+            if (debug_process_month_events_logged < 25)
+            {
+                fprintf(fd_log, "DBG dispatch death person=%d month=%d\n", p->person_id, current_month);
+                fflush(fd_log);
+            }
             //logmsg("next event... death 1  \n", "", 1);
             death(p);
+            if (debug_process_month_events_logged < 25)
+            {
+                fprintf(fd_log, "DBG return death person=%d month=%d\n", p->person_id, current_month);
+                fflush(fd_log);
+            }
         }
         else if (p->next_event == E_BIRTH)
         {
+            if (debug_process_month_events_logged < 25)
+            {
+                fprintf(fd_log, "DBG dispatch birth person=%d month=%d\n", p->person_id, current_month);
+                fflush(fd_log);
+            }
 
 #ifdef ENHANCED
             enhance_birth_pre(p);
@@ -1082,22 +1083,63 @@ int process_month()
             }
             birth(p);
 #endif
+            if (debug_process_month_events_logged < 25)
+            {
+                fprintf(fd_log, "DBG return birth person=%d month=%d\n", p->person_id, current_month);
+                fflush(fd_log);
+            }
         }
         else if (p->next_event == E_DIVORCE)
         {
+            if (debug_process_month_events_logged < 25)
+            {
+                fprintf(fd_log, "DBG dispatch divorce person=%d month=%d\n", p->person_id, current_month);
+                fflush(fd_log);
+            }
             // logmsg("next event... divorce 1  \n", "", 1);
             divorce(p);
+            if (debug_process_month_events_logged < 25)
+            {
+                fprintf(fd_log, "DBG return divorce person=%d month=%d\n", p->person_id, current_month);
+                fflush(fd_log);
+            }
         }
         else if (p->next_event == E_MARRIAGE)
         {
+            if (debug_process_month_events_logged < 25)
+            {
+                fprintf(fd_log, "DBG dispatch marriage person=%d month=%d\n", p->person_id, current_month);
+                fflush(fd_log);
+            }
             //logmsg("next event... marriage\n", "", 1);
             marriage(p);
+            if (debug_process_month_events_logged < 25)
+            {
+                fprintf(fd_log, "DBG return marriage person=%d month=%d\n", p->person_id, current_month);
+                fflush(fd_log);
+            }
         }
         else if ((p->next_event >= TRANSIT1) &&
                 (p->next_event < TRANSIT1 + numgroups))
         {
+            if (debug_process_month_events_logged < 25)
+            {
+                fprintf(fd_log, "DBG dispatch transit person=%d month=%d next_event=%d\n",
+                        p->person_id, current_month, p->next_event);
+                fflush(fd_log);
+            }
             //logmsg("next event... transit   \n", "", 1);
             transit(p);
+            if (debug_process_month_events_logged < 25)
+            {
+                fprintf(fd_log, "DBG return transit person=%d month=%d\n", p->person_id, current_month);
+                fflush(fd_log);
+            }
+        }
+
+        if (debug_process_month_events_logged < 25)
+        {
+            debug_process_month_events_logged++;
         }
 
         /*
@@ -1424,7 +1466,6 @@ void install_in_order(struct person *p, struct queue_element *e, int q_type)
     p->event_queue_index = e->num;
     p->MONTH = e;
     p->pointer_type[EVENT_QUEUE] = PTR_Q;
-    p->NEXT_PERSON = NULL;
     e->num++;
     return;
 }
@@ -1583,7 +1624,7 @@ void queue_delete( struct person *p, int q_type)
     e->num--;
     p->event_queue_index = -1;
     p->pointer_type[EVENT_QUEUE] = PTR_NULL;
-    p->NEXT_PERSON = NULL;
+    p->MONTH = NULL;
 
     if (q_d_verbose)
     {

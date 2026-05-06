@@ -3,6 +3,8 @@
 #include <math.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdarg.h>
+#include <errno.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 
@@ -24,24 +26,90 @@ extern FILE *fd_pop, *fd_mar, *fd_xtra, *fd_out_pop, *fd_out_mar, *fd_out_xtra;
 extern FILE  *fd_out_otx, *fd_out_otx_seg; //*fd_rn,
 extern FILE *fd_pyr, *fd_stat, *fd_log;
 
+static int socsim_console_log_level = SOCSIM_LOG_NONE;
+static int socsim_file_log_level = SOCSIM_LOG_INFO;
+
+static int socsim_log_has_trailing_linebreak(const char *message)
+{
+  size_t len = strlen(message);
+  if (len == 0)
+  {
+    return 0;
+  }
+
+  return message[len - 1] == '\n' || message[len - 1] == '\r';
+}
+
+static const char *socsim_log_prefix(int level)
+{
+  switch (level)
+  {
+    case SOCSIM_LOG_WARN:
+      return "WARNING: ";
+    case SOCSIM_LOG_ERROR:
+      return "ERROR: ";
+    default:
+      return "";
+  }
+}
+
+static void socsim_write_log_message(FILE *stream, int level, const char *message)
+{
+  const char *prefix = socsim_log_prefix(level);
+
+  if (prefix[0] != '\0')
+  {
+    fputs(prefix, stream);
+  }
+
+  fputs(message, stream);
+  if (!socsim_log_has_trailing_linebreak(message))
+  {
+    fputc('\n', stream);
+  }
+  fflush(stream);
+}
+
+void socsim_set_console_log_level(int level)
+{
+  socsim_console_log_level = level;
+}
+
+void socsim_set_file_log_level(int level)
+{
+  socsim_file_log_level = level;
+}
+
+void socsim_logf(int level, const char *fmt, ...)
+{
+  char message[4096];
+  va_list args;
+
+  va_start(args, fmt);
+  vsnprintf(message, sizeof(message), fmt, args);
+  va_end(args);
+
+  if (fd_log != NULL && level >= socsim_file_log_level)
+  {
+    socsim_write_log_message(fd_log, level, message);
+  }
+
+  if (socsim_console_log_level != SOCSIM_LOG_NONE && level >= socsim_console_log_level)
+  {
+    FILE *stream = (level >= SOCSIM_LOG_WARN) ? stderr : stdout;
+    socsim_write_log_message(stream, level, message);
+  }
+}
+
+void socsim_log_errno(int level, const char *context)
+{
+  socsim_logf(level, "%s: %s", context, strerror(errno));
+}
+
 void logmsg(const char * frmt, const char * msg, int where)
 {
-
-  /** This would be better if it could be treated as a pintf as it is
-      msg must be passed as a string and this requires sprintf before this
-      can be called **/
-  /** Fri Dec  6 16:30:59 PST 2002
-   ** over time, all screen output should be funelled through this
-   ** it will write a line to the screen if where >=1 and to the log_file
-   **/
-
-  fprintf(fd_log, frmt, msg);
-  fflush(fd_log); /*flush the buffer */
-  if (where)
-  {
-    printf(frmt, msg);
-  }
-  return;
+  (void)where;
+  socsim_logf(SOCSIM_LOG_INFO, frmt, msg);
 }
 
 /***********************************************************************/

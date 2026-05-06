@@ -59,9 +59,9 @@ void marriage_tally(FILE *fd)
 	      if (p->deathdate == 0) {
 	          i = (int) ((current_month - p->birthdate)/60);
 
-		  printf("agegrp %d mstat %d group %d smat %d \n",i,
-			 p->mstatus,p->group,
-			 single_matrix[i][p->sex][p->group]); 
+		  SOCSIM_DEBUGF("agegrp %d mstat %d group %d smat %d\n", i,
+			 p->mstatus, p->group,
+			 single_matrix[i][p->sex][p->group]);
 	          if (p->mstatus == SINGLE) {
 	              single_matrix[i][p->sex][p->group]++;
 	          } else {

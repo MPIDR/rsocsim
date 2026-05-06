@@ -287,7 +287,6 @@ int load( char *file)
     fprintf(fd_log,"\nopening %s \n", file);
     fprintf(fd_log,"starting with line %d ", current_lineno);
     fprintf(fd_log,"at %ld, seekset= %i \n", current_offset, SEEK_SET);
-    Rcpp::Rcout << "18b-load.cpp->load . " << file << std::endl;
     fflush(fd_log);
     fseek(fp, current_offset, SEEK_SET); // before, SEEK_SET was 0
                                          //somehow this jumps to the wrong position, if we don't start at the beginning.
@@ -304,7 +303,6 @@ int load( char *file)
     }
     cx.file = file;
 
-    Rcpp::Rcout << "#load.cpp->load 4. " << file << std::endl;
     while (fgets(line, sizeof line, fp) != 0)
     {
         cx.lineno++;
@@ -321,7 +319,7 @@ int load( char *file)
         {
             /* just quit on any error for now */
             (void)fclose(fp);
-            printf("FILE: %s LINE: %s\n", cx.file, line);
+            SOCSIM_ERRORF("FILE: %s LINE: %s", cx.file, line);
             fprintf(fd_log,"Error in load..l_process_line;FILE: %s LINE: %s \n", cx.file, line);
             fflush(fd_log);
             return -1;
@@ -377,12 +375,12 @@ int create_output_fn_dir() {
     char *rate_file_base_name = get_basename(rate_file_name, delimiters,
             buffer_base_name, 1024);
     if (rate_file_base_name) {
-        printf("Basename of sup file: %s\n", rate_file_base_name);
+        SOCSIM_DEBUGF("Basename of sup file: %s\n", rate_file_base_name);
     } else {
-        printf("Error: no sup file provided or buffer too small.\n");
+        SOCSIM_ERRORF("No sup file provided or buffer too small for output directory setup");
     }
 
-    sprintf (buffer_output_dir, "sim_results_%ld_%s/", original_seed,result_suffix);
+    sprintf (buffer_output_dir, "sim_results_%s_%ld_%s/", rate_file_base_name, original_seed, result_suffix);
     sprintf (buffer_output_fn, "%sresult", buffer_output_dir);
 
     // create the directory:
@@ -392,8 +390,8 @@ int create_output_fn_dir() {
     mkdir(buffer_output_dir, 0777); // notice that 777 is different than 0777
 #endif
 
-    Rprintf("Trying to copy %s\n", rate_file_name);
-    Rprintf("... to %s\n", buffer_output_fn);
+    SOCSIM_INFOF("Preparing output directory %s\n", buffer_output_dir);
+    SOCSIM_DEBUGF("Copying supervisory file %s -> %s\n", rate_file_name, buffer_output_fn);
 
     strcpy(pop_out_name, buffer_output_fn);
     strcpy(mar_out_name, buffer_output_fn);
@@ -409,11 +407,11 @@ int create_output_fn_dir() {
     // copy the .sup-file (rate_file_name) into the subfolder:
     FILE *source = fopen(rate_file_name, "rb");
     if (source == NULL) {
-        Rprintf("Could not open source (rate) file: %s\n", strerror(errno));
+        SOCSIM_ERRORF("Could not open source rate file: %s\n", strerror(errno));
     }
     char buffer_sup_fn_dest [1024];
     sprintf (buffer_sup_fn_dest, "%s%s", buffer_output_dir, rate_file_base_name);
-    Rcpp::Rcout << "Destination file path: " << buffer_sup_fn_dest << std::endl;
+    SOCSIM_DEBUGF("Supervisory file destination path: %s\n", buffer_sup_fn_dest);
     FILE *destination = fopen(buffer_sup_fn_dest, "wb");
     if (destination == NULL) {
         stop("Could not open destination file: %s\n", strerror(errno));
@@ -570,7 +568,7 @@ int l_process_line(char *line,struct l_context *cx,FILE *fp)
 */
 
         // Rcpp::Rcout << "18b-l_process_line... recall!=NULL "<< std::endl;
-        Rcpp::Rcout << "Incomplete rate set, will add rate till MAXUYEARS (death-->1.0; others:0.0) " << recall->upper_age << std::endl;
+        SOCSIM_WARNF("Incomplete rate set; extending to MAXUYEARS from upper age %d\n", recall->upper_age);
 
         // logmsg("-----18c - l_process_line.. recall!=NULL - Incomplete rate set.\n", "", 1);
 
@@ -1105,7 +1103,7 @@ int l_process_line(char *line,struct l_context *cx,FILE *fp)
                 //exit(-1);
             }
 
-            printf("on birth children get group from %s\n", words[1]);
+            SOCSIM_INFOF("On birth, children inherit group using rule %s\n", words[1]);
             return 1;
             break;
         case k_duration:
@@ -1171,7 +1169,7 @@ int l_process_line(char *line,struct l_context *cx,FILE *fp)
             if (reading_kt_values)
             {
                 reading_kt_values = FALSE;
-                printf("done reading kt values\n");
+                SOCSIM_INFOF("Finished reading kt values\n");
             }
             return 1;
             break;
@@ -1663,8 +1661,8 @@ void add_lc_rate_block(int years, int months, double prob)
                printf(" block %d compute %d\n",
                current_block->upper_age, 12 * years + months);
                */
-            Rcpp::Rcout << "18b-add_lc_rate_block BX.3| | " << current_block->upper_age  << " upper age | " << read_ax_or_bx << std::endl;
-
+                SOCSIM_ERRORF("Rate file ax and bx out of alignment at upper age %d and selector %d\n",
+                    current_block->upper_age, read_ax_or_bx);
             logmsg("18b-add_lc_rate_block BX.3| |\n", "", 1);
             stop("Rate file ax and bx out of alignment");//exit(-1);
             warning("\"Rate file ax and bx out of alignment\"");

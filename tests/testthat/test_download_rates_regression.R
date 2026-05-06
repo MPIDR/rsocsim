@@ -91,7 +91,10 @@ test_that("download_rates regression: simulate, estimate, compare, plot", {
   )
   expect_equal(result, 1)
 
-  output_dir <- file.path(simdir, paste0("sim_results_", seed, "_", suffix))
+  output_dir <- file.path(
+    simdir,
+    paste0("sim_results_", basename(download_result$infoFile), "_", seed, "_", suffix)
+  )
   opop_path <- file.path(output_dir, "result.opop")
   omar_path <- file.path(output_dir, "result.omar")
 

@@ -24,9 +24,9 @@ socsim <- function(folder, supfile, seed = "42", process_method = "inprocess",
                    compatibility_mode = "1", suffix = "") {
   seed = as.character(seed)
   compatibility_mode = as.character(compatibility_mode)
-  print("Start running one simulation with a .sup file.")
-  print(paste("Base directory of the simulation:", folder))
-  print(paste("RNG seed:", seed))
+  message("Starting SOCSIM simulation.")
+  message("Base directory: ", folder)
+  message("RNG seed: ", seed)
   previous_wd = getwd()
   result = NULL
   # If 'supfile' contains more than a basename, startSocsimWithFile() will
@@ -57,7 +57,7 @@ socsim <- function(folder, supfile, seed = "42", process_method = "inprocess",
     if (remove_supfile) {
       unlink(file.path(folder, basename(supfile)))
     }
-    print(paste("Restore previous working dir:", previous_wd))
+    message("Restoring working directory: ", previous_wd)
     setwd(previous_wd)
   }
   )
@@ -75,8 +75,15 @@ socsim <- function(folder, supfile, seed = "42", process_method = "inprocess",
 #' @noRd
 run_sim_w_file <- function(supfile, seed = "42", compatibility_mode = "1",
                            suffix = "", method = "inprocess") {
+    outfn <- socsim_result_file(folder = ".",
+                  supfile = supfile,
+                  seed = seed,
+                  suffix = suffix,
+                  filename = "logfile.log")
+    tail_log <- isTRUE(getOption("rsocsim.tail_log", interactive()))
+
     if (method == "inprocess") {
-        print("Starting socsim simulation now. No output will be shown!")
+        message("Running SOCSIM in the current R process.")
         startSocsimWithFile(supfile = supfile,
                             seed = seed,
                             compatibility_mode = compatibility_mode,
@@ -86,36 +93,29 @@ run_sim_w_file <- function(supfile, seed = "42", compatibility_mode = "1",
     if (!requireNamespace("future", quietly = TRUE)) {
       stop("The 'future' package is required for process_method = 'future'.")
     }
-        print("Using future::future to run simulation in a separate process.")
-        future::plan(future::multisession, workers=2)
-        print("Starting socsim simulation now. No output will be shown!")
+        message("Running SOCSIM in a separate R process via future::multisession.")
+        old_plan <- future::plan()
+        on.exit(future::plan(old_plan), add = TRUE)
+        future::plan(future::multisession, workers = 1)
         f1 <- future::future({
             startSocsimWithFile(supfile, seed, compatibility_mode, result_suffix = suffix)
         }, seed = TRUE)
-        print("Started the simulation.")
-        # start a loop and check whether the simulation in the future is finished.
-        # if it is not yet finished, read the output file and print the last line
-        # to the console
-        outfn = paste0("sim_results_", supfile, "_", seed, "_", suffix, "/logfile.log")
-        print(paste("Wait for simulation to finish. Log file:",outfn))
-        lastline = ""
-        while (!future::resolved(f1)) {
-            Sys.sleep(1)
-            lastline = print_last_line_of_logfile(outfn, lastline)
-            if (lastline=="err0"){
-                break;
-            }
+        message("Simulation started.")
+        if (tail_log) {
+          message("Live tailing logfile: ", outfn)
         }
-        print("Finished running the simulation.")
-        v1 <- future::value(f1) # TODO: v1 isn't used anywhere?
+        wait_for_future_simulation(f1, outfn, tail_log = tail_log)
+        future::value(f1)
+        message("Simulation finished.")
         return(1)
     } else if (method == "clustercall") {
         if (!requireNamespace("parallel", quietly = TRUE)) {
           stop("The 'parallel' package is required for process_method = 'clustercall'.")
         }
-        print("Using parallel::clusterCall to run simulation in a separate process.")
-        outfn <- paste0("sim_results_", supfile, "_", seed, "_", suffix, "/logfile.log")
-        cl <- parallel::makeCluster(spec = 1, type = "PSOCK", outfile = outfn)
+        message("Running SOCSIM in a separate R process via parallel::clusterCall.")
+        worker_outfn <- paste0(outfn, ".worker")
+        cl <- parallel::makeCluster(spec = 1, type = "PSOCK", outfile = worker_outfn)
+        on.exit(parallel::stopCluster(cl), add = TRUE)
         parallel::clusterExport(cl, "startSocsimWithFile")
         parallel::clusterCall(cl,
                               startSocsimWithFile,
@@ -123,17 +123,35 @@ run_sim_w_file <- function(supfile, seed = "42", compatibility_mode = "1",
                               seed = seed,
                               compatibility_mode = compatibility_mode,
                               result_suffix = suffix)
-        print("Started the simulation.")
-        print_last_line_of_logfile(outfn)
-        parallel::stopCluster(cl)
-        print("Finished running the simulation.")
+        if (tail_log) {
+          print_last_line_of_logfile(outfn)
+        }
+        message("Simulation finished.")
         return(1)
     } else {
         stop("No valid process_method argument given.")
     }
 }
 
+wait_for_future_simulation <- function(future_result, logfilename, tail_log = TRUE) {
+  lastline <- ""
+  while (!future::resolved(future_result)) {
+    Sys.sleep(1)
+    if (tail_log) {
+      lastline <- print_last_line_of_logfile(logfilename, lastline)
+    }
+  }
+
+  if (tail_log) {
+    print_last_line_of_logfile(logfilename, lastline)
+  }
+}
+
 print_last_line_of_logfile = function(logfilename, lastline = "") {
+  if (!file.exists(logfilename)) {
+    return(lastline)
+  }
+
   tryCatch({
     con = file(logfilename, "r")
     on.exit(close(con), add = TRUE)
@@ -142,7 +160,7 @@ print_last_line_of_logfile = function(logfilename, lastline = "") {
       line = readLines(con, n = 1)
       if ( length(line) == 0 ) {
         if (!identical(lastline, line2) && nzchar(line2)) {
-          print(line2);
+          message(line2)
         }
         break
       }
@@ -150,10 +168,8 @@ print_last_line_of_logfile = function(logfilename, lastline = "") {
     }
     return(line2)
   }, error = function(e) {
-    warning("Error while reading file")
-    warning(logfilename)
-    warning(e)
-    return("err0")
+    warning("Error while reading logfile '", logfilename, "': ", conditionMessage(e))
+    return(lastline)
   })
 }
 

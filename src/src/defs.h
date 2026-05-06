@@ -692,6 +692,20 @@ struct extra_data
 #define ON_MARRIAGE_QUEUE(p) ((p)->pointer_type[MARRIAGE_QUEUE] != PTR_NULL)
 #define ON_EVENT_QUEUE(p) ((p)->event_queue_index >= 0)
 
+enum socsim_log_level
+{
+  SOCSIM_LOG_DEBUG = 10,
+  SOCSIM_LOG_INFO = 20,
+  SOCSIM_LOG_WARN = 30,
+  SOCSIM_LOG_ERROR = 40,
+  SOCSIM_LOG_NONE = 50,
+};
+
+#define SOCSIM_DEBUGF(...) socsim_logf(SOCSIM_LOG_DEBUG, __VA_ARGS__)
+#define SOCSIM_INFOF(...) socsim_logf(SOCSIM_LOG_INFO, __VA_ARGS__)
+#define SOCSIM_WARNF(...) socsim_logf(SOCSIM_LOG_WARN, __VA_ARGS__)
+#define SOCSIM_ERRORF(...) socsim_logf(SOCSIM_LOG_ERROR, __VA_ARGS__)
+
 /* debugging hooks for some experiments */
 
 
@@ -705,6 +719,10 @@ void assemble_household( struct person * p);
 void population_pyramid(FILE * fd_pyr);
 FILE *open_write(char*);
 void print_segment_info();
+void socsim_set_console_log_level(int level);
+void socsim_set_file_log_level(int level);
+void socsim_logf(int level, const char *fmt, ...);
+void socsim_log_errno(int level, const char *context);
 void logmsg(const char * frmt, const char * msg, int where);
 void initialize_segment_vars();
 void initialize_marriage_targets();

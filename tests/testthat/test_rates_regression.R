@@ -68,7 +68,7 @@ test_that("rates regression: simulate, estimate, compare, plot", {
   result <- socsim(simdir, "socsim.sup", seed = seed, process_method = "inprocess", suffix = suffix)
   expect_equal(result, 1)
 
-  output_dir <- file.path(simdir, paste0("sim_results_", seed, "_", suffix))
+  output_dir <- file.path(simdir, paste0("sim_results_socsim.sup_", seed, "_", suffix))
   opop_path <- file.path(output_dir, "result.opop")
   omar_path <- file.path(output_dir, "result.omar")
 
@@ -230,7 +230,7 @@ test_that("rates regression: identical outputs with fixed seed", {
   result1 <- socsim(simdir, "socsim.sup", seed = seed, process_method = "inprocess", suffix = suffix)
   expect_equal(result1, 1)
 
-  output_dir1 <- file.path(simdir, paste0("sim_results_", seed, "_", suffix))
+  output_dir1 <- file.path(simdir, paste0("sim_results_socsim.sup_", seed, "_", suffix))
   opop_path1 <- file.path(output_dir1, "result.opop")
   omar_path1 <- file.path(output_dir1, "result.omar")
 
@@ -243,7 +243,7 @@ test_that("rates regression: identical outputs with fixed seed", {
   result2 <- socsim(simdir, "socsim.sup", seed = seed, process_method = "inprocess", suffix = suffix)
   expect_equal(result2, 1)
 
-  output_dir2 <- file.path(simdir, paste0("sim_results_", seed, "_", suffix))
+  output_dir2 <- file.path(simdir, paste0("sim_results_socsim.sup_", seed, "_", suffix))
   opop_path2 <- file.path(output_dir2, "result.opop")
   omar_path2 <- file.path(output_dir2, "result.omar")
 

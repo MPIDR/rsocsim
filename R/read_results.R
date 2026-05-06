@@ -30,7 +30,21 @@ read_omar <- function(folder=NULL, supfile="socsim.sup",seed=42,suffix="",fn=NUL
 
   # create fn
   if (is.null(fn)){
-    fn <- paste0(folder,"/sim_results_", supfile, "_",seed,"_",suffix, "/result.omar")
+    fn <- socsim_result_file(folder = folder,
+                             supfile = supfile,
+                             seed = seed,
+                             suffix = suffix,
+                             filename = "result.omar")
+    if (!file.exists(fn)) {
+      legacy_fn <- socsim_legacy_result_file(folder = folder,
+                                             supfile = supfile,
+                                             seed = seed,
+                                             suffix = suffix,
+                                             filename = "result.omar")
+      if (file.exists(legacy_fn)) {
+        fn <- legacy_fn
+      }
+    }
   } else {
     fn <- fn
   }
@@ -95,7 +109,21 @@ read_opop <- function(folder=NULL, supfile="socsim.sup",seed=42,suffix="",fn=NUL
 
   # create fn
   if (is.null(fn)){
-    fn <- paste0(folder,"/sim_results_", supfile, "_",seed,"_",suffix, "/result.opop")
+    fn <- socsim_result_file(folder = folder,
+                             supfile = supfile,
+                             seed = seed,
+                             suffix = suffix,
+                             filename = "result.opop")
+    if (!file.exists(fn)) {
+      legacy_fn <- socsim_legacy_result_file(folder = folder,
+                                             supfile = supfile,
+                                             seed = seed,
+                                             suffix = suffix,
+                                             filename = "result.opop")
+      if (file.exists(legacy_fn)) {
+        fn <- legacy_fn
+      }
+    }
   } else {
     fn <- fn
   }
