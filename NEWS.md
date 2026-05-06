@@ -1,3 +1,8 @@
+# rsocsim 1.9.5
+ * paralellization
+ * 
+
+
 # rsocsim 1.9 (March/April 2026)
  * improved marriage queue:
    * array based index

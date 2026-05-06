@@ -1290,102 +1290,6 @@ void new_events_for_all()
     }
 }
 
-/*
-   mqueue_install(p, q)
-   struct person *p;
-   struct queue_element *q;
-   {
-
-   if (q->first == NULL) {
-   q->first = p;
-   q->num++;
-   p->pointer_type[MARRIAGE_QUEUE] = PTR_Q;
-   p->MQUEUE = q;
-   } else {
-   q->num++;
-   p->pointer_type[MARRIAGE_QUEUE] = PTR_N;
-   p->NEXT_ON_MQUEUE = q->first;
-   q->first = p;
-   }
-
-   }
-   */
-
-void install_in_orderNOTWRONGBUTSLOW(struct person *p, struct queue_element *e, int q_type)
-    /** 1/13/14 This is Marcia's routine that puts individiduals on queues
-      in personid/birth order.  There does not appear to be any reason other
-      than esthetics for people to be installed in order since all events
-      are executed in random order and marriage requires a working queue to
-      be constructed. Perhaps I am wrong and this will blow up, but the sample
-      simulation works without sorting and generally things run much faster so
-      this is going into purgatory  **/
-
-    /** installs people onto the queue in person_id order **/
-    //struct person *p;
-    //struct queue_element *e;
-    //int q_type;
-{
-    struct person *after, *before;
-    int j;
-
-    /* printf("trying to install %d\n", p->person_id); */
-
-    if (e->first == NULL)
-    {
-        e->num++;
-        e->first = p;
-        p->pointer_type[q_type] = PTR_Q;
-        SET_NEXT_NODE(p, e);
-        /* printf("at head\n"); */
-        return;
-    }
-    else if (e->first->person_id > p->person_id)
-    {
-        e->num++;
-        p->pointer_type[q_type] = PTR_N;
-        SET_NEXT_ELEMENT(p, e->first);
-        e->first = p;
-        /* printf("at head, non-null\n"); */
-        return;
-    }
-    else
-    {
-        after = e->first;
-        before = e->first;
-        j = 1;
-        while ((after->person_id < p->person_id) && (j < e->num))
-        {
-            before = after;
-            after = NEXT_ELEMENT(after);
-            j++;
-        }
-        if (j < e->num || after->person_id > p->person_id)
-        {
-            p->pointer_type[q_type] = PTR_N;
-            SET_NEXT_ELEMENT(p, after);
-            SET_NEXT_ELEMENT(before, p);
-            e->num++;
-            /* printf("internal\n"); */
-            return;
-        }
-        else if (j == e->num)
-        {
-            p->pointer_type[q_type] = PTR_Q;
-            SET_NEXT_NODE(p, e);
-            after->pointer_type[q_type] = PTR_N;
-            SET_NEXT_ELEMENT(after, p);
-            e->num++;
-            /* printf("at end\n"); */
-            return;
-        }
-        else
-        {
-            printf("unknown queue circumstances\n");
-            stop("unknown queue circumstances\n");//exit(1);
-        }
-    }
-}
-/******************************************/
 static void ensure_marriage_queue_capacity(struct queue_element *e, int needed)
 {
     if (e->capacity >= needed)
@@ -1460,6 +1364,11 @@ void install_in_order(struct person *p, struct queue_element *e, int q_type)
     // struct person *after, *before;
 
     /* printf("trying to install %d\n", p->person_id); */
+
+    if (ON_EVENT_QUEUE(p))
+    {
+        stop("attempted to enqueue person %d on the event queue twice", p->person_id);
+    }
 
     ensure_event_queue_capacity(e, e->num + 1);
     e->items[e->num] = p;
@@ -1568,6 +1477,11 @@ void queue_delete( struct person *p, int q_type)
             stop("invalid marriage queue index");
         }
 
+        if (e->items[index] != p)
+        {
+            stop("marriage queue entry mismatch for person %d", p->person_id);
+        }
+
         if (index != last_index)
         {
             struct person *moved = e->items[last_index];
@@ -1611,6 +1525,11 @@ void queue_delete( struct person *p, int q_type)
     if (index < 0 || index > last_index)
     {
         stop("invalid event queue index");
+    }
+
+    if (e->items[index] != p)
+    {
+        stop("event queue entry mismatch for person %d", p->person_id);
     }
 
     if (index != last_index)

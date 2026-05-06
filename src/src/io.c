@@ -146,12 +146,17 @@ void initialize_person(struct person *pnew) {
   pnew->lborn = NULL;
   pnew->last_marriage = NULL;
   pnew->mstatus = MS_NULL;
+  pnew->deathdate = 0;
   pnew->fmult = 1.0;
   pnew->dmult = 1.0;
   pnew->tmult = 1.0;
   pnew->down = NULL;
+  pnew->pointer_type[EVENT_QUEUE] = PTR_NULL;
+  pnew->pointer_type[MARRIAGE_QUEUE] = PTR_NULL;
   pnew->marriage_queue_index = -1;
   pnew->event_queue_index = -1;
+  pnew->MONTH = NULL;
+  pnew->NEXT_ON_MQUEUE = NULL;
   pnew->extra = NULL;
   pnew->ltrans = NULL;
 }

@@ -612,16 +612,6 @@ struct person
 #define EVENT_QUEUE 0
 #define MARRIAGE_QUEUE 1
 
-#define NEXT_ELEMENT(p) \
-  ((q_type) == EVENT_QUEUE) ? (p)->NEXT_PERSON : (p)->NEXT_ON_MQUEUE
-#define NEXT_NODE(p) \
-  ((q_type) == EVENT_QUEUE) ? (p)->MONTH : (p)->MQUEUE
-
-#define SET_NEXT_ELEMENT(p, q) \
-  ((q_type) == EVENT_QUEUE) ? ((p)->NEXT_PERSON = (q)) : ((p)->NEXT_ON_MQUEUE = (q))
-#define SET_NEXT_NODE(p, e) \
-  ((q_type) == EVENT_QUEUE) ? ((p)->MONTH = (e)) : ((p)->MQUEUE = (e))
-
 struct marriage
 {
   int marr_id;

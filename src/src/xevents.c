@@ -38,10 +38,7 @@ void birth(struct person *p)
 
   /* create child, set up pointers */
   child = NEW(struct person);
-  child->extra = NULL; /* best to initialize to NULL */
-  child->ltrans = NULL;
-  child->dmult = 1.0;
-  child->tmult = 1.0;
+  initialize_person(child);
   child->person_id = ++last_person_id;
   last_person->down = child;
   last_person = child;
@@ -123,9 +120,6 @@ void birth(struct person *p)
   {
     child->fmult = 0;
   }
-  child->pointer_type[MARRIAGE_QUEUE] = PTR_NULL;
-  child->marriage_queue_index = -1;
-  child->NEXT_ON_MQUEUE = NULL;
   child->pref = random_spouse2;
 
   child->score = score3;
