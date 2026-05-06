@@ -24,9 +24,11 @@ socsim <- function(folder, supfile, seed = "42", process_method = "inprocess",
                    compatibility_mode = "1", suffix = "") {
   seed = as.character(seed)
   compatibility_mode = as.character(compatibility_mode)
-  message("Starting SOCSIM simulation.")
-  message("Base directory: ", folder)
-  message("RNG seed: ", seed)
+  input_supfile_path <- socsim_input_supfile_path(folder, supfile)
+  socsim_message("Starting SOCSIM simulation.")
+  socsim_message("Base directory: ", folder)
+  socsim_message("Input supervisory file: ", input_supfile_path)
+  socsim_message("RNG seed: ", seed)
   previous_wd = getwd()
   result = NULL
   # If 'supfile' contains more than a basename, startSocsimWithFile() will
@@ -48,6 +50,12 @@ socsim <- function(folder, supfile, seed = "42", process_method = "inprocess",
                             compatibility_mode = compatibility_mode,
                             suffix = suffix,
                             method = process_method)
+    if (!is.null(result) && identical(as.integer(result), 1L)) {
+      report_socsim_console_summary(folder = ".",
+                                    supfile = supfile,
+                                    seed = seed,
+                                    suffix = suffix)
+    }
   },
   error = function(w){
     warning("Error during execution of simulation!")
@@ -57,12 +65,110 @@ socsim <- function(folder, supfile, seed = "42", process_method = "inprocess",
     if (remove_supfile) {
       unlink(file.path(folder, basename(supfile)))
     }
-    message("Restoring working directory: ", previous_wd)
+    socsim_message("Restoring working directory: ", previous_wd)
     setwd(previous_wd)
   }
   )
   return(result)
   
+}
+
+socsim_console_enabled <- function() {
+  isTRUE(getOption("rsocsim.console_output", TRUE))
+}
+
+socsim_message <- function(...) {
+  if (socsim_console_enabled()) {
+    message(...)
+  }
+}
+
+socsim_is_absolute_path <- function(path) {
+  grepl("^[A-Za-z]:[/\\\\]|^[/\\\\]{2}|^/", path)
+}
+
+socsim_input_supfile_path <- function(folder, supfile) {
+  if (socsim_is_absolute_path(supfile)) {
+    return(normalizePath(supfile, winslash = "/", mustWork = FALSE))
+  }
+
+  normalizePath(file.path(folder, supfile), winslash = "/", mustWork = FALSE)
+}
+
+report_socsim_console_summary <- function(folder, supfile, seed, suffix = "") {
+  output_dir <- normalizePath(
+    socsim_result_dir(folder = folder,
+                      supfile = supfile,
+                      seed = seed,
+                      suffix = suffix),
+    winslash = "/",
+    mustWork = FALSE
+  )
+  pyramid_file <- socsim_result_file(folder = folder,
+                                     supfile = supfile,
+                                     seed = seed,
+                                     suffix = suffix,
+                                     filename = "result.pyr")
+
+  socsim_message("Output directory: ", output_dir)
+  if (!file.exists(pyramid_file)) {
+    return(invisible(output_dir))
+  }
+
+  pyramid_lines <- extract_console_population_pyramid(pyramid_file)
+  if (length(pyramid_lines) > 0L) {
+    socsim_message("Population pyramid:")
+    writeLines(pyramid_lines)
+  }
+
+  invisible(output_dir)
+}
+
+extract_console_population_pyramid <- function(pyramid_file) {
+  pyramid_lines <- readLines(pyramid_file, warn = FALSE)
+  if (!length(pyramid_lines)) {
+    return(character())
+  }
+
+  all_groups_idx <- grep("All groups :", pyramid_lines, fixed = TRUE)
+  if (!length(all_groups_idx)) {
+    return(character())
+  }
+
+  header_candidates <- grep("Population Pyramid", pyramid_lines, fixed = TRUE)
+  header_candidates <- header_candidates[header_candidates < tail(all_groups_idx, 1L)]
+  if (!length(header_candidates)) {
+    return(character())
+  }
+
+  start_idx <- tail(header_candidates, 1L)
+  scale_idx <- grep("^   ------\\+", pyramid_lines)
+  scale_candidates <- scale_idx[scale_idx > tail(all_groups_idx, 1L)]
+  if (!length(scale_candidates)) {
+    return(character())
+  }
+
+  scale_start_idx <- scale_candidates[1L]
+  scale_end_idx <- min(scale_start_idx + 1L, length(pyramid_lines))
+  block <- pyramid_lines[start_idx:scale_end_idx]
+
+  if (length(block) < 6L) {
+    return(block)
+  }
+
+  header_part <- block[1:3]
+  age_rows <- block[4:(length(block) - 2L)]
+  scale_part <- block[(length(block) - 1L):length(block)]
+
+  if (length(age_rows) > 1L) {
+    keep_idx <- seq(1L, length(age_rows), by = 2L)
+    if (tail(keep_idx, 1L) != length(age_rows)) {
+      keep_idx <- c(keep_idx, length(age_rows))
+    }
+    age_rows <- age_rows[unique(keep_idx)]
+  }
+
+  c(header_part, age_rows, scale_part)
 }
 
 #' Run a single Socsim simulation.
@@ -80,10 +186,12 @@ run_sim_w_file <- function(supfile, seed = "42", compatibility_mode = "1",
                   seed = seed,
                   suffix = suffix,
                   filename = "logfile.log")
-    tail_log <- isTRUE(getOption("rsocsim.tail_log", interactive()))
+  socsim_message("Monitor progress in the logfile: ",
+                 normalizePath(outfn, winslash = "/", mustWork = FALSE))
+  tail_log <- isTRUE(getOption("rsocsim.tail_log", FALSE))
 
     if (method == "inprocess") {
-        message("Running SOCSIM in the current R process.")
+      socsim_message("Running SOCSIM in the current R process.")
         startSocsimWithFile(supfile = supfile,
                             seed = seed,
                             compatibility_mode = compatibility_mode,
@@ -93,26 +201,26 @@ run_sim_w_file <- function(supfile, seed = "42", compatibility_mode = "1",
     if (!requireNamespace("future", quietly = TRUE)) {
       stop("The 'future' package is required for process_method = 'future'.")
     }
-        message("Running SOCSIM in a separate R process via future::multisession.")
+        socsim_message("Running SOCSIM in a separate R process via future::multisession.")
         old_plan <- future::plan()
         on.exit(future::plan(old_plan), add = TRUE)
         future::plan(future::multisession, workers = 1)
         f1 <- future::future({
             startSocsimWithFile(supfile, seed, compatibility_mode, result_suffix = suffix)
         }, seed = TRUE)
-        message("Simulation started.")
+        socsim_message("Simulation started.")
         if (tail_log) {
-          message("Live tailing logfile: ", outfn)
+          socsim_message("Live tailing logfile: ", outfn)
         }
         wait_for_future_simulation(f1, outfn, tail_log = tail_log)
         future::value(f1)
-        message("Simulation finished.")
+        socsim_message("Simulation finished.")
         return(1)
     } else if (method == "clustercall") {
         if (!requireNamespace("parallel", quietly = TRUE)) {
           stop("The 'parallel' package is required for process_method = 'clustercall'.")
         }
-        message("Running SOCSIM in a separate R process via parallel::clusterCall.")
+        socsim_message("Running SOCSIM in a separate R process via parallel::clusterCall.")
         worker_outfn <- paste0(outfn, ".worker")
         cl <- parallel::makeCluster(spec = 1, type = "PSOCK", outfile = worker_outfn)
         on.exit(parallel::stopCluster(cl), add = TRUE)
@@ -126,7 +234,7 @@ run_sim_w_file <- function(supfile, seed = "42", compatibility_mode = "1",
         if (tail_log) {
           print_last_line_of_logfile(outfn)
         }
-        message("Simulation finished.")
+        socsim_message("Simulation finished.")
         return(1)
     } else {
         stop("No valid process_method argument given.")

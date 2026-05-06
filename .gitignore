@@ -44,3 +44,4 @@ tests/testthat/_results/*.png
 
 *.csv
 *.png
+.tmpRlib/*

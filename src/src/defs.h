@@ -711,9 +711,15 @@ FILE *open_write(char*);
 void print_segment_info();
 void socsim_set_console_log_level(int level);
 void socsim_set_file_log_level(int level);
+int socsim_log_enabled(int level);
 void socsim_logf(int level, const char *fmt, ...);
 void socsim_log_errno(int level, const char *context);
 void logmsg(const char * frmt, const char * msg, int where);
+
+#define printf(...) socsim_logf(SOCSIM_LOG_DEBUG, __VA_ARGS__)
+#define Rprintf(...) socsim_logf(SOCSIM_LOG_DEBUG, __VA_ARGS__)
+#define warning(...) socsim_logf(SOCSIM_LOG_WARN, __VA_ARGS__)
+#define perror(context) socsim_log_errno(SOCSIM_LOG_ERROR, context)
 void initialize_segment_vars();
 void initialize_marriage_targets();
 void new_events_for_all();

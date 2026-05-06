@@ -155,6 +155,9 @@ socsim_parallel <- function(folder,
   run_job <- function(job) {
     result <- tryCatch(
       expr = {
+        old_console_output <- getOption("rsocsim.console_output", TRUE)
+        on.exit(options(rsocsim.console_output = old_console_output), add = TRUE)
+        options(rsocsim.console_output = FALSE)
         value <- socsim(folder = job$folder,
                         supfile = job$supfile,
                         seed = job$seed,
@@ -206,5 +209,34 @@ socsim_parallel <- function(folder,
                stringsAsFactors = FALSE)
   }))
   rownames(results_df) <- NULL
+  print_socsim_parallel_summary(results_df)
   results_df
+}
+
+print_socsim_parallel_summary <- function(results_df) {
+  if (!nrow(results_df)) {
+    return(invisible(results_df))
+  }
+
+  message("SOCSIM parallel summary:")
+  apply(results_df, 1L, function(row) {
+    status <- row[["status"]]
+    output_dir <- normalizePath(row[["output_dir"]], winslash = "/", mustWork = FALSE)
+    if (identical(status, "success")) {
+      message(sprintf("[%s] %s seed=%s -> %s",
+                      status,
+                      basename(row[["supfile"]]),
+                      row[["seed"]],
+                      output_dir))
+    } else {
+      message(sprintf("[%s] %s seed=%s -> %s",
+                      status,
+                      basename(row[["supfile"]]),
+                      row[["seed"]],
+                      row[["error_message"]]))
+    }
+    NULL
+  })
+
+  invisible(results_df)
 }

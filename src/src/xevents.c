@@ -1657,9 +1657,7 @@ struct person * find_random_father(struct person *child)
 
   /* if we are here, then fathers are very scarce as in no living males
      over random_father_min_age */
-  char logstring[256];
-  sprintf(logstring, "\n month:%d child:%d No qualified father found in %d attempts \n",
-          current_month, child->person_id, rejects);
-  logmsg("%s\n", logstring, 1);
+    SOCSIM_INFOF("month:%d child:%d No qualified father found in %d attempts\n",
+      current_month, child->person_id, rejects);
   return (NULL);
 }

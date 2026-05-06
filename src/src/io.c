@@ -80,6 +80,12 @@ void socsim_set_file_log_level(int level)
   socsim_file_log_level = level;
 }
 
+int socsim_log_enabled(int level)
+{
+  return level >= socsim_file_log_level ||
+    (socsim_console_log_level != SOCSIM_LOG_NONE && level >= socsim_console_log_level);
+}
+
 void socsim_logf(int level, const char *fmt, ...)
 {
   char message[4096];
@@ -108,8 +114,21 @@ void socsim_log_errno(int level, const char *context)
 
 void logmsg(const char * frmt, const char * msg, int where)
 {
+  char message[4096];
+  int level = SOCSIM_LOG_DEBUG;
+
   (void)where;
-  socsim_logf(SOCSIM_LOG_INFO, frmt, msg);
+  snprintf(message, sizeof(message), frmt, msg);
+  if (strncmp(message, "ERROR", 5) == 0)
+  {
+    level = SOCSIM_LOG_ERROR;
+  }
+  else if (strncmp(message, "WARNING", 7) == 0)
+  {
+    level = SOCSIM_LOG_WARN;
+  }
+
+  socsim_logf(level, "%s", message);
 }
 
 /***********************************************************************/

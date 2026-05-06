@@ -246,8 +246,7 @@ int load( char *file)
 {
 
     //Rcpp::Rcout << "18b-load rate file . " << file << std::endl;
-    fprintf(fd_log,"open: %i, load rate file: |%s\n",current_fstatus,file);
-    fflush(fd_log);
+    SOCSIM_DEBUGF("open: %i, load rate file: |%s\n", current_fstatus, file);
     struct l_context cx;
     char line[LINELENGTH];
     FILE *fp;
@@ -283,11 +282,10 @@ int load( char *file)
         current_offset = 0;
     }
 
-    //logmsg("openning %s \n", file, 1);
-    fprintf(fd_log,"\nopening %s \n", file);
-    fprintf(fd_log,"starting with line %d ", current_lineno);
-    fprintf(fd_log,"at %ld, seekset= %i \n", current_offset, SEEK_SET);
-    fflush(fd_log);
+        //logmsg("openning %s \n", file, 1);
+        SOCSIM_DEBUGF("opening %s\n", file);
+        SOCSIM_DEBUGF("starting with line %d at %ld, seekset=%i\n",
+            current_lineno, current_offset, SEEK_SET);
     fseek(fp, current_offset, SEEK_SET); // before, SEEK_SET was 0
                                          //somehow this jumps to the wrong position, if we don't start at the beginning.
 
@@ -568,7 +566,7 @@ int l_process_line(char *line,struct l_context *cx,FILE *fp)
 */
 
         // Rcpp::Rcout << "18b-l_process_line... recall!=NULL "<< std::endl;
-        SOCSIM_WARNF("Incomplete rate set; extending to MAXUYEARS from upper age %d\n", recall->upper_age);
+        SOCSIM_DEBUGF("Incomplete rate set; extending to MAXUYEARS from upper age %d\n", recall->upper_age);
 
         // logmsg("-----18c - l_process_line.. recall!=NULL - Incomplete rate set.\n", "", 1);
 
@@ -692,16 +690,12 @@ int l_process_line(char *line,struct l_context *cx,FILE *fp)
             break;
 
         case k_input_file:
-            fprintf(fd_log,"I am here at load.cpp-k_input_file. |%s\n",pop_file_name);
-            //pop_file_name;
-            //memset(pop_file_name, 0, 1024);
             memset(pop_file_name, 0, 1024 * (sizeof pop_file_name[0]) );
-            fprintf(fd_log,"I am here at load.cpp-k_input_file. |%s\n",pop_file_name);
             //pop_file_name[0] = '\0';
             strcpy(pop_file_name, words[1]);
-            fprintf(fd_log,"I am here at load.cpp-k_input_file. |%s\n",pop_file_name);
             fflush(fd_log);
             strcpy(mar_file_name, words[1]);
+            fprintf(fd_log,"loading population file: |%s\n",pop_file_name);
             strcpy(xtra_file_name, words[1]);
             strcpy(otx_file_name, words[1]);
             return 1;
@@ -1155,14 +1149,14 @@ int l_process_line(char *line,struct l_context *cx,FILE *fp)
             current_fstatus = OPEN;
             current_lineno = cx->lineno;
             /*printf("offset %ld line %d\n", current_offset, cx->lineno);*/
-            fprintf(fd_log,"\ncurrent_offset: %ld; line: %d\n", current_offset, cx->lineno);
+            SOCSIM_DEBUGF("current_offset: %ld; line: %d\n", current_offset, cx->lineno);
             current_fp = fp;
             return 1;
             break;
         case k_include:
-            fprintf(fd_log,"loading %s ... ", words[1]);
+            SOCSIM_DEBUGF("loading %s\n", words[1]);
             load(words[1]);
-            fprintf(fd_log,"done loading %s\n", words[1]);
+            SOCSIM_DEBUGF("done loading %s\n", words[1]);
             return 1;
             break;
         case k_done:
@@ -1842,15 +1836,15 @@ int fill_rate_gaps()
       once causing extremely suboptimal behavior **/
 
     //logmsg("Rates imply simulation will have %d groups\n", " ", numgroups);
-    fprintf(fd_log, "Simulation will have %i groups - fprintf \n",numgroups);
-    fprintf(fd_log, "Simulation will have %i groups in ipop - fprintf \n",numgroups_in_ipop);
+    SOCSIM_DEBUGF("Simulation will have %i groups\n", numgroups);
+    SOCSIM_DEBUGF("Initial population has %i groups\n", numgroups_in_ipop);
     //logmsg("Initial population has max group id %d \n", " ",numgroups_in_ipop);
     if (numgroups != numgroups_in_ipop)
     {
         numgroups = MAX(numgroups, numgroups_in_ipop);
     }
 
-    fprintf(fd_log, "Simulation will have %i groups - fprintf \n",numgroups);
+    SOCSIM_DEBUGF("Simulation will have %i groups after reconciliation\n", numgroups);
 
     zero_block = NEW(struct age_block);
     zero_block->previous = NULL;

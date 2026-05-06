@@ -113,10 +113,6 @@ const char *c_tally_to_string[] = {
     "NUMCAT",
 };
 
-static int debug_process_month_events_logged = 0;
-
-
-
 // [[Rcpp::export]]
 int main1(int argc, char *argv[])
 {
@@ -354,11 +350,10 @@ int main1(int argc, char *argv[])
       printf("current value of hetfert flag %d\n", hetfert);
      **/
 
-    fprintf(fd_log,"I am here at events.cpp-pop_file_name. |%s\n",pop_file_name);
+    SOCSIM_DEBUGF("base pop file name %s\n", pop_file_name);
     //pop_file_name[0] = 0;
     strcat(pop_file_name, ".opop");
-    fprintf(fd_log,"I am here at events.cpp-pop_file_name. |%s\n",pop_file_name);
-    fflush(fd_log);
+    SOCSIM_DEBUGF("initial pop file path %s\n", pop_file_name);
     strcat(mar_file_name, ".omar");
     strcat(xtra_file_name, ".opox");
     strcat(pyr_file_name, ".pyr");
@@ -378,7 +373,7 @@ int main1(int argc, char *argv[])
     {
         //   Rprintf("------------pop_file error");
         //logmsg("can't open initial  pop file; can't simuluate..%s \n",pop_file_name,1);//exit
-        fprintf(fd_log,"can't open initial  pop file; can't simuluate..%s \n",pop_file_name);
+        SOCSIM_ERRORF("can't open initial pop file; can't simulate: %s\n", pop_file_name);
         stop("can't open initial pop file; can't simulate: %s", pop_file_name);//exit
     }
     if ((fd_mar = fopen(mar_file_name, "r")) == NULL)
@@ -411,7 +406,8 @@ int main1(int argc, char *argv[])
 
     SOCSIM_INFOF("Output files: %s|%s|%s|%s|%s|%s|\n",
             pop_file_name, mar_file_name, xtra_file_name, pyr_file_name, stat_file_name, otx_file_name);
-    fprintf(fd_log,"\n output file names:\n %s|%s|%s|%s|%s|%s|\n",pop_file_name,mar_file_name,xtra_file_name,pyr_file_name,stat_file_name,otx_file_name);
+        SOCSIM_DEBUGF("output file names: %s|%s|%s|%s|%s|%s|\n",
+            pop_file_name, mar_file_name, xtra_file_name, pyr_file_name, stat_file_name, otx_file_name);
 
     logmsg("----------------------- prepare_output_files_1 \n"," ",1);
 
@@ -441,7 +437,6 @@ int main1(int argc, char *argv[])
     if (fd_mar != NULL)
     {
         SOCSIM_INFOF("Reading initial marriage file %s\n", mar_file_name);
-        fprintf(fd_log,"Reading initial marriage file %s\n", mar_file_name);
         read_marlist(fd_mar);
         fclose(fd_mar);
     }
@@ -472,7 +467,7 @@ int main1(int argc, char *argv[])
     if (fd_otx != NULL)
     {
         //logmsg("Reading initial transition history file %s\n", otx_file_name,1);
-        fprintf(fd_log,"Reading initial transition history file %s\n", otx_file_name);
+        SOCSIM_DEBUGF("Reading initial transition history file %s\n", otx_file_name);
         read_otx(fd_otx);
         fclose(fd_otx);
     }
@@ -491,20 +486,20 @@ int main1(int argc, char *argv[])
         int rows_read = 0;
         //char logstring[128];
         //logmsg("\n\nReading initial xtra file %s\n", xtra_file_name, 1);
-        fprintf(fd_log,"\n\nReading initial xtra file %s\n", xtra_file_name);
+        SOCSIM_DEBUGF("Reading initial xtra file %s\n", xtra_file_name);
         rows_read = read_xtra(fd_xtra, pop_rows);
         // sprintf(logstring, "%d observations read from %s",
         // 		rows_read, xtra_file_name);
         //logmsg("%s\n", logstring, 0);
-        fprintf(fd_log,"%d observations read from %s\n",
-                rows_read, xtra_file_name);
+        SOCSIM_DEBUGF("%d observations read from %s\n",
+            rows_read, xtra_file_name);
 
         fclose(fd_xtra);
     }
     else
     {
         //logmsg("xtra file NOT read: read_extra_file=%d\n", " ",read_xtra_file);
-        fprintf(fd_log,"xtra file NOT read: read_extra_file=%d\n", read_xtra_file);
+        SOCSIM_DEBUGF("xtra file NOT read: read_extra_file=%d\n", read_xtra_file);
     }
 
     /* numgroups willbe reset to reflect groups in initial pop if nec 
@@ -576,9 +571,10 @@ int main1(int argc, char *argv[])
         //Rprintf("------------aa35");
 
         //logmsg("--aa35\n", "", 1);
-        print_segment_info(fd_log);
-        //logmsg("--aa35\n", "", 1);
-        print_segment_info(stdout);
+        if (socsim_log_enabled(SOCSIM_LOG_DEBUG))
+        {
+            print_segment_info(fd_log);
+        }
         //logmsg("--aa35\n", "", 1);
         population_pyramid(fd_pyr); /*blows guts here*/
 
@@ -608,7 +604,8 @@ int main1(int argc, char *argv[])
            printf("processing event queue\n");
            */
         logmsg("|m0|", "", 1);
-        timestart2 = clock();
+        clock_t segment_start = clock();
+        timestart2 = segment_start;
         int done = 0;
         //stop("just before month-loop");
         for (; current_month <= stop_month; current_month++)
@@ -730,8 +727,15 @@ int main1(int argc, char *argv[])
 
         //logmsg("|m5|", "", 1);
         //Rprintf("-m|pa");
-        fprintf(fd_log,"\nsegment %d complete current month: %d\n",	current_segment, current_month);
-        SOCSIM_INFOF("segment %d complete current month: %d\n",	current_segment, current_month);
+        timeend = clock();
+        timedif2 = (double)(timeend - segment_start) / CLOCKS_PER_SEC;
+        char segment_timestamp[32] = "unknown-time";
+        time_t wall_clock_now = time(NULL);
+        struct tm *segment_time = localtime(&wall_clock_now);
+        if (segment_time != NULL)
+            strftime(segment_timestamp, sizeof(segment_timestamp), "%Y-%m-%d %H:%M:%S", segment_time);
+        SOCSIM_INFOF("segment %d/%d complete at month %d in %.2f s at %s\n",
+		current_segment, num_segments, current_month, timedif2, segment_timestamp);
         //logmsg("%s\n", logstring, 1);
 
         if (take_census)
@@ -759,8 +763,6 @@ int main1(int argc, char *argv[])
 
         logmsg(" grogro \n", "", 1);
 
-        fprintf(fd_log, "agga lolo num_segments %i \n",num_segments);
-        fprintf(fd_log, "agga lolo curr_segment %i \n",current_segment);
         if (current_segment < num_segments)
         {
             if (write_output)
@@ -783,19 +785,16 @@ int main1(int argc, char *argv[])
             logmsg("%s\n", logstring, 1);
             logmsg("about to empty event queue\n", "", 0);
 
-                SOCSIM_INFOF("Setting up rates and queues for segment %d\n", current_segment);
+		        SOCSIM_DEBUGF("Setting up rates and queues for segment %d\n", current_segment);
 
             logmsg("about to (re)initialize segment vars -----\n", "", 0);
-            fprintf(fd_log,"about to (re)initialize segment vars fprintf");
-            fflush(fd_log);
+            SOCSIM_DEBUGF("about to reinitialize segment vars\n");
             /* dump_rates(2); */
             initialize_segment_vars();
 
-            fprintf(fd_log,"after (re)initializing segment vars");
-            fflush(fd_log);
+            SOCSIM_DEBUGF("finished reinitializing segment vars\n");
             //logmsg("about read rate file %s\n", rate_file_name, 0);
-            fprintf(fd_log,"about to read rate file %s\n", rate_file_name);
-            fflush(fd_log);
+            SOCSIM_DEBUGF("about to read rate file %s\n", rate_file_name);
             if (load(rate_file_name) < 0){
                 stop("could not read rate_file_name %s",rate_file_name);
             }
@@ -815,25 +814,22 @@ int main1(int argc, char *argv[])
     }
     logmsg("\n Simulation Complete \n", "", 1);
 
-    fprintf(fd_log, "agga number of groups  %i \n",NUMBER_OF_GROUPS);
-    fprintf(fd_log, "agga num_segments %i \n",num_segments);
-    fprintf(fd_log, "agga curr_segment %i \n",current_segment);
-
-    fprintf(fd_log, "agga read_xtra_file! %i \n",read_xtra_file);
-    fprintf(fd_log, "agga read_xtra_file! %d \n",read_xtra_file);
-
-    fprintf(fd_log, "males on queue\n");
+    SOCSIM_DEBUGF("number of groups %i\n", NUMBER_OF_GROUPS);
+    SOCSIM_DEBUGF("num_segments %i\n", num_segments);
+    SOCSIM_DEBUGF("curr_segment %i\n", current_segment);
+    SOCSIM_DEBUGF("read_xtra_file %d\n", read_xtra_file);
+    SOCSIM_DEBUGF("males on queue\n");
     /* this looks like it's just for debugging*/
     if (marriage_queues == 1)
     {
         /*      inspect_entry(marriage_queue + MALE, MARRIAGE_QUEUE,fd_log);*/
     }
 
-    fprintf(fd_log, "person-years on queue: %d\n", (int)time_waiting[MALE] / 12);
-    fprintf(fd_log, "females on queue\n");
+    SOCSIM_DEBUGF("person-years on queue: %d\n", (int)time_waiting[MALE] / 12);
+    SOCSIM_DEBUGF("females on queue\n");
     /*inspect_entry(marriage_queue + FEMALE, MARRIAGE_QUEUE,fd_log);*/
 
-    fprintf(fd_log, "person-years on queue: %d\n",
+    SOCSIM_DEBUGF("person-years on queue: %d\n",
             (int)time_waiting[FEMALE] / 12);
 
     if (marriage_eval == DISTRIBUTION)
@@ -857,7 +853,7 @@ int main1(int argc, char *argv[])
         evaluate_marmkt(fd_log);
     }
 
-    fprintf(fd_log, "now printing popfiles..\n");
+    SOCSIM_DEBUGF("now printing popfiles\n");
     write_popfiles(0);
 
     /*
@@ -868,11 +864,10 @@ int main1(int argc, char *argv[])
     logmsg("%s\n", logstring, 1);
     for (i = 1; i <= numgroups; i++)
     {
-        fprintf(fd_log, "living pop group %d  %d\n", i, size_of_pop[i]);
+        SOCSIM_DEBUGF("living pop group %d %d\n", i, size_of_pop[i]);
     }
 
-    fprintf(fd_log, "now printing populationpyramid");
-    population_pyramid(stdout);
+    SOCSIM_DEBUGF("now printing populationpyramid\n");
     population_pyramid(fd_pyr);
 
     fclose(fd_pyr);
@@ -961,9 +956,11 @@ int process_month()
     i = current_month % MAXUMONTHS;
     e = event_queue + i;
 
-        fprintf(fd_log, "DBG process_month start month=%d slot=%d queue_num=%d\n",
-            current_month, i, e->num);
-        fflush(fd_log);
+    if (socsim_log_enabled(SOCSIM_LOG_DEBUG))
+    {
+        SOCSIM_DEBUGF("DBG process_month start month=%d slot=%d queue_num=%d\n",
+                current_month, i, e->num);
+    }
 
     /*
        printf("processing month %d on queue %d\n", current_month, e->num);
@@ -996,16 +993,12 @@ int process_month()
         }
         p = e->items[nth];
 
-        if (debug_process_month_events_logged < 25)
+        if (socsim_log_enabled(SOCSIM_LOG_DEBUG))
         {
-            fprintf(fd_log,
-                "DBG process_month pick month=%d slot=%d nth=%d queue_num=%d person_ptr=%p\n",
-                current_month, i, nth, e->num, (void *)p);
-            fflush(fd_log);
-            fprintf(fd_log,
-                "DBG process_month person id=%d sex=%d group=%d mstatus=%d next_event=%d\n",
-                p->person_id, p->sex, p->group, p->mstatus, p->next_event);
-            fflush(fd_log);
+            SOCSIM_DEBUGF("DBG process_month pick month=%d slot=%d nth=%d queue_num=%d person_ptr=%p\n",
+                    current_month, i, nth, e->num, (void *)p);
+            SOCSIM_DEBUGF("DBG process_month person id=%d sex=%d group=%d mstatus=%d next_event=%d\n",
+                    p->person_id, p->sex, p->group, p->mstatus, p->next_event);
         }
         //logmsg("|pm1|", "", 1);
 
@@ -1015,22 +1008,18 @@ int process_month()
            p->person_id);
            */
 
-        if (debug_process_month_events_logged < 25)
+        if (socsim_log_enabled(SOCSIM_LOG_DEBUG))
         {
-            fprintf(fd_log,
-                "DBG before queue_delete person=%d event_queue_index=%d pointer_type=%d\n",
-                p->person_id, p->event_queue_index, p->pointer_type[EVENT_QUEUE]);
-            fflush(fd_log);
+            SOCSIM_DEBUGF("DBG before queue_delete person=%d event_queue_index=%d pointer_type=%d\n",
+                    p->person_id, p->event_queue_index, p->pointer_type[EVENT_QUEUE]);
         }
 
         queue_delete(p, EVENT_QUEUE);
 
-        if (debug_process_month_events_logged < 25)
+        if (socsim_log_enabled(SOCSIM_LOG_DEBUG))
         {
-            fprintf(fd_log,
-                "DBG after queue_delete person=%d next_event=%d event_queue_index=%d pointer_type=%d\n",
-                p->person_id, p->next_event, p->event_queue_index, p->pointer_type[EVENT_QUEUE]);
-            fflush(fd_log);
+            SOCSIM_DEBUGF("DBG after queue_delete person=%d next_event=%d event_queue_index=%d pointer_type=%d\n",
+                    p->person_id, p->next_event, p->event_queue_index, p->pointer_type[EVENT_QUEUE]);
         }
 
         //printf ("3.3 process month %d\n", "");
@@ -1044,26 +1033,17 @@ int process_month()
         // logmsg("next event all -", "", 1);
         if (p->next_event == E_DEATH)
         {
-            if (debug_process_month_events_logged < 25)
-            {
-                fprintf(fd_log, "DBG dispatch death person=%d month=%d\n", p->person_id, current_month);
-                fflush(fd_log);
-            }
+            if (socsim_log_enabled(SOCSIM_LOG_DEBUG))
+                SOCSIM_DEBUGF("DBG dispatch death person=%d month=%d\n", p->person_id, current_month);
             //logmsg("next event... death 1  \n", "", 1);
             death(p);
-            if (debug_process_month_events_logged < 25)
-            {
-                fprintf(fd_log, "DBG return death person=%d month=%d\n", p->person_id, current_month);
-                fflush(fd_log);
-            }
+            if (socsim_log_enabled(SOCSIM_LOG_DEBUG))
+                SOCSIM_DEBUGF("DBG return death person=%d month=%d\n", p->person_id, current_month);
         }
         else if (p->next_event == E_BIRTH)
         {
-            if (debug_process_month_events_logged < 25)
-            {
-                fprintf(fd_log, "DBG dispatch birth person=%d month=%d\n", p->person_id, current_month);
-                fflush(fd_log);
-            }
+            if (socsim_log_enabled(SOCSIM_LOG_DEBUG))
+                SOCSIM_DEBUGF("DBG dispatch birth person=%d month=%d\n", p->person_id, current_month);
 
 #ifdef ENHANCED
             enhance_birth_pre(p);
@@ -1083,63 +1063,37 @@ int process_month()
             }
             birth(p);
 #endif
-            if (debug_process_month_events_logged < 25)
-            {
-                fprintf(fd_log, "DBG return birth person=%d month=%d\n", p->person_id, current_month);
-                fflush(fd_log);
-            }
+            if (socsim_log_enabled(SOCSIM_LOG_DEBUG))
+                SOCSIM_DEBUGF("DBG return birth person=%d month=%d\n", p->person_id, current_month);
         }
         else if (p->next_event == E_DIVORCE)
         {
-            if (debug_process_month_events_logged < 25)
-            {
-                fprintf(fd_log, "DBG dispatch divorce person=%d month=%d\n", p->person_id, current_month);
-                fflush(fd_log);
-            }
+            if (socsim_log_enabled(SOCSIM_LOG_DEBUG))
+                SOCSIM_DEBUGF("DBG dispatch divorce person=%d month=%d\n", p->person_id, current_month);
             // logmsg("next event... divorce 1  \n", "", 1);
             divorce(p);
-            if (debug_process_month_events_logged < 25)
-            {
-                fprintf(fd_log, "DBG return divorce person=%d month=%d\n", p->person_id, current_month);
-                fflush(fd_log);
-            }
+            if (socsim_log_enabled(SOCSIM_LOG_DEBUG))
+                SOCSIM_DEBUGF("DBG return divorce person=%d month=%d\n", p->person_id, current_month);
         }
         else if (p->next_event == E_MARRIAGE)
         {
-            if (debug_process_month_events_logged < 25)
-            {
-                fprintf(fd_log, "DBG dispatch marriage person=%d month=%d\n", p->person_id, current_month);
-                fflush(fd_log);
-            }
+            if (socsim_log_enabled(SOCSIM_LOG_DEBUG))
+                SOCSIM_DEBUGF("DBG dispatch marriage person=%d month=%d\n", p->person_id, current_month);
             //logmsg("next event... marriage\n", "", 1);
             marriage(p);
-            if (debug_process_month_events_logged < 25)
-            {
-                fprintf(fd_log, "DBG return marriage person=%d month=%d\n", p->person_id, current_month);
-                fflush(fd_log);
-            }
+            if (socsim_log_enabled(SOCSIM_LOG_DEBUG))
+                SOCSIM_DEBUGF("DBG return marriage person=%d month=%d\n", p->person_id, current_month);
         }
         else if ((p->next_event >= TRANSIT1) &&
                 (p->next_event < TRANSIT1 + numgroups))
         {
-            if (debug_process_month_events_logged < 25)
-            {
-                fprintf(fd_log, "DBG dispatch transit person=%d month=%d next_event=%d\n",
+            if (socsim_log_enabled(SOCSIM_LOG_DEBUG))
+                SOCSIM_DEBUGF("DBG dispatch transit person=%d month=%d next_event=%d\n",
                         p->person_id, current_month, p->next_event);
-                fflush(fd_log);
-            }
             //logmsg("next event... transit   \n", "", 1);
             transit(p);
-            if (debug_process_month_events_logged < 25)
-            {
-                fprintf(fd_log, "DBG return transit person=%d month=%d\n", p->person_id, current_month);
-                fflush(fd_log);
-            }
-        }
-
-        if (debug_process_month_events_logged < 25)
-        {
-            debug_process_month_events_logged++;
+            if (socsim_log_enabled(SOCSIM_LOG_DEBUG))
+                SOCSIM_DEBUGF("DBG return transit person=%d month=%d\n", p->person_id, current_month);
         }
 
         /*
@@ -1517,7 +1471,7 @@ void queue_delete( struct person *p, int q_type)
     if (q_d_verbose)
     {
         printf("in queue_delete, before deletion: num on queue %d\n", e->num);
-        fprintf(fd_log, "before inspect-entry, %d-\n", p->person_id);
+        SOCSIM_DEBUGF("before inspect-entry, %d\n", p->person_id);
         inspect_entry(e, EVENT_QUEUE, fd_log);
         printf("gagain queue_delete, before deletion: after inspecting entry\n");
     }
@@ -2020,7 +1974,7 @@ int date_and_event(struct person *p)
             if (marriage_queues == 1 && p->sex == MALE)
             {
                 //logmsg("\nmarriage_queues==1 yet marriage event gen'ed for %d\n"," ", p->person_id);
-                fprintf(fd_log,"\nmarriage_queues==1 yet marriage event gen'ed for %d\n",p->person_id);
+                SOCSIM_ERRORF("marriage_queues==1 yet marriage event generated for %d\n", p->person_id);
                 stop("\nmarriage_queues==1 yet marriage event gen'ed for %d\n",p->person_id);//exit(-1);
             }
         }
@@ -2460,7 +2414,7 @@ void population_pyramid(FILE *fd_pyr)
                     {
                         /* someone lived too long*/
                         //sprintf(logstring,"person %d lived too long check group %d mortality rates ",p->person_id, p->group);
-                        fprintf(fd_log,"person %d lived too long check group %d mortality rates \n",p->person_id, p->group);
+                        SOCSIM_WARNF("person %d lived too long check group %d mortality rates\n", p->person_id, p->group);
                         //logmsg("%s\n", logstring, 1);
                         row = limit - 1;
                     }
