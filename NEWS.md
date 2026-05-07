@@ -1,6 +1,12 @@
-# rsocsim 1.9.5
+# rsocsim 1.9.7
+ * restore input/output folder behavior from version 1.5.9
  * paralellization
- * 
+ * printing to the console: 
+   * removed lots of unneccessary print statements
+   * replaced lots of sprintf statements in the C/C++ code with safer wrapper functions
+   * most simulation log-file statements are now "debug-level" and will not pollute the log-file
+ * Making the package CRAN-ready by removing lots of warnings
+ * fixed some issues/inconsistencies in retrieve_kin and estimate_rates
 
 
 # rsocsim 1.9 (March/April 2026)
