@@ -5,58 +5,44 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="description" content="Install and run socsim microsimulations from within R with this R-package.">
 <title>SOCSIM with R • rsocsim</title>
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
-<script src="deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="SOCSIM with R">
-<meta property="og:description" content="Install and run socsim microsimulations from within R with this R-package.">
-<!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
-<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]-->
+<link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
+<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="SOCSIM with R">
+<meta name="description" content="Tools for preparing inputs, running SOCSIM demographic kinship microsimulations, and reading simulation outputs from R. The package includes helpers for creating simulation folders, downloading demographic rate schedules, starting simulations, and loading population and marriage result files.">
+<meta property="og:description" content="Tools for preparing inputs, running SOCSIM demographic kinship microsimulations, and reading simulation outputs from R. The package includes helpers for creating simulation folders, downloading demographic rate schedules, starting simulations, and loading population and marriage result files.">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
-    
 
-    <nav class="navbar fixed-top navbar-light navbar-expand-lg bg-light"><div class="container">
-    
+
+    <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
+
     <a class="navbar-brand me-2" href="index.html">rsocsim</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.5.9</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.9.7</small>
 
-    
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
-<li class="nav-item">
-  <a class="nav-link" href="reference/index.html">Reference</a>
-</li>
-<li class="nav-item">
-  <a class="nav-link" href="news/index.html">Changelog</a>
-</li>
+<li class="nav-item"><a class="nav-link" href="reference/index.html">Reference</a></li>
+<li class="nav-item"><a class="nav-link" href="news/index.html">Changelog</a></li>
       </ul>
-<form class="form-inline my-2 my-lg-0" role="search">
-        <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="search.json" id="search-input" placeholder="Search for" autocomplete="off">
-</form>
-
-      <ul class="navbar-nav">
-<li class="nav-item">
-  <a class="external-link nav-link" href="https://github.com/MPIDR/rsocsim/" aria-label="github">
-    <span class="fab fa fab fa-github fa-lg"></span>
-     
-  </a>
-</li>
+<ul class="navbar-nav">
+<li class="nav-item"><form class="form-inline" role="search">
+ <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="search.json">
+</form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/MPIDR/rsocsim/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
-    
+
   </div>
 </nav><div class="container template-home">
 <div class="row">
@@ -65,20 +51,36 @@
 </h1></div>
 <p><img align="left" width="144" alt="2023-MPIDR_rsocsim-web-144" src="https://user-images.githubusercontent.com/5939967/221559559-1233e070-0e0a-43a1-b451-a3215c0b7d4c.png"></p>
 <p>Socsim (‘Social Simulator’) is an open source stochastic microsimulation platform used to produce synthetic populations with plausible kinship structures using demographic rates as input. We stand on the shoulders of giants: Socsim was originally developed for Unix at UC Berkeley [1-2], where it has been mantained for decades. The current release of <code>rsocsim</code> aims to be OS-agnostic and, for the most part, back-compatible with the original Socsim distribution (<a href="https://lab.demog.berkeley.edu/socsim/" class="external-link uri">https://lab.demog.berkeley.edu/socsim/</a>).</p>
-<p><code>rsocsim</code> is still under development. You might find some bugs or unexpected behavior, the API might change without warnings in the next weeks. If you encounter an error or bug, we are happy to hear from you in the issues.</p>
+<p><code>rsocsim</code> is under active development. Please report bugs or unexpected behavior in the issue tracker.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
 <div class="section level3">
-<h3 id="from-source">From Source<a class="anchor" aria-label="anchor" href="#from-source"></a>
+<h3 id="from-a-binary-package">From a binary package<a class="anchor" aria-label="anchor" href="#from-a-binary-package"></a>
 </h3>
-<p>To get the latest version, you need to have the package devtools and a Rcpp compatible compiler installed (<a href="https://cran.r-project.org/bin/windows/Rtools/index.html" class="external-link">RTools</a> on Windows; Xcode command line tools on Mac: <code>xcode-select --install</code>; <code>sudo apt-get install r-base-dev</code> on Linux, all according to <a href="https://teuder.github.io/rcpp4everyone_en/020_install.html" class="external-link uri">https://teuder.github.io/rcpp4everyone_en/020_install.html</a>)</p>
-<p>Then install the devtools R-package:</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></span></code></pre></div>
-<p>Then you can use devtools to install rsocsim:</p>
+<p>Download the correct binary package from the <a href="https://github.com/MPIDR/rsocsim/releases" class="external-link">release section on Github</a>: Currently, you can use <a href="https://github.com/MPIDR/rsocsim/releases/download/v1.5.9/rsocsim_1.5.9.tgz" class="external-link">rsocsim_1.5.9.tgz</a> for Mac and <a href="https://github.com/MPIDR/rsocsim/releases/download/1.8.5/rsocsim_win_1.8.5.zip" class="external-link">rsocsim_1.8.5.zip</a> for Windows.</p>
+<p>Then execute the following line in R and choose the downloaded file:</p>
+<pre><code><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/file.choose.html" class="external-link">file.choose</a></span><span class="op">(</span><span class="op">)</span>,repos<span class="op">=</span><span class="cn">NULL</span>,type<span class="op">=</span><span class="st">"binary"</span><span class="op">)</span></span></code></pre>
+</div>
+<div class="section level3">
+<h3 id="from-source-requires-a-compiler">From Source (requires a compiler)<a class="anchor" aria-label="anchor" href="#from-source-requires-a-compiler"></a>
+</h3>
+<p>To get the latest version, you need to have a Rcpp compatible compiler installed and a way to install packages from Github.</p>
+<p>Install a Rcpp compatible compiler:</p>
+<ul>
+<li>on Windows: <a href="https://cran.r-project.org/bin/windows/Rtools/index.html" class="external-link">RTools</a>;</li>
+<li>on Mac: <code>xcode-select --install</code>;</li>
+<li>on Linux: <code>sudo apt-get install r-base-dev</code>.</li>
+</ul>
+<p>For more help, see <a href="https://teuder.github.io/rcpp4everyone_en/020_install.html" class="external-link">Rcpp for everyone</a>.</p>
+<p>In order to install packages from Github, you can use the {remotes} or {devtools} packages. {remotes} (<a href="https://cran.r-project.org/web/packages/remotes/index.html" class="external-link">CRAN link</a>) only provides the capability to install packages from different code repositories. {devtools} (<a href="https://cran.r-project.org/web/packages/devtools/index.html" class="external-link">CRAN link</a>) includes many more capabilities needed in package development (e.g. (re-)generating documentation or running tests). {devtools} includes {remotes}.</p>
+<p>Install {remotes} or {devtools}:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"MPIDR/rsocsim"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span></code></pre></div>
+<p>Install rsocsim from Github:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># The command is the same in {devtools} and {remotes}.</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"MPIDR/rsocsim@v1.5.9"</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -87,11 +89,11 @@
 <div class="section level3">
 <h3 id="getting-started">Getting started<a class="anchor" aria-label="anchor" href="#getting-started"></a>
 </h3>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/MPIDR/rsocsim" class="external-link">"rsocsim"</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># create a new folder for all the files related to a simulation.</span></span>
-<span><span class="co"># this will be in your home- or user-directory:</span></span>
+<span><span class="co"># this will be inside a temporary directory by default:</span></span>
 <span><span class="va">folder</span> <span class="op">=</span> <span class="fu">rsocsim</span><span class="fu">::</span><span class="fu"><a href="reference/create_simulation_folder.html">create_simulation_folder</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># create a new supervisory-file.</span></span>
@@ -99,7 +101,7 @@
 <span><span class="co"># create_sup_file will create a very basic supervisory file.</span></span>
 <span><span class="co"># It also copies some rate-files that will be needed into the </span></span>
 <span><span class="co"># simulation folder:</span></span>
-<span><span class="va">supfile</span> <span class="op">=</span> <span class="fu">rsocsim</span><span class="fu">::</span><span class="fu"><a href="reference/create_sup_file.html">create_sup_file</a></span><span class="op">(</span><span class="va">folder</span><span class="op">)</span></span>
+<span><span class="va">supfile</span> <span class="op">=</span> <span class="fu">rsocsim</span><span class="fu">::</span><span class="fu"><a href="reference/create_sup_file.html">create_sup_file</a></span><span class="op">(</span><span class="va">folder</span>, simname <span class="op">=</span> <span class="st">"socsim"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Choose a random-number seed:</span></span>
 <span><span class="va">seed</span> <span class="op">=</span> <span class="fl">300</span></span>
@@ -132,6 +134,27 @@
 <pre><code><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/build.html" class="external-link">build</a></span><span class="op">(</span>binary<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/build.html" class="external-link">build</a></span><span class="op">(</span>binary<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre>
 <div class="section level3">
+<h3 id="style-guide">Style guide<a class="anchor" aria-label="anchor" href="#style-guide"></a>
+</h3>
+<p>The goal of this section is to improve the readability of the code and reduce complaints from modern compilers (parts of the code are 40ish years old). We (try to) follow Allman style, but as a guideline not a hard requirement. Basically, this means:</p>
+<ul>
+<li>one level of indentation = 4 spaces;</li>
+<li>spaces not tabs;</li>
+<li>braces after a function declaration or a control flow statement go on a new line;</li>
+<li>first-level braces at the beginning of a line appear in the first column;</li>
+<li>closing braces appear in the same column as their counterpart.</li>
+<li>spaces…:
+<ul>
+<li>… around binary operators;</li>
+<li>… after commas;</li>
+<li>… before opening parentheses and after closing parentheses.</li>
+</ul>
+</li>
+</ul>
+<p>If you use vim, the default C formatting should be fine (‘:h C-indenting’).</p>
+<p>We reformatted the .cpp files because indentation was all over the place, but we left the .c files largely alone such as not to anger the compiler gods.</p>
+</div>
+<div class="section level3">
 <h3 id="future-plans">Future plans<a class="anchor" aria-label="anchor" href="#future-plans"></a>
 </h3>
 <ul>
@@ -155,7 +178,7 @@
 <ol style="list-style-type: decimal">
 <li><p>Hammel, E., Hutchinson, D., Wachter, K., Lundy, R., and Deuel, R. (1976). The SOCSIM Demographic-Sociological Microsimulation Program: Operating Manual. University of California Berkeley. Institute of International Studies.</p></li>
 <li><p>Wachter, K.W. (1997). Kinship resources for the elderly. Philosophical Transactions of the Royal Society of London. Series B: Biological Sciences 352(1363):1811–1817. <a href="doi:10.1098/rstb.1997.0166" class="uri">doi:10.1098/rstb.1997.0166</a>.</p></li>
-<li><p>Mason, Carl. (2016). Socsim Oversimplified. Accesed on 24 Feb 2023 from: <a href="https://lab.demog.berkeley.edu/socsim/CurrentDocs/socsimOversimplified.pdf" class="external-link uri">https://lab.demog.berkeley.edu/socsim/CurrentDocs/socsimOversimplified.pdf</a></p></li>
+<li><p>Mason, Carl. (2016). Socsim Oversimplified. Accesed on 24 Feb 2023 from: <a href="https://doi.org/10.7910/DVN/JOCRUR" class="external-link uri">https://doi.org/10.7910/DVN/JOCRUR</a></p></li>
 <li><p>Alburez‐Gutierrez, D., Mason, C., and Zagheni, E. (2021). The “Sandwich Generation” Revisited: Global Demographic Drivers of Care Time Demands. Population and Development Review 47(4):997–1023. <a href="doi:10.1111/padr.12436" class="uri">doi:10.1111/padr.12436</a>.</p></li>
 <li><p>Hammel, E.A. (2005). Demographic dynamics and kinship in anthropological populations. Proceedings of the National Academy of Sciences 102(6):2248–2253. <a href="doi:10.1073/pnas.0409762102" class="uri">doi:10.1073/pnas.0409762102</a>.</p></li>
 <li><p>Verdery, A.M. and Margolis, R. (2017). Projections of white and black older adults without living kin in the United States, 2015 to 2060. Proceedings of the National Academy of Sciences 114(42):11109–11114. <a href="doi:10.1073/pnas.1710341114" class="uri">doi:10.1073/pnas.1710341114</a>.</p></li>
@@ -171,6 +194,7 @@
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
 <li><a href="https://github.com/MPIDR/rsocsim/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/MPIDR/rsocsim/issues" class="external-link">Report a bug</a></li>
 </ul>
 </div>
 
@@ -178,7 +202,7 @@
 <h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li><a href="LICENSE.html">Full license</a></li>
-<li><small>GPL (&gt;= 2)</small></li>
+<li><small><a href="https://www.r-project.org/Licenses/GPL-3" class="external-link">GPL-3</a></small></li>
 </ul>
 </div>
 
@@ -193,10 +217,10 @@
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li>Tom Theile <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0003-0573-9093" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
-<li>Diego Alburez-Gutierrez <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0003-0573-9093" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
-<li>Mallika Snyder <br><small class="roles"> Author, maintainer </small>  </li>
-<li>Liliana P. Calderón-Bernal <br><small class="roles"> Author, maintainer </small>  </li>
+<li>Tom Theile <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0003-0573-9093" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
+<li>Diego Alburez-Gutierrez <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-9823-5179" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
+<li>Mallika Snyder <br><small class="roles"> Author </small>   </li>
+<li>Liliana P. Calderón-Bernal <br><small class="roles"> Author </small>   </li>
 </ul>
 </div>
 
@@ -207,21 +231,19 @@
 
 
     <footer><div class="pkgdown-footer-left">
-  <p></p>
-<p>Developed by Tom Theile, Diego Alburez-Gutierrez, Mallika Snyder, Liliana P. Calderón-Bernal.</p>
+  <p>Developed by Tom Theile, Diego Alburez-Gutierrez, Mallika Snyder, Liliana P. Calderón-Bernal.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
     </footer>
 </div>
 
-  
 
-  
+
+
 
   </body>
 </html>
