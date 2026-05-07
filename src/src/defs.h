@@ -47,6 +47,12 @@ double enhance_couple_score();
 #define MIN(a, b) (((a) > (b)) ? (b) : (a))
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
 
+/* The native sources mostly format into fixed-size stack or global arrays.
+  Route legacy sprintf calls through snprintf so Apple clang no longer emits
+  deprecation warnings for the unbounded variant. */
+#define SOCSIM_SPRINTF(buffer, ...) snprintf((buffer), sizeof(buffer), __VA_ARGS__)
+#define sprintf(buffer, ...) SOCSIM_SPRINTF(buffer, __VA_ARGS__)
+
 #define NEW(type) ((type *)malloc(sizeof(type)))
 
 /* #define MOD1200(x) (x) % 1200 + 1200 * ((int)((x) - (x) % 1200) / (x))*/
