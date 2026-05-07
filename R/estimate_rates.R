@@ -16,12 +16,14 @@
 #' refer to to a real-world year.
 #' 
 #' Grouped year and age ranges (i.e., if `year_group > 1` or `age_group > 1`) 
-#' are created as [year;year+year_group). Mortality rates always start from 0 
-#' [0,0+age_group). 
+#' are created as [year;year+year_group). For `age_group > 1`, mortality rates 
+#' are split into an infant group [0,1) and then grouped ages [1, age_group),
+#' [age_group, age_group + age_group), and so on.
 #' 
 #' @importFrom magrittr %>%
 #' 
-#' @return A data.frame with yearly age-specific mortality rates by year and age.
+#' @return A data.frame with yearly age-specific mortality rates by year, age,
+#' and sex.
 #'@examples
 #' \dontrun{
 #' # Read opop file into global environment
@@ -38,64 +40,77 @@
 #' @export
 estimate_mortality_rates <- function(opop, final_sim_year, year_min, year_max, year_group, age_max_mort, age_group) {
   last_month <- max(opop$dob)
-  # Year range and breaks 
-  year_range <- year_min:(year_max-1)
+  year_range <- year_min:(year_max - 1)
   year_breaks <- seq(year_min, year_max, by = year_group)
-  # Age groups of mortality rates
-  if(age_group == 1){
+  if (age_group == 1) {
     age_breaks_mort <- c(0, seq(age_group, age_max_mort, by = age_group))
-  } else{ 
+  } else {
     age_breaks_mort <- c(0, 1, seq(age_group, age_max_mort, by = age_group))
   }
-  # Age levels to complete the census (denominator)
-  age_levels_census <- seq(0, age_max_mort-1, by = 1)
-  # Calculate age at death and year of death
-  opop2 <- opop %>% 
-    rename(sex = fem) %>% 
-    mutate(age_death_months = ifelse(dod == 0,NA,dod-dob), 
-           age_death = trunc(age_death_months/12), 
-           age_death_g = cut(age_death, breaks = age_breaks_mort, 
-                             include.lowest = FALSE, right = FALSE, ordered_results = TRUE),
+  age_levels_census <- seq(0, age_max_mort - 1, by = 1)
+  age_levels_mort <- levels(cut(age_levels_census,
+                                breaks = age_breaks_mort,
+                                include.lowest = FALSE,
+                                right = FALSE,
+                                ordered_results = TRUE))
+
+  opop2 <- opop %>%
+    rename(sex = fem) %>%
+    mutate(age_death_months = ifelse(dod == 0, NA, dod - dob),
+           age_death = trunc(age_death_months / 12),
+           age_death_g = cut(age_death,
+                             breaks = age_breaks_mort,
+                             include.lowest = FALSE,
+                             right = FALSE,
+                             ordered_results = TRUE),
            death_year = ifelse(dod == 0, NA, asYr(dod, last_month, final_sim_year)))
-  # 1. Numerator - death counts by sex and age
-  numerator <- opop2 %>% 
+
+  numerator <- opop2 %>%
     filter(dod != 0 & death_year %in% year_range & !is.na(age_death_g)) %>%
-    count(death_year, sex, age_death_g) %>% 
-    rename(year = death_year, age = age_death_g) %>% 
-    arrange(year, sex, age) %>% 
-    mutate(year = factor(year, levels = year_range),
-           sex = factor(sex, levels = c("0","1"))) %>% 
-    tidyr::complete(year, sex, age, fill = list(n = 0))  %>%
-    mutate(year = as.numeric(as.character(year)))
-  # 2. Denominator - population by sex and age (1st July)
-  opop2_subset <- opop2 %>% 
-    select(pid, dob, dod, sex)
-  yearly_pop_age_sex <- lapply(year_range, census_socsim, 
-                               df = opop2_subset, 
+    mutate(age = factor(as.character(age_death_g), levels = age_levels_mort)) %>%
+    count(year = death_year, sex, age) %>%
+    tidyr::complete(
+      year = year_range,
+      sex = c(0, 1),
+      age = factor(age_levels_mort, levels = age_levels_mort),
+      fill = list(n = 0)
+    ) %>%
+    rename(n_num = n)
+
+  yearly_pop_age_sex <- lapply(year_range, census_socsim,
+                               df = opop2 %>% select(pid, dob, dod, sex),
                                final_sim_year = final_sim_year,
-                               age_levels_census = age_levels_census)  
-  denominator <- data.frame(do.call(rbind, yearly_pop_age_sex)) %>% 
-    rename(year = census) %>% 
-    mutate(age_at_census = as.numeric(as.character(age_at_census)),
-           age = cut(age_at_census, breaks = age_breaks_mort, 
-                     include.lowest = FALSE, right = FALSE, ordered_results = TRUE)) %>%
-    filter(!is.na(age)) %>% 
-    group_by(year, sex, age) %>% 
-    summarise(n = sum(n)) %>% 
-    arrange(year, sex, age) %>% 
-    ungroup()
-  # 3. Rate
-  asmr <- numerator %>% 
-    full_join(denominator, by = c("year", "sex", "age"), 
-              suffix = c("_num", "_den")) %>% 
-    mutate(socsim = n_num / n_den,
-           year_gr = cut(year, breaks = year_breaks, 
-                         include.lowest = FALSE, right = FALSE, ordered_results = TRUE),
-           sex = ifelse(sex == 0, "male", "female")) %>%
+                               age_levels_census = age_levels_census)
+  denominator <- data.frame(do.call(rbind, yearly_pop_age_sex)) %>%
+    rename(year = census) %>%
+      mutate(sex = as.numeric(as.character(sex)),
+        age_at_census = as.numeric(as.character(age_at_census)),
+           age = cut(age_at_census,
+                     breaks = age_breaks_mort,
+                     include.lowest = FALSE,
+                     right = FALSE,
+                     ordered_results = TRUE),
+           age = factor(as.character(age), levels = age_levels_mort)) %>%
+    filter(!is.na(age)) %>%
+    group_by(year, sex, age) %>%
+    summarise(n_den = sum(n), .groups = "drop")
+
+  numerator %>%
+    full_join(denominator, by = c("year", "sex", "age")) %>%
+    mutate(n_num = dplyr::coalesce(n_num, 0L),
+           n_den = dplyr::coalesce(n_den, 0L),
+           year_gr = cut(year,
+                         breaks = year_breaks,
+                         include.lowest = FALSE,
+                         right = FALSE,
+                         ordered_results = TRUE)) %>%
     group_by(year = year_gr, sex, age) %>%
-    summarise(socsim = mean(socsim)) %>%
-    ungroup()
-  return(asmr)  
+    summarise(n_num = sum(n_num),
+              n_den = sum(n_den),
+              socsim = ifelse(sum(n_den) == 0, NA_real_, sum(n_num) / sum(n_den)),
+              .groups = "drop") %>%
+    mutate(sex = ifelse(sex == 0, "male", "female")) %>%
+    select(year, sex, age, socsim)
 }
 
 
@@ -141,34 +156,36 @@ estimate_mortality_rates <- function(opop, final_sim_year, year_min, year_max, y
 #' @export
 estimate_fertility_rates <- function(opop, final_sim_year, year_min, year_max, year_group = 5, age_min_fert = 15, age_max_fert = 50, age_group = 5) {
   last_month <- max(opop$dob)
-  # Year range and breaks
-  year_range <- year_min:(year_max-1)
+  year_range <- year_min:(year_max - 1)
   year_breaks <- seq(year_min, year_max, by = year_group)
-  # Age groups of fertility rates
   age_breaks_fert <- seq(age_min_fert, age_max_fert, by = age_group)
-  # Calculate year of birth
   opop2 <- opop %>%
     mutate(birth_year = asYr(dob, last_month, final_sim_year))
-  # 1. Numerator - births by women of given age group
-  numerator <- yearly_birth_by_age_socsim(df = opop2, 
-                                          year_range = year_range, 
+  numerator <- yearly_birth_by_age_socsim(df = opop2,
+                                          year_range = year_range,
                                           age_breaks_fert = age_breaks_fert)
-  # 2. Denominator - women in reproductive years (1st July)
   denom <- lapply(year_range, get_women_reproductive_age_socsim,
                   df = opop2,
                   final_sim_year = final_sim_year,
                   age_breaks_fert = age_breaks_fert)
   denominator <- data.frame(do.call(rbind, denom))
-  # 3. Rate
-  asfr <- bind_cols(denominator %>% rename(deno = n),
-                    numerator %>% select(nume = n)) %>%
-    mutate(socsim = nume/deno,
-           year_gr = cut(year, breaks = year_breaks, 
-                         include.lowest = FALSE, right = FALSE, ordered_results = TRUE)) %>%
+
+  denominator %>%
+    rename(deno = n) %>%
+    full_join(numerator %>% rename(nume = n), by = c("year", "agegr")) %>%
+    mutate(deno = dplyr::coalesce(deno, 0L),
+           nume = dplyr::coalesce(nume, 0L),
+           year_gr = cut(year,
+                         breaks = year_breaks,
+                         include.lowest = FALSE,
+                         right = FALSE,
+                         ordered_results = TRUE)) %>%
     group_by(year = year_gr, age = agegr) %>%
-    summarise(socsim = mean(socsim)) %>%
-    ungroup()
-  return(asfr)
+    summarise(nume = sum(nume),
+              deno = sum(deno),
+              socsim = ifelse(sum(deno) == 0, NA_real_, sum(nume) / sum(deno)),
+              .groups = "drop") %>%
+    select(year, age, socsim)
 }
 
 ###################################################################################
@@ -205,26 +222,37 @@ jul <- function(year, last_month, final_sim_year){
 #' @return A data frame with columns \code{year}, \code{agegr}, and \code{n} (birth counts).
 #' @export
 yearly_birth_by_age_socsim <- function(df, year_range, age_breaks_fert) {
-  
-  last_month <- max(df$dob)
-  
-  out <- df %>% 
-    left_join(df %>% select(mom = pid, mother_birth = birth_year), 
-              by = "mom") %>% 
-    select(birth_year, mother_birth) %>% 
-    filter(birth_year %in% year_range) %>% 
+  age_levels_fert <- levels(cut(seq(min(age_breaks_fert), max(age_breaks_fert) - 1, by = 1),
+                                breaks = age_breaks_fert,
+                                include.lowest = FALSE,
+                                right = FALSE,
+                                ordered_results = TRUE))
+
+  out <- df %>%
+    left_join(df %>% select(mom = pid, mother_birth = birth_year),
+              by = "mom") %>%
+    select(birth_year, mother_birth) %>%
+    filter(birth_year %in% year_range) %>%
     mutate(birth_year_factor = factor(birth_year, levels = year_range),
            mother_age = birth_year - mother_birth,
-           mother_agegr_factor = cut(mother_age, breaks = age_breaks_fert, 
-                                     include.lowest = FALSE, right = FALSE, ordered_results = TRUE)) %>%
-    filter(!is.na(mother_agegr_factor)) %>% 
-    count(birth_year = birth_year_factor, mother_agegr = mother_agegr_factor) %>% 
-    tidyr::complete(birth_year, mother_agegr, fill = list(n = 0)) %>% 
-    select(year = birth_year, agegr = mother_agegr, n) %>% 
+           mother_agegr_factor = factor(
+             cut(mother_age,
+                 breaks = age_breaks_fert,
+                 include.lowest = FALSE,
+                 right = FALSE,
+                 ordered_results = TRUE),
+             levels = age_levels_fert
+           )) %>%
+    filter(!is.na(mother_agegr_factor)) %>%
+    count(birth_year = birth_year_factor, mother_agegr = mother_agegr_factor) %>%
+    tidyr::complete(birth_year = factor(year_range, levels = year_range),
+                    mother_agegr = factor(age_levels_fert, levels = age_levels_fert),
+                    fill = list(n = 0)) %>%
+    mutate(birth_year = as.numeric(as.character(birth_year))) %>%
+    select(year = birth_year, agegr = mother_agegr, n) %>%
     arrange(year, agegr)
-  
+
   return(out)
-  
 }
 
 #' Get women of reproductive age from SOCSIM population data.
@@ -239,22 +267,35 @@ yearly_birth_by_age_socsim <- function(df, year_range, age_breaks_fert) {
 #' @return A data frame with columns \code{year}, \code{agegr}, and \code{n} (population count).
 #' @export
 get_women_reproductive_age_socsim <- function(df, final_sim_year, year, age_breaks_fert) {
-  
   last_month <- max(df$dob)
+  july_month <- jul(year, last_month, final_sim_year)
+  age_levels_fert <- levels(cut(seq(min(age_breaks_fert), max(age_breaks_fert) - 1, by = 1),
+                                breaks = age_breaks_fert,
+                                include.lowest = FALSE,
+                                right = FALSE,
+                                ordered_results = TRUE))
   df$census <- year
-  
-  out <- df %>% 
+
+  out <- df %>%
     mutate(dod2 = ifelse(dod == 0, 999999999, dod)) %>%
-    filter(fem == 1 & dob < jul(year, last_month, final_sim_year) & dod2 >= jul(year, last_month, final_sim_year)) %>%
-    mutate(age_at_census = trunc((jul(census, last_month, final_sim_year)-dob)/12),
-           agegr_at_census = cut(age_at_census, breaks = age_breaks_fert, 
-                                 include.lowest = FALSE, right = FALSE, ordered_results = TRUE)) %>% 
-    filter(!is.na(agegr_at_census)) %>% 
-    count(agegr_at_census, census) %>% 
-    tidyr::complete(agegr_at_census, census, fill = list(n = 0)) %>% 
-    select(year = census, agegr = agegr_at_census, n) %>% 
+    filter(fem == 1 & dob < july_month & dod2 >= july_month) %>%
+    mutate(age_at_census = trunc((july_month-dob)/12),
+           agegr_at_census = factor(
+             cut(age_at_census,
+                 breaks = age_breaks_fert,
+                 include.lowest = FALSE,
+                 right = FALSE,
+                 ordered_results = TRUE),
+             levels = age_levels_fert
+           )) %>%
+    filter(!is.na(agegr_at_census)) %>%
+    count(agegr_at_census, census) %>%
+    tidyr::complete(agegr_at_census = factor(age_levels_fert, levels = age_levels_fert),
+                    census = year,
+                    fill = list(n = 0)) %>%
+    select(year = census, agegr = agegr_at_census, n) %>%
     arrange(year, agegr)
-  
+
   return(out)
 }
 
@@ -271,18 +312,18 @@ get_women_reproductive_age_socsim <- function(df, final_sim_year, year, age_brea
 #' @return A data frame with columns \code{sex}, \code{age_at_census}, \code{census}, and \code{n} (counts).
 #' @export
 census_socsim <- function(df, year, final_sim_year, age_levels_census) {
-  
   last_month <- max(df$dob)
-  df$census <- year 
-  
-  out <- df %>% 
+  july_month <- jul(year, last_month, final_sim_year)
+  df$census <- year
+
+  out <- df %>%
     mutate(dod2 = ifelse(dod == 0, 999999999, dod)) %>%
-    filter(dob < jul(year, last_month, final_sim_year) & dod2 >= jul(year, last_month, final_sim_year)) %>% 
-    mutate(age_at_census = trunc((jul(census, last_month, final_sim_year)-dob)/12)) %>%
-    count(sex, age_at_census, census) %>% 
+    filter(dob < july_month & dod2 >= july_month) %>%
+    mutate(age_at_census = trunc((july_month-dob)/12)) %>%
+    count(sex, age_at_census, census) %>%
     mutate(sex = factor(sex, levels = c("0","1")),
            age_at_census = factor(age_at_census, levels = age_levels_census)) %>%
     tidyr::complete(sex, age_at_census, census, fill = list(n = 0))
-  
+
   return(out)
 }

@@ -6,12 +6,12 @@
 interest.}
 \usage{
 retrieve_kin(
-  opop = opop,
-  omar = omar,
-  KidsOf = KidsOf,
   pid,
-  extra_kintypes,
-  kin_by_sex
+  opop,
+  omar,
+  extra_kintypes = character(),
+  kin_by_sex = FALSE,
+  KidsOf = NULL
 )
 }
 \arguments{
@@ -19,10 +19,7 @@ retrieve_kin(
 
 \item{omar}{An R object from SOCSIM microsimulation output (marriage file). Create this object with the function read_omar().}
 
-\item{KidsOf}{A list object containing the children of each person in the
-population. This object is created by the function getKidsOf().}
-
-\item{pid}{A character vector of person IDs, indicating persons of interest
+\item{pid}{A vector of person IDs, indicating persons of interest
 for whom these kin networks should be identified.}
 
 \item{extra_kintypes}{A vector of character values indicating which
@@ -46,6 +43,9 @@ in law (siblings of spouse and spouse of siblings)
 kin relations additionally disaggregated by the sex of the relative. Setting
 this value to TRUE will result in additional objects being generated
 to identify individuals' relatives by sex.}
+
+\item{KidsOf}{An optional precomputed list object containing the children of
+each person in the population. If \code{NULL}, it is built from \code{opop}.}
 }
 \value{
 An R object containing a list of lists with person IDs

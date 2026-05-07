@@ -9,7 +9,8 @@ read_omar(
   supfile = "socsim.sup",
   seed = 42,
   suffix = "",
-  fn = NULL
+  fn = NULL,
+  quiet = FALSE
 )
 }
 \arguments{
@@ -22,9 +23,11 @@ read_omar(
 \item{suffix}{optional suffix for the results-directory (default="")}
 
 \item{fn}{complete path to the file. If not provided, it will be created from the other arguments}
+
+\item{quiet}{logical. If \code{FALSE}, emit a message with the file path being read.}
 }
 \value{
-Data frame with the information of the output population file
+Data frame with the information of the output marriage file
 }
 \description{
 \tabular{rll}{

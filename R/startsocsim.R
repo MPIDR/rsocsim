@@ -186,7 +186,7 @@ run_sim_w_file <- function(supfile, seed = "42", compatibility_mode = "1",
                   seed = seed,
                   suffix = suffix,
                   filename = "logfile.log")
-  socsim_message("Monitor progress in the logfile: ",
+  socsim_message("Progress can be monitored in the logfile: ",
                  normalizePath(outfn, winslash = "/", mustWork = FALSE))
   tail_log <- isTRUE(getOption("rsocsim.tail_log", FALSE))
 

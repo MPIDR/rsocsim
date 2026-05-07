@@ -1,4 +1,3 @@
-
 #' Read output marriage file into a data frame
 #' 
 #' \tabular{rll}{
@@ -20,16 +19,15 @@
 #' @param seed random number seed (42)
 #' @param suffix optional suffix for the results-directory (default="")
 #' @param fn complete path to the file. If not provided, it will be created from the other arguments
+#' @param quiet logical. If `FALSE`, emit a message with the file path being read.
 #'
-#' @return Data frame with the information of the output population file
+#' @return Data frame with the information of the output marriage file
 #'
 #' @md
 #' 
 #' @export
-read_omar <- function(folder=NULL, supfile="socsim.sup",seed=42,suffix="",fn=NULL){
-
-  # create fn
-  if (is.null(fn)){
+read_omar <- function(folder = NULL, supfile = "socsim.sup", seed = 42, suffix = "", fn = NULL, quiet = FALSE) {
+  if (is.null(fn)) {
     fn <- socsim_result_file(folder = folder,
                              supfile = supfile,
                              seed = seed,
@@ -45,12 +43,18 @@ read_omar <- function(folder=NULL, supfile="socsim.sup",seed=42,suffix="",fn=NUL
         fn <- legacy_fn
       }
     }
-  } else {
-    fn <- fn
   }
-  print(paste0("read marriage file: ",fn))
-  if (!file.exists(fn) || is.na(file.info(fn)$size) || file.info(fn)$size == 0) {
-    omar <- data.frame(
+
+  if (!quiet) {
+    message("read marriage file: ", fn)
+  }
+
+  omar_names <- c("mid", "wpid", "hpid", "dstart", "dend", "rend", "wprior", "hprior")
+  file_size <- if (file.exists(fn)) file.info(fn)$size else NA_real_
+
+  if (!file.exists(fn) || is.na(file_size) || file_size == 0) {
+    warning("marriage file missing or empty; returning empty data frame", call. = FALSE)
+    return(data.frame(
       mid = integer(),
       wpid = integer(),
       hpid = integer(),
@@ -59,14 +63,17 @@ read_omar <- function(folder=NULL, supfile="socsim.sup",seed=42,suffix="",fn=NUL
       rend = integer(),
       wprior = integer(),
       hprior = integer()
-    )
-    return(omar)
+    ))
   }
-  omar <- utils::read.table(file = fn, header = FALSE, as.is = TRUE)
-  names(omar)<-c("mid","wpid","hpid","dstart","dend", "rend","wprior","hprior")
-  return(omar)
-}
 
+  utils::read.table(
+    file = fn,
+    header = FALSE,
+    as.is = TRUE,
+    col.names = omar_names,
+    colClasses = rep("integer", length(omar_names))
+  )
+}
 
 #' Read output population file into a data frame
 #' 
@@ -99,16 +106,15 @@ read_omar <- function(folder=NULL, supfile="socsim.sup",seed=42,suffix="",fn=NUL
 #' @param seed random number seed (42)
 #' @param suffix optional suffix for the results-directory (default="")
 #' @param fn complete path to the file. If not provided, it will be created from the other arguments
+#' @param quiet logical. If `FALSE`, emit a message with the file path being read.
 #'
 #' @return Data frame with the information of the output population file
 #' 
 #' @md
 #' 
 #' @export
-read_opop <- function(folder=NULL, supfile="socsim.sup",seed=42,suffix="",fn=NULL){
-
-  # create fn
-  if (is.null(fn)){
+read_opop <- function(folder = NULL, supfile = "socsim.sup", seed = 42, suffix = "", fn = NULL, quiet = FALSE) {
+  if (is.null(fn)) {
     fn <- socsim_result_file(folder = folder,
                              supfile = supfile,
                              seed = seed,
@@ -124,15 +130,41 @@ read_opop <- function(folder=NULL, supfile="socsim.sup",seed=42,suffix="",fn=NUL
         fn <- legacy_fn
       }
     }
-  } else {
-    fn <- fn
   }
-  
-  print(paste0("read population file: ",fn))
-  opop <- utils::read.table(file = fn, header = FALSE, as.is = TRUE)
-  ## assign names to columns
-  names(opop)<-c("pid","fem","group",
-                 "nev","dob","mom","pop","nesibm","nesibp",
-                 "lborn","marid","mstat","dod","fmult")
-  return(opop)
+
+  if (!quiet) {
+    message("read population file: ", fn)
+  }
+
+  opop_names <- c("pid", "fem", "group", "nev", "dob", "mom", "pop", "nesibm", "nesibp",
+                  "lborn", "marid", "mstat", "dod", "fmult")
+  file_size <- if (file.exists(fn)) file.info(fn)$size else NA_real_
+
+  if (!file.exists(fn) || is.na(file_size) || file_size == 0) {
+    warning("population file missing or empty; returning empty data frame", call. = FALSE)
+    return(data.frame(
+      pid = integer(),
+      fem = integer(),
+      group = integer(),
+      nev = integer(),
+      dob = integer(),
+      mom = integer(),
+      pop = integer(),
+      nesibm = integer(),
+      nesibp = integer(),
+      lborn = integer(),
+      marid = integer(),
+      mstat = integer(),
+      dod = integer(),
+      fmult = numeric()
+    ))
+  }
+
+  utils::read.table(
+    file = fn,
+    header = FALSE,
+    as.is = TRUE,
+    col.names = opop_names,
+    colClasses = c(rep("integer", length(opop_names) - 1L), "numeric")
+  )
 }
