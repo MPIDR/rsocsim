@@ -126,7 +126,7 @@ retrieve_kin <- function(opop, omar, pid,
     mother_kids <- split(opop$pid[opop$mom != 0], as.character(opop$mom[opop$mom != 0]))
     father_kids <- split(opop$pid[opop$pop != 0], as.character(opop$pop[opop$pop != 0]))
     parent_ids <- union(names(mother_kids), names(father_kids))
-    KidsOf <- setNames(vector("list", length(parent_ids)), parent_ids)
+    KidsOf <- stats::setNames(vector("list", length(parent_ids)), parent_ids)
     for (parent_id in parent_ids) {
       KidsOf[[parent_id]] <- c(mother_kids[[parent_id]], father_kids[[parent_id]])
     }

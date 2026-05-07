@@ -6,9 +6,9 @@
 interest.}
 \usage{
 retrieve_kin(
-  pid,
   opop,
   omar,
+  pid,
   extra_kintypes = character(),
   kin_by_sex = FALSE,
   KidsOf = NULL

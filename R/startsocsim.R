@@ -136,14 +136,14 @@ extract_console_population_pyramid <- function(pyramid_file) {
   }
 
   header_candidates <- grep("Population Pyramid", pyramid_lines, fixed = TRUE)
-  header_candidates <- header_candidates[header_candidates < tail(all_groups_idx, 1L)]
+  header_candidates <- header_candidates[header_candidates < utils::tail(all_groups_idx, 1L)]
   if (!length(header_candidates)) {
     return(character())
   }
 
-  start_idx <- tail(header_candidates, 1L)
+  start_idx <- utils::tail(header_candidates, 1L)
   scale_idx <- grep("^   ------\\+", pyramid_lines)
-  scale_candidates <- scale_idx[scale_idx > tail(all_groups_idx, 1L)]
+  scale_candidates <- scale_idx[scale_idx > utils::tail(all_groups_idx, 1L)]
   if (!length(scale_candidates)) {
     return(character())
   }
@@ -162,7 +162,7 @@ extract_console_population_pyramid <- function(pyramid_file) {
 
   if (length(age_rows) > 1L) {
     keep_idx <- seq(1L, length(age_rows), by = 2L)
-    if (tail(keep_idx, 1L) != length(age_rows)) {
+    if (utils::tail(keep_idx, 1L) != length(age_rows)) {
       keep_idx <- c(keep_idx, length(age_rows))
     }
     age_rows <- age_rows[unique(keep_idx)]
