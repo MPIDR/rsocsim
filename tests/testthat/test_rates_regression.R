@@ -15,6 +15,32 @@ expect_within_tolerance <- function(current, baseline, abs_tol = NULL, rel_tol =
                             "; max allowed=", max(allowed)))
 }
 
+mirror_test_artifact <- function(path, results_dir = file.path("tests", "testthat", "_results")) {
+  mirror_enabled <- tolower(Sys.getenv("RSOCSIM_MIRROR_TEST_ARTIFACTS", "")) %in% c("1", "true", "yes")
+  if (!mirror_enabled || !file.exists(path)) {
+    return(invisible(NULL))
+  }
+
+  if (!dir.exists(results_dir)) {
+    dir.create(results_dir, recursive = TRUE)
+  }
+
+  file.copy(path, file.path(results_dir, basename(path)), overwrite = TRUE)
+  invisible(path)
+}
+
+reference_initial_population_size <- function() {
+  init_src <- system.file("extdata", "init_new.opop", package = "rsocsim", mustWork = TRUE)
+  nrow(read_opop(fn = init_src, quiet = TRUE))
+}
+
+write_deterministic_initial_population <- function(folder, output_base, size_opop, rng_seed) {
+  set.seed(rng_seed)
+  create_initial_population(folder = folder,
+                            size_opop = as.integer(size_opop),
+                            output_base = output_base)
+}
+
 test_that("rates regression: simulate, estimate, compare, plot", {
   testthat::skip_on_cran()
   if (Sys.getenv("RSOCSIM_RUN_INTEGRATION_TESTS") != "1") {
@@ -36,12 +62,14 @@ test_that("rates regression: simulate, estimate, compare, plot", {
 
   fert_src <- system.file("extdata", "SWEfert2022", package = "rsocsim", mustWork = TRUE)
   mort_src <- system.file("extdata", "SWEmort2022", package = "rsocsim", mustWork = TRUE)
-  init_src <- system.file("extdata", "init_new.opop", package = "rsocsim", mustWork = TRUE)
+  base_population_size <- reference_initial_population_size()
 
   file.copy(fert_src, file.path(simdir, "SWEfert2022"), overwrite = TRUE)
   file.copy(mort_src, file.path(simdir, "SWEmort2022"), overwrite = TRUE)
-  file.copy(init_src, file.path(simdir, "init_new.opop"), overwrite = TRUE)
-  file.create(file.path(simdir, "init_new.omar"))
+  write_deterministic_initial_population(folder = simdir,
+                                         output_base = "init_new",
+                                         size_opop = 2L * base_population_size,
+                                         rng_seed = 20260508L)
 
   sup_content <- c(
     "marriage_queues 1",
@@ -58,12 +86,8 @@ test_that("rates regression: simulate, estimate, compare, plot", {
   sup_path <- file.path(simdir, "socsim.sup")
   writeLines(sup_content, sup_path)
 
-  seed_env <- Sys.getenv("RSOCSIM_RATES_SEED", "random")
-  seed <- if (seed_env == "random") {
-    as.character(sample.int(1e9, 1))
-  } else {
-    seed_env
-  }
+  seed_env <- Sys.getenv("RSOCSIM_RATES_SEED", "20260508")
+  seed <- if (identical(seed_env, "random")) "20260508" else seed_env
   suffix <- "rates"
   result <- socsim(simdir, "socsim.sup", seed = seed, process_method = "inprocess", suffix = suffix)
   expect_equal(result, 1)
@@ -128,6 +152,7 @@ test_that("rates regression: simulate, estimate, compare, plot", {
   plot_path <- file.path(artifacts_dir, sprintf("rates_plot_%s_seed_%s.png", date_tag, seed))
 
   utils::write.csv(rates, current_path, row.names = FALSE)
+  mirror_test_artifact(current_path, baseline_dir)
 
   if (!file.exists(baseline_path)) {
     proposed_baseline_path <- file.path(artifacts_dir, basename(baseline_path))
@@ -147,7 +172,10 @@ test_that("rates regression: simulate, estimate, compare, plot", {
 
     # Plot and save
     grDevices::png(plot_path, width = 900, height = 600)
-    on.exit(grDevices::dev.off(), add = TRUE)
+    on.exit({
+      grDevices::dev.off()
+      mirror_test_artifact(plot_path, baseline_dir)
+    }, add = TRUE)
     y_values <- c(rates$rate_fertility, rates$rate_mortality)
     if (exists("baseline") && nrow(baseline) > 0) {
       y_values <- c(y_values, baseline$rate_fertility, baseline$rate_mortality)

@@ -10,10 +10,15 @@ But you can also use devtools to build the documentation and website. And to bui
 
 `devtools::check()` - run tests --> can it be published on CRAN? Runs several tests.
 
-Simulations will be skipped by default tests. Run the following line first to activate more extensive testing:
-`Sys.setenv(RSOCSIM_RUN_INTEGRATION_TESTS="1")`
-and then `devtools::check()` 
+Simulations will be skipped by default tests. Run the following lines to activate more extensive testing:
 
+```{R}
+Sys.setenv(RSOCSIM_RUN_INTEGRATION_TESTS="1") # run simulations
+Sys.setenv(RSOCSIM_MIRROR_TEST_ARTIFACTS="1") # copy some sim-results test folder
+devtools::check()
+``` 
+
+The results will then be copied to `tests\testthat\tests\testthat\_results` for inspection
 
 `usethis::use_github_action("pkgdown")`
 
