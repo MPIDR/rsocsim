@@ -19,11 +19,6 @@
 - [`retrieve_kin()`](https://mpidr.github.io/rsocsim/reference/retrieve_kin.md)
   : Identify members of a kin network for an individual or individuals
   of interest.
-- [`rsocsim-package`](https://mpidr.github.io/rsocsim/reference/rsoc-package.md)
-  [`rsocsim`](https://mpidr.github.io/rsocsim/reference/rsoc-package.md)
-  : SOCSIM Package for R. Run Social microsimulations directly from R.
-- [`run1simulationwithfile_from_binary()`](https://mpidr.github.io/rsocsim/reference/run1simulationwithfile_from_binary.md)
-  : Run a single socsim-simulation with a socsim binary
 - [`simulation_time_to_years()`](https://mpidr.github.io/rsocsim/reference/simulation_time_to_years.md)
   : Calculate for how many years the simulation ran
 - [`socsim()`](https://mpidr.github.io/rsocsim/reference/socsim.md) :

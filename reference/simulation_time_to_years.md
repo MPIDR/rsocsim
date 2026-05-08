@@ -26,5 +26,6 @@ simulation_time_to_years(simulation_time, pre_simulation_time, start_year)
 
 ## Value
 
-An number. The number of years for which the simulation ran. May have a
-fractional part.
+A numeric scalar giving the calendar year reached at the end of the
+simulated period after subtracting `pre_simulation_time / 12`. The value
+can include a fractional year.

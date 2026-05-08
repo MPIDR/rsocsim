@@ -57,4 +57,7 @@ socsim(
 
 ## Value
 
-Returns the name of the directory to which the results will be written.
+Returns `1L` when the simulation finishes successfully. If the
+simulation errors before completion, the function returns `NULL` after
+issuing warnings. Result files are written to the directory
+`sim_results_<basename(supfile)>_<seed>_<suffix>` inside `folder`.

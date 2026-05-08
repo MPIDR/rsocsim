@@ -7,12 +7,12 @@ interest.
 
 ``` r
 retrieve_kin(
-  opop = opop,
-  omar = omar,
-  KidsOf = KidsOf,
+  opop,
+  omar,
   pid,
-  extra_kintypes,
-  kin_by_sex
+  extra_kintypes = character(),
+  kin_by_sex = FALSE,
+  KidsOf = NULL
 )
 ```
 
@@ -28,15 +28,10 @@ retrieve_kin(
   An R object from SOCSIM microsimulation output (marriage file). Create
   this object with the function read_omar().
 
-- KidsOf:
-
-  A list object containing the children of each person in the
-  population. This object is created by the function getKidsOf().
-
 - pid:
 
-  A character vector of person IDs, indicating persons of interest for
-  whom these kin networks should be identified.
+  A vector of person IDs, indicating persons of interest for whom these
+  kin networks should be identified.
 
 - extra_kintypes:
 
@@ -66,18 +61,24 @@ retrieve_kin(
   value to TRUE will result in additional objects being generated to
   identify individuals' relatives by sex.
 
+- KidsOf:
+
+  An optional precomputed list object containing the children of each
+  person in the population. If `NULL`, it is built from `opop`.
+
 ## Value
 
-An R object containing a list of lists with person IDs of kin, organized
-by relationship. These person ID values will be named based on the
-person of interest with whom they are associated. For example, for a
-list named "parents", the values will be person IDs of the parents of
-individuals of interest. These values will be named according to their
-children's IDs (given that their children are, in this case, the persons
-of interest provided to the function input). With kin_by_sex set to TRUE
-and extra_kintypes set to c(c("gunclesaunts", "unclesaunts",
-"firstcousins", "niblings", "inlaws")), the full list of kin relations
-identified are:
+A named list whose components are kinship categories such as `parents`,
+`siblings`, or `children`. Each component is itself a named list of
+integer person IDs, organized by relationship. These person ID values
+will be named based on the person of interest with whom they are
+associated. For example, for a list named "parents", the values will be
+person IDs of the parents of individuals of interest. These values will
+be named according to their children's IDs (given that their children
+are, in this case, the persons of interest provided to the function
+input). With kin_by_sex set to TRUE and extra_kintypes set to
+c(c("gunclesaunts", "unclesaunts", "firstcousins", "niblings",
+"inlaws")), the full list of kin relations identified are:
 
 - "ggparents": great-grandparents
 
@@ -161,7 +162,7 @@ if (FALSE) { # \dontrun{
 #Individuals of interest
 pid <- c("10111", "10211", "10311")
 #Obtain partial kinship network, with omar and opop already in R environment
-kin_network <- getKin(opop = opop, omar = omar, pid = pid, 
+kin_network <- retrieve_kin(opop = opop, omar = omar, pid = pid,
 extra_kintypes = c("unclesaunts", "niblings"), kin_by_sex = TRUE)
 } # }
 ```

@@ -52,7 +52,10 @@ estimate_mortality_rates(
 
 ## Value
 
-A data.frame with yearly age-specific mortality rates by year and age.
+A data frame with columns `year`, `sex`, `age`, and `socsim`. `year` is
+a factor describing the grouped calendar-year interval, `sex` is
+`"male"` or `"female"`, `age` is a factor describing the age interval,
+and `socsim` is the estimated mortality rate for that cell.
 
 ## Details
 
@@ -60,17 +63,19 @@ The `final_sim_year` can be obtained from the .sup file and must refer
 to to a real-world year.
 
 Grouped year and age ranges (i.e., if `year_group > 1` or
-`age_group > 1`) are created as \[year;year+year_group). Mortality rates
-always start from 0 \[0,0+age_group).
+`age_group > 1`) are created as \[year;year+year_group). For
+`age_group > 1`, mortality rates are split into an infant group \[0,1)
+and then grouped ages \[1, age_group), \[age_group, age_group +
+age_group), and so on.
 
 ## Examples
 
 ``` r
 if (FALSE) { # \dontrun{
 # Read opop file into global environment
-opop <- read_opop(path = "my_path")
+opop <- read_opop(fn = "my_path")
 # Retrieve age-specific mortality rates
-asmr <- get_asmr_socsim(opop = opop,
+asmr <- estimate_mortality_rates(opop = opop,
                      final_sim_year = 2021,
                      year_min = 1750,
                      year_max = 2020,

@@ -57,7 +57,10 @@ estimate_fertility_rates(
 
 ## Value
 
-A data.frame with age-specific fertility rates by year and age.
+A data frame with columns `year`, `age`, and `socsim`. `year` is a
+factor describing the grouped calendar-year interval, `age` is a factor
+describing the maternal-age interval, and `socsim` is the estimated
+fertility rate for that cell.
 
 ## Details
 
@@ -72,9 +75,9 @@ Grouped year and age ranges (i.e., if `year_group > 1` or
 ``` r
 if (FALSE) { # \dontrun{
 # Read opop file into global environment
-opop <- read_opop(path = "my_path")
+opop <- read_opop(fn = "my_path")
 # Retrieve age-specific fertility rates
-asfr <- get_asfr_socsim(opop = opop,
+asfr <- estimate_fertility_rates(opop = opop,
                      final_sim_year = 2021, 
                      year_min = 1750,
                      year_max = 2020,

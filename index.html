@@ -11,8 +11,8 @@
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="SOCSIM with R">
-<meta name="description" content="Install and run socsim microsimulations from within R with this R-package.">
-<meta property="og:description" content="Install and run socsim microsimulations from within R with this R-package.">
+<meta name="description" content="Tools for preparing inputs, running SOCSIM demographic kinship microsimulations, and reading simulation outputs from R. The package includes helpers for creating simulation folders, downloading demographic rate schedules, starting simulations, and loading population and marriage result files.">
+<meta property="og:description" content="Tools for preparing inputs, running SOCSIM demographic kinship microsimulations, and reading simulation outputs from R. The package includes helpers for creating simulation folders, downloading demographic rate schedules, starting simulations, and loading population and marriage result files.">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">rsocsim</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.9.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.9.9</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -51,7 +51,7 @@
 </h1></div>
 <p><img align="left" width="144" alt="2023-MPIDR_rsocsim-web-144" src="https://user-images.githubusercontent.com/5939967/221559559-1233e070-0e0a-43a1-b451-a3215c0b7d4c.png"></p>
 <p>Socsim (‘Social Simulator’) is an open source stochastic microsimulation platform used to produce synthetic populations with plausible kinship structures using demographic rates as input. We stand on the shoulders of giants: Socsim was originally developed for Unix at UC Berkeley [1-2], where it has been mantained for decades. The current release of <code>rsocsim</code> aims to be OS-agnostic and, for the most part, back-compatible with the original Socsim distribution (<a href="https://lab.demog.berkeley.edu/socsim/" class="external-link uri">https://lab.demog.berkeley.edu/socsim/</a>).</p>
-<p><code>rsocsim</code> is still under development. You might find some bugs or unexpected behavior, the API might change without warnings in the next weeks. If you encounter an error or bug, we are happy to hear from you in the issues.</p>
+<p><code>rsocsim</code> is under active development. Please report bugs or unexpected behavior in the issue tracker.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -93,7 +93,7 @@
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/MPIDR/rsocsim" class="external-link">"rsocsim"</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># create a new folder for all the files related to a simulation.</span></span>
-<span><span class="co"># this will be in your home- or user-directory:</span></span>
+<span><span class="co"># this will be inside a temporary directory by default:</span></span>
 <span><span class="va">folder</span> <span class="op">=</span> <span class="fu">rsocsim</span><span class="fu">::</span><span class="fu"><a href="reference/create_simulation_folder.html">create_simulation_folder</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># create a new supervisory-file.</span></span>
@@ -101,7 +101,7 @@
 <span><span class="co"># create_sup_file will create a very basic supervisory file.</span></span>
 <span><span class="co"># It also copies some rate-files that will be needed into the </span></span>
 <span><span class="co"># simulation folder:</span></span>
-<span><span class="va">supfile</span> <span class="op">=</span> <span class="fu">rsocsim</span><span class="fu">::</span><span class="fu"><a href="reference/create_sup_file.html">create_sup_file</a></span><span class="op">(</span><span class="va">folder</span><span class="op">)</span></span>
+<span><span class="va">supfile</span> <span class="op">=</span> <span class="fu">rsocsim</span><span class="fu">::</span><span class="fu"><a href="reference/create_sup_file.html">create_sup_file</a></span><span class="op">(</span><span class="va">folder</span>, simname <span class="op">=</span> <span class="st">"socsim"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Choose a random-number seed:</span></span>
 <span><span class="va">seed</span> <span class="op">=</span> <span class="fl">300</span></span>
@@ -194,6 +194,7 @@
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
 <li><a href="https://github.com/MPIDR/rsocsim/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/MPIDR/rsocsim/issues" class="external-link">Report a bug</a></li>
 </ul>
 </div>
 
@@ -201,7 +202,7 @@
 <h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li><a href="LICENSE.html">Full license</a></li>
-<li><small>GPL (&gt;= 2)</small></li>
+<li><small><a href="https://www.r-project.org/Licenses/GPL-3" class="external-link">GPL-3</a></small></li>
 </ul>
 </div>
 
@@ -216,10 +217,10 @@
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li>Tom Theile <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0003-0573-9093" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
-<li>Diego Alburez-Gutierrez <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0003-0573-9093" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
-<li>Mallika Snyder <br><small class="roles"> Author, maintainer </small>   </li>
-<li>Liliana P. Calderón-Bernal <br><small class="roles"> Author, maintainer </small>   </li>
+<li>Tom Theile <br><small class="roles"> Author, maintainer, copyright holder </small> <a href="https://orcid.org/0000-0003-0573-9093" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
+<li>Diego Alburez-Gutierrez <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-9823-5179" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
+<li>Mallika Snyder <br><small class="roles"> Author </small>   </li>
+<li>Liliana P. Calderón-Bernal <br><small class="roles"> Author </small>   </li>
 </ul>
 </div>
 

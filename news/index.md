@@ -1,5 +1,25 @@
 # Changelog
 
+## rsocsim 1.9.7 (May 2026)
+
+- restore input/output folder naming behavior from version 1.5.9
+- new: parallelization!
+  - one can provide a list of seeds or a list of sup-filenames and all
+    those simulations will be executed in parallel
+  - read_opop and read_omar will read several result files into one
+    dataframe, if the user supplies a list of seeds or a list of
+    filenames instead of only one seed. These functions increment ids so
+    that ids will not collide.
+- printing to the console:
+  - removed lots of unneccessary print statements
+  - replaced lots of sprintf statements in the C/C++ code with safer
+    wrapper functions
+  - most simulation log-file statements are now “debug-level” and will
+    not pollute the log-file
+- Making the package CRAN-ready by removing lots of warnings
+- fixed some issues/inconsistencies in retrieve_kin and estimate_rates
+- added more test simulations
+
 ## rsocsim 1.9 (March/April 2026)
 
 - improved marriage queue:

@@ -6,7 +6,7 @@ directory 'simdir'.
 ## Usage
 
 ``` r
-create_sup_file(simdir, simname)
+create_sup_file(simdir, simname = "socsim")
 ```
 
 ## Arguments
@@ -17,9 +17,11 @@ create_sup_file(simdir, simname)
 
 - simname:
 
-  A string. The name of the simulation.
+  A string. The base name of the simulation. Defaults to `"socsim"`.
 
 ## Value
 
-A string. The filename of the supervisory file which is needed to start
-the simulation.
+A string. The basename of the created supervisory file, for example
+`"socsim.sup"`. The file is written to `simdir`, and the function also
+copies the bundled rate and initial-population input files into
+`simdir`.

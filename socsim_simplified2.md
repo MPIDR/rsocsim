@@ -27,6 +27,8 @@ results.
 - **`download_rates(folder, countrycode, ...)`**: Downloads standardized
   fertility and mortality rate files (e.g., from UN WPP) for a given
   country and period.
+- **`read_opop`** reads the result of a simulation into a data frame. It
+  will contain all simulated persons and their kinship network.
 
 ## 2. Input Files
 

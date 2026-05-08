@@ -1,10 +1,10 @@
 # Create a directory structure for the simulation
 
 Create a two-level directory structure. If the first-level argument is
-NULL, we look for and, if needed, created the directory 'socsim' in the
-user's home directory. If the second-level argument is NULL, we create a
-directory named 'socsim_sim_some random component' in the first-level
-directory.
+NULL, we look for and, if needed, create the directory 'socsim' in the
+current temporary directory. If the second-level argument is NULL, we
+create a directory named like 'socsim_sim\_' followed by a random
+component in the first-level directory.
 
 ## Usage
 
@@ -18,7 +18,7 @@ create_simulation_folder(basedir = NULL, simdir = NULL)
 
   A string. Optional. First-level directory where the
   simulation-specific directory will be created. Defaults to
-  '\$HOME/socsim'.
+  `file.path(tempdir(), "socsim")`.
 
 - simdir:
 

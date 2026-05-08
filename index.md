@@ -11,10 +11,8 @@ of giants: Socsim was originally developed for Unix at UC Berkeley
 with the original Socsim distribution
 (<https://lab.demog.berkeley.edu/socsim/>).
 
-`rsocsim` is still under development. You might find some bugs or
-unexpected behavior, the API might change without warnings in the next
-weeks. If you encounter an error or bug, we are happy to hear from you
-in the issues.
+`rsocsim` is under active development. Please report bugs or unexpected
+behavior in the issue tracker.
 
 ## Installation
 
@@ -60,12 +58,14 @@ includes many more capabilities needed in package development (e.g.
 Install {remotes} or {devtools}:
 
 ``` r
+
 install.packages("remotes")
 ```
 
 Install rsocsim from Github:
 
 ``` r
+
 # The command is the same in {devtools} and {remotes}.
 remotes::install_github("MPIDR/rsocsim@v1.5.9")
 ```
@@ -75,10 +75,11 @@ remotes::install_github("MPIDR/rsocsim@v1.5.9")
 ### Getting started
 
 ``` r
+
 library("rsocsim")
 
 # create a new folder for all the files related to a simulation.
-# this will be in your home- or user-directory:
+# this will be inside a temporary directory by default:
 folder = rsocsim::create_simulation_folder()
 
 # create a new supervisory-file.
@@ -86,7 +87,7 @@ folder = rsocsim::create_simulation_folder()
 # create_sup_file will create a very basic supervisory file.
 # It also copies some rate-files that will be needed into the 
 # simulation folder:
-supfile = rsocsim::create_sup_file(folder)
+supfile = rsocsim::create_sup_file(folder, simname = "socsim")
 
 # Choose a random-number seed:
 seed = 300

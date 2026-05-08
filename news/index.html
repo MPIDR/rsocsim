@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">rsocsim</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.9.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.9.9</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -32,6 +32,22 @@
       <small>Source: <a href="https://github.com/MPIDR/rsocsim/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.9.7" id="rsocsim-197-may-2026">rsocsim 1.9.7 (May 2026)<a class="anchor" aria-label="anchor" href="#rsocsim-197-may-2026"></a></h2>
+<ul><li>restore input/output folder naming behavior from version 1.5.9</li>
+<li>new: parallelization!
+<ul><li>one can provide a list of seeds or a list of sup-filenames and all those simulations will be executed in parallel</li>
+<li>read_opop and read_omar will read several result files into one dataframe, if the user supplies a list of seeds or a list of filenames instead of only one seed. These functions increment ids so that ids will not collide.</li>
+</ul></li>
+<li>printing to the console:
+<ul><li>removed lots of unneccessary print statements</li>
+<li>replaced lots of sprintf statements in the C/C++ code with safer wrapper functions</li>
+<li>most simulation log-file statements are now “debug-level” and will not pollute the log-file</li>
+</ul></li>
+<li>Making the package CRAN-ready by removing lots of warnings</li>
+<li>fixed some issues/inconsistencies in retrieve_kin and estimate_rates</li>
+<li>added more test simulations</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.9" id="rsocsim-19-marchapril-2026">rsocsim 1.9 (March/April 2026)<a class="anchor" aria-label="anchor" href="#rsocsim-19-marchapril-2026"></a></h2>
 <ul><li>improved marriage queue:

@@ -429,10 +429,12 @@ following way:
 
   \[
 
-  $$\begin{array}{rlr}
-  {agediff} & = & {{age}_{groom} - {age}_{bride}} \\
-  {score} & = & {{target}_{agediff} - \frac{{count}_{agediff}}{{count}_{total}}}
-  \end{array}$$
+  ``` math
+  \begin{aligned}
+      \mathrm{agediff} &=& \mathrm{age}_{\mathrm{groom}} - \mathrm{age}_{\mathrm{bride}} \\    \label{eq:mscore}
+      \mathrm{score} &=& \mathrm{target}_{\mathrm{agediff}} - \frac{\mathrm{count}_{\mathrm{agediff}}}{\mathrm{count}_{\mathrm{total}}}
+    \end{aligned}
+  ```
 
   \]
 
@@ -603,10 +605,10 @@ particular segent, **the new value becomes the default** for subsequent
 simulation segments. In the case of segment specific directives, the
 default values are reset at the start of a new segment.
 
-| 1\. \| segments \| *int* \| def: 0 \| \|———-\|:————-:\|——:\|                                                                                                                                                                                                                                                                                                                                                                                               |
-|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 1\. \| segments \| *int* \| def: 0 \| \|———-\|:————-:\|——:\| |
+|:---|
 | \|input_file \| *word* \| def: none\| \|———-\|:————-:\|——:\| `input_file initpop` Indicates where Socsim should look for the input files. The arguement of this directive is a stem from which complete filename paths are constructed. `input-file-stem`.opop will be the initial population file; `input-file-stem`.omar will be the initial marriage file. The initial marriage file need not exist if the initial population has no kinship structure. |
-| 3\.                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| 3\. |
 
 | output_file | *word* | def: none |
 |-------------|--------|-----------|
@@ -623,10 +625,10 @@ naming conventions to avoid overwriting.
 
 4.  
 
-| \| proportion_male \| *real* \| def: 0.5112 \| \|———-\|:————-:\|——:\| `proportion_male 0.5112` Indicates the proportion of births which are male. In order to preserve an early mistake, the directive `sex_ratio` is a synonym for `proportion_male`.                                                                                                                                                                                                                                                             |
-|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| \| proportion_male \| *real* \| def: 0.5112 \| \|———-\|:————-:\|——:\| `proportion_male 0.5112` Indicates the proportion of births which are male. In order to preserve an early mistake, the directive `sex_ratio` is a synonym for `proportion_male`. |
+|:---|
 | \|hetfert \| *1/0* \| def: 1\| \|———-\|:————-:\|——:\| `hetfert 1` Enables the heterogeneous fertility feature (0 to disables it). If enabled, each female will have a beta distributed random variable by which her fertility is multiplied before random waiting times are generated. The result is a wider variation in sibling set size than would otherwise result. Note that the degree to which this fertility “multiplier” is inherited by daughters can be set by the user see ***alpha*** and ***beta***. |
-| 6\.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| 6\. |
 
 | alpha,betaT | *real* | def: 0.0, 1.0 |
 |-------------|--------|---------------|
@@ -639,10 +641,10 @@ complete description.
 
 7.  
 
-| \| random_father \| *0/1* \| def: 0 \| \|———-\|:————-:\|——:\| `random_father 0` Indicates whether or not births to unmarried women should have a father randomly assigned. The default value 0 means “no”. In this case the children of nonmarried/non-cohabiting mothers will have 0 as their father’s id.                                                                                                                                                                                                |
-|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| \| random_father \| *0/1* \| def: 0 \| \|———-\|:————-:\|——:\| `random_father 0` Indicates whether or not births to unmarried women should have a father randomly assigned. The default value 0 means “no”. In this case the children of nonmarried/non-cohabiting mothers will have 0 as their father’s id. |
+|:---|
 | \| random_father_min_age \| *int* \| def: 15\| \|———-\|:————-:\|——:\| `random_father_min_age 15` Specifies the minimum age in years that males must be in order to be picked as fathers of children born to unmarried/non-cohabiging women. Constraints on marriageability e.g. incest constraints and endogamy constraints are also enforced with respect to random fathers, but marital status is ignored. The default value is 15. Obviously this is meaningless unless the `random_father` is set to 1 |
-| 9\.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| 9\. |
 
 | bint | *int* | def: 9 |
 |------|-------|--------|
@@ -656,9 +658,9 @@ upward to compensate for the birth interval.
 10. 
 
 | \| endogamy \| *(-1..1)* \| def: 0\| \|———-\|:————-:\|——:\| `endogamy 0` Determines how suitors from other ***groups*** are treated in determining suitability for marriage. When ego is having a marriage event executed, s/he inspects everyone on the marriage queue of the opposite sex. A value of `endogamy` between 0 and 1 is taken as the probability that a potential spouse who is a member of a *different* group from that of ego will be rejected. A value of 1 therefore implies *endogamy* while a value of 0 implies that group membership will not matter with respect to marriage. A value of `endogamy` between -1 and 0 is taken as the negative of the probability that a potential spouse from the **same group** will be rejected. A value of -1 therefore enforces complete *exogamy* – all suitors of ego’s own group will be rejected with probability 1. |
-|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| \| marriage_queues \| *1 or 2* \| def: 2\| \|———-\|:————-:\|——:\| `marriage_queues 2` Determines which of the two possible marriage market schemes will be used. A “1” indicates that the ***one-queue*** system will be employed. Under this system ***all marriage-eligible males*** are evaluated for each female with a scheduled marriage event. A “2” indicates that the ***two-queue*** marriage market system will be used. In that case, both males and females have stochastically scheduled marriage (search) events and both sexes wait in their respecitve marriage queues if no suitable partner is immediately available. See Section [3](#sec:marriageQueue) for a longer explanation                                                                                                                                                                                |
-| 12\.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+|:---|
+| \| marriage_queues \| *1 or 2* \| def: 2\| \|———-\|:————-:\|——:\| `marriage_queues 2` Determines which of the two possible marriage market schemes will be used. A “1” indicates that the ***one-queue*** system will be employed. Under this system ***all marriage-eligible males*** are evaluated for each female with a scheduled marriage event. A “2” indicates that the ***two-queue*** marriage market system will be used. In that case, both males and females have stochastically scheduled marriage (search) events and both sexes wait in their respecitve marriage queues if no suitable partner is immediately available. See Section [3](#sec:marriageQueue) for a longer explanation |
+| 12\. |
 
 | marriage_eval | *preference/distribution* | def: preference |
 |---------------|---------------------------|-----------------|
@@ -676,9 +678,9 @@ distribution of the age difference between spouses at marriage. See
 13. 
 
 | \| agedif_marriage_mean group \| *real* \| def: all groups 2.0 \|———-\|:————-:\|——:\| `agedif_marriage_mean 1 2` Determines the mean (in **years** ) of the target distribution of spousal age differences for ***women* of the specified group.** This directive consists of the word `agedif_marriage_age_mean` followed by an integer indicating the group to which the directive applies and a real indicating the target mean spousal age difference in years. Currently Socsim uses a normal distribution as the target distribution. We await theoretically robust arguments in favor other parametric distributions. This is **only valid if `marriage_eval` is set to “distribution”** See Section [3.3](#sec:score3) for more details. |
-|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| \| agedif_marriage_sd \| *int real \> 0* \| def: all groups 3 \| \|———-\|:————-:\|——:\| `agedif_marriage_sd 1 3` Determines the standard deviation of the target spousal age distribution. Just as with `agedif_marriage_mean`, this directive is specified separately for each group in the simulation. This is **only valid if `marriage_eval` is set to “distribution”.** See Section [3.3](#sec:score3) for more details.                                                                                                                                                                                                                                                                                                                    |
-| 15                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+|:---|
+| \| agedif_marriage_sd \| *int real \> 0* \| def: all groups 3 \| \|———-\|:————-:\|——:\| `agedif_marriage_sd 1 3` Determines the standard deviation of the target spousal age distribution. Just as with `agedif_marriage_mean`, this directive is specified separately for each group in the simulation. This is **only valid if `marriage_eval` is set to “distribution”.** See Section [3.3](#sec:score3) for more details. |
+| 15 |
 
 | `marriage_peak_age` | *int* | def: 36 |
 |---------------------|-------|---------|
@@ -689,8 +691,8 @@ spousal age **difference** (in months) among spouses. This is **only
 valid if `marriage_eval` is set to “preference”**. See Section
 [3.3](#sec:score3) for more details.
 
-| \|marriage_slope_ratio \|*real* \|def: 2\| \|———-\|:————-:\|——:\| `marriage_slope_ratio 2.0` Works with `marriage_peak_age` to determine a marriage preference “score” for potential spouses. This is **only valid if `marriage_eval` is set to “preference”**. See Section [3.3](#sec:score3) for more details.                  |
-|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| \|marriage_slope_ratio \|*real* \|def: 2\| \|———-\|:————-:\|——:\| `marriage_slope_ratio 2.0` Works with `marriage_peak_age` to determine a marriage preference “score” for potential spouses. This is **only valid if `marriage_eval` is set to “preference”**. See Section [3.3](#sec:score3) for more details. |
+|----|
 | \|marriage_agedif_min \| *int* \|def: -120\| \|———-\|:————-:\|——:\| `marriage_agedif_min -120` Determines the *lower* end of the permissible age difference between spouses (groom age - bride age), in months. This is **only valid if `marriage_eval` is set to “preference”** See Section [3.3](#sec:score3) for more details. |
 
 | marriage_agedif_max | *int* | def: 120 |
@@ -702,15 +704,15 @@ spouses (groom age - bride age), in months. This is **only valid if
 `marriage_eval` is set to “preference”** See Section [3.3](#sec:score3)
 for more details.
 
-|                                                                                                                                                                                                            |
-|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|  |
+|----|
 | \|child_inherits_group \|rule \|def: from_mother\| \|———-\|:————-:\|——:\| `child_inherits_group from_mother` Determines how group membership is assigned at birth. Socsim understands the following rules: |
-| \- from_mother                                                                                                                                                                                             |
-| \- from_father                                                                                                                                                                                             |
-| \- from_same_sex_parent                                                                                                                                                                                    |
-| \- from_opposite_sex_parent                                                                                                                                                                                |
-| \- (n) where (n) is a group to which all new borns are assigned.                                                                                                                                           |
-| By default, Socsim assigns newborns to mother’s group. That is, if no option is specified, Socsim will use “from_mother”.                                                                                  |
+| \- from_mother |
+| \- from_father |
+| \- from_same_sex_parent |
+| \- from_opposite_sex_parent |
+| \- (n) where (n) is a group to which all new borns are assigned. |
+| By default, Socsim assigns newborns to mother’s group. That is, if no option is specified, Socsim will use “from_mother”. |
 
 ## Directives used in extended versions
 
@@ -837,22 +839,22 @@ it^([7](#f7)) .
 
 Table [tab:opop](#tab:opop) shows which information is in each column.
 
-| **position** | **name** | **description**                                                                       |
-|-------------:|:---------|:--------------------------------------------------------------------------------------|
-|            1 | pid      | Person id unique identifier assigned as integer in birth order                        |
-|            2 | fem      | 1 if female 0 if male                                                                 |
-|            3 | group    | Group identifier 1..60 current group membership of individual                         |
-|            4 | nev      | Next scheduled event                                                                  |
-|            5 | dob      | Date of birth integer month number                                                    |
-|            6 | mom      | Person id of mother                                                                   |
-|            7 | pop      | Person id of father                                                                   |
-|            8 | nesibm   | Person id of next eldest sibling through mother                                       |
-|            9 | nesibp   | Person id of next eldest sibling through father                                       |
-|           10 | lborn    | Person id of last born child                                                          |
-|           11 | marid    | Id of marriage in .omar file                                                          |
-|           12 | mstat    | Marital status at end of simulation integer 1=single;2=divorced; 3=widowed; 4=married |
-|           13 | dod      | Date of death or 0 if alive at end of simulation                                      |
-|           14 | fmult    | Fertility multiplier                                                                  |
+| **position** | **name** | **description** |
+|---:|:---|:---|
+| 1 | pid | Person id unique identifier assigned as integer in birth order |
+| 2 | fem | 1 if female 0 if male |
+| 3 | group | Group identifier 1..60 current group membership of individual |
+| 4 | nev | Next scheduled event |
+| 5 | dob | Date of birth integer month number |
+| 6 | mom | Person id of mother |
+| 7 | pop | Person id of father |
+| 8 | nesibm | Person id of next eldest sibling through mother |
+| 9 | nesibp | Person id of next eldest sibling through father |
+| 10 | lborn | Person id of last born child |
+| 11 | marid | Id of marriage in .omar file |
+| 12 | mstat | Marital status at end of simulation integer 1=single;2=divorced; 3=widowed; 4=married |
+| 13 | dod | Date of death or 0 if alive at end of simulation |
+| 14 | fmult | Fertility multiplier |
 
 contents and format of the .opop file
 
@@ -965,16 +967,16 @@ rownames(omar)<-omar$mid
 
 labelfig:readOmar
 
-| **position** | **name** | **description**                                                    |
-|-------------:|:---------|:-------------------------------------------------------------------|
-|            1 | mid      | Marriage id number (unique sequential integer)                     |
-|            2 | wpid     | Wife’s person id                                                   |
-|            3 | hpid     | Husband’s person id                                                |
-|            4 | dstart   | Date marriage began                                                |
-|            5 | dend     | Date marriage ended or zero if still in force at end of simulation |
-|            6 | rend     | Reason marriage ended 2 = divorce; 3 = death of one partner        |
-|            7 | wprior   | Marriage id of wife’s next most recent prior marriage              |
-|            8 | hprior   | Marriage id of husband’s next most recent prior marriage           |
+| **position** | **name** | **description** |
+|---:|:---|:---|
+| 1 | mid | Marriage id number (unique sequential integer) |
+| 2 | wpid | Wife’s person id |
+| 3 | hpid | Husband’s person id |
+| 4 | dstart | Date marriage began |
+| 5 | dend | Date marriage ended or zero if still in force at end of simulation |
+| 6 | rend | Reason marriage ended 2 = divorce; 3 = death of one partner |
+| 7 | wprior | Marriage id of wife’s next most recent prior marriage |
+| 8 | hprior | Marriage id of husband’s next most recent prior marriage |
 
 Structure of Socsim marriage file
 
@@ -1011,13 +1013,13 @@ delimited and contains only numbers. Table
 file. Figure [\[fig:otxread\]](#fig:otxread) contains R code for reading
 an otx file into a data frame.
 
-| **position** | **name** | **description**                                                                                                                                                                                                                                            |
-|-------------:|:---------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-|            1 | pid      | Person id to who the transition event occurred                                                                                                                                                                                                             |
-|            2 | date     | Month in which the transtion occurred                                                                                                                                                                                                                      |
-|            3 | fromg    | group from which the person transitions                                                                                                                                                                                                                    |
-|            4 | tog      | group into which the person transitions                                                                                                                                                                                                                    |
-|            5 | sequence | a non positive number indicating the order of the event. A zero indicates that the current record refers to the most recent transition event; a -7 indicates that seven transitions have occurred to this person subsequent to that of the current record. |
+| **position** | **name** | **description** |
+|---:|:---|:---|
+| 1 | pid | Person id to who the transition event occurred |
+| 2 | date | Month in which the transtion occurred |
+| 3 | fromg | group from which the person transitions |
+| 4 | tog | group into which the person transitions |
+| 5 | sequence | a non positive number indicating the order of the event. A zero indicates that the current record refers to the most recent transition event; a -7 indicates that seven transitions have occurred to this person subsequent to that of the current record. |
 
 Table 3: Contents and format of the .otx file
 
@@ -1080,6 +1082,7 @@ forever, you must specify mortality rates for such “people”.
 
 **Fertility Rates**
 
+
     For parity zero women in group 1
     --------------------------------
     single                          ==> Zero
@@ -1097,6 +1100,7 @@ forever, you must specify mortality rates for such “people”.
     mstatus m; parity  p; GROUP  G   ==>  mstatus m; parity p; GROUP G-1
 
 **Marriage, Divorce and Mortality Rates**
+
 
     For men and women in group
     -----------------------------------
@@ -1377,10 +1381,13 @@ the () weighted average of () and ego’s mother’s fertility multiplier.
 If () then (x) is the daughter’s fertility multiplier. Otherwise it is
 further modified by the second equation.
 
-\[ $$\begin{array}{rlr}
-x & = & {\alpha*{fmult}_{mother} + (1 - \alpha)*\gamma} \\
-{fmult}_{daughter} & = & {2.5*\exp^{\beta*log{(\frac{x}{2.5})}}}
-\end{array}$$
+\[
+``` math
+\begin{aligned}
+  x &=& \alpha *\mathrm{fmult}_{\mathrm{mother}} + (1-\alpha)*\gamma\\
+\label{eq:inheritfert}
+  \mathrm{fmult}_{\mathrm{daughter}} &=& 2.5* \exp^{\beta*log(\frac{x}{2.5})} \end{aligned}
+```
 
 \]
 
