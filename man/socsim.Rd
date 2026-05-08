@@ -40,8 +40,10 @@ instead.
 \item{suffix}{A string.}
 }
 \value{
-Returns the name of the directory to which the results will be
-written.
+Returns \code{1L} when the simulation finishes successfully. If the
+simulation errors before completion, the function returns \code{NULL} after
+issuing warnings. Result files are written to the directory
+\verb{sim_results_<basename(supfile)>_<seed>_<suffix>} inside \code{folder}.
 }
 \description{
 Run a single Socsim simulation with a given supervisory file and directory

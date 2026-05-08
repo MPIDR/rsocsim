@@ -17,8 +17,10 @@
 #'      instead.
 #' @param compatibility_mode A string.
 #' @param suffix A string.
-#' @return Returns the name of the directory to which the results will be
-#'   written.
+#' @return Returns `1L` when the simulation finishes successfully. If the
+#'   simulation errors before completion, the function returns `NULL` after
+#'   issuing warnings. Result files are written to the directory
+#'   `sim_results_<basename(supfile)>_<seed>_<suffix>` inside `folder`.
 #' @export
 socsim <- function(folder, supfile, seed = "42", process_method = "inprocess",
                    compatibility_mode = "1", suffix = "") {
@@ -349,8 +351,9 @@ create_simulation_folder <- function(basedir = NULL, simdir = NULL) {
 #' @param simdir A string. The directory where the .sup file will be saved.
 #' @param simname A string. The base name of the simulation. Defaults to
 #'   `"socsim"`.
-#' @return A string. The filename of the supervisory file which is needed to
-#'   start the simulation.
+#' @return A string. The basename of the created supervisory file, for example
+#'   `"socsim.sup"`. The file is written to `simdir`, and the function also
+#'   copies the bundled rate and initial-population input files into `simdir`.
 #' @export
 create_sup_file <- function(simdir, simname = "socsim") {
   sup_content <- "
@@ -389,7 +392,8 @@ run
 #'
 #' @param simdir A string. Base directory of the simulation.
 #' @param sup_fn A string. File name of the .sup file.
-#' @return A list of strings. The content of the supervisory file.
+#' @return A character vector with one element per line of the supervisory
+#'   file.
 #' @export
 get_supervisory_content <- function(simdir, sup_fn) {
   if (is.null(sup_fn)) {
@@ -407,8 +411,9 @@ get_supervisory_content <- function(simdir, sup_fn) {
 #'   simulation ran before getting to a stable population. This is subtracted
 #'   from 'simulation_time' in order to arrive at the "real" simulation time
 #' @param start_year An integer. The year the simulation started.
-#' @return An number. The number of years for which the simulation ran. May
-#'   have a fractional part.
+#' @return A numeric scalar giving the calendar year reached at the end of the
+#'   simulated period after subtracting `pre_simulation_time / 12`. The value
+#'   can include a fractional year.
 #' @export
 simulation_time_to_years <- function(simulation_time, pre_simulation_time, start_year) {
     stopifnot(all(is.integer(simulation_time), is.integer(pre_simulation_time), is.integer(start_year)))

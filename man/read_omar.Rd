@@ -27,7 +27,10 @@ read_omar(
 \item{quiet}{logical. If \code{FALSE}, emit a message with the file path being read.}
 }
 \value{
-Data frame with the information of the output marriage file
+A data frame with columns \code{mid}, \code{wpid}, \code{hpid}, \code{dstart}, \code{dend},
+\code{rend}, \code{wprior}, and \code{hprior}, matching the SOCSIM \code{result.omar} file.
+If the file is missing or empty, a zero-row data frame with these columns
+is returned.
 }
 \description{
 \tabular{rll}{

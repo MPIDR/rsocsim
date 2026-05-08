@@ -48,8 +48,9 @@ to identify individuals' relatives by sex.}
 each person in the population. If \code{NULL}, it is built from \code{opop}.}
 }
 \value{
-An R object containing a list of lists with person IDs
-of kin, organized by relationship. These person ID values will be named
+A named list whose components are kinship categories such as
+\code{parents}, \code{siblings}, or \code{children}. Each component is itself a named list
+of integer person IDs, organized by relationship. These person ID values will be named
 based on the person of interest with whom they are associated.
 For example, for a list named "parents", the values will be person IDs of
 the parents of individuals of interest. These values will be named according

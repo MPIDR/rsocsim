@@ -13,8 +13,9 @@ create_sup_file(simdir, simname = "socsim")
 \code{"socsim"}.}
 }
 \value{
-A string. The filename of the supervisory file which is needed to
-start the simulation.
+A string. The basename of the created supervisory file, for example
+\code{"socsim.sup"}. The file is written to \code{simdir}, and the function also
+copies the bundled rate and initial-population input files into \code{simdir}.
 }
 \description{
 The simulation is only a simple one. The file will be saved into the

@@ -17,8 +17,9 @@ from 'simulation_time' in order to arrive at the "real" simulation time}
 \item{start_year}{An integer. The year the simulation started.}
 }
 \value{
-An number. The number of years for which the simulation ran. May
-have a fractional part.
+A numeric scalar giving the calendar year reached at the end of the
+simulated period after subtracting \code{pre_simulation_time / 12}. The value
+can include a fractional year.
 }
 \description{
 Calculate for how many years the simulation ran

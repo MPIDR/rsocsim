@@ -135,8 +135,39 @@ normalize_socsim_parallel_jobs <- function(folder,
 #'   processes or "sequential" to run jobs one after another.
 #' @param workers An integer. Number of workers to use with
 #'   `backend = "future"`.
-#' @return A data frame with one row per job and columns describing the input,
-#'   output directory, status, and any error message.
+#' @return A data frame with one row per job. The returned columns are:
+#'   `folder`, `supfile`, `seed`, `compatibility_mode`, and `suffix`
+#'   (normalized job inputs), `output_dir` (target result directory), `status`
+#'   (`"success"` or `"error"`), `result` (`1L` for successful runs and
+#'   `NA_integer_` otherwise), and `error_message` (`NA` for successful jobs,
+#'   otherwise the captured error message).
+#'
+#' @examples
+#' \dontrun{
+#' # Reuse the same folder and supervisory file, but vary the RNG seed.
+#' simdir <- create_simulation_folder()
+#' sup <- create_sup_file(simdir, simname = "baseline")
+#' jobs_same_inputs <- socsim_parallel(
+#'   folder = simdir,
+#'   supfile = sup,
+#'   seed = c("42", "43", "44"),
+#'   backend = "sequential"
+#' )
+#' jobs_same_inputs[, c("supfile", "seed", "status")]
+#'
+#' # Keep the seed fixed, but vary both the folder and supervisory file.
+#' simdir_a <- create_simulation_folder(simdir = "scenario_a")
+#' simdir_b <- create_simulation_folder(simdir = "scenario_b")
+#' sup_a <- create_sup_file(simdir_a, simname = "scenario_a")
+#' sup_b <- create_sup_file(simdir_b, simname = "scenario_b")
+#' jobs_different_inputs <- socsim_parallel(
+#'   folder = c(simdir_a, simdir_b),
+#'   supfile = c(sup_a, sup_b),
+#'   seed = "42",
+#'   backend = "sequential"
+#' )
+#' jobs_different_inputs[, c("folder", "supfile", "seed", "status")]
+#' }
 #' @export
 socsim_parallel <- function(folder,
                             supfile,

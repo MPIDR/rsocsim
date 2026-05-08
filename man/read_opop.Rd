@@ -27,7 +27,10 @@ read_opop(
 \item{quiet}{logical. If \code{FALSE}, emit a message with the file path being read.}
 }
 \value{
-Data frame with the information of the output population file
+A data frame with columns \code{pid}, \code{fem}, \code{group}, \code{nev}, \code{dob},
+\code{mom}, \code{pop}, \code{nesibm}, \code{nesibp}, \code{lborn}, \code{marid}, \code{mstat}, \code{dod}, and
+\code{fmult}, matching the SOCSIM \code{result.opop} file. If the file is missing
+or empty, a zero-row data frame with these columns is returned.
 }
 \description{
 after the end of the simulation, socsim writes every person of the simulation into

@@ -21,7 +21,10 @@
 #' @param fn complete path to the file. If not provided, it will be created from the other arguments
 #' @param quiet logical. If `FALSE`, emit a message with the file path being read.
 #'
-#' @return Data frame with the information of the output marriage file
+#' @return A data frame with columns `mid`, `wpid`, `hpid`, `dstart`, `dend`,
+#'   `rend`, `wprior`, and `hprior`, matching the SOCSIM `result.omar` file.
+#'   If the file is missing or empty, a zero-row data frame with these columns
+#'   is returned.
 #'
 #' @md
 #' 
@@ -108,7 +111,10 @@ read_omar <- function(folder = NULL, supfile = "socsim.sup", seed = 42, suffix =
 #' @param fn complete path to the file. If not provided, it will be created from the other arguments
 #' @param quiet logical. If `FALSE`, emit a message with the file path being read.
 #'
-#' @return Data frame with the information of the output population file
+#' @return A data frame with columns `pid`, `fem`, `group`, `nev`, `dob`,
+#'   `mom`, `pop`, `nesibm`, `nesibp`, `lborn`, `marid`, `mstat`, `dod`, and
+#'   `fmult`, matching the SOCSIM `result.opop` file. If the file is missing
+#'   or empty, a zero-row data frame with these columns is returned.
 #' 
 #' @md
 #' 

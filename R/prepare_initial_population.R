@@ -8,7 +8,8 @@
 #' @param size_opop An integer defining the size of the initial population. Default is 20000.
 #' @param output_base A character string for the base name of the output files. Default is "presim".
 #'
-#' @return None. The function writes two files: one for the initial population and one for empty marriage data.
+#' @return `NULL`, invisibly. The function is called for its side effects: it
+#'   writes `<output_base>.opop` and `<output_base>.omar` into `folder`.
 #'
 #' @examples
 #' \dontrun{

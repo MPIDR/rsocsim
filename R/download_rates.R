@@ -13,8 +13,11 @@
 #' See https://github.com/tomthe/retrieveVitalRates_for_rsocsim_API for the 
 #' code that converts the source data into socsim format.
 #' 
-#' @return A list with components `fertility`, `mortality`, and `infoFile`
-#'   giving the extracted filenames and the generated supervisory file path.
+#' @return A named list with three components: `fertility`, a character vector
+#'   of extracted fertility-rate filenames relative to `folder/rates`;
+#'   `mortality`, a character vector of extracted mortality-rate filenames
+#'   relative to `folder/rates`; and `infoFile`, the full path to the generated
+#'   supervisory file.
 #'@examples
 #' \dontrun{
 #' simdir <- tempdir()
