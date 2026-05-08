@@ -1,4 +1,10 @@
 #' Read output marriage file into a data frame
+#'
+#' When `fn` contains multiple file paths, or when `seed` contains multiple
+#' values and `fn` is `NULL`, the matching result files are read and row-bound
+#' into a single data frame. To keep identifiers unique across simulations,
+#' positive ID columns are offset by `(index - 1) * id_offset`, while sentinel
+#' zeros remain unchanged.
 #' 
 #' \tabular{rll}{
 #'  1   \tab mid \tab Marriage id number (unique sequential integer) \cr
@@ -19,6 +25,9 @@
 #' @param seed random number seed (42)
 #' @param suffix optional suffix for the results-directory (default="")
 #' @param fn complete path to the file. If not provided, it will be created from the other arguments
+#' @param id_offset positive integer stride used to offset IDs when combining
+#'   multiple files. Ignored for single-file reads. Default is 10 million, which allows combining up
+#'   to 214 files with a total population of 10 million each.
 #' @param quiet logical. If `FALSE`, emit a message with the file path being read.
 #'
 #' @return A data frame with columns `mid`, `wpid`, `hpid`, `dstart`, `dend`,
@@ -29,56 +38,46 @@
 #' @md
 #' 
 #' @export
-read_omar <- function(folder = NULL, supfile = "socsim.sup", seed = 42, suffix = "", fn = NULL, quiet = FALSE) {
-  if (is.null(fn)) {
-    fn <- socsim_result_file(folder = folder,
-                             supfile = supfile,
-                             seed = seed,
-                             suffix = suffix,
-                             filename = "result.omar")
-    if (!file.exists(fn)) {
-      legacy_fn <- socsim_legacy_result_file(folder = folder,
-                                             supfile = supfile,
-                                             seed = seed,
-                                             suffix = suffix,
-                                             filename = "result.omar")
-      if (file.exists(legacy_fn)) {
-        fn <- legacy_fn
-      }
-    }
+read_omar <- function(folder = NULL, supfile = "socsim.sup", seed = 42, suffix = "", fn = NULL, id_offset = 10000000L, quiet = FALSE) {
+  if (read_results_has_multiple_inputs(fn) || (is.null(fn) && read_results_has_multiple_inputs(seed))) {
+    jobs <- read_results_normalize_inputs(folder = folder,
+                                          supfile = supfile,
+                                          seed = seed,
+                                          suffix = suffix,
+                                          fn = fn)
+    read_results_validate_batch_size(nrow(jobs), id_offset)
+    out <- lapply(seq_len(nrow(jobs)), function(i) {
+      row <- jobs[i, , drop = FALSE]
+      data <- read_omar_single(folder = row$folder,
+                               supfile = row$supfile,
+                               seed = row$seed,
+                               suffix = row$suffix,
+                               fn = if (is.na(row$fn)) NULL else row$fn,
+                               quiet = quiet)
+      read_results_apply_offset(data,
+                                id_columns = c("mid", "wpid", "hpid", "wprior", "hprior"),
+                                offset = (i - 1L) * as.integer(id_offset),
+                                id_offset = id_offset,
+                                source_label = row$label)
+    })
+    return(do.call(rbind, out))
   }
 
-  if (!quiet) {
-    message("read marriage file: ", fn)
-  }
-
-  omar_names <- c("mid", "wpid", "hpid", "dstart", "dend", "rend", "wprior", "hprior")
-  file_size <- if (file.exists(fn)) file.info(fn)$size else NA_real_
-
-  if (!file.exists(fn) || is.na(file_size) || file_size == 0) {
-    warning("marriage file missing or empty; returning empty data frame", call. = FALSE)
-    return(data.frame(
-      mid = integer(),
-      wpid = integer(),
-      hpid = integer(),
-      dstart = integer(),
-      dend = integer(),
-      rend = integer(),
-      wprior = integer(),
-      hprior = integer()
-    ))
-  }
-
-  utils::read.table(
-    file = fn,
-    header = FALSE,
-    as.is = TRUE,
-    col.names = omar_names,
-    colClasses = rep("integer", length(omar_names))
-  )
+  read_omar_single(folder = folder,
+                   supfile = supfile,
+                   seed = seed,
+                   suffix = suffix,
+                   fn = fn,
+                   quiet = quiet)
 }
 
 #' Read output population file into a data frame
+#'
+#' When `fn` contains multiple file paths, or when `seed` contains multiple
+#' values and `fn` is `NULL`, the matching result files are read and row-bound
+#' into a single data frame. To keep identifiers unique across simulations,
+#' positive ID columns are offset by `(index - 1) * id_offset`, while sentinel
+#' zeros remain unchanged.
 #' 
 #' after the end of the simulation, socsim writes every person of the simulation into
 #' a file called result.opop                                                              |
@@ -109,6 +108,9 @@ read_omar <- function(folder = NULL, supfile = "socsim.sup", seed = 42, suffix =
 #' @param seed random number seed (42)
 #' @param suffix optional suffix for the results-directory (default="")
 #' @param fn complete path to the file. If not provided, it will be created from the other arguments
+#' @param id_offset positive integer stride used to offset IDs when combining
+#'   multiple files. Ignored for single-file reads. Default is 10 million, which allows combining up
+#'   to 214 files with a total population of 10 million each.
 #' @param quiet logical. If `FALSE`, emit a message with the file path being read.
 #'
 #' @return A data frame with columns `pid`, `fem`, `group`, `nev`, `dob`,
@@ -119,23 +121,234 @@ read_omar <- function(folder = NULL, supfile = "socsim.sup", seed = 42, suffix =
 #' @md
 #' 
 #' @export
-read_opop <- function(folder = NULL, supfile = "socsim.sup", seed = 42, suffix = "", fn = NULL, quiet = FALSE) {
-  if (is.null(fn)) {
-    fn <- socsim_result_file(folder = folder,
-                             supfile = supfile,
-                             seed = seed,
-                             suffix = suffix,
-                             filename = "result.opop")
-    if (!file.exists(fn)) {
-      legacy_fn <- socsim_legacy_result_file(folder = folder,
-                                             supfile = supfile,
-                                             seed = seed,
-                                             suffix = suffix,
-                                             filename = "result.opop")
-      if (file.exists(legacy_fn)) {
-        fn <- legacy_fn
-      }
+read_opop <- function(folder = NULL, supfile = "socsim.sup", seed = 42, suffix = "", fn = NULL, id_offset = 10000000L, quiet = FALSE) {
+  if (read_results_has_multiple_inputs(fn) || (is.null(fn) && read_results_has_multiple_inputs(seed))) {
+    jobs <- read_results_normalize_inputs(folder = folder,
+                                          supfile = supfile,
+                                          seed = seed,
+                                          suffix = suffix,
+                                          fn = fn)
+    read_results_validate_batch_size(nrow(jobs), id_offset)
+    out <- lapply(seq_len(nrow(jobs)), function(i) {
+      row <- jobs[i, , drop = FALSE]
+      data <- read_opop_single(folder = row$folder,
+                               supfile = row$supfile,
+                               seed = row$seed,
+                               suffix = row$suffix,
+                               fn = if (is.na(row$fn)) NULL else row$fn,
+                               quiet = quiet)
+      read_results_apply_offset(data,
+                                id_columns = c("pid", "mom", "pop", "nesibm", "nesibp", "lborn", "marid"),
+                                offset = (i - 1L) * as.integer(id_offset),
+                                id_offset = id_offset,
+                                source_label = row$label)
+    })
+    return(do.call(rbind, out))
+  }
+
+  read_opop_single(folder = folder,
+                   supfile = supfile,
+                   seed = seed,
+                   suffix = suffix,
+                   fn = fn,
+                   quiet = quiet)
+}
+
+read_results_has_multiple_inputs <- function(x) {
+  if (is.null(x)) {
+    return(FALSE)
+  }
+
+  length(read_results_flatten_input(x)) > 1L
+}
+
+read_results_flatten_input <- function(x) {
+  if (is.null(x)) {
+    return(NULL)
+  }
+
+  unlist(x, use.names = FALSE)
+}
+
+read_results_validate_batch_size <- function(n_inputs, id_offset) {
+  if (!is.numeric(id_offset) || length(id_offset) != 1L || is.na(id_offset) || id_offset <= 0 || id_offset != trunc(id_offset)) {
+    stop("Argument 'id_offset' must be one positive integer value.", call. = FALSE)
+  }
+
+  max_files <- floor(.Machine$integer.max / as.double(id_offset))
+  if (n_inputs > max_files) {
+    warning(sprintf("Combining %s files with id_offset=%s can overflow integer IDs; lower 'id_offset' and try again.",
+                    n_inputs,
+                    format(id_offset, scientific = FALSE)),
+            call. = FALSE)
+    stop("ID offset configuration would overflow integer IDs.", call. = FALSE)
+  }
+}
+
+read_results_normalize_inputs <- function(folder, supfile, seed, suffix, fn) {
+  if (!is.null(fn)) {
+    fn_values <- as.character(read_results_flatten_input(fn))
+    return(data.frame(folder = rep(NA_character_, length(fn_values)),
+                      supfile = rep(NA_character_, length(fn_values)),
+                      seed = rep(NA_character_, length(fn_values)),
+                      suffix = rep(NA_character_, length(fn_values)),
+                      fn = fn_values,
+                      label = fn_values,
+                      stringsAsFactors = FALSE))
+  }
+
+  seed_values <- as.character(read_results_flatten_input(seed))
+  target_length <- length(seed_values)
+  recycle_arg <- function(x, name) {
+    values <- read_results_flatten_input(x)
+    if (is.null(values)) {
+      values <- NA_character_
     }
+    if (!length(values) %in% c(1L, target_length)) {
+      stop("Arguments 'folder', 'supfile', 'seed', and 'suffix' must all have length 1 or the same length.", call. = FALSE)
+    }
+    rep_len(as.character(values), target_length)
+  }
+
+  data.frame(folder = recycle_arg(folder, "folder"),
+             supfile = recycle_arg(supfile, "supfile"),
+             seed = seed_values,
+             suffix = recycle_arg(suffix, "suffix"),
+             fn = rep(NA_character_, target_length),
+             label = paste0("seed=", seed_values),
+             stringsAsFactors = FALSE)
+}
+
+read_results_apply_offset <- function(data, id_columns, offset, id_offset, source_label) {
+  if (!nrow(data)) {
+    return(data)
+  }
+
+  max_id <- 0L
+  for (column in id_columns) {
+    values <- data[[column]]
+    positive_values <- values[!is.na(values) & values > 0L]
+    if (length(positive_values)) {
+      max_id <- max(max_id, max(positive_values))
+    }
+  }
+
+  if (max_id > id_offset) {
+    stop(sprintf("Cannot combine '%s' because IDs exceed id_offset=%s. Increase 'id_offset' to at least the maximum positive ID in each file.",
+                 source_label,
+                 format(id_offset, scientific = FALSE)),
+         call. = FALSE)
+  }
+
+  if (offset > 0L && max_id > (.Machine$integer.max - offset)) {
+    stop(sprintf("Cannot combine '%s' because applying the configured id_offset would overflow integer IDs.",
+                 source_label),
+         call. = FALSE)
+  }
+
+  if (offset == 0L) {
+    return(data)
+  }
+
+  for (column in id_columns) {
+    values <- data[[column]]
+    positive_idx <- !is.na(values) & values > 0L
+    values[positive_idx] <- as.integer(values[positive_idx] + offset)
+    data[[column]] <- values
+  }
+
+  data
+}
+
+read_results_resolve_file <- function(folder, supfile, seed, suffix, filename) {
+  fn <- socsim_result_file(folder = folder,
+                           supfile = supfile,
+                           seed = seed,
+                           suffix = suffix,
+                           filename = filename)
+  if (!file.exists(fn)) {
+    legacy_fn <- socsim_legacy_result_file(folder = folder,
+                                           supfile = supfile,
+                                           seed = seed,
+                                           suffix = suffix,
+                                           filename = filename)
+    if (file.exists(legacy_fn)) {
+      fn <- legacy_fn
+    }
+  }
+
+  fn
+}
+
+read_omar_empty <- function() {
+  data.frame(
+    mid = integer(),
+    wpid = integer(),
+    hpid = integer(),
+    dstart = integer(),
+    dend = integer(),
+    rend = integer(),
+    wprior = integer(),
+    hprior = integer()
+  )
+}
+
+read_omar_single <- function(folder, supfile, seed, suffix, fn, quiet) {
+  if (is.null(fn)) {
+    fn <- read_results_resolve_file(folder = folder,
+                                    supfile = supfile,
+                                    seed = seed,
+                                    suffix = suffix,
+                                    filename = "result.omar")
+  }
+
+  if (!quiet) {
+    message("read marriage file: ", fn)
+  }
+
+  omar_names <- c("mid", "wpid", "hpid", "dstart", "dend", "rend", "wprior", "hprior")
+  file_size <- if (file.exists(fn)) file.info(fn)$size else NA_real_
+
+  if (!file.exists(fn) || is.na(file_size) || file_size == 0) {
+    warning("marriage file missing or empty; returning empty data frame", call. = FALSE)
+    return(read_omar_empty())
+  }
+
+  utils::read.table(
+    file = fn,
+    header = FALSE,
+    as.is = TRUE,
+    col.names = omar_names,
+    colClasses = rep("integer", length(omar_names))
+  )
+}
+
+read_opop_empty <- function() {
+  data.frame(
+    pid = integer(),
+    fem = integer(),
+    group = integer(),
+    nev = integer(),
+    dob = integer(),
+    mom = integer(),
+    pop = integer(),
+    nesibm = integer(),
+    nesibp = integer(),
+    lborn = integer(),
+    marid = integer(),
+    mstat = integer(),
+    dod = integer(),
+    fmult = numeric()
+  )
+}
+
+read_opop_single <- function(folder, supfile, seed, suffix, fn, quiet) {
+  if (is.null(fn)) {
+    fn <- read_results_resolve_file(folder = folder,
+                                    supfile = supfile,
+                                    seed = seed,
+                                    suffix = suffix,
+                                    filename = "result.opop")
   }
 
   if (!quiet) {
@@ -148,22 +361,7 @@ read_opop <- function(folder = NULL, supfile = "socsim.sup", seed = 42, suffix =
 
   if (!file.exists(fn) || is.na(file_size) || file_size == 0) {
     warning("population file missing or empty; returning empty data frame", call. = FALSE)
-    return(data.frame(
-      pid = integer(),
-      fem = integer(),
-      group = integer(),
-      nev = integer(),
-      dob = integer(),
-      mom = integer(),
-      pop = integer(),
-      nesibm = integer(),
-      nesibp = integer(),
-      lborn = integer(),
-      marid = integer(),
-      mstat = integer(),
-      dod = integer(),
-      fmult = numeric()
-    ))
+    return(read_opop_empty())
   }
 
   utils::read.table(

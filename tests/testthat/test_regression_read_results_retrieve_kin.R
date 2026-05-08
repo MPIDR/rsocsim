@@ -101,6 +101,133 @@ test_that("read_results returns typed empty frames for missing files", {
   expect_type(opop_empty$fmult, "double")
 })
 
+test_that("read_results combines multiple fn inputs with ID offsets", {
+  opop_run <- data.frame(
+    pid = 1:4,
+    fem = c(1L, 0L, 1L, 0L),
+    group = c(1L, 1L, 1L, 1L),
+    nev = c(0L, 0L, 0L, 0L),
+    dob = c(120L, 120L, 300L, 300L),
+    mom = c(0L, 0L, 1L, 1L),
+    pop = c(0L, 0L, 2L, 2L),
+    nesibm = c(0L, 0L, 0L, 3L),
+    nesibp = c(0L, 0L, 0L, 3L),
+    lborn = c(4L, 4L, 0L, 0L),
+    marid = c(1L, 1L, 0L, 0L),
+    mstat = c(4L, 4L, 1L, 1L),
+    dod = c(0L, 0L, 0L, 0L),
+    fmult = c(0, 0, 0, 0)
+  )
+  omar_run <- data.frame(
+    mid = 1L,
+    wpid = 1L,
+    hpid = 2L,
+    dstart = 0L,
+    dend = 0L,
+    rend = 0L,
+    wprior = 0L,
+    hprior = 0L
+  )
+
+  opop_path1 <- tempfile(fileext = ".opop")
+  opop_path2 <- tempfile(fileext = ".opop")
+  omar_path1 <- tempfile(fileext = ".omar")
+  omar_path2 <- tempfile(fileext = ".omar")
+
+  write.table(opop_run, file = opop_path1, row.names = FALSE, col.names = FALSE)
+  write.table(opop_run, file = opop_path2, row.names = FALSE, col.names = FALSE)
+  write.table(omar_run, file = omar_path1, row.names = FALSE, col.names = FALSE)
+  write.table(omar_run, file = omar_path2, row.names = FALSE, col.names = FALSE)
+
+  opop_combined <- read_opop(fn = c(opop_path1, opop_path2), id_offset = 10L, quiet = TRUE)
+  omar_combined <- read_omar(fn = c(omar_path1, omar_path2), id_offset = 10L, quiet = TRUE)
+
+  expect_equal(opop_combined$pid, c(1L, 2L, 3L, 4L, 11L, 12L, 13L, 14L))
+  expect_equal(opop_combined$mom, c(0L, 0L, 1L, 1L, 0L, 0L, 11L, 11L))
+  expect_equal(opop_combined$pop, c(0L, 0L, 2L, 2L, 0L, 0L, 12L, 12L))
+  expect_equal(opop_combined$nesibm, c(0L, 0L, 0L, 3L, 0L, 0L, 0L, 13L))
+  expect_equal(opop_combined$nesibp, c(0L, 0L, 0L, 3L, 0L, 0L, 0L, 13L))
+  expect_equal(opop_combined$lborn, c(4L, 4L, 0L, 0L, 14L, 14L, 0L, 0L))
+  expect_equal(opop_combined$marid, c(1L, 1L, 0L, 0L, 11L, 11L, 0L, 0L))
+
+  expect_equal(omar_combined$mid, c(1L, 11L))
+  expect_equal(omar_combined$wpid, c(1L, 11L))
+  expect_equal(omar_combined$hpid, c(2L, 12L))
+
+  kin <- retrieve_kin(
+    opop = opop_combined,
+    omar = omar_combined,
+    pid = 13,
+    extra_kintypes = character(),
+    kin_by_sex = TRUE,
+    KidsOf = list()
+  )
+
+  expect_equal(kin$parents[[1]], c(11L, 12L))
+  expect_equal(kin$siblings[[1]], 14L)
+})
+
+test_that("read_results combines multiple seed inputs via resolved result paths", {
+  simdir <- tempfile(pattern = "read-results-")
+  dir.create(simdir)
+
+  dir1 <- file.path(simdir, "sim_results_1_")
+  dir2 <- file.path(simdir, "sim_results_2_")
+  dir.create(dir1)
+  dir.create(dir2)
+
+  opop_seed1 <- data.frame(1L, 1L, 1L, 0L, 100L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 1)
+  opop_seed2 <- data.frame(1L, 0L, 1L, 0L, 101L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 1)
+
+  write.table(opop_seed1,
+              file = file.path(dir1, "result.opop"),
+              row.names = FALSE,
+              col.names = FALSE)
+  write.table(opop_seed2,
+              file = file.path(dir2, "result.opop"),
+              row.names = FALSE,
+              col.names = FALSE)
+
+  combined <- read_opop(folder = simdir,
+                        supfile = "socsim.sup",
+                        seed = c(1, 2),
+                        id_offset = 10L,
+                        quiet = TRUE)
+
+  expect_equal(combined$pid, c(1L, 11L))
+  expect_equal(combined$fem, c(1L, 0L))
+  expect_equal(combined$dob, c(100L, 101L))
+})
+
+test_that("read_results stops when id_offset is too small for file IDs", {
+  opop_path1 <- tempfile(fileext = ".opop")
+  opop_path2 <- tempfile(fileext = ".opop")
+  opop_run <- data.frame(11L, 1L, 1L, 0L, 100L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 1)
+
+  write.table(opop_run, file = opop_path1, row.names = FALSE, col.names = FALSE)
+  write.table(opop_run, file = opop_path2, row.names = FALSE, col.names = FALSE)
+
+  expect_error(
+    read_opop(fn = c(opop_path1, opop_path2), id_offset = 10L, quiet = TRUE),
+    "IDs exceed id_offset=10"
+  )
+})
+
+test_that("read_results warns and stops before integer overflow", {
+  opop_path <- tempfile(fileext = ".opop")
+  opop_run <- data.frame(1L, 1L, 1L, 0L, 100L, 0L, 0L, 0L, 0L, 0L, 0L, 1L, 0L, 1)
+
+  write.table(opop_run, file = opop_path, row.names = FALSE, col.names = FALSE)
+
+  expect_warning(
+    expect_error(
+      read_opop(fn = c(opop_path, opop_path), id_offset = .Machine$integer.max, quiet = TRUE),
+      "overflow integer IDs"
+    ),
+    "lower 'id_offset'"
+  )
+})
+
 test_that("retrieve_kin derives first cousins without explicit unclesaunts", {
   opop <- data.frame(
     pid = 1:7,

@@ -122,7 +122,9 @@ normalize_socsim_parallel_jobs <- function(folder,
   jobs
 }
 
-#' Run several SOCSIM simulations
+#' Run several SOCSIM simulations in parallel.
+#' If you provide a list of seeds instead of a single seed, the function will run one simulation per seed, keeping the other parameters fixed. You can also provide multiple folders and supervisory files to run different simulations with the same seed.
+#' read_opop and read_omar can read and combine results from multiple simulations when you provide a vector of seeds or file paths.
 #'
 #' @param folder A character vector. Simulation folders. Scalars are recycled.
 #' @param supfile A character vector. Supervisory files. Scalars are recycled.
