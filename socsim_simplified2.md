@@ -15,6 +15,7 @@ The `rsocsim` package provides a wrapper to run simulations and analyze results.
     *   `process_method`: `"inprocess"` (runs in R) or `"future"` (runs in separate process).
 *   **`create_initial_population(folder, size_opop, ...)`**: Generates a basic initial population (`.opop`) and empty marriage file (`.omar`) to bootstrap a simulation.
 *   **`download_rates(folder, countrycode, ...)`**: Downloads standardized fertility and mortality rate files (e.g., from UN WPP) for a given country and period.
+* **`read_opop`** reads the result of a simulation into a data frame. It will contain all simulated persons and their kinship network.
 
 ## 2. Input Files
 
