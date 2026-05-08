@@ -2,6 +2,7 @@
 //#include <sys/wait.h> //outcommenting suggested by jim
 #include <math.h>
 #include <stdlib.h>
+#include <errno.h>
 
 #include <iostream>
 #include <filesystem>
@@ -10,6 +11,7 @@
 #include <direct.h>
 #define GetCurrentDir _getcwd
 #else
+#include <sys/stat.h>
 #include <unistd.h>
 #define GetCurrentDir getcwd
 #endif
