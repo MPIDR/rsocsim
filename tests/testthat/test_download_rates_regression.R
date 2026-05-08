@@ -16,7 +16,15 @@ expect_within_tolerance <- function(current, baseline, abs_tol = NULL, rel_tol =
   )
 }
 
-mirror_test_artifact <- function(path, results_dir = file.path("tests", "testthat", "_results")) {
+regression_results_dir <- function() {
+  results_dir <- testthat::test_path("_results")
+  if (!dir.exists(results_dir)) {
+    dir.create(results_dir, recursive = TRUE)
+  }
+  results_dir
+}
+
+mirror_test_artifact <- function(path, results_dir = regression_results_dir()) {
   mirror_enabled <- tolower(Sys.getenv("RSOCSIM_MIRROR_TEST_ARTIFACTS", "")) %in% c("1", "true", "yes")
   if (!mirror_enabled || !file.exists(path)) {
     return(invisible(NULL))
@@ -28,6 +36,14 @@ mirror_test_artifact <- function(path, results_dir = file.path("tests", "testtha
 
   file.copy(path, file.path(results_dir, basename(path)), overwrite = TRUE)
   invisible(path)
+}
+
+read_or_create_baseline <- function(current_rates, baseline_path) {
+  if (!file.exists(baseline_path)) {
+    utils::write.csv(current_rates, baseline_path, row.names = FALSE)
+  }
+
+  utils::read.csv(baseline_path)
 }
 
 reference_initial_population_size <- function() {
@@ -219,7 +235,7 @@ test_that("download_rates regression: simulate, estimate, compare, plot", {
   if (!dir.exists(artifacts_dir)) {
     dir.create(artifacts_dir, recursive = TRUE)
   }
-  baseline_dir <- file.path("tests", "testthat", "_results")
+  baseline_dir <- regression_results_dir()
 
   date_tag <- format(Sys.Date(), "%Y%m%d")
   current_path <- file.path(
@@ -238,17 +254,7 @@ test_that("download_rates regression: simulate, estimate, compare, plot", {
   utils::write.csv(rates, current_path, row.names = FALSE)
   mirror_test_artifact(current_path, baseline_dir)
 
-  if (!file.exists(baseline_path)) {
-    proposed_baseline_path <- file.path(artifacts_dir, basename(baseline_path))
-    utils::write.csv(rates, proposed_baseline_path, row.names = FALSE)
-    testthat::skip(paste0(
-      "Baseline rates CSV missing. Wrote a proposed baseline to ",
-      proposed_baseline_path,
-      ". Re-run the test after adding a checked-in baseline if needed."
-    ))
-  }
-
-  baseline <- utils::read.csv(baseline_path)
+  baseline <- read_or_create_baseline(rates, baseline_path)
   expect_equal(baseline$month, rates$month)
 
   expect_within_tolerance(rates$rate_fertility, baseline$rate_fertility)
@@ -365,7 +371,7 @@ test_that("download_rates parallel regression: USA five seeds combined, compare,
   if (!dir.exists(artifacts_dir)) {
     dir.create(artifacts_dir, recursive = TRUE)
   }
-  baseline_dir <- file.path("tests", "testthat", "_results")
+  baseline_dir <- regression_results_dir()
 
   date_tag <- format(Sys.Date(), "%Y%m%d")
   current_path <- file.path(
@@ -384,17 +390,7 @@ test_that("download_rates parallel regression: USA five seeds combined, compare,
   utils::write.csv(rates, current_path, row.names = FALSE)
   mirror_test_artifact(current_path, baseline_dir)
 
-  if (!file.exists(baseline_path)) {
-    proposed_baseline_path <- file.path(artifacts_dir, basename(baseline_path))
-    utils::write.csv(rates, proposed_baseline_path, row.names = FALSE)
-    testthat::skip(paste0(
-      "Parallel baseline rates CSV missing. Wrote a proposed baseline to ",
-      proposed_baseline_path,
-      ". Re-run the test after adding a checked-in baseline if needed."
-    ))
-  }
-
-  baseline <- utils::read.csv(baseline_path)
+  baseline <- read_or_create_baseline(rates, baseline_path)
   expect_equal(baseline$month, rates$month)
 
   expect_within_tolerance(rates$rate_fertility, baseline$rate_fertility)

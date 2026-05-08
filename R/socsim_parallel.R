@@ -190,7 +190,7 @@ socsim_parallel <- function(folder,
       expr = {
         old_console_output <- getOption("rsocsim.console_output", TRUE)
         on.exit(options(rsocsim.console_output = old_console_output), add = TRUE)
-        options(rsocsim.console_output = FALSE)
+        options(rsocsim.console_output = isTRUE(socsim_env_flag("RSOCSIM_TEST_CONSOLE_OUTPUT")))
         value <- socsim(folder = job$folder,
                         supfile = job$supfile,
                         seed = job$seed,

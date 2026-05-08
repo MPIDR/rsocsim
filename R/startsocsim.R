@@ -75,7 +75,21 @@ socsim <- function(folder, supfile, seed = "42", process_method = "inprocess",
   
 }
 
+socsim_env_flag <- function(name) {
+  value <- Sys.getenv(name, "")
+  if (!nzchar(value)) {
+    return(NULL)
+  }
+
+  tolower(value) %in% c("1", "true", "yes")
+}
+
 socsim_console_enabled <- function() {
+  env_override <- socsim_env_flag("RSOCSIM_TEST_CONSOLE_OUTPUT")
+  if (!is.null(env_override)) {
+    return(env_override)
+  }
+
   isTRUE(getOption("rsocsim.console_output", TRUE))
 }
 

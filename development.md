@@ -15,10 +15,19 @@ Simulations will be skipped by default tests. Run the following lines to activat
 ```{R}
 Sys.setenv(RSOCSIM_RUN_INTEGRATION_TESTS="1") # run simulations
 Sys.setenv(RSOCSIM_MIRROR_TEST_ARTIFACTS="1") # copy some sim-results test folder
+Sys.setenv(RSOCSIM_TEST_CONSOLE_OUTPUT="1") # output to R console during simulation-tests
 devtools::check()
 ``` 
 
-The results will then be copied to `tests\testthat\tests\testthat\_results` for inspection
+To also show the SOCSIM progress messages and population pyramids during local test runs, set:
+
+```{R}
+Sys.setenv(RSOCSIM_TEST_CONSOLE_OUTPUT="1")
+```
+
+For local runs with `devtools::test()` or `testthat::test_file()`, mirrored artifacts are copied into `tests/testthat/_results`.
+
+When running `devtools::check()`, tests execute in a temporary `*.Rcheck` copy of the package, so the mirrored files are created under that temporary tree instead of your working checkout.
 
 `usethis::use_github_action("pkgdown")`
 
