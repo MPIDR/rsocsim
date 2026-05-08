@@ -53,6 +53,39 @@ static const char *socsim_log_prefix(int level)
   }
 }
 
+static void socsim_write_console_message(int level, const char *message)
+{
+  const char *prefix = socsim_log_prefix(level);
+
+  if (level >= SOCSIM_LOG_WARN)
+  {
+    if (prefix[0] != '\0')
+    {
+      Rcpp::Rcerr << prefix;
+    }
+
+    Rcpp::Rcerr << message;
+    if (!socsim_log_has_trailing_linebreak(message))
+    {
+      Rcpp::Rcerr << '\n';
+    }
+    Rcpp::Rcerr.flush();
+    return;
+  }
+
+  if (prefix[0] != '\0')
+  {
+    Rcpp::Rcout << prefix;
+  }
+
+  Rcpp::Rcout << message;
+  if (!socsim_log_has_trailing_linebreak(message))
+  {
+    Rcpp::Rcout << '\n';
+  }
+  Rcpp::Rcout.flush();
+}
+
 static void socsim_write_log_message(FILE *stream, int level, const char *message)
 {
   const char *prefix = socsim_log_prefix(level);
@@ -102,8 +135,7 @@ void socsim_logf(int level, const char *fmt, ...)
 
   if (socsim_console_log_level != SOCSIM_LOG_NONE && level >= socsim_console_log_level)
   {
-    FILE *stream = (level >= SOCSIM_LOG_WARN) ? stderr : stdout;
-    socsim_write_log_message(stream, level, message);
+    socsim_write_console_message(level, message);
   }
 }
 

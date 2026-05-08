@@ -1281,7 +1281,6 @@ void transit(struct person *q)
 
   /* printf("migration of %d \n", q->person_id);*/
 
-  fflush(stdout);
   destgroup = q->next_event - NONTRANSIT;
   tl0 = tl;
   while (tl0 != NULL)

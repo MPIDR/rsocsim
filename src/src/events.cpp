@@ -988,7 +988,6 @@ int process_month()
             if(nth==e->num){
                 nth--;
                 printf("\nError!? nth==e->num, %d; person p will be undefined.\n",nth);
-                fflush(stdout);
             }
         }
         p = e->items[nth];
@@ -1454,12 +1453,10 @@ void queue_delete( struct person *p, int q_type)
     // detect undefined person by testing wether the sex is valid:
     if (!(p->sex==0 || p->sex==1)){
         printf("\n\nError, invalid person, sex = %d\n",p->sex);
-        fflush(stdout);
     }
     if (!ON_EVENT_QUEUE(p))
     {
         printf("person %d current month %d\n", p->person_id, current_month);
-        fflush(stdout);
         perror("trying to delete something not on event queue\n");
         return;
     }
@@ -2383,7 +2380,6 @@ void population_pyramid(FILE *fd_pyr)
      */
 
     logmsg("--write population pyramid\n", "", 1);
-    fflush(stdout);
     while (p != NULL)
     {
         /*
