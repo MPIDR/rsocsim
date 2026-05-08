@@ -10,6 +10,7 @@ read_omar(
   seed = 42,
   suffix = "",
   fn = NULL,
+  id_offset = 10000000L,
   quiet = FALSE
 )
 }
@@ -24,6 +25,10 @@ read_omar(
 
 \item{fn}{complete path to the file. If not provided, it will be created from the other arguments}
 
+\item{id_offset}{positive integer stride used to offset IDs when combining
+multiple files. Ignored for single-file reads. Default is 10 million, which allows combining up
+to 214 files with a total population of 10 million each.}
+
 \item{quiet}{logical. If \code{FALSE}, emit a message with the file path being read.}
 }
 \value{
@@ -33,6 +38,13 @@ If the file is missing or empty, a zero-row data frame with these columns
 is returned.
 }
 \description{
+When \code{fn} contains multiple file paths, or when \code{seed} contains multiple
+values and \code{fn} is \code{NULL}, the matching result files are read and row-bound
+into a single data frame. To keep identifiers unique across simulations,
+positive ID columns are offset by \code{(index - 1) * id_offset}, while sentinel
+zeros remain unchanged.
+}
+\details{
 \tabular{rll}{
 1   \tab mid \tab Marriage id number (unique sequential integer) \cr
 2   \tab wpid \tab Wife’s person id \cr
@@ -43,8 +55,7 @@ is returned.
 7   \tab wprior \tab Marriage id of wife’s next most recent prior marriage \cr
 8   \tab hprior \tab Marriage id of husband’s next most recent prior marriage \cr
 }
-}
-\details{
+
 you can either provide the complete \code{path} to the file or the \code{folder}, supfilename, seed and suffix with which you
 started the simulation
 }

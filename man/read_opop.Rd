@@ -10,6 +10,7 @@ read_opop(
   seed = 42,
   suffix = "",
   fn = NULL,
+  id_offset = 10000000L,
   quiet = FALSE
 )
 }
@@ -24,6 +25,10 @@ read_opop(
 
 \item{fn}{complete path to the file. If not provided, it will be created from the other arguments}
 
+\item{id_offset}{positive integer stride used to offset IDs when combining
+multiple files. Ignored for single-file reads. Default is 10 million, which allows combining up
+to 214 files with a total population of 10 million each.}
+
 \item{quiet}{logical. If \code{FALSE}, emit a message with the file path being read.}
 }
 \value{
@@ -33,10 +38,16 @@ A data frame with columns \code{pid}, \code{fem}, \code{group}, \code{nev}, \cod
 or empty, a zero-row data frame with these columns is returned.
 }
 \description{
-after the end of the simulation, socsim writes every person of the simulation into
-a file called result.opop                                                              |
+When \code{fn} contains multiple file paths, or when \code{seed} contains multiple
+values and \code{fn} is \code{NULL}, the matching result files are read and row-bound
+into a single data frame. To keep identifiers unique across simulations,
+positive ID columns are offset by \code{(index - 1) * id_offset}, while sentinel
+zeros remain unchanged.
 }
 \details{
+after the end of the simulation, socsim writes every person of the simulation into
+a file called result.opop                                                              |
+
 \tabular{rll}{
 1   \tab pid \tab Person id unique identifier assigned as integer in birth order \cr
 2   \tab fem \tab 1 if female 0 if male \cr
