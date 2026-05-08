@@ -1,11 +1,11 @@
 Package: rsocsim
 Type: Package
 Title: SOCSIM with R
-Version: 1.9.8
+Version: 1.9.9
 Date: 2026-04-23
 Maintainer: Tom Theile <theile@demogr.mpg.de>
 Authors@R: c(
-    person("Tom", "Theile", role = c("aut", "cre"), email = "theile@demogr.mpg.de", comment = c(ORCID = "0000-0003-0573-9093")),
+    person("Tom", "Theile", role = c("aut", "cre", "cph"), email = "theile@demogr.mpg.de", comment = c(ORCID = "0000-0003-0573-9093")),
     person("Diego", "Alburez-Gutierrez", role = "aut", comment = c(ORCID = "0000-0002-9823-5179")),
     person("Mallika", "Snyder", role = "aut"),
     person("Liliana P.", "Calderón-Bernal", role = "aut")
