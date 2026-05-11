@@ -9,10 +9,16 @@ We stand on the shoulders of giants: Socsim was originally developed for Unix at
 
 ## Installation
 
+### From CRAN
+Coming soon: The package will soon be available on CRAN. Installation will be easier:
+```
+install.packages("rsocsim")
+```
+
 ### From a binary package
 
 Download the correct binary package from the [release section on Github](https://github.com/MPIDR/rsocsim/releases):
-Currently, you can use [rsocsim_1.5.9.tgz](https://github.com/MPIDR/rsocsim/releases/download/v1.5.9/rsocsim_1.5.9.tgz) for Mac and [rsocsim_1.8.5.zip](https://github.com/MPIDR/rsocsim/releases/download/1.8.5/rsocsim_win_1.8.5.zip)
+Currently, you can use [rsocsim_1.9.9.tgz](https://github.com/MPIDR/rsocsim/releases/download/v1.9.9/rsocsim_1.5.9.tgz) for Mac and [rsocsim_1.9.9.zip](https://github.com/MPIDR/rsocsim/releases/download/v1.9.9/rsocsim_win_1.9.9.zip)
 for Windows.
 
 Then execute the following line in R and choose the downloaded file:
@@ -150,14 +156,6 @@ The goal of this section is to improve the readability of the code and reduce co
 If you use vim, the default C formatting should be fine (':h C-indenting').
 
 We reformatted the .cpp files because indentation was all over the place, but we left the .c files largely alone such as not to anger the compiler gods.
-
-### Future plans
-
-* Testing and verification
-* including convenient R-functions for generating input and reading/processing output
-  * possible options:
-    * include those functions into this package
-    * create another package that loads this package
 
 
 ## References
