@@ -2,7 +2,6 @@
 
 ## rsocsim 1.9.7 (May 2026)
 
-- restore input/output folder naming behavior from version 1.5.9
 - new: parallelization!
   - one can provide a list of seeds or a list of sup-filenames and all
     those simulations will be executed in parallel
@@ -19,6 +18,7 @@
 - Making the package CRAN-ready by removing lots of warnings
 - fixed some issues/inconsistencies in retrieve_kin and estimate_rates
 - added more test simulations
+- Bugfix:restore input/output folder naming behavior from version 1.5.9
 
 ## rsocsim 1.9 (March/April 2026)
 

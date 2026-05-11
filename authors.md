@@ -15,7 +15,7 @@
 ## Citation
 
 Source:
-[`inst/CITATION`](https://github.com/MPIDR/rsocsim/blob/v1.9.9/inst/CITATION)
+[`inst/CITATION`](https://github.com/MPIDR/rsocsim/blob/main/inst/CITATION)
 
 Theile, T., Alburez-Gutierrez, D., Snyder, M., & Calderón-Bernal, L. P.
 (2026). rsocsim: SOCSIM with R. https://github.com/MPIDR/rsocsim
