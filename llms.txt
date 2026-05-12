@@ -60,10 +60,9 @@ everyone](https://teuder.github.io/rcpp4everyone_en/020_install.html).
 
 In order to install packages from Github, you can use the {remotes} or
 {devtools} packages. {remotes} ([CRAN
-link](https://cran.r-project.org/web/packages/remotes/index.html)) only
-provides the capability to install packages from different code
-repositories. {devtools} ([CRAN
-link](https://cran.r-project.org/web/packages/devtools/index.html))
+link](https://CRAN.R-project.org/package=remotes)) only provides the
+capability to install packages from different code repositories.
+{devtools} ([CRAN link](https://CRAN.R-project.org/package=devtools))
 includes many more capabilities needed in package development (e.g.
 (re-)generating documentation or running tests). {devtools} includes
 {remotes}.
