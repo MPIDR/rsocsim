@@ -3,7 +3,7 @@
 <img align="left" width="144" alt="2023-MPIDR_rsocsim-web-144" src="https://user-images.githubusercontent.com/5939967/221559559-1233e070-0e0a-43a1-b451-a3215c0b7d4c.png">
 
 Socsim ('Social Simulator') is an open source stochastic microsimulation platform used to produce synthetic populations with plausible kinship structures using demographic rates as input.
-We stand on the shoulders of giants: Socsim was originally developed for Unix at UC Berkeley [1-2], where it has been mantained for decades. The current release of `rsocsim` aims to be OS-agnostic and, for the most part, back-compatible with the original Socsim distribution (https://lab.demog.berkeley.edu/socsim/).
+We stand on the shoulders of giants: Socsim was originally developed for Unix at UC Berkeley [1-2], where it has been maintained for decades. The current release of `rsocsim` aims to be OS-agnostic and, for the most part, back-compatible with the original Socsim distribution (https://lab.demog.berkeley.edu/socsim/).
 
 `rsocsim` is under active development. Please report bugs or unexpected behavior in the issue tracker.
 
@@ -18,7 +18,7 @@ install.packages("rsocsim")
 ### From a binary package
 
 Download the correct binary package from the [release section on Github](https://github.com/MPIDR/rsocsim/releases):
-Currently, you can use [rsocsim_1.9.9.tgz](https://github.com/MPIDR/rsocsim/releases/download/v1.9.9/rsocsim_1.5.9.tgz) for Mac and [rsocsim_1.9.9.zip](https://github.com/MPIDR/rsocsim/releases/download/v1.9.9/rsocsim_win_1.9.9.zip)
+Currently, you can use [rsocsim_1.9.9.tgz](https://github.com/MPIDR/rsocsim/releases/download/v1.9.9/rsocsim_1.9.9.tgz) for Mac and [rsocsim_1.9.9.zip](https://github.com/MPIDR/rsocsim/releases/download/v1.9.9/rsocsim_win_1.9.9.zip)
 for Windows.
 
 Then execute the following line in R and choose the downloaded file:
@@ -62,7 +62,7 @@ install.packages("remotes")
 Install rsocsim from Github:
 ````R
 # The command is the same in {devtools} and {remotes}.
-remotes::install_github("MPIDR/rsocsim@v1.5.9")
+remotes::install_github("MPIDR/rsocsim@v1.9.9")
 ````
 
 ## Use rsocsim
@@ -136,9 +136,9 @@ Clone this repository, change something, hit "Build-->clean and rebuild"
 (If that fails because the package is in use, you can restart the R-session (CTRL-SHIFT-F10)).
 
 
-renew documentation and some stuff with:
+renew the documentation with:
 ```
-devtools.document()
+devtools::document()
 ```
 
 build source and binary package:
@@ -171,7 +171,7 @@ We reformatted the .cpp files because indentation was all over the place, but we
 
 2. Wachter, K.W. (1997). Kinship resources for the elderly. Philosophical Transactions of the Royal Society of London. Series B: Biological Sciences 352(1363):1811–1817. doi:10.1098/rstb.1997.0166.
 
-3. Mason, Carl. (2016). Socsim Oversimplified. Accesed on 24 Feb 2023 from: https://doi.org/10.7910/DVN/JOCRUR
+3. Mason, Carl. (2016). Socsim Oversimplified. Accessed on 24 Feb 2023 from: https://doi.org/10.7910/DVN/JOCRUR
 
 4. Alburez‐Gutierrez, D., Mason, C., and Zagheni, E. (2021). The “Sandwich Generation” Revisited: Global Demographic Drivers of Care Time Demands. Population and Development Review 47(4):997–1023. doi:10.1111/padr.12436.
 

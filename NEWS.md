@@ -1,3 +1,7 @@
+# rsocsim 1.9.9 (May 2026)
+ * package metadata and documentation cleanup for CRAN submission
+ * refreshed release references in the README
+
 # rsocsim 1.9.7 (May 2026)
  * new: parallelization!
    * one can provide a list of seeds or a list of sup-filenames and all those simulations will be executed in parallel
