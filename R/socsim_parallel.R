@@ -122,9 +122,18 @@ normalize_socsim_parallel_jobs <- function(folder,
   jobs
 }
 
-#' Run several SOCSIM simulations in parallel.
-#' If you provide a list of seeds instead of a single seed, the function will run one simulation per seed, keeping the other parameters fixed. You can also provide multiple folders and supervisory files to run different simulations with the same seed.
-#' read_opop and read_omar can read and combine results from multiple simulations when you provide a vector of seeds or file paths.
+#' Run multiple SOCSIM jobs
+#'
+#' @description Normalize one or more SOCSIM job specifications and run them
+#' either sequentially or through the `future` backend.
+#'
+#' If you provide a vector of seeds instead of a single seed, the function runs
+#' one simulation per seed while keeping the other parameters fixed. You can
+#' also provide multiple folders and supervisory files to run different
+#' simulations with the same seed.
+#'
+#' `read_opop()` and `read_omar()` can read and combine results from multiple
+#' simulations when you provide a vector of seeds or file paths.
 #'
 #' @param folder A character vector. Simulation folders. Scalars are recycled.
 #' @param supfile A character vector. Supervisory files. Scalars are recycled.
@@ -137,6 +146,7 @@ normalize_socsim_parallel_jobs <- function(folder,
 #'   processes or "sequential" to run jobs one after another.
 #' @param workers An integer. Number of workers to use with
 #'   `backend = "future"`.
+#'
 #' @return A data frame with one row per job. The returned columns are:
 #'   `folder`, `supfile`, `seed`, `compatibility_mode`, and `suffix`
 #'   (normalized job inputs), `output_dir` (target result directory), `status`

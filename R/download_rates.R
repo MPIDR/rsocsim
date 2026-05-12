@@ -1,24 +1,31 @@
-#' download and convert rate files from HMD, HFD, UN
-#' @description Given a iso2code countrycode and a range of years (between 1950 
-#'      and 2100) this function will download mortality and fertility rates and
-#'      save them in SOCSIM-compatible files.
-#' @param folder folder where the rates will be saved
-#' @param countrycode 2-character country code https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
-#' @param yearStart Start year. For "UN" the first possible year is 1950
-#' @param yearEnd End year. For "UN" the first possible year is 2100
-#' @param source "UN", at the moment only UN Population Prospects is supported
-#' @param apiUrl url of the API. "https://user.demogr.mpg.de/theile/socsimratesAPI/v1/" by default
-#' @param presim_duration_months Duration of the pre-simulation in months. Default is 96 months (8 years). Change this to 1200 for a stable population.
-#' @details 
-#' See https://github.com/tomthe/retrieveVitalRates_for_rsocsim_API for the 
-#' code that converts the source data into socsim format.
-#' 
+#' Download and convert SOCSIM rate files
+#'
+#' @description Given an ISO2 country code and a range of years, download
+#' fertility and mortality rates and save them in SOCSIM-compatible files.
+#'
+#' @param folder Folder where the rates will be saved.
+#' @param countrycode Two-character country code.
+#' @param yearStart Start year. For `"UN"` the first possible year is 1950.
+#' @param yearEnd End year. For `"UN"` the last possible year is 2100.
+#' @param source Data source identifier. Currently only `"UN"` is supported.
+#' @param apiUrl Base URL of the rate-download API.
+#' @param presim_duration_months Duration of the pre-simulation in months.
+#'
+#' @details
+#' The function downloads fertility and mortality zip archives, extracts the
+#' files matching the requested year range into `folder/rates`, and writes a
+#' SOCSIM supervisory file that references the downloaded rate files.
+#'
+#' See <https://github.com/tomthe/retrieveVitalRates_for_rsocsim_API> for the
+#' code that converts the source data into SOCSIM format.
+#'
 #' @return A named list with three components: `fertility`, a character vector
 #'   of extracted fertility-rate filenames relative to `folder/rates`;
 #'   `mortality`, a character vector of extracted mortality-rate filenames
 #'   relative to `folder/rates`; and `infoFile`, the full path to the generated
 #'   supervisory file.
-#'@examples
+#'
+#' @examples
 #' \dontrun{
 #' simdir <- tempdir()
 #' out <- download_rates(simdir, countrycode = "SE", yearStart = 1970, yearEnd = 1971)

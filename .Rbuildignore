@@ -17,3 +17,5 @@
 ^socsim_simplified2\.md$
 ^tests/testthat/tests($|/)
 ^\.cran-comments\.md$
+^\.positai$
+^\.claude$

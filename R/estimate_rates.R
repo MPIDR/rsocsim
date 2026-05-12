@@ -199,6 +199,8 @@ estimate_fertility_rates <- function(opop, final_sim_year, year_min, year_max, y
 
 #' Convert SOCSIM months to calendar years.
 #'
+#' @description Convert month indices from SOCSIM time to real calendar years.
+#'
 #' @param month Simulation month.
 #' @param last_month The maximum simulation month recorded in the data.
 #' @param final_sim_year Final simulated real world year.
@@ -211,6 +213,9 @@ asYr <- function(month, last_month, final_sim_year) {
 
 #' Get simulation month corresponding to July of a given year.
 #'
+#' @description Convert a calendar year to the SOCSIM month number
+#' corresponding to 1 July of that year.
+#'
 #' @param year Real calendar year.
 #' @param last_month The maximum simulation month present in the data.
 #' @param final_sim_year Final simulated real world year.
@@ -222,6 +227,8 @@ jul <- function(year, last_month, final_sim_year){
 }
 
 #' Estimate yearly number of births by mother’s age group in SOCSIM data.
+#'
+#' @description Count births by calendar year and maternal age group.
 #'
 #' @param df Data frame containing SOCSIM population data.
 #' @param year_range Vector of years for which births are to be estimated.
@@ -312,8 +319,9 @@ get_women_reproductive_age_socsim <- function(df, final_sim_year, year, age_brea
 
 #' Census SOCSIM: Population counts by sex and age.
 #'
-#' @description Returns the population counts by sex and age for individuals alive on 1st July 
-#' of the specified year (including right-censored individuals).
+#' @description Returns the population counts by sex and age for individuals
+#' alive on 1st July of the specified year (including right-censored
+#' individuals).
 #'
 #' @param df Data frame containing SOCSIM population data.
 #' @param year The census year.

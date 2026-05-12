@@ -402,10 +402,14 @@ run
   return(sup_fn)
 }
 
-#' Read the content of the supervisory file 
+#' Read a supervisory file
+#'
+#' @description Read and return the content of a SOCSIM supervisory file from a
+#' simulation directory.
 #'
 #' @param simdir A string. Base directory of the simulation.
-#' @param sup_fn A string. File name of the .sup file.
+#' @param sup_fn A string. File name of the `.sup` file. If `NULL`,
+#'   `"socsim.sup"` is used.
 #' @return A character vector with one element per line of the supervisory
 #'   file.
 #' @export

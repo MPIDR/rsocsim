@@ -46,3 +46,4 @@ tests/testthat/_results/*.png
 *.png
 .tmpRlib/*
 *.tar.gz
+.positai

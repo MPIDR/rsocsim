@@ -21,7 +21,6 @@ Imports: Rcpp (>= 1.0.5),
     tidyr,
     utils
 LinkingTo: Rcpp
-RoxygenNote: 7.3.2
 Suggests: 
     future,
     parallel,
@@ -32,3 +31,4 @@ URL: https://github.com/MPIDR/rsocsim,
 BugReports: https://github.com/MPIDR/rsocsim/issues
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
+Config/roxygen2/version: 8.0.0
