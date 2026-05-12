@@ -37,6 +37,12 @@ Then execute the following line in R and choose the downloaded file:
 
     install.packages(file.choose(),repos=NULL,type="binary")
 
+#### Troubleshooting
+
+rsocsim needs the packages `Rcpp`, `magrittr`, `dplyr` and `tidyr`. If
+you haven’t installed them already, you can do so with this line of
+code: `{R} install.packages(c('Rcpp','magrittr','dplyr','tidyr'))`
+
 ### From Source (requires a compiler)
 
 To get the latest version, you need to have a Rcpp compatible compiler
