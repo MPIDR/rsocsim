@@ -18,7 +18,7 @@ install.packages("rsocsim")
 ### From a binary package
 
 Download the correct binary package from the [release section on Github](https://github.com/MPIDR/rsocsim/releases):
-Currently, you can use [rsocsim_1.9.9.tgz](https://github.com/MPIDR/rsocsim/releases/download/v1.9.9/rsocsim_1.9.9.tgz) for Mac and [rsocsim_1.9.9.zip](https://github.com/MPIDR/rsocsim/releases/download/v1.9.9/rsocsim_win_1.9.9.zip)
+Currently, you can use [rsocsim_1.9.9.tgz](https://github.com/MPIDR/rsocsim/releases/download/v1.9.9/rsocsim_1.9.9.tgz) for Mac and [rsocsim_1.9.9.zip](https://github.com/MPIDR/rsocsim/releases/download/v1.9.9/rsocsim_1.9.9.zip)
 for Windows.
 
 Then execute the following line in R and choose the downloaded file:
