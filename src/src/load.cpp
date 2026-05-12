@@ -226,7 +226,7 @@ const char *index_to_mstatus[] =
     "cohabiting",
 };
 
-char command[80];
+char command[1024];
 
 struct kt_holding_array
 {
@@ -243,6 +243,46 @@ int reading_rate_table = FALSE;
 /*int numgroups = NUMBER_OF_GROUPS ;  figure it out from reading rates*/
 
 char logstring[1024];
+
+static void socsim_copy_string_checked(char *dest, size_t dest_size,
+        const char *src, const char *label)
+{
+    size_t src_len;
+
+    if (src == NULL)
+    {
+        stop("Missing string while building %s", label);
+    }
+
+    src_len = strlen(src);
+    if (src_len >= dest_size)
+    {
+        stop("%s is too long (%zu bytes, max %zu)", label, src_len + 1, dest_size);
+    }
+
+    memcpy(dest, src, src_len + 1);
+}
+
+static void socsim_append_string_checked(char *dest, size_t dest_size,
+        const char *src, const char *label)
+{
+    size_t dest_len;
+    size_t src_len;
+
+    if (src == NULL)
+    {
+        stop("Missing string while building %s", label);
+    }
+
+    dest_len = strlen(dest);
+    src_len = strlen(src);
+    if (dest_len + src_len >= dest_size)
+    {
+        stop("%s is too long (%zu bytes, max %zu)", label, dest_len + src_len + 1, dest_size);
+    }
+
+    memcpy(dest + dest_len, src, src_len + 1);
+}
 
 int load( char *file)
 {
@@ -363,6 +403,7 @@ int create_output_fn_dir() {
     // concatenate "sim_results_" with the name of the supervisory file:
     char buffer_output_dir [1024];
     char buffer_output_fn [1024];
+    char seed_buffer[32];
 
     /* 2024-12-03 Ole
        If rate_file_name includes more than a basename, buffer_output_dir 
@@ -380,8 +421,26 @@ int create_output_fn_dir() {
         SOCSIM_ERRORF("No sup file provided or buffer too small for output directory setup");
     }
 
-    sprintf (buffer_output_dir, "sim_results_%s_%ld_%s/", rate_file_base_name, original_seed, result_suffix);
-    sprintf (buffer_output_fn, "%sresult", buffer_output_dir);
+        snprintf(seed_buffer, sizeof(seed_buffer), "%ld", original_seed);
+        socsim_copy_string_checked(buffer_output_dir, sizeof(buffer_output_dir),
+            "sim_results_", "output directory");
+        socsim_append_string_checked(buffer_output_dir, sizeof(buffer_output_dir),
+            rate_file_base_name, "output directory");
+        socsim_append_string_checked(buffer_output_dir, sizeof(buffer_output_dir),
+            "_", "output directory");
+        socsim_append_string_checked(buffer_output_dir, sizeof(buffer_output_dir),
+            seed_buffer, "output directory");
+        socsim_append_string_checked(buffer_output_dir, sizeof(buffer_output_dir),
+            "_", "output directory");
+        socsim_append_string_checked(buffer_output_dir, sizeof(buffer_output_dir),
+            result_suffix, "output directory");
+        socsim_append_string_checked(buffer_output_dir, sizeof(buffer_output_dir),
+            "/", "output directory");
+
+        socsim_copy_string_checked(buffer_output_fn, sizeof(buffer_output_fn),
+            buffer_output_dir, "output file prefix");
+        socsim_append_string_checked(buffer_output_fn, sizeof(buffer_output_fn),
+            "result", "output file prefix");
 
     // create the directory:
 #if defined(_WIN32)
@@ -401,7 +460,10 @@ int create_output_fn_dir() {
     strcpy(prefix_out_name, buffer_output_fn);
     strcpy(otx_out_name, buffer_output_fn);
 
-    sprintf(log_file_name, "%slogfile.log", buffer_output_dir);
+        socsim_copy_string_checked(log_file_name, sizeof(log_file_name),
+            buffer_output_dir, "log file path");
+        socsim_append_string_checked(log_file_name, sizeof(log_file_name),
+            "logfile.log", "log file path");
     //Rprintf(log_file_name, "%s%d.log", rate_file_name, ceed);
 
     // copy the .sup-file (rate_file_name) into the subfolder:
@@ -410,7 +472,10 @@ int create_output_fn_dir() {
         SOCSIM_ERRORF("Could not open source rate file: %s\n", strerror(errno));
     }
     char buffer_sup_fn_dest [1024];
-    sprintf (buffer_sup_fn_dest, "%s%s", buffer_output_dir, rate_file_base_name);
+        socsim_copy_string_checked(buffer_sup_fn_dest, sizeof(buffer_sup_fn_dest),
+            buffer_output_dir, "supervisory file destination");
+        socsim_append_string_checked(buffer_sup_fn_dest, sizeof(buffer_sup_fn_dest),
+            rate_file_base_name, "supervisory file destination");
     SOCSIM_DEBUGF("Supervisory file destination path: %s\n", buffer_sup_fn_dest);
     FILE *destination = fopen(buffer_sup_fn_dest, "wb");
     if (destination == NULL) {
@@ -424,7 +489,10 @@ int create_output_fn_dir() {
     fclose(source);
     fclose(destination);
 
-    sprintf(log_file_name, "%slogfile.log", buffer_output_dir);
+        socsim_copy_string_checked(log_file_name, sizeof(log_file_name),
+            buffer_output_dir, "log file path");
+        socsim_append_string_checked(log_file_name, sizeof(log_file_name),
+            "logfile.log", "log file path");
     //sprintf(logstring, "compatibility_mode: %d \n",compatibility_mode );
     //logmsg("%s\n", logstring, 1);     
     return(0);
@@ -737,15 +805,20 @@ int l_process_line(char *line,struct l_context *cx,FILE *fp)
                versions */
 
         case k_execute:
-            strcpy(command, "");
+            command[0] = '\0';
             for (i = 1; i < nwords; i++)
             {
-                strcat(command, words[i]);
-                strcat(command, " ");
+                socsim_append_string_checked(command, sizeof(command), words[i],
+                        "execute command");
+                socsim_append_string_checked(command, sizeof(command), " ",
+                        "execute command");
             }
 
             fprintf(fd_log, "process line, command: %s | - fprintf \n",command);
-            system(command);
+            if (system(command) == -1)
+            {
+                SOCSIM_WARNF("Failed to execute command: %s\n", command);
+            }
             return 1;
             break;
 
