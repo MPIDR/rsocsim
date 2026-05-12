@@ -1,5 +1,10 @@
 # Changelog
 
+## rsocsim 1.9.9 (May 2026)
+
+- package metadata and documentation cleanup for CRAN submission
+- refreshed release references in the README
+
 ## rsocsim 1.9.7 (May 2026)
 
 - new: parallelization!
