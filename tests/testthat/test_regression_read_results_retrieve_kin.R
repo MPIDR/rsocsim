@@ -307,3 +307,61 @@ test_that("retrieve_kin honors supplied non-empty KidsOf", {
 
   expect_equal(res$children[[1]], 999)
 })
+
+test_that("retrieve_kin matches internally built and supplied KidsOf outputs", {
+  opop <- data.frame(
+    pid = 1:10,
+    fem = c(1, 0, 1, 0, 0, 1, 1, 0, 1, 0),
+    group = 1,
+    nev = 0,
+    dob = c(100, 100, 220, 220, 220, 220, 340, 340, 340, 340),
+    mom = c(0, 0, 1, 1, 0, 0, 3, 3, 6, 6),
+    pop = c(0, 0, 2, 2, 0, 0, 5, 5, 4, 4),
+    nesibm = 0,
+    nesibp = 0,
+    lborn = 0,
+    marid = c(1, 1, 2, 3, 2, 3, 0, 0, 0, 0),
+    mstat = c(4, 4, 4, 4, 4, 4, 1, 1, 1, 1),
+    dod = 0,
+    fmult = 0
+  )
+
+  omar <- data.frame(
+    mid = 1:3,
+    wpid = c(1, 3, 6),
+    hpid = c(2, 5, 4),
+    dstart = 0,
+    dend = 0,
+    rend = 0,
+    wprior = 0,
+    hprior = 0
+  )
+
+  mother_kids <- split(opop$pid[opop$mom != 0], as.character(opop$mom[opop$mom != 0]))
+  father_kids <- split(opop$pid[opop$pop != 0], as.character(opop$pop[opop$pop != 0]))
+  parent_ids <- union(names(mother_kids), names(father_kids))
+  kids_of <- stats::setNames(vector("list", length(parent_ids)), parent_ids)
+  for (parent_id in parent_ids) {
+    kids_of[[parent_id]] <- c(mother_kids[[parent_id]], father_kids[[parent_id]])
+  }
+
+  res_internal <- retrieve_kin(
+    opop = opop,
+    omar = omar,
+    pid = c(7, 9),
+    extra_kintypes = c("gunclesaunts", "unclesaunts", "firstcousins", "niblings", "inlaws"),
+    kin_by_sex = TRUE,
+    KidsOf = NULL
+  )
+
+  res_supplied <- retrieve_kin(
+    opop = opop,
+    omar = omar,
+    pid = c(7, 9),
+    extra_kintypes = c("gunclesaunts", "unclesaunts", "firstcousins", "niblings", "inlaws"),
+    kin_by_sex = TRUE,
+    KidsOf = kids_of
+  )
+
+  expect_equal(res_supplied, res_internal)
+})

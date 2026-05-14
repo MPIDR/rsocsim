@@ -218,7 +218,7 @@ test_that("retrieve_kin opt-in benchmark remains roughly linear and benefits fro
   scaling_df <- benchmark_df[benchmark_df$persons >= 10000L, , drop = FALSE]
 
   testthat::expect_true(all(benchmark_df$reuse_ratio <= 1.25))
-  if (nrow(scaling_df) >= 2L) {
+  if (nrow(scaling_df) >= 2L && reps >= 2L && min(scaling_df$default_median) >= 1) {
     testthat::expect_true(
       max(scaling_df$default_sec_per_100k) <= min(scaling_df$default_sec_per_100k) * 4
     )

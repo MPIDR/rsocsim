@@ -100,184 +100,311 @@ retrieve_kin <- function(opop, omar, pid,
   pid_keys <- as.character(pid)
   extra_kintypes <- unique(extra_kintypes)
 
+  pid_vector <- opop$pid
   pid_index <- seq_len(nrow(opop))
-  names(pid_index) <- as.character(opop$pid)
+  names(pid_index) <- as.character(pid_vector)
+  mom_pid <- opop$mom
+  pop_pid <- opop$pop
+  sex_vector <- opop$fem
+  marid <- opop$marid
 
-  lookup_column <- function(ids, column) {
-    idx <- unname(pid_index[as.character(ids)])
-    opop[[column]][idx]
+  row_index_of <- function(ids) {
+    unname(pid_index[as.character(ids)])
   }
 
-  subset_by_sex <- function(relatives, sex_value) {
+  map_rows <- function(row_index, values) {
+    out <- rep.int(NA_integer_, length(row_index))
+    valid <- !is.na(row_index)
+    out[valid] <- values[row_index[valid]]
+    out
+  }
+
+  list_from_vectors <- function(row_index, vectors) {
+    lapply(row_index, function(idx) {
+      if (is.na(idx)) {
+        return(vector(mode = "numeric", length = 0L))
+      }
+      as.vector(unlist(lapply(vectors, `[`, idx), use.names = FALSE))
+    })
+  }
+
+  rows_to_pid <- function(relatives) {
+    lapply(relatives, function(x) {
+      if (!length(x)) {
+        return(vector(mode = "numeric", length = 0L))
+      }
+      pid_vector[x]
+    })
+  }
+
+  subset_pid_by_sex <- function(relatives, sex_value) {
+    sex_lookup <- sex_vector
+    names(sex_lookup) <- as.character(pid_vector)
     lapply(relatives, function(x) {
       x[sex_lookup[as.character(x)] == sex_value]
     })
   }
 
-  list_for_pid <- function(row_index, columns) {
-    lapply(row_index, function(idx) {
-      if (is.na(idx)) {
-        return(vector(mode = "numeric", length = 0L))
-      }
-      as.vector(unlist(opop[idx, columns, drop = FALSE], use.names = FALSE))
+  subset_row_by_sex <- function(relatives, sex_value) {
+    lapply(relatives, function(x) {
+      valid <- !is.na(x) & sex_vector[x] == sex_value
+      x[valid]
     })
   }
 
-  if (is.null(KidsOf) || length(KidsOf) == 0L) {
-    mother_kids <- split(opop$pid[opop$mom != 0], as.character(opop$mom[opop$mom != 0]))
-    father_kids <- split(opop$pid[opop$pop != 0], as.character(opop$pop[opop$pop != 0]))
-    parent_ids <- union(names(mother_kids), names(father_kids))
-    KidsOf <- stats::setNames(vector("list", length(parent_ids)), parent_ids)
-    for (parent_id in parent_ids) {
-      KidsOf[[parent_id]] <- c(mother_kids[[parent_id]], father_kids[[parent_id]])
-    }
-  } else if (length(KidsOf) && is.null(names(KidsOf))) {
+  spouse_pid_lookup <- rep(NA, nrow(opop))
+  marriage_index <- match(marid, omar$mid)
+  valid_marriage <- !is.na(marriage_index)
+  wife_rows <- valid_marriage & sex_vector == 1
+  husband_rows <- valid_marriage & sex_vector == 0
+  spouse_pid_lookup[wife_rows] <- omar$hpid[marriage_index[wife_rows]]
+  spouse_pid_lookup[husband_rows] <- omar$wpid[marriage_index[husband_rows]]
+  spouse_row_lookup <- row_index_of(spouse_pid_lookup)
+
+  spouse_pid_lookup_named <- spouse_pid_lookup
+  names(spouse_pid_lookup_named) <- as.character(pid_vector)
+
+  mom_row <- row_index_of(mom_pid)
+  pop_row <- row_index_of(pop_pid)
+
+  so_pid <- function(relatives) {
+    lapply(relatives, function(x) {
+      as.vector(unname(spouse_pid_lookup_named[as.character(x)]))
+    })
+  }
+
+  so_row <- function(relatives) {
+    lapply(relatives, function(x) {
+      if (!length(x)) {
+        return(vector(mode = "numeric", length = 0L))
+      }
+      as.vector(spouse_row_lookup[x])
+    })
+  }
+
+  if (length(KidsOf) && is.null(names(KidsOf))) {
     names(KidsOf) <- as.character(seq_along(KidsOf))
   }
 
-  ko <- function(p) {
-    lapply(p, function(x) {
+  kids_lookup_rows <- NULL
+  use_row_lookup <- TRUE
+
+  if (is.null(KidsOf) || length(KidsOf) == 0L) {
+    mother_rows <- which(!is.na(mom_row))
+    father_rows <- which(!is.na(pop_row))
+    mother_split <- split(mother_rows, mom_row[mother_rows])
+    father_split <- split(father_rows, pop_row[father_rows])
+    parent_rows <- union(names(mother_split), names(father_split))
+    kids_lookup_rows <- vector("list", nrow(opop))
+    if (length(parent_rows)) {
+      parent_rows_int <- as.integer(parent_rows)
+      kids_lookup_rows[parent_rows_int] <- Map(c, mother_split[parent_rows], father_split[parent_rows])
+    }
+  } else {
+    parent_rows <- row_index_of(names(KidsOf))
+    use_row_lookup <- !anyNA(parent_rows)
+
+    if (use_row_lookup) {
+      child_lengths <- lengths(KidsOf)
+      total_children <- sum(child_lengths)
+      child_rows <- vector("list", length(KidsOf))
+
+      if (total_children) {
+        flat_children <- unlist(KidsOf, use.names = FALSE)
+        flat_child_rows <- row_index_of(flat_children)
+        valid_children <- !is.na(flat_children)
+
+        if (any(valid_children & is.na(flat_child_rows))) {
+          use_row_lookup <- FALSE
+        } else {
+          child_groups <- split(flat_child_rows, rep.int(seq_along(KidsOf), child_lengths))
+          child_rows[as.integer(names(child_groups))] <- child_groups
+        }
+      }
+
+      if (use_row_lookup) {
+        kids_lookup_rows <- vector("list", nrow(opop))
+        kids_lookup_rows[parent_rows] <- child_rows
+      }
+    }
+  }
+
+  ko_pid <- function(relatives) {
+    lapply(relatives, function(x) {
       ids <- as.character(x[!is.na(x)])
       unique(as.vector(unlist(KidsOf[ids], use.names = FALSE)))
     })
   }
 
-  spouse_lookup <- rep(NA, nrow(opop))
-  marriage_index <- match(opop$marid, omar$mid)
-  valid_marriage <- !is.na(marriage_index)
-  wife_rows <- valid_marriage & opop$fem == 1
-  husband_rows <- valid_marriage & opop$fem == 0
-  spouse_lookup[wife_rows] <- omar$hpid[marriage_index[wife_rows]]
-  spouse_lookup[husband_rows] <- omar$wpid[marriage_index[husband_rows]]
-  opop$spouse <- spouse_lookup
-  sex_lookup <- opop$fem
-  names(sex_lookup) <- as.character(opop$pid)
-  spouse_lookup <- opop$spouse
-  names(spouse_lookup) <- as.character(opop$pid)
-
-  opop$FM <- lookup_column(opop$pop, "mom")
-  opop$MM <- lookup_column(opop$mom, "mom")
-  opop$MF <- lookup_column(opop$mom, "pop")
-  opop$FF <- lookup_column(opop$pop, "pop")
-
-  opop$FFM <- lookup_column(opop$pop, "FM")
-  opop$FMM <- lookup_column(opop$pop, "MM")
-  opop$FMF <- lookup_column(opop$pop, "MF")
-  opop$FFF <- lookup_column(opop$pop, "FF")
-
-  opop$MFM <- lookup_column(opop$mom, "FM")
-  opop$MMM <- lookup_column(opop$mom, "MM")
-  opop$MMF <- lookup_column(opop$mom, "MF")
-  opop$MFF <- lookup_column(opop$mom, "FF")
-
-  so <- function(p) {
-    lapply(p, function(x) {
-      as.vector(unname(spouse_lookup[as.character(x)]))
+  ko_row <- function(relatives) {
+    lapply(relatives, function(x) {
+      parent_rows <- x[!is.na(x)]
+      if (!length(parent_rows)) {
+        return(vector(mode = "numeric", length = 0L))
+      }
+      unique(as.vector(unlist(kids_lookup_rows[parent_rows], use.names = FALSE)))
     })
   }
 
-  ego_index <- unname(pid_index[pid_keys])
-  res <- list()
+  FM_row <- map_rows(pop_row, mom_row)
+  MM_row <- map_rows(mom_row, mom_row)
+  MF_row <- map_rows(mom_row, pop_row)
+  FF_row <- map_rows(pop_row, pop_row)
 
-  res$ggparents <- list_for_pid(ego_index, c("MMM", "MMF", "MFM", "MFF", "FMM", "FMF", "FFM", "FFF"))
-  res$gparents <- list_for_pid(ego_index, c("MM", "MF", "FM", "FF"))
+  FFM_row <- map_rows(pop_row, FM_row)
+  FMM_row <- map_rows(pop_row, MM_row)
+  FMF_row <- map_rows(pop_row, MF_row)
+  FFF_row <- map_rows(pop_row, FF_row)
+
+  MFM_row <- map_rows(mom_row, FM_row)
+  MMM_row <- map_rows(mom_row, MM_row)
+  MMF_row <- map_rows(mom_row, MF_row)
+  MFF_row <- map_rows(mom_row, FF_row)
+
+  ego_rows <- row_index_of(pid)
+  parent_rows <- list_from_vectors(ego_rows, list(mom_row, pop_row))
+  gparent_rows <- list_from_vectors(ego_rows, list(MM_row, MF_row, FM_row, FF_row))
+  ggparent_rows <- list_from_vectors(ego_rows, list(MMM_row, MMF_row, MFM_row, MFF_row, FMM_row, FMF_row, FFM_row, FFF_row))
+
+  ko <- if (use_row_lookup) ko_row else ko_pid
+  subset_by_sex <- if (use_row_lookup) subset_row_by_sex else subset_pid_by_sex
+  so <- if (use_row_lookup) so_row else so_pid
+  convert_relatives <- if (use_row_lookup) rows_to_pid else identity
+  ego_relatives <- if (use_row_lookup) as.list(ego_rows) else as.list(pid)
+  parents_rel <- if (use_row_lookup) parent_rows else list_from_vectors(ego_rows, list(mom_pid, pop_pid))
+  gparents_rel <- if (use_row_lookup) gparent_rows else rows_to_pid(gparent_rows)
+  ggparents_rel <- if (use_row_lookup) ggparent_rows else rows_to_pid(ggparent_rows)
+
+  res <- list()
+  res$ggparents <- rows_to_pid(ggparent_rows)
+  res$gparents <- rows_to_pid(gparent_rows)
 
   if (kin_by_sex) {
-    res$gmothers <- list_for_pid(ego_index, c("MM", "FM"))
-    res$gfathers <- list_for_pid(ego_index, c("MF", "FF"))
-    res$ggmothers <- list_for_pid(ego_index, c("MMM", "FMM", "FFM", "MFM"))
-    res$ggfathers <- list_for_pid(ego_index, c("FFF", "MMF", "MFF", "FMF"))
+    res$gmothers <- rows_to_pid(list_from_vectors(ego_rows, list(MM_row, FM_row)))
+    res$gfathers <- rows_to_pid(list_from_vectors(ego_rows, list(MF_row, FF_row)))
+    res$ggmothers <- rows_to_pid(list_from_vectors(ego_rows, list(MMM_row, FMM_row, FFM_row, MFM_row)))
+    res$ggfathers <- rows_to_pid(list_from_vectors(ego_rows, list(FFF_row, MMF_row, MFF_row, FMF_row)))
   }
 
   if ("gunclesaunts" %in% extra_kintypes) {
-    g1 <- ko(res$ggparents)
-    res$gunclesaunts <- lapply(seq_along(g1), function(i) g1[[i]][g1[[i]] %ni% res$gparents[[i]]])
+    gunclesaunts <- ko(ggparents_rel)
+    gunclesaunts <- lapply(seq_along(gunclesaunts), function(i) gunclesaunts[[i]][gunclesaunts[[i]] %ni% gparents_rel[[i]]])
+    res$gunclesaunts <- convert_relatives(gunclesaunts)
     if (kin_by_sex) {
-      res$gaunts <- subset_by_sex(res$gunclesaunts, 1)
-      res$guncles <- subset_by_sex(res$gunclesaunts, 0)
+      res$gaunts <- convert_relatives(subset_by_sex(gunclesaunts, 1))
+      res$guncles <- convert_relatives(subset_by_sex(gunclesaunts, 0))
     }
   }
 
-  res$parents <- list_for_pid(ego_index, c("mom", "pop"))
+  res$parents <- list_from_vectors(ego_rows, list(mom_pid, pop_pid))
   if (kin_by_sex) {
-    res$mother <- list_for_pid(ego_index, "mom")
-    res$father <- list_for_pid(ego_index, "pop")
+    res$mother <- list_from_vectors(ego_rows, list(mom_pid))
+    res$father <- list_from_vectors(ego_rows, list(pop_pid))
   }
 
   needs_unclesaunts <- any(c("unclesaunts", "firstcousins") %in% extra_kintypes)
   unclesaunts <- NULL
   if (needs_unclesaunts) {
-    g2 <- ko(res$gparents)
-    unclesaunts <- lapply(seq_along(g2), function(i) g2[[i]][g2[[i]] %ni% res$parents[[i]]])
+    unclesaunts <- ko(gparents_rel)
+    unclesaunts <- lapply(seq_along(unclesaunts), function(i) unclesaunts[[i]][unclesaunts[[i]] %ni% parents_rel[[i]]])
     if ("unclesaunts" %in% extra_kintypes) {
-      res$unclesaunts <- unclesaunts
+      res$unclesaunts <- convert_relatives(unclesaunts)
       if (kin_by_sex) {
-        res$aunts <- subset_by_sex(res$unclesaunts, 1)
-        res$uncles <- subset_by_sex(res$unclesaunts, 0)
+        res$aunts <- convert_relatives(subset_by_sex(unclesaunts, 1))
+        res$uncles <- convert_relatives(subset_by_sex(unclesaunts, 0))
       }
     }
   }
 
-  res$siblings <- ko(res$parents)
-  res$siblings <- lapply(seq_along(res$siblings), function(i) res$siblings[[i]][res$siblings[[i]] %ni% pid[[i]]])
+  siblings <- ko(parents_rel)
+  self_ids <- if (use_row_lookup) ego_rows else pid
+  siblings <- lapply(seq_along(siblings), function(i) siblings[[i]][siblings[[i]] %ni% self_ids[[i]]])
+  res$siblings <- convert_relatives(siblings)
   if (kin_by_sex) {
-    res$sisters <- subset_by_sex(res$siblings, 1)
-    res$brothers <- subset_by_sex(res$siblings, 0)
+    res$sisters <- convert_relatives(subset_by_sex(siblings, 1))
+    res$brothers <- convert_relatives(subset_by_sex(siblings, 0))
   }
 
   if ("firstcousins" %in% extra_kintypes) {
-    res$firstcousins <- ko(unclesaunts)
+    firstcousins <- ko(unclesaunts)
+    res$firstcousins <- convert_relatives(firstcousins)
     if (kin_by_sex) {
-      res$firstcousinsfemale <- subset_by_sex(res$firstcousins, 1)
-      res$firstcousinsmale <- subset_by_sex(res$firstcousins, 0)
+      res$firstcousinsfemale <- convert_relatives(subset_by_sex(firstcousins, 1))
+      res$firstcousinsmale <- convert_relatives(subset_by_sex(firstcousins, 0))
     }
   }
 
-  res$children <- ko(as.list(pid))
+  children <- ko(ego_relatives)
+  res$children <- convert_relatives(children)
   if (kin_by_sex) {
-    res$daughters <- subset_by_sex(res$children, 1)
-    res$sons <- subset_by_sex(res$children, 0)
+    res$daughters <- convert_relatives(subset_by_sex(children, 1))
+    res$sons <- convert_relatives(subset_by_sex(children, 0))
   }
 
-  res$gchildren <- ko(res$children)
+  gchildren <- ko(children)
+  res$gchildren <- convert_relatives(gchildren)
   if (kin_by_sex) {
-    res$gdaughters <- subset_by_sex(res$gchildren, 1)
-    res$gsons <- subset_by_sex(res$gchildren, 0)
+    res$gdaughters <- convert_relatives(subset_by_sex(gchildren, 1))
+    res$gsons <- convert_relatives(subset_by_sex(gchildren, 0))
   }
 
   if ("niblings" %in% extra_kintypes) {
-    res$niblings <- ko(res$siblings)
+    niblings <- ko(siblings)
+    res$niblings <- convert_relatives(niblings)
     if (kin_by_sex) {
-      res$nieces <- subset_by_sex(res$niblings, 1)
-      res$nephews <- subset_by_sex(res$niblings, 0)
+      res$nieces <- convert_relatives(subset_by_sex(niblings, 1))
+      res$nephews <- convert_relatives(subset_by_sex(niblings, 0))
     }
   }
 
-  res$spouse <- so(as.list(pid))
+  spouse_rel <- so(ego_relatives)
+  res$spouse <- convert_relatives(spouse_rel)
 
   if ("inlaws" %in% extra_kintypes) {
-    res$parentsinlaw <- lapply(res$spouse, function(x) {
-      as.vector(unlist(opop[opop$pid %in% x, c("mom", "pop"), drop = FALSE], use.names = FALSE))
+    spouse_rows <- if (use_row_lookup) spouse_rel else lapply(spouse_rel, row_index_of)
+    parentsinlaw_rows <- lapply(spouse_rows, function(x) {
+      spouse_idx <- x[!is.na(x)]
+      if (!length(spouse_idx)) {
+        return(vector(mode = "numeric", length = 0L))
+      }
+      c(mom_row[spouse_idx], pop_row[spouse_idx])
+    })
+    res$parentsinlaw <- lapply(spouse_rows, function(x) {
+      spouse_idx <- x[!is.na(x)]
+      if (!length(spouse_idx)) {
+        return(vector(mode = "numeric", length = 0L))
+      }
+      c(mom_pid[spouse_idx], pop_pid[spouse_idx])
     })
     if (kin_by_sex) {
-      res$motherinlaw <- lapply(res$spouse, function(x) {
-        as.vector(unlist(opop[opop$pid %in% x, "mom", drop = FALSE], use.names = FALSE))
+      res$motherinlaw <- lapply(spouse_rows, function(x) {
+        spouse_idx <- x[!is.na(x)]
+        if (!length(spouse_idx)) {
+          return(vector(mode = "numeric", length = 0L))
+        }
+        mom_pid[spouse_idx]
       })
-      res$fatherinlaw <- lapply(res$spouse, function(x) {
-        as.vector(unlist(opop[opop$pid %in% x, "pop", drop = FALSE], use.names = FALSE))
+      res$fatherinlaw <- lapply(spouse_rows, function(x) {
+        spouse_idx <- x[!is.na(x)]
+        if (!length(spouse_idx)) {
+          return(vector(mode = "numeric", length = 0L))
+        }
+        pop_pid[spouse_idx]
       })
     }
 
-    spouseofsiblings <- so(res$siblings)
-    siblingsofspouse <- ko(res$parentsinlaw)
+    spouseofsiblings <- so(siblings)
+    parentsinlaw_rel <- if (use_row_lookup) parentsinlaw_rows else res$parentsinlaw
+    siblingsofspouse <- ko(parentsinlaw_rel)
     siblingsofspouse <- lapply(seq_along(siblingsofspouse), function(i) {
-      siblingsofspouse[[i]][siblingsofspouse[[i]] %ni% res$spouse[[i]]]
+      siblingsofspouse[[i]][siblingsofspouse[[i]] %ni% spouse_rel[[i]]]
     })
     spouseofsiblingsofspouse <- so(siblingsofspouse)
-    res$siblingsinlaw <- mapply(c, spouseofsiblings, siblingsofspouse, spouseofsiblingsofspouse, SIMPLIFY = FALSE)
+    siblingsinlaw <- mapply(c, spouseofsiblings, siblingsofspouse, spouseofsiblingsofspouse, SIMPLIFY = FALSE)
+    res$siblingsinlaw <- convert_relatives(siblingsinlaw)
     if (kin_by_sex) {
-      res$sistersinlaw <- subset_by_sex(res$siblingsinlaw, 1)
-      res$brothersinlaw <- subset_by_sex(res$siblingsinlaw, 0)
+      res$sistersinlaw <- convert_relatives(subset_by_sex(siblingsinlaw, 1))
+      res$brothersinlaw <- convert_relatives(subset_by_sex(siblingsinlaw, 0))
     }
   }
 
