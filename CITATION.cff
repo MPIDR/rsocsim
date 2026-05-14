@@ -21,7 +21,7 @@ authors:
     affiliation: "Max Planck Institute for Demographic Research"
 title: "rsocsim: SOCSIM with R"
 abstract: "Install and run socsim microsimulations from within R with this R-package."
-version: 1.9.12
+version: 1.9.13
 date-released: 2026-04-23
 repository-code: "https://github.com/MPIDR/rsocsim"
 repository: "https://mpidr.github.io/rsocsim/"
