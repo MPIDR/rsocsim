@@ -1,5 +1,9 @@
 # Changelog
 
+## rsocsim 1.9.14
+
+- significant performance improvement of retrieve_kin()
+
 ## rsocsim 1.9.9 (May 2026)
 
 - package metadata and documentation cleanup for CRAN submission
