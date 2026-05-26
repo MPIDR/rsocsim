@@ -1,8 +1,8 @@
 # Changelog
 
-## rsocsim 1.9.14
+## rsocsim 1.9.14 (May 2026)
 
-- significant performance improvement of retrieve_kin()
+- significant performance improvements in retrieve_kin()
 
 ## rsocsim 1.9.9 (May 2026)
 

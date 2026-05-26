@@ -28,9 +28,9 @@ will be easier:
 Download the correct binary package from the [release section on
 Github](https://github.com/MPIDR/rsocsim/releases): Currently, you can
 use
-[rsocsim_1.9.9.tgz](https://github.com/MPIDR/rsocsim/releases/download/v1.9.9/rsocsim_1.9.9.tgz)
+[rsocsim_1.9.14.tgz](https://github.com/MPIDR/rsocsim/releases/download/v1.9.14/rsocsim_1.9.14.tgz)
 for Mac and
-[rsocsim_1.9.9.zip](https://github.com/MPIDR/rsocsim/releases/download/v1.9.9/rsocsim_1.9.9.zip)
+[rsocsim_1.9.14.zip](https://github.com/MPIDR/rsocsim/releases/download/v1.9.14/rsocsim_1.9.14.zip)
 for Windows.
 
 Then execute the following line in R and choose the downloaded file:
