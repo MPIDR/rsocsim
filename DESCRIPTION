@@ -1,8 +1,8 @@
 Package: rsocsim
 Type: Package
-Title: SOCSIM with R
-Version: 1.9.15
-Date: 2026-05-26
+Title: SOCSIM
+Version: 1.9.16
+Date: 2026-06-01
 Maintainer: Tom Theile <theile@demogr.mpg.de>
 Authors@R: c(
     person("Tom", "Theile", role = c("aut", "cre", "cph"), email = "theile@demogr.mpg.de", comment = c(ORCID = "0000-0003-0573-9093")),
@@ -10,7 +10,7 @@ Authors@R: c(
     person("Mallika", "Snyder", role = "aut"),
     person("Liliana P.", "Calderón-Bernal", role = "aut")
     )
-Description: Tools for preparing inputs, running SOCSIM demographic kinship microsimulations,
+Description: Tools for preparing inputs, running SOCSIM (SOCial SIMulator) demographic kinship microsimulations,
     and reading simulation outputs from R. The package includes helpers for
     creating simulation folders, downloading demographic rate schedules,
     starting simulations, and loading population and marriage result files.
