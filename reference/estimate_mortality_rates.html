@@ -107,18 +107,40 @@ are split into an infant group [0,1) and then grouped ages [1, age_group),
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
-<span class="r-in"><span><span class="co"># Read opop file into global environment</span></span></span>
-<span class="r-in"><span><span class="va">opop</span> <span class="op">&lt;-</span> <span class="fu"><a href="read_opop.html">read_opop</a></span><span class="op">(</span>fn <span class="op">=</span> <span class="st">"my_path"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="co"># Retrieve age-specific mortality rates</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">opop</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  pid <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">6</span>,</span></span>
+<span class="r-in"><span>  fem <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  group <span class="op">=</span> <span class="fl">1</span>,</span></span>
+<span class="r-in"><span>  nev <span class="op">=</span> <span class="fl">0</span>,</span></span>
+<span class="r-in"><span>  dob <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">120</span>, <span class="fl">120</span>, <span class="fl">336</span>, <span class="fl">348</span>, <span class="fl">180</span>, <span class="fl">360</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  mom <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">5</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  pop <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">2</span>, <span class="fl">2</span>, <span class="fl">0</span>, <span class="fl">2</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  nesibm <span class="op">=</span> <span class="fl">0</span>,</span></span>
+<span class="r-in"><span>  nesibp <span class="op">=</span> <span class="fl">0</span>,</span></span>
+<span class="r-in"><span>  lborn <span class="op">=</span> <span class="fl">0</span>,</span></span>
+<span class="r-in"><span>  marid <span class="op">=</span> <span class="fl">0</span>,</span></span>
+<span class="r-in"><span>  mstat <span class="op">=</span> <span class="fl">0</span>,</span></span>
+<span class="r-in"><span>  dod <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">300</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  fmult <span class="op">=</span> <span class="fl">0</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">asmr</span> <span class="op">&lt;-</span> <span class="fu">estimate_mortality_rates</span><span class="op">(</span>opop <span class="op">=</span> <span class="va">opop</span>,</span></span>
 <span class="r-in"><span>                     final_sim_year <span class="op">=</span> <span class="fl">2021</span>,</span></span>
-<span class="r-in"><span>                     year_min <span class="op">=</span> <span class="fl">1750</span>,</span></span>
-<span class="r-in"><span>                     year_max <span class="op">=</span> <span class="fl">2020</span>,</span></span>
+<span class="r-in"><span>                     year_min <span class="op">=</span> <span class="fl">1995</span>,</span></span>
+<span class="r-in"><span>                     year_max <span class="op">=</span> <span class="fl">2000</span>,</span></span>
 <span class="r-in"><span>                     year_group <span class="op">=</span> <span class="fl">5</span>,</span></span>
-<span class="r-in"><span>                     age_max_mort <span class="op">=</span> <span class="fl">110</span>,</span></span>
+<span class="r-in"><span>                     age_max_mort <span class="op">=</span> <span class="fl">100</span>,</span></span>
 <span class="r-in"><span>                     age_group <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">asmr</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 6 × 4</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   year        sex   age     socsim</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> [1995,2000) male  [0,1)       <span style="color: #BB0000;">NA</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> [1995,2000) male  [1,5)       <span style="color: #BB0000;">NA</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> [1995,2000) male  [5,10)      <span style="color: #BB0000;">NA</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> [1995,2000) male  [10,15)     <span style="color: #BB0000;">NA</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> [1995,2000) male  [15,20)     <span style="color: #BB0000;">NA</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> [1995,2000) male  [20,25)     <span style="color: #BB0000;">NA</span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

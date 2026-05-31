@@ -5,14 +5,14 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>SOCSIM with R • rsocsim</title>
+<title>SOCSIM • rsocsim</title>
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="SOCSIM with R">
-<meta name="description" content="Tools for preparing inputs, running SOCSIM demographic kinship microsimulations, and reading simulation outputs from R. The package includes helpers for creating simulation folders, downloading demographic rate schedules, starting simulations, and loading population and marriage result files.">
-<meta property="og:description" content="Tools for preparing inputs, running SOCSIM demographic kinship microsimulations, and reading simulation outputs from R. The package includes helpers for creating simulation folders, downloading demographic rate schedules, starting simulations, and loading population and marriage result files.">
+<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="SOCSIM">
+<meta name="description" content="Tools for preparing inputs, running SOCSIM (SOCial SIMulator) demographic kinship microsimulations, and reading simulation outputs from R. The package includes helpers for creating simulation folders, downloading demographic rate schedules, starting simulations, and loading population and marriage result files.">
+<meta property="og:description" content="Tools for preparing inputs, running SOCSIM (SOCial SIMulator) demographic kinship microsimulations, and reading simulation outputs from R. The package includes helpers for creating simulation folders, downloading demographic rate schedules, starting simulations, and loading population and marriage result files.">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -47,10 +47,10 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="rsocsim---socsim-r-package">rsocsim - Socsim R package<a class="anchor" aria-label="anchor" href="#rsocsim---socsim-r-package"></a>
+<div class="page-header"><h1 id="rsocsim---social-kinship-microsimulation-r-package">rsocsim - Social Kinship MicroSimulation R package<a class="anchor" aria-label="anchor" href="#rsocsim---social-kinship-microsimulation-r-package"></a>
 </h1></div>
 <p><img align="left" width="144" alt="2023-MPIDR_rsocsim-web-144" src="https://user-images.githubusercontent.com/5939967/221559559-1233e070-0e0a-43a1-b451-a3215c0b7d4c.png"></p>
-<p>Socsim (‘Social Simulator’) is an open source stochastic microsimulation platform used to produce synthetic populations with plausible kinship structures using demographic rates as input. We stand on the shoulders of giants: Socsim was originally developed for Unix at UC Berkeley [1-2], where it has been maintained for decades. The current release of <code>rsocsim</code> aims to be OS-agnostic and, for the most part, back-compatible with the original Socsim distribution (<a href="https://lab.demog.berkeley.edu/socsim/" class="external-link uri">https://lab.demog.berkeley.edu/socsim/</a>).</p>
+<p>SOCSIM (‘SOCial SIMulator’) is an open source stochastic microsimulation platform used to produce synthetic populations with plausible kinship structures using demographic rates as input. We stand on the shoulders of giants: Socsim was originally developed for Unix at UC Berkeley [1-2], where it has been maintained for decades. The current release of <code>rsocsim</code> aims to be OS-agnostic and, for the most part, back-compatible with the original Socsim distribution.</p>
 <p><code>rsocsim</code> is under active development. Please report bugs or unexpected behavior in the issue tracker.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>

@@ -71,16 +71,38 @@ age_group), and so on.
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
-# Read opop file into global environment
-opop <- read_opop(fn = "my_path")
-# Retrieve age-specific mortality rates
+opop <- data.frame(
+  pid = 1:6,
+  fem = c(1, 0, 1, 0, 1, 1),
+  group = 1,
+  nev = 0,
+  dob = c(120, 120, 336, 348, 180, 360),
+  mom = c(0, 0, 1, 1, 0, 5),
+  pop = c(0, 0, 2, 2, 0, 2),
+  nesibm = 0,
+  nesibp = 0,
+  lborn = 0,
+  marid = 0,
+  mstat = 0,
+  dod = c(0, 300, 0, 0, 0, 0),
+  fmult = 0
+)
+
 asmr <- estimate_mortality_rates(opop = opop,
                      final_sim_year = 2021,
-                     year_min = 1750,
-                     year_max = 2020,
+                     year_min = 1995,
+                     year_max = 2000,
                      year_group = 5,
-                     age_max_mort = 110,
+                     age_max_mort = 100,
                      age_group = 5)
-} # }
+head(asmr)
+#> # A tibble: 6 × 4
+#>   year        sex   age     socsim
+#>   <fct>       <chr> <fct>    <dbl>
+#> 1 [1995,2000) male  [0,1)       NA
+#> 2 [1995,2000) male  [1,5)       NA
+#> 3 [1995,2000) male  [5,10)      NA
+#> 4 [1995,2000) male  [10,15)     NA
+#> 5 [1995,2000) male  [15,20)     NA
+#> 6 [1995,2000) male  [20,25)     NA
 ```

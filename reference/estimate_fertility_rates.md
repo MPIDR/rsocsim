@@ -73,17 +73,39 @@ Grouped year and age ranges (i.e., if `year_group > 1` or
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
-# Read opop file into global environment
-opop <- read_opop(fn = "my_path")
-# Retrieve age-specific fertility rates
+opop <- data.frame(
+  pid = 1:6,
+  fem = c(1, 0, 1, 0, 1, 1),
+  group = 1,
+  nev = 0,
+  dob = c(120, 120, 336, 348, 180, 360),
+  mom = c(0, 0, 1, 1, 0, 5),
+  pop = c(0, 0, 2, 2, 0, 2),
+  nesibm = 0,
+  nesibp = 0,
+  lborn = 0,
+  marid = 0,
+  mstat = 0,
+  dod = c(0, 300, 0, 0, 0, 0),
+  fmult = 0
+)
+
 asfr <- estimate_fertility_rates(opop = opop,
                      final_sim_year = 2021, 
-                     year_min = 1750,
-                     year_max = 2020,
+                     year_min = 1998,
+                     year_max = 2000,
                      year_group = 5,
-                     age_min_fert = 10,
-                     age_max_fert = 55,
+                     age_min_fert = 15,
+                     age_max_fert = 50,
                      age_group = 5)
-} # }
+head(asfr)
+#> # A tibble: 6 × 3
+#>   year                 age     socsim
+#>   <fct>                <fct>    <dbl>
+#> 1 [1997.999,1998.0005) [15,20)     NA
+#> 2 [1997.999,1998.0005) [20,25)     NA
+#> 3 [1997.999,1998.0005) [25,30)     NA
+#> 4 [1997.999,1998.0005) [30,35)     NA
+#> 5 [1997.999,1998.0005) [35,40)     NA
+#> 6 [1997.999,1998.0005) [40,45)     NA
 ```
