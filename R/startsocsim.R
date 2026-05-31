@@ -36,6 +36,13 @@ socsim <- function(folder, supfile, seed = "42", process_method = "inprocess",
   # If 'supfile' contains more than a basename, startSocsimWithFile() will
   # crash. This is only a workaround.
   remove_supfile <- FALSE
+  on.exit({
+    if (remove_supfile) {
+      unlink(file.path(folder, basename(supfile)))
+    }
+    socsim_message("Restoring working directory: ", previous_wd)
+    setwd(previous_wd)
+  }, add = TRUE)
   if (!identical(basename(supfile), supfile)) {
     if (identical(dirname(supfile), "folder")) {
       supfile <- basename(supfile)
@@ -62,13 +69,6 @@ socsim <- function(folder, supfile, seed = "42", process_method = "inprocess",
   error = function(w){
     warning("Error during execution of simulation!")
     warning(w)
-  },
-  finally = {
-    if (remove_supfile) {
-      unlink(file.path(folder, basename(supfile)))
-    }
-    socsim_message("Restoring working directory: ", previous_wd)
-    setwd(previous_wd)
   }
   )
   return(result)
@@ -315,13 +315,13 @@ run1simulationwithfile_from_binary <- function(folder, supfile,seed="42",compati
   print(paste0("socsim_path: ", socsim_path))
   print(seed)
   previous_wd = getwd()
+  on.exit(setwd(previous_wd), add = TRUE)
   setwd(paste0(folder))
   
   print(paste0("command: ",socsim_path,args=paste0(" ",supfile," ", seed," ", compatibility_mode)))
   
   print(system2(socsim_path, args = c(supfile, seed, compatibility_mode)))
   print(previous_wd)
-  setwd(previous_wd)
   return(1)
 }
 
