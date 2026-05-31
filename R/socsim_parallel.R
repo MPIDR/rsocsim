@@ -155,7 +155,7 @@ normalize_socsim_parallel_jobs <- function(folder,
 #'   otherwise the captured error message).
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # Reuse the same folder and supervisory file, but vary the RNG seed.
 #' simdir <- create_simulation_folder()
 #' sup <- create_sup_file(simdir, simname = "baseline")

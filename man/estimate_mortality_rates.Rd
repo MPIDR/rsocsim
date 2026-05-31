@@ -53,16 +53,29 @@ are split into an infant group [0,1) and then grouped ages [1, age_group),
 [age_group, age_group + age_group), and so on.
 }
 \examples{
-\dontrun{
-# Read opop file into global environment
-opop <- read_opop(fn = "my_path")
-# Retrieve age-specific mortality rates
+opop <- data.frame(
+  pid = 1:6,
+  fem = c(1, 0, 1, 0, 1, 1),
+  group = 1,
+  nev = 0,
+  dob = c(120, 120, 336, 348, 180, 360),
+  mom = c(0, 0, 1, 1, 0, 5),
+  pop = c(0, 0, 2, 2, 0, 2),
+  nesibm = 0,
+  nesibp = 0,
+  lborn = 0,
+  marid = 0,
+  mstat = 0,
+  dod = c(0, 300, 0, 0, 0, 0),
+  fmult = 0
+)
+
 asmr <- estimate_mortality_rates(opop = opop,
                      final_sim_year = 2021,
-                     year_min = 1750,
-                     year_max = 2020,
+                     year_min = 1995,
+                     year_max = 2000,
                      year_group = 5,
-                     age_max_mort = 110,
+                     age_max_mort = 100,
                      age_group = 5)
-}
+head(asmr)
 }

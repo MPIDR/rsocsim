@@ -11,9 +11,11 @@
 #'   writes `<output_base>.opop` and `<output_base>.omar` into `folder`.
 #'
 #' @examples
-#' \dontrun{
-#' create_initial_population(folder = tempdir(), size_opop = 10000, output_base = "simdata")
-#' }
+#' simdir <- tempfile("rsocsim-example-")
+#' dir.create(simdir)
+#' create_initial_population(folder = simdir, size_opop = 1000, output_base = "simdata")
+#' file.exists(file.path(simdir, "simdata.opop"))
+#' file.exists(file.path(simdir, "simdata.omar"))
 #'
 #' @export
 create_initial_population <- function(folder, size_opop = 20000, output_base = "presim") {

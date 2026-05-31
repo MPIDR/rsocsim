@@ -26,7 +26,7 @@
 #'   supervisory file.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' simdir <- tempdir()
 #' out <- download_rates(simdir, countrycode = "SE", yearStart = 1970, yearEnd = 1971)
 #' names(out)

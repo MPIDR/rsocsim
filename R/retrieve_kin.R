@@ -80,13 +80,41 @@
 #'  }
 #'
 #'@examples
-#' \dontrun{
-#' #Individuals of interest
-#' pid <- c("10111", "10211", "10311")
-#' #Obtain partial kinship network, with omar and opop already in R environment
-#' kin_network <- retrieve_kin(opop = opop, omar = omar, pid = pid,
-#' extra_kintypes = c("unclesaunts", "niblings"), kin_by_sex = TRUE)
-#' }
+#' opop <- data.frame(
+#'   pid = 1:4,
+#'   fem = c(1, 0, 1, 0),
+#'   group = 1,
+#'   nev = 0,
+#'   dob = c(120, 120, 300, 300),
+#'   mom = c(0, 0, 1, 1),
+#'   pop = c(0, 0, 2, 2),
+#'   nesibm = 0,
+#'   nesibp = 0,
+#'   lborn = 0,
+#'   marid = c(1, 1, 0, 0),
+#'   mstat = c(4, 4, 1, 1),
+#'   dod = 0,
+#'   fmult = 0
+#' )
+#' omar <- data.frame(
+#'   mid = 1,
+#'   wpid = 1,
+#'   hpid = 2,
+#'   dstart = 0,
+#'   dend = 0,
+#'   rend = 0,
+#'   wprior = 0,
+#'   hprior = 0
+#' )
+#'
+#' kin_network <- retrieve_kin(
+#'   opop = opop,
+#'   omar = omar,
+#'   pid = 3,
+#'   extra_kintypes = c("niblings", "inlaws"),
+#'   kin_by_sex = TRUE
+#' )
+#' kin_network$parents[[1]]
 #'
 #' @export
 retrieve_kin <- function(opop, omar, pid,
