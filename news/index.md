@@ -1,5 +1,12 @@
 # Changelog
 
+## rsocsim 1.9.17 (June 2026)
+
+- small fixes after CRAN feedback:
+  - supressable output
+  - on.exit() instead of finally() to reset working directory
+  - remove or replace with in documentation
+
 ## rsocsim 1.9.14 (May 2026)
 
 - significant performance improvements in retrieve_kin()
