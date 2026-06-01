@@ -2618,6 +2618,7 @@ char *command;
 }
 */
 
+// error is probably never used:
 void error(const char* fmt, ...) {
 	// rewritten by ChatGPT...
     char buf[1024];
