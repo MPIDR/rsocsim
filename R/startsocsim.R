@@ -134,7 +134,7 @@ report_socsim_console_summary <- function(folder, supfile, seed, suffix = "") {
   pyramid_lines <- extract_console_population_pyramid(pyramid_file)
   if (length(pyramid_lines) > 0L) {
     socsim_message("Population pyramid:")
-    writeLines(pyramid_lines)
+    socsim_message(paste(pyramid_lines, collapse = "\n"))
   }
 
   invisible(output_dir)
@@ -284,7 +284,7 @@ print_last_line_of_logfile = function(logfilename, lastline = "") {
       line = readLines(con, n = 1)
       if ( length(line) == 0 ) {
         if (!identical(lastline, line2) && nzchar(line2)) {
-          message(line2)
+          socsim_message(line2)
         }
         break
       }
@@ -309,19 +309,23 @@ run1simulationwithfile_from_binary <- function(folder, supfile,seed="42",compati
     stop("'socsim_path' must point to an executable file, not a directory.")
   }
   seed = toString(seed)
-  print("Start run1simulationwithfile")
-  print(folder)
-  print(supfile)
-  print(paste0("socsim_path: ", socsim_path))
-  print(seed)
+  socsim_message("Starting external SOCSIM simulation.")
+  socsim_message("Base directory: ", folder)
+  socsim_message("Input supervisory file: ", supfile)
+  socsim_message("socsim_path: ", socsim_path)
+  socsim_message("RNG seed: ", seed)
   previous_wd = getwd()
   on.exit(setwd(previous_wd), add = TRUE)
   setwd(paste0(folder))
-  
-  print(paste0("command: ",socsim_path,args=paste0(" ",supfile," ", seed," ", compatibility_mode)))
-  
-  print(system2(socsim_path, args = c(supfile, seed, compatibility_mode)))
-  print(previous_wd)
+
+  socsim_message(
+    "Command: ",
+    paste(c(socsim_path, supfile, seed, compatibility_mode), collapse = " ")
+  )
+
+  exit_status <- system2(socsim_path, args = c(supfile, seed, compatibility_mode))
+  socsim_message("Process exit status: ", exit_status)
+  socsim_message("Restoring working directory: ", previous_wd)
   return(1)
 }
 
