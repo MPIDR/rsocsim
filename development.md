@@ -1,4 +1,4 @@
-# To also show the SOCSIM progress messages and population pyramids during local test runs, set:
+# NA
 
 ## Development
 
@@ -20,12 +20,7 @@ several tests.
 Simulations will be skipped by default tests. Run the following lines to
 activate more extensive testing:
 
-\`\`\`{R} Sys.setenv(RSOCSIM_RUN_INTEGRATION_TESTS=“1”) \# run
-simulations Sys.setenv(RSOCSIM_MIRROR_TEST_ARTIFACTS=“1”) \# copy some
-sim-results test folder Sys.setenv(RSOCSIM_TEST_CONSOLE_OUTPUT=“1”) \#
-output to R console during simulation-tests devtools::check()
-
-Sys.setenv(RSOCSIM_TEST_CONSOLE_OUTPUT=“1”) \`\`\`
+`{R} Sys.setenv(RSOCSIM_RUN_INTEGRATION_TESTS="1") # run simulations Sys.setenv(RSOCSIM_MIRROR_TEST_ARTIFACTS="1") # copy some sim-results test folder Sys.setenv(RSOCSIM_TEST_CONSOLE_OUTPUT="1") # output progress messages and population pyramids to R console during simulation-tests devtools::check()`
 
 For local runs with `devtools::test()` or
 [`testthat::test_file()`](https://testthat.r-lib.org/reference/test_file.html),
