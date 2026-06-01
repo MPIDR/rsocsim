@@ -1,3 +1,9 @@
+# rsocsim 1.9.17 (June 2026)
+ * small fixes after CRAN feedback: 
+    * supressable output
+    * on.exit() instead of finally() to reset working directory
+    * remove \dontrun or replace \dontrun with \donttest in documentation
+
 # rsocsim 1.9.14 (May 2026)
  * significant performance improvements in retrieve_kin()
 
